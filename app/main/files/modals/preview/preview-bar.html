@@ -1,0 +1,54 @@
+<!-- <button type="button" class="btn btn-primary btn-sm" ng-click="others_btn=!others_btn">
+<span ng-if="!others_btn">更多操作 <i class="fa fa-caret-right"></i></span>
+<span ng-if="others_btn">收起 <i class="fa fa-caret-left"></i></span>
+</button>
+
+<span ng-show="others_btn">
+  <button type="button" class="btn btn-default btn-sm" ng-click="showFn.download()">
+    <i class="fa fa-download text-info"></i>
+    下载</button>
+
+  <button type="button" class="btn btn-default btn-sm" ng-click="showFn.remove();cancel();">
+    <i class="fa fa-trash text-danger"></i>
+    删除</button>
+
+  <button type="button" class="btn btn-default btn-sm" ng-click="showFn.move(true);cancel();">
+    <i class="fa fa-copy text-primary"></i>
+    复制</button>
+  <button type="button" class="btn btn-default btn-sm" ng-click="showFn.move(false);cancel();">
+    <i class="fa fa-cut text-primary"></i>
+    移动</button>
+
+  <button type="button" class="btn btn-default btn-sm" ng-click="showFn.rename();cancel();">
+    <i class="fa fa-edit text-info"></i>
+    重命名</button>
+
+  <button type="button" class="btn btn-default btn-sm" ng-click="showFn.grant();cancel();">
+    <i class="fa fa-shield text-warning"></i>
+    授权</button>
+
+  <button type="button" class="btn btn-default btn-sm" ng-click="showFn.address();cancel();">
+    <i class="fa fa-download"></i>
+    获取地址
+  </button>
+
+</span> -->
+
+<button type="button" class="btn btn-default btn-sm" ng-click="showFn.download();cancel()">
+  <i class="glyphicon glyphicon-cloud-download text-info"></i>
+  下载</button>
+
+
+<button type="button" class="btn btn-default btn-sm" ng-click="showFn.address();">
+  <i class="fa fa-download"></i>
+  获取地址
+</button>
+
+<!-- <button type="button" class="btn btn-default btn-sm" ng-click="showFn.grant();cancel();">
+  <i class="fa fa-shield text-warning"></i>
+  简化Policy授权</button> -->
+
+
+  <button type="button" class="btn btn-default btn-sm" ng-click="showFn.acl();">
+    <i class="fa fa-shield text-success"></i>
+    ACL权限</button>

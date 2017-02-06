@@ -1,0 +1,42 @@
+.my-nav.navbar  {
+  border: 0px;
+  margin-bottom: 0px;
+  border-bottom: 1px solid #ccc;
+  border-radius: 0;
+}
+
+@media (min-width: 768px){
+  .navbar {
+    border-radius: 0px;
+  }
+}
+
+.my-nav .navbar-brand {
+  padding:4px 10px;
+}
+
+.my-nav.navbar-inverse.navbar-default,
+.my-nav.navbar-inverse.navbar-default .navbar-nav a {
+  color: #ccc;
+}
+
+.my-nav.navbar-inverse.navbar-default .navbar-nav > .active > a,
+.my-nav.navbar-inverse.navbar-default .navbar-nav > .active > a:hover,
+.my-nav.navbar-inverse.navbar-default .navbar-nav > .active > a:focus {
+  font-weight: bold;
+  background: rgba(38, 211, 58, 0.5);
+  color: #fff;
+}
+
+.navbar-default .navbar-toggle {
+  border-color: #fff;
+}
+.app-version{
+  color:#f90;
+  padding-top:15px;
+  padding-right:20px;
+}
+.app-version:hover{
+  color:#f60;
+  cursor:pointer;
+}

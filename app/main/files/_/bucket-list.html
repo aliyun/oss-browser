@@ -1,0 +1,51 @@
+<div ng-if="!isLoading && (!buckets || buckets.length==0)" no-data></div>
+
+<div ng-if="!isLoading && buckets.length>0">
+  <table class="table table-condensed table-hover table-striped" ng-if="ref.isListView">
+    <tr>
+      <th>-</th>
+      <th>Bucket名称</th>
+      <th>区域</th>
+      <th>创建时间</th>
+      <th>操作</th>
+    </tr>
+
+    <tr ng-repeat="item in buckets|filter:sch.bucketName"
+    ng-dblclick="goIn(item.name)"
+    ng-click="selectBucket(item);$event.stopPropagation()"
+    ng-class="{'info':bucket_sel.item==item}">
+      <td class="text-muted">&nbsp;{{$index+1}}.</td>
+      <td>
+        <div class="text-overflow">
+          <i class="fa fa-database text-warning"></i>
+          <a href="" ng-click="goIn(item.name)">
+            <span>{{item.name}}</span>
+          </a>
+        </div>
+      </td>
+      <td>{{item.region}}</td>
+      <td>{{item.creationDate|timeFormat}}</td>
+      <td>
+        <a href="" ng-click="showDeleteBucket(item)" class="text-danger">删除</a>
+
+      </td>
+    </tr>
+  </table>
+
+
+
+  <div ng-if="!ref.isListView" class="pd10"
+     ng-click="bucket_sel.item=null;">
+
+     <div ng-repeat="item in buckets|filter:sch.bucketName"
+     ng-dblclick="goIn(item.name);$event.stopPropagation()"
+     ng-click="selectBucket(item);$event.stopPropagation()"
+      class="item-block" ng-class={'active':bucket_sel.item==item}>
+        <i class="fa fa-database text-warning"></i>
+        <div class="item-block-name" uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'">{{item.name}}</div>
+        <div class="item-block-desc">{{item.region}}</div>
+     </div>
+
+   <div class="clearfix">&nbsp;</div>
+  </div>
+</div>

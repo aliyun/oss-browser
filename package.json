@@ -1,0 +1,62 @@
+{
+  "name": "oss-browser",
+  "version": "0.4.0",
+  "main": "main-dev.js",
+  "scripts": {
+    "dev": "npm-run-all --parallel watch dev:run",
+    "dev:run": "cross-env NODE_ENV=development electron .",
+    "prod": "cross-env NODE_ENV=production  cd dist && electron .",
+    "clean": "rm -rf dist node_modules build releases",
+    "watch": "gulp",
+    "postinstall": "npm run build",
+    "build": "gulp build",
+    "mirror": "set ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ || export ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/",
+    "win64": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.5.0 --platform=win32 --arch=x64",
+    "win32": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.5.0 --platform=win32 --arch=ia32",
+    "mac": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.5.0 --platform=darwin --arch=x64 --icon=./app/icons/icon.icns",
+    "linux32": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.5.0 --platform=linux --arch=ia32",
+    "linux64": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.5.0 --platform=linux --arch=x64",
+    "all": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.5.0 --all"
+  },
+  "engines": {
+    "node": ">=4.5.0"
+  },
+  "devDependencies": {
+    "angular": "1.5.8",
+    "angular-sanitize": "1.5.8",
+    "angular-ui-bootstrap": "^2.3.1",
+    "angular-ui-codemirror": "0.3.0",
+    "angular-ui-router": "0.2.18",
+    "babel-preset-es2015": "~6.6.0",
+    "bootstrap": "3.3.6",
+    "bower": "~1.7.9",
+    "codemirror": "^5.19.0",
+    "commander": "~2.9.0",
+    "cross-env": "^3.1.4",
+    "electron": "^1.4.15",
+    "electron-packager": "~7.1.0",
+    "font-awesome": "^4.7.0",
+    "gulp": "~3.5.5",
+    "gulp-angular-templatecache": "^1.1.0",
+    "gulp-babel": "~6.1.2",
+    "gulp-concat": "~2.1.7",
+    "gulp-connect": "^1.0.7",
+    "gulp-jshint": "~1.5.0",
+    "gulp-load-plugins": "~0.4.0",
+    "jquery": "^2.2.3",
+    "karma": "^0.12.1",
+    "karma-chrome-launcher": "^0.1.2",
+    "karma-jasmine": "^0.1.5",
+    "mocha": "~2.4.5",
+    "moment": "~2.10.6",
+    "node-httpclient": "0.0.2",
+    "request": "^2.72.0",
+    "shelljs": "~0.7.0",
+    "should": "~9.0.0",
+    "showdown": "^1.4.2"
+  },
+  "dependencies": {
+    "aliyun-sdk": "^1.9.9",
+    "npm-run-all": "^4.0.1"
+  }
+}

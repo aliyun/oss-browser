@@ -1,0 +1,114 @@
+<header class="pd4 file-toolbar">
+
+  <div class="col-sm-6 pd0">
+    <!-- <button type="button" class="btn btn-default btn-sm"
+            ng-click="sel.all=!sel.all;selectAll()">
+        <i class="glyphicon {{sel.all?'glyphicon-check':'glyphicon-unchecked'}}"></i> 全选
+    </button> -->
+
+    <!-- &nbsp; -->
+    <div class="btn-group" role="group" ng-if="!copy.pwd">
+
+      <button type="button" class="btn btn-default btn-sm" ng-click="showUploadDialog()">
+        <i class="glyphicon glyphicon-cloud-upload text-info"></i>上传
+      </button>
+      <button type="button" class="btn btn-default btn-sm" ng-click="showAddFolder()">
+        <i class="glyphicon glyphicon-plus text-success"></i>
+        新建目录
+      </button>
+    </div>
+
+    &nbsp;
+    <div class="btn-group" role="group" ng-if="!copy.pwd">
+
+      <button type="button" class="btn btn-default btn-sm" ng-click="sel.all=!sel.all;selectAll()">
+        <i class="fa" ng-class="{'fa-check-square-o': sel.all ,'fa-square-o': !sel.all}"></i>
+        全选
+      </button>
+
+      <button type="button" class="btn btn-default btn-sm" ng-disabled="!sel.has" ng-click="showDownloadDialog()">
+        <i class="glyphicon glyphicon-cloud-download text-primary"></i>
+        下载
+      </button>
+
+      <button type="button" class="btn btn-default btn-sm" ng-disabled="!sel.has" ng-click="showDeleteFilesSelected()">
+       <i class="fa fa-remove text-danger"></i>
+        删除
+      </button>
+
+    </div>
+
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-default btn-sm dropdown-toggle" ng-disabled="!sel.has" data-toggle="dropdown">
+        更多
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="" class="" ng-if="sel.has" ng-click="showMove(sel.has, true)">
+            <i class="fa fa-clone text-primary"></i>
+            复制
+          </a>
+        </li>
+        <li>
+          <a href="" class="" ng-if="sel.has" ng-click="showMove(sel.has)">
+            <i class="fa fa-cut text-primary"></i>
+            移动
+          </a>
+        </li>
+        <li>
+          <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder"
+          ng-click="showRename(sel.has[0])">
+            <i class="fa fa-edit text-info"></i>
+            重命名
+          </a>
+        </li>
+        <li>
+          <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder"
+            ng-click="showACL(sel.has[0])">
+            <i class="fa fa-shield text-success"></i>
+            ACL权限
+          </a>
+        </li>
+        
+        <li>
+          <a href="" ng-if="sel.has"
+            ng-class="{'text-success':sel.has}"
+            ng-click="showGrant(sel.has)">
+            <i class="fa fa-shield text-warning"></i>
+            简化Policy授权
+          </a>
+        </li>
+
+        <li>
+          <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder" ng-click="showAddress(sel.has[0])">
+            <i class="fa fa-download"></i>
+            获取地址
+          </a>
+        </li>
+      </ul>
+
+    </div>
+
+  </div>
+
+  <div class="col-sm-3 pd0">
+
+    <div class="input-group input-group-sm">
+      <input type="text" ng-model="sch.objectName" class="form-control" cleanable-input placeholder="按名称过滤">
+      <span class="input-group-addon">
+        <i class="fa fa-search"></i>
+      </span>
+    </div>
+
+  </div>
+  <div class="col-sm-3 pd0">
+    <span ng-include="'main/files/_/list-view-options.html'"></span>
+    <span class="f8 text-muted pull-right" style="line-height:30px;">区域:
+      {{currentInfo.region}}
+      &nbsp;</span>
+  </div>
+
+  <div class="clearfix"></div>
+</header>

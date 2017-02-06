@@ -1,0 +1,8 @@
+{
+  "name": "ossstore",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "main": "lib/index.js"
+}

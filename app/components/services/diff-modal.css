@@ -1,0 +1,12 @@
+
+.CodeMirror-merge, .CodeMirror-merge .CodeMirror {
+  height: 400px;
+}
+
+.CodeMirror-merge-2pane .CodeMirror-merge-gap {
+  display:none;
+}
+
+.CodeMirror-merge-2pane .CodeMirror-merge-pane {
+  width: 50%;
+}

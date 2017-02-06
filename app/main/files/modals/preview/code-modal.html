@@ -1,0 +1,44 @@
+
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">
+      <i style="color:orange" class="fa fa-folder"></i>
+      预览 <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span></h4>
+  </div>
+  <div class="modal-body pd0">
+
+    <header class="pd4 bg-success">
+      oss://{{bucketInfo.bucket}}/{{objectInfo.path}}
+    </header>
+
+    <div ng-if="objectInfo.size > MAX_SIZE" style="margin:40px auto 0" class="text-center">
+
+      文件大小: <code>{{objectInfo.size|sizeFormat}} > {{MAX_SIZE|sizeFormat}}</code>, 不支持直接打开，请下载到本地后打开。
+      <div class="clearfix">&nbsp;</div>
+      <div class="pd4 text-center">
+         <button class="btn btn-default" type="button" ng-click="showFn.download();cancel()"><i class="fa fa-download text-success"></i> 下载文件</button>
+      </div>
+
+      <div class="clearfix">&nbsp;</div>
+    </div>
+
+
+    <div ng-if="objectInfo.size <= MAX_SIZE"
+     ui-codemirror="{onLoad: codemirrorLoaded}"
+           ui-codemirror-opts="codeOptions"
+           ng-model="content" style="border:1px solid #ccc"></div>
+
+  </div>
+  <div class="modal-footer" style="text-align:left;">
+    <span ng-include="'main/files/modals/preview/preview-bar.html'"></span>
+
+    <button type="button" class="pull-right btn btn-default btn-sm mgl4" ng-click="cancel()">
+      <i class="glyphicon glyphicon-remove"></i>
+      取消</button>
+
+      <button type="button" class="pull-right btn btn-primary btn-sm" ng-click="saveContent()">
+        <i class="fa fa-save"></i>
+        保存</button>
+  </div>

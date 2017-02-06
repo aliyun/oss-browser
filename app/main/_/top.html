@@ -1,0 +1,30 @@
+<nav class="navbar navbar-default navbar-inverse my-nav" ng-controller="topCtrl">
+
+    <div class="navbar-header">
+
+        <a class="navbar-brand">
+          <img src="{{app.logo}}" style="display:inline-block;" width="40"/>
+          {{app.name}}
+        </a>
+        <label class="app-version">v{{app.version}}</label>
+    </div>
+
+
+    <div class="collapse navbar-collapse" id="collapse-1" ng-if="!hideTopNav">
+        <ul class="nav navbar-nav">
+            <li ng-class="{active:showTab==1}"><a href="#/"><i class="glyphicon glyphicon-folder-close"></i> 文件</a></li>
+            </li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right" style="margin-right:10px;">
+
+            <li><a href="" ng-click="showFavList()"><i class="fa fa-star"></i> 书签管理</a></li>
+            <li><a href="" ng-click="showSettings()"><i class="fa fa-cog"></i> 设置</a></li>
+            <li><a><i class="fa fa-user"></i>
+              <span ng-if="authInfo.desc">{{authInfo.desc}}({{authInfo.id.substring(0,3)+'..'}})</span>
+              <span ng-if="!authInfo.desc">{{authInfo.id}}</span>
+            </a></li>
+            <li><a href="" ng-click="logout()"><i class="fa fa-power-off"></i> 退出</a></li>
+        </ul>
+    </div>
+</nav>

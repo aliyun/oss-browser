@@ -1,0 +1,29 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="modal-title">
+    <i style="color:orange" class="fa fa-folder"></i>
+    预览
+    <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span>
+  </h4>
+</div>
+<div class="modal-body pd0">
+
+  <div class="bg-success pd4">oss://{{bucketInfo.bucket}}/{{objectInfo.path}}</div>
+
+  <div style="overflow:auto; " class="text-center pd4">
+    <div ng-if="isLoading" is-loading></div>
+    <img ng-if="!isLoading" ng-src="{{imgsrc}}" alt="图像"
+    style="max-width:600px;max-height:400px;"/>
+  </div>
+
+</div>
+<div class="modal-footer" style="text-align:left;">
+
+  <span ng-include="'main/files/modals/preview/preview-bar.html'"></span>
+
+  <button type="button" class="pull-right btn btn-default btn-sm" ng-click="cancel()">
+    <i class="glyphicon glyphicon-remove"></i>
+    关闭</button>
+</div>

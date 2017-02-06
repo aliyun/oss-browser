@@ -1,0 +1,32 @@
+<div ng-include="'main/_/top.html'"></div>
+
+<div>
+
+  <div ng-include="'main/files/_/address-bar.html'"></div>
+
+
+  <div ng-if="ref.isBucketList">
+    <div ng-include="'main/files/_/bucket-toolbar.html'"></div>
+  </div>
+  <div ng-if="!ref.isBucketList">
+    <div ng-include="'main/files/_/file-toolbar.html'"></div>
+  </div>
+
+
+  <div auto-height="-130" class="file-list-box">
+     <div ng-if="isLoading" is-loading></div>
+
+    <div ng-if="ref.isBucketList">
+      <div ng-include="'main/files/_/bucket-list.html'"></div>
+    </div>
+
+    <div ng-if="!ref.isBucketList" drop-zone="handlerDrop">
+      <div ng-include="'main/files/_/file-list.html'"  auto-height="-136"></div>
+
+    </div>
+
+  </div>
+
+  <div ng-include="'main/files/transfer/frame.html'"></div>
+
+</div>
