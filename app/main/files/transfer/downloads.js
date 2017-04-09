@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('web')
-  .controller('transferDownloadsCtrl', ['$scope','$timeout','$interval','ossDownloadManager','Toast','Dialog','safeApply',
-    function($scope,$timeout,$interval,ossDownloadManager,Toast, Dialog,safeApply){
+  .controller('transferDownloadsCtrl', ['$scope','$timeout','$interval','ossDownloadManager','DelayDone','Toast','Dialog','safeApply',
+    function($scope,$timeout,$interval,ossDownloadManager,DelayDone,Toast, Dialog,safeApply){
 
     angular.extend($scope, {
       showRemoveItem: showRemoveItem,
@@ -44,6 +44,7 @@ angular.module('web')
         }
       }
       ossDownloadManager.saveProg();
+      $scope.calcTotalProg();
       safeApply($scope);
     }
 
@@ -55,6 +56,8 @@ angular.module('web')
           i--;
         }
       }
+
+      $scope.calcTotalProg(); 
     }
 
 
@@ -68,36 +71,49 @@ angular.module('web')
             arr.splice(i, 1);
             i--;
           }
+          $scope.calcTotalProg();
           ossDownloadManager.saveProg();
         }
       }, 1);
     }
 
-
+    var  stopFlag = false;
     function stopAll() {
 
       var arr = $scope.lists.downloadJobList;
+      stopFlag = true;
 
-      angular.forEach(arr, function (n) {
+      Toast.info('正在停止...');
+
+      angular.forEach(arr, function(n){
         if (n.status == 'running' || n.status == 'waiting') n.stop();
       });
+      Toast.success('停止成功');
 
       $timeout(function(){
         ossDownloadManager.saveProg();
-      },100);
+      },100); 
+      
     }
 
 
     function startAll(){
-      var arr = $scope.lists.downloadJobList;
+      var arr = $scope.lists.downloadJobList; 
+       stopFlag = false;
+      //串行 
+      DelayDone.seriesRun(arr, function eachItemFn(n, fn){
+        if( stopFlag) return;
 
-      angular.forEach(arr, function (n) {
         if (n.status == 'stopped' || n.status == 'failed'){
-          n.wait();
+          n.wait(); 
         }
-      });
+        ossDownloadManager.checkStart();
+        fn();
+      }, function doneFy(){
+        
+      }); 
 
-      ossDownloadManager.checkStart();
+      
     }
 
   }])

@@ -10,7 +10,7 @@ function($scope ,ossUploadManager,ossDownloadManager, Toast){
      },
 
      totalProg: {loaded:0,total:0},
-     totalNum: {running:0,total:0},
+     totalNum: {running:0,total:0,  upDone: 0, downDone: 0},
      calcTotalProg: calcTotalProg,
 
      transTab: 1,
@@ -68,7 +68,7 @@ function($scope ,ossUploadManager,ossDownloadManager, Toast){
 
 
    function calcTotalProg(){
-       var c=0;
+       var c=0, c2=0;
        angular.forEach($scope.lists.uploadJobList,function(n){
          if(n.status=='running' || n.status=='waiting' || n.status=='stopped'){
            c++;
@@ -76,11 +76,17 @@ function($scope ,ossUploadManager,ossDownloadManager, Toast){
        });
        angular.forEach($scope.lists.downloadJobList,function(n){
          if(n.status=='running' || n.status=='waiting' || n.status=='stopped'){
-           c++;
+           c2++;
          }
        });
-       $scope.totalNum.running=c;
-       $scope.totalNum.total=$scope.lists.uploadJobList.length + $scope.lists.downloadJobList.length;
+      //  $scope.totalNum.upRunning = c;
+      //  $scope.totalNum.downRunning = c; 
+       $scope.totalNum.running=c + c2;
+
+       $scope.totalNum.upDone = $scope.lists.uploadJobList.length-c;
+       $scope.totalNum.downDone = $scope.lists.downloadJobList.length-c2;
+       
+       $scope.totalNum.total = $scope.lists.uploadJobList.length + $scope.lists.downloadJobList.length;
      }
 
 }]);

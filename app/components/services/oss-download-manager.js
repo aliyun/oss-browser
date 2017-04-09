@@ -1,5 +1,6 @@
 angular.module('web')
-  .factory('ossDownloadManager', ['$q', '$state', 'AuthInfo', 'ossSvs', 'Toast', 'Const', 'DelayDone', 'safeApply', 'settingsSvs', function ($q, $state, AuthInfo, ossSvs, Toast, Const, DelayDone, safeApply, settingsSvs) {
+  .factory('ossDownloadManager', ['$q', '$state', '$timeout', 'AuthInfo', 'ossSvs', 'Toast', 'Const', 'DelayDone', 'safeApply', 'settingsSvs',
+   function ($q, $state, $timeout, AuthInfo, ossSvs, Toast, Const, DelayDone, safeApply, settingsSvs) {
 
     var OssStore = require('./node/ossstore');
     var fs = require('fs');
@@ -37,6 +38,9 @@ angular.module('web')
       $scope.calcTotalProg();
       safeApply($scope);
       checkStart();
+
+      //save
+      saveProg();
 
       job.on('partcomplete', function (prog) {
         safeApply($scope);
@@ -122,6 +126,10 @@ angular.module('web')
           if (!fs.existsSync(filePath)) {
             //如果不存在， mkdir
             fs.mkdir(filePath, function (err) {
+              if(err){
+                Toast.error('创建目录['+filePath+']失败:'+err.message);
+                return;
+              }
               //遍历 oss 目录
               ossSvs.listFiles(ossInfo.region, ossInfo.bucket, ossInfo.path).then(function (arr2) {
                 arr2.forEach(function (n) {
@@ -129,7 +137,9 @@ angular.module('web')
                   n.bucket = ossInfo.bucket;
                 });
                 loop(arr2, function (jobs) {
-                  callFn(jobs);
+                  $timeout(function(){
+                    callFn(jobs);
+                  },1);
                 });
               });
             });
@@ -141,7 +151,9 @@ angular.module('web')
                 n.bucket = ossInfo.bucket;
               });
               loop(arr2, function (jobs) {
-                callFn(jobs);
+                $timeout(function(){
+                  callFn(jobs);
+                },1);
               });
             });
           }
@@ -160,7 +172,9 @@ angular.module('web')
             }
           });
           addEvents(job);
-          callFn([job]);
+          $timeout(function(){
+            callFn([job]);
+          },1);
         }
       }
     }
@@ -204,12 +218,12 @@ angular.module('web')
       });
 
       //console.log('request save:', t);
-      DelayDone('save_download_prog', 1000, function () {
+      DelayDone.delayRun('save_download_prog', 1000, function () {
         //console.log('save:', t);
 
         fs.writeFileSync(getDownProgFilePath(), JSON.stringify(t, ' ', 2));
         $scope.calcTotalProg();
-      });
+      },20);
     }
 
     /**
@@ -227,10 +241,8 @@ angular.module('web')
     //下载进度保存路径
     function getDownProgFilePath() {
       var folder = path.join(os.homedir(), '.oss-browser');
-      try {
-        fs.statSync(folder).isDirectory();
-      } catch (e) {
-        fs.mkdirSync(folder);
+      if(!fs.existsSync(folder)){
+          fs.mkdirSync(folder);
       }
       var username = AuthInfo.get().id || '';
       return path.join(folder, 'downprog_' + username + '.json');

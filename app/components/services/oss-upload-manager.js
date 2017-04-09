@@ -1,6 +1,6 @@
 angular.module('web')
-  .factory('ossUploadManager', ['$q', '$state', 'ossSvs', 'AuthInfo', 'Toast', 'Const', 'DelayDone', 'safeApply', 'settingsSvs',
-    function ($q, $state, ossSvs, AuthInfo, Toast, Const, DelayDone, safeApply, settingsSvs) {
+  .factory('ossUploadManager', ['$q', '$state','$timeout', 'ossSvs', 'AuthInfo', 'Toast', 'Const', 'DelayDone', 'safeApply', 'settingsSvs',
+    function ($q, $state, $timeout, ossSvs, AuthInfo, Toast, Const, DelayDone, safeApply, settingsSvs) {
 
       var OssStore = require('./node/ossstore');
       var fs = require('fs');
@@ -35,9 +35,12 @@ angular.module('web')
 
       function addEvents(job) {
         $scope.lists.uploadJobList.push(job);
-        $scope.calcTotalProg();
+        //$scope.calcTotalProg();
         safeApply($scope);
         checkStart();
+
+        //save
+        saveProg();
 
         job.on('partcomplete', function (prog) {
           safeApply($scope);
@@ -125,7 +128,7 @@ angular.module('web')
           function _dig() {
             var n = filePaths[c];
             var dirPath = path.dirname(n);
- 
+           
             dig(filePaths[c], dirPath, function (jobs) {
               t = t.concat(jobs);
               c++;
@@ -144,7 +147,7 @@ angular.module('web')
 
           //串行
           function inDig() {
-            //console.log('---loop:',path.join(parentPath, arr[c]))
+            
             dig(path.join(parentPath, arr[c]), dirPath,  function (jobs) {
               t = t.concat(jobs);
               c++;
@@ -155,6 +158,7 @@ angular.module('web')
         }
 
         function dig(absPath, dirPath,  callFn) {
+           
           var fileName = path.basename(absPath);
           var filePath = path.join(bucketInfo.key, path.relative(dirPath, absPath)).replace(/\\/g, '/');
 
@@ -179,7 +183,11 @@ angular.module('web')
               } else {
 
                 loop(absPath, dirPath,  arr, function (jobs) {
-                  if (callFn) callFn(jobs);
+                  
+                  $timeout(function(){
+                    callFn(jobs);
+                  },1);
+                
                 });
               }
             });
@@ -198,7 +206,11 @@ angular.module('web')
               }
             });
             addEvents(job);
-            callFn([job]);
+             
+            $timeout(function(){
+              callFn([job]);
+            },1);
+             
           }
         }
       }
@@ -256,11 +268,11 @@ angular.module('web')
         });
 
         //console.log('request save upload:', t);
-        DelayDone('save_upload_prog', 1000, function () {
-          //console.log('save upload:', t);
+        DelayDone.delayRun('save_upload_prog', 1000, function () {
+          //console.log('-save')
           fs.writeFileSync(getUpProgFilePath(), JSON.stringify(t, ' ', 2));
           $scope.calcTotalProg();
-        });
+        }, 20);
       }
 
       /**
@@ -278,11 +290,10 @@ angular.module('web')
       //上传进度保存路径
       function getUpProgFilePath() {
         var folder = path.join(os.homedir(), '.oss-browser');
-        try {
-          fs.statSync(folder).isDirectory();
-        } catch (e) {
-          fs.mkdirSync(folder);
+        if(!fs.existsSync(folder)){
+           fs.mkdirSync(folder);
         }
+      
         var username = AuthInfo.get().id || '';
         return path.join(folder, 'upprog_' + username + '.json');
       }

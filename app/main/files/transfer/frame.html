@@ -1,7 +1,8 @@
 
 <section ng-controller="transferFrameCtrl">
-  <div ng-hide="transVisible" ng-click="toggleTransVisible(true)" class="trans-dock-btn">
-      {{totalNum.running}}
+  <div ng-hide="transVisible" class="trans-dock-btn">
+      <a href=""  ng-click="toggleTransVisible(true);transTab = 1">上传: {{totalNum.upDone}}/{{lists.uploadJobList.length}}</a>
+      <a href=""  ng-click="toggleTransVisible(true);transTab = 2">下载: {{totalNum.downDone}}/{{lists.downloadJobList.length}}</a>
   </div>
 
   <div ng-show="transVisible" class="trans-frame" ng-init="transTab=1">
@@ -9,12 +10,12 @@
       <ul class="nav nav-tabs trans-nav">
           <li role="presentation" ng-class="{active:transTab==1}">
             <a href="#" ng-click="transTab=1">上传
-                <label class="badge">{{lists.uploadJobList.length}}</label>
+                <label class="badge">{{totalNum.upDone}}/{{lists.uploadJobList.length}}</label>
             </a>
           </li>
           <li role="presentation" ng-class="{active:transTab==2}">
             <a href="#" ng-click="transTab=2">下载
-              <label class="badge">{{lists.downloadJobList.length}}</label>
+              <label class="badge">{{totalNum.downDone}}/{{lists.downloadJobList.length}}</label>
             </a>
           </li>
 
