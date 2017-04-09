@@ -1,6 +1,6 @@
 angular.module('web')
   .factory('ossUploadManager', ['$q', '$state', 'ossSvs', 'AuthInfo', 'Toast', 'Const', 'DelayDone', 'safeApply', 'settingsSvs',
-    function ($q, $state, ossSvs,  AuthInfo, Toast, Const, DelayDone, safeApply, settingsSvs) {
+    function ($q, $state, ossSvs, AuthInfo, Toast, Const, DelayDone, safeApply, settingsSvs) {
 
       var OssStore = require('./node/ossstore');
       var fs = require('fs');
@@ -39,7 +39,6 @@ angular.module('web')
         safeApply($scope);
         checkStart();
 
-
         job.on('partcomplete', function (prog) {
           safeApply($scope);
           //save
@@ -61,7 +60,8 @@ angular.module('web')
         job.on('complete', function () {
           concurrency--;
           checkStart();
-          $scope.$emit('needrefreshfilelists');
+          checkNeedRefreshFileList(job.to.bucket, job.to.key);
+          //$scope.$emit('needrefreshfilelists');
         });
         job.on('error', function (err) {
           console.error(err);
@@ -91,6 +91,19 @@ angular.module('web')
         }
       }
 
+      function checkNeedRefreshFileList(bucket, key){
+        
+        if($scope.currentInfo.bucket == bucket){
+
+          var p = path.dirname(key) + '/';
+          p = (p == './') ? '' : p;
+
+          if($scope.currentInfo.key == p){
+             $scope.$emit('needrefreshfilelists');
+          }
+        }
+      }
+
       /**
        * 上传
        * @param filePaths []  {array<string>}  有可能是目录，需要遍历
@@ -101,33 +114,76 @@ angular.module('web')
 
         var authInfo = AuthInfo.get();
 
-        var t = [];
-        angular.forEach(filePaths, function (n) {
-          t = t.concat(dig(n, path.dirname(n)));
-        });
-        //console.log(t);
+        digArr(filePaths, fn);
+        return;
 
-        angular.forEach(t,function(n){
-          addEvents(n);
-        });
-        return fn(t);
+        function digArr(filePaths, fn) {
+          var t = [];
+          var len = filePaths.length;
+          var c = 0;
 
+          function _dig() {
+            var n = filePaths[c];
+            var dirPath = path.dirname(n);
+ 
+            dig(filePaths[c], dirPath, function (jobs) {
+              t = t.concat(jobs);
+              c++;
+              if (c >= len) fn(t);
+              else _dig();
+            });
+          }
+          _dig();
+        }
 
-        function dig(absPath, dirPath) {
+        function loop(parentPath, dirPath,  arr, callFn) {
+          var t = [];
+          var len = arr.length;
+          var c = 0;
+          inDig();
+
+          //串行
+          function inDig() {
+            //console.log('---loop:',path.join(parentPath, arr[c]))
+            dig(path.join(parentPath, arr[c]), dirPath,  function (jobs) {
+              t = t.concat(jobs);
+              c++;
+              if (c >= len) callFn(t);
+              else inDig();
+            });
+          }
+        }
+
+        function dig(absPath, dirPath,  callFn) {
           var fileName = path.basename(absPath);
+          var filePath = path.join(bucketInfo.key, path.relative(dirPath, absPath)).replace(/\\/g, '/');
 
           if (fs.statSync(absPath).isDirectory()) {
             //创建目录
-            ossSvs.createFolder(bucketInfo.region, bucketInfo.bucket, path.join(bucketInfo.key, fileName) + '/');
+            ossSvs.createFolder(bucketInfo.region, bucketInfo.bucket, filePath+ '/').then(function(){
+              //判断是否刷新文件列表
+              checkNeedRefreshFileList(bucketInfo.bucket, filePath+ '/');
+            });
 
             //递归遍历目录
-            var t = [];
-            var arr = fs.readdirSync(absPath);
-            arr.forEach(function (fname) {
-              var ret = dig(path.join(absPath, fname), dirPath);
-              t = t.concat(ret);
+            // var t = [];
+            // var arr = fs.readdirSync(absPath);
+            // arr.forEach(function (fname) {
+            //   var ret = dig(path.join(absPath, fname), dirPath);
+            //   t = t.concat(ret);
+            // });
+
+            fs.readdir(absPath, function (err, arr) {
+              if (err) {
+                console.log(err.stack);
+              } else {
+
+                loop(absPath, dirPath,  arr, function (jobs) {
+                  if (callFn) callFn(jobs);
+                });
+              }
             });
-            return t;
+
           } else {
             //文件
             var job = createJob(authInfo, {
@@ -138,10 +194,11 @@ angular.module('web')
               },
               to: {
                 bucket: bucketInfo.bucket,
-                key: path.join(bucketInfo.key, path.relative(dirPath, absPath))
+                key: filePath
               }
             });
-            return [job];
+            addEvents(job);
+            callFn([job]);
           }
         }
       }
@@ -201,7 +258,7 @@ angular.module('web')
         //console.log('request save upload:', t);
         DelayDone('save_upload_prog', 1000, function () {
           //console.log('save upload:', t);
-          fs.writeFileSync(getUpProgFilePath(), JSON.stringify(t, ' ',2));
+          fs.writeFileSync(getUpProgFilePath(), JSON.stringify(t, ' ', 2));
           $scope.calcTotalProg();
         });
       }
@@ -220,10 +277,10 @@ angular.module('web')
 
       //上传进度保存路径
       function getUpProgFilePath() {
-        var folder = path.join(os.homedir(),'.oss-browser');
-        try{
+        var folder = path.join(os.homedir(), '.oss-browser');
+        try {
           fs.statSync(folder).isDirectory();
-        }catch(e){
+        } catch (e) {
           fs.mkdirSync(folder);
         }
         var username = AuthInfo.get().id || '';

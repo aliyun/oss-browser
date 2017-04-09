@@ -16,6 +16,14 @@ class UploadJob extends Base {
    *    config.checkPoints  {object}
    *    config.status     {string} default 'waiting'
    *    config.prog   {object}  {loaded, total}
+   *
+   * events:
+   *    statuschange(state) 'running'|'waiting'|'stopped'|'failed'|'finished'
+   *    stopped
+   *    error  (err)
+   *    complete
+   *    progress ({loaded:0, total: 1200})
+   *    partcomplete  ({done: c, total: total}, checkPoint)
    */
   constructor(ossClient, config) {
     super();
