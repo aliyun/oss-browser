@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('web')
-  .controller('transferUploadsCtrl', ['$scope', '$timeout', '$interval', 'ossUploadManager', 'Toast','Dialog',
-    function ($scope, $timeout, $interval, ossUploadManager, Toast, Dialog) {
+  .controller('transferUploadsCtrl', ['$scope', '$timeout', '$interval', 'DelayDone', 'ossUploadManager', 'Toast','Dialog',
+    function ($scope, $timeout, $interval, DelayDone, ossUploadManager, Toast, Dialog) {
 
       angular.extend($scope, {
         showRemoveItem: showRemoveItem,
@@ -39,6 +39,7 @@ angular.module('web')
           }
         }
         ossUploadManager.saveProg();
+        $scope.calcTotalProg();
       }
 
       function clearAllCompleted() {
@@ -49,6 +50,7 @@ angular.module('web')
             i--;
           }
         }
+        $scope.calcTotalProg();
       }
 
       function clearAll() {
@@ -62,34 +64,49 @@ angular.module('web')
               arr.splice(i, 1);
               i--;
             }
-
+            $scope.calcTotalProg();
             ossUploadManager.saveProg();
           }
         }, 1);
       }
 
+
+      var stopFlag = false;
       function stopAll() {
         var arr = $scope.lists.uploadJobList;
+        stopFlag = true;
+
+        Toast.info('正在停止...');
+
         angular.forEach(arr, function (n) {
           if (n.status == 'running' || n.status == 'waiting') n.stop();
         });
+        Toast.success('停止成功');
 
         $timeout(function () {
           ossUploadManager.saveProg();
         }, 100);
+
+        
       }
 
       function startAll() {
         var arr = $scope.lists.uploadJobList;
+        stopFlag = false;
+        //串行
+        DelayDone.seriesRun(arr, function(n, fn){
+          if(stopFlag)return;
 
-        angular.forEach(arr, function (n) {
-          if (n.status == 'stopped' || n.status == 'failed') {
-            n.wait();
+          if (n.status == 'stopped' || n.status == 'failed'){
+            n.wait(); 
           }
+          
+          ossUploadManager.checkStart();
+
+          fn();
+        }, function(){
+          //ossUploadManager.checkStart();
         });
-
-        ossUploadManager.checkStart();
       }
-
     }
   ]);

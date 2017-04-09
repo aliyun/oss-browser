@@ -266,11 +266,11 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
   });
 
   function createFileIfNotExists(p, fn){
-    try{
-      fs.statSync(p);
+    if(!fs.existsSync(p)){
+      //if todo: mkdir
+       fs.writeFile(tmpName, '', fn);
+    }else{
       fn();
-    }catch(e){
-      fs.writeFile(tmpName, '',fn);
     }
   }
 
@@ -373,11 +373,19 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
           if (completedCount == chunkNum) {
 
             //util.closeFD(keepFd);
-            fs.renameSync(tmpName,  self.to.path);
-            self._changeStatus('finished');
-            //self.emit('progress', progCp);
-            self.emit('partcomplete', {total:chunkNum, done:completedCount}, checkPoints);
-            self.emit('complete');
+            fs.rename(tmpName,  self.to.path, function(err){
+              if(err){
+                console.log(err);
+              }
+              else{
+                  self._changeStatus('finished');
+                  //self.emit('progress', progCp);
+                  self.emit('partcomplete', {total:chunkNum, done:completedCount}, checkPoints);
+                  self.emit('complete');
+              }
+              
+            });
+            
           }
           else {
             //self.emit('progress', progCp);
