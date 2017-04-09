@@ -25,9 +25,9 @@ if (process.platform == 'darwin') {
 function createWindow() {
   // Create the browser window.   http://electron.atom.io/docs/api/browser-window/
   win = new BrowserWindow({
-    width: 1000,
+    width: 1020,
     height: 700,
-    minWidth: 1000,
+    minWidth: 1020,
     minHeight: 660,
     title: "OSS浏览器",
     icon: path.join(__dirname, 'dist/icons', 'icon.ico')

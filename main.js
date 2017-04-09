@@ -25,9 +25,9 @@ if (process.platform == 'darwin') {
 function createWindow() {
   // Create the browser window.   http://electron.atom.io/docs/api/browser-window/
   win = new BrowserWindow({
-    width: 1000,
+    width: 1020,
     height: 700,
-    minWidth: 1000,
+    minWidth: 1020,
     minHeight: 660,
     title: "OSS浏览器",
     icon: path.join(__dirname, 'icons', 'icon.ico')
@@ -53,10 +53,10 @@ function createWindow() {
 
   // drawin 就是 MacOS
   if (process.platform === 'darwin') {
-      // Create the Application's main menu
-       let template =  getMenuTemplate();
-      //注册菜单, 打包后可以复制, 但是不能打开 devTools
-      Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+    // Create the Application's main menu
+    let template = getMenuTemplate();
+    //注册菜单, 打包后可以复制, 但是不能打开 devTools
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
   }
 
 }
@@ -100,23 +100,49 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-function getMenuTemplate(){
+function getMenuTemplate() {
   return [{
     label: "Application",
-    submenu: [
-        { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
-        { type: "separator" },
-        { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
-    ]}, {
+    submenu: [{
+      label: "About Application",
+      selector: "orderFrontStandardAboutPanel:"
+    }, {
+      type: "separator"
+    }, {
+      label: "Quit",
+      accelerator: "Command+Q",
+      click: function() {
+        app.quit();
+      }
+    }]
+  }, {
     label: "Edit",
-    submenu: [
-        { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
-        { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
-        { type: "separator" },
-        { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-        { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-        { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-        { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
-    ]}
-  ];
+    submenu: [{
+      label: "Undo",
+      accelerator: "CmdOrCtrl+Z",
+      selector: "undo:"
+    }, {
+      label: "Redo",
+      accelerator: "Shift+CmdOrCtrl+Z",
+      selector: "redo:"
+    }, {
+      type: "separator"
+    }, {
+      label: "Cut",
+      accelerator: "CmdOrCtrl+X",
+      selector: "cut:"
+    }, {
+      label: "Copy",
+      accelerator: "CmdOrCtrl+C",
+      selector: "copy:"
+    }, {
+      label: "Paste",
+      accelerator: "CmdOrCtrl+V",
+      selector: "paste:"
+    }, {
+      label: "Select All",
+      accelerator: "CmdOrCtrl+A",
+      selector: "selectAll:"
+    }]
+  }];
 }
