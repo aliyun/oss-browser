@@ -1,6 +1,6 @@
 <div ng-if="!isLoading && (!objects || objects.length==0)" no-data></div>
 
-<div ng-if="!isLoading && objects.length>0">
+<div ng-if="!isLoading && objects.length>0" style="height:100%">
 
   <table class="table table-condensed table-striped" ng-if="ref.isListView">
     <tr>
@@ -60,7 +60,7 @@
     </tr>
   </table>
 
-  <div ng-if="!ref.isListView" class="pd10"
+  <div ng-if="!ref.isListView" class="pd10" style="height:100%"
   ng-click="sel.all=false;selectAll();$event.stopPropagation()">
 
     <div ng-repeat="item in objects|filter:{name:sch.objectName}"
