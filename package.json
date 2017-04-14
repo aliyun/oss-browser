@@ -1,6 +1,6 @@
 {
   "name": "oss-browser",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "main": "main-dev.js",
   "scripts": {
     "dev": "npm-run-all --parallel watch dev:run",
