@@ -1,7 +1,7 @@
 
 angular.module('web')
-  .controller('filesCtrl', ['$scope', '$rootScope', '$uibModal', '$timeout', 'ossSvs','fileSvs','safeApply','Toast', 'Dialog',
-    function ($scope, $rootScope, $modal, $timeout, ossSvs,fileSvs, safeApply,Toast, Dialog) {
+  .controller('filesCtrl', ['$scope', '$rootScope', '$uibModal', '$timeout','AuthInfo', 'ossSvs','fileSvs','safeApply','Toast', 'Dialog',
+    function ($scope, $rootScope, $modal, $timeout, AuthInfo, ossSvs,fileSvs, safeApply,Toast, Dialog) {
 
       angular.extend($scope, {
         showTab: 1,
@@ -80,16 +80,38 @@ angular.module('web')
       init();
 
       function init() {
-        $scope.ref.isBucketList = true;
-        listBuckets(function(){
-          addEvents();
-          $scope.$broadcast('filesViewReady');
-        });
+        var authInfo = AuthInfo.get();
+       
+        if(authInfo.osspath){
+            $scope.ref.isBucketList = false;
+            //bucketMap
+            $rootScope.bucketMap = {};
+            var bucket = ossSvs.parseOSSPath(authInfo.osspath).bucket;
+            $rootScope.bucketMap[bucket] = {region: authInfo.region};
+
+
+            $timeout(function(){
+              addEvents();
+              $rootScope.$broadcast('ossAddressChange', authInfo.osspath); 
+              $scope.$broadcast('filesViewReady'); 
+            });
+            
+        }
+        else{ 
+      
+          $scope.ref.isBucketList = true;
+          listBuckets(function(){
+            addEvents();
+            $scope.$broadcast('filesViewReady');
+          });
+        }  
+      
+        
       }
 
       function addEvents(){
         $scope.$on('ossAddressChange', function(e, addr, forceRefresh) {
-
+ 
           var info = ossSvs.parseOSSPath(addr);
 
           if(info.key){
@@ -104,9 +126,10 @@ angular.module('web')
           }
 
           $scope.currentInfo = info;
-
-
+ 
+ 
           if(info.bucket){
+
             //has bucket , list objects
             $scope.currentBucket = info.bucket;
             info.region = $rootScope.bucketMap[info.bucket].region;
@@ -142,9 +165,10 @@ angular.module('web')
 
       function goIn(bucket, prefix){
         var ossPath = 'oss://';
+
         if(bucket){
           ossPath = 'oss://'+bucket +'/'+ (prefix||'');
-        }
+        } 
         $rootScope.$broadcast('goToOssAddress', ossPath);
       }
 
@@ -192,6 +216,7 @@ angular.module('web')
 
         },function(err){
           $scope.isLoading = false;
+          if(fn)fn();
         });
       }
 

@@ -4,7 +4,7 @@
 <div>
 
     <div class="clearfix" style="height:40px;"></div>
-    <div class="col-sm-6 col-sm-offset-3">
+    <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default shadow10">
             <div class="panel-heading">登入</div>
             <div class="panel-body">
@@ -26,11 +26,31 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="input3" class="col-sm-4 control-label">备注(最多10个字):</label>
+                    <div class="form-group" ng-class="{'has-error': !form1.osspath.$valid }">
+                        <label for="input3" class="col-sm-4 control-label"> OSS路径(可选):</label>
                         <div class="col-sm-8">
-                            <input type="text" ng-model="item.desc" maxlength="10"
-                             class="form-control" id="input3" placeholder="可以为空，最多10个字">
+                            <input type="text" name="osspath" ng-pattern="reg_osspath" ng-model="item.osspath"
+                             class="form-control" id="input3" placeholder="可选">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" ng-if="item.osspath">
+                        <label for="input4" class="col-sm-4 control-label"><span class="red">*</span> 区域:</label>
+                        <div class="col-sm-8">
+                            <select required ng-model="item.region" 
+                             class="form-control" id="input4" placeholder="可选"
+                             ng-options="rg.id as rg.label for rg in regions">
+                             </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="input5" class="col-sm-4 control-label">备注(最多50个字):</label>
+                        <div class="col-sm-8">
+                            <input type="text" ng-model="item.desc" maxlength="50"
+                             class="form-control" id="input5" placeholder="可以为空，最多50个字">
                         </div>
                     </div>
 
@@ -64,7 +84,9 @@
     </div>
 
     <div class="clearfix"></div>
-    <div ng-show="showHis=='YES'">
+
+
+    <div class="col-xs-12" ng-show="showHis=='YES'">
     <header>
       <h4 class="col-xs-6">AK历史</h4>
       <div class="col-xs-6">
