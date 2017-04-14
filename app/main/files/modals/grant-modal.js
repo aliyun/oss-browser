@@ -62,11 +62,12 @@ angular.module('web')
         var actions = [];
         if(privType=='readOnly'){
           actions = ['oss:GetObject',
-          'oss:HeadObject',
-          'oss:CopyObject',
-          'oss:UploadPartCopy',
-          'oss:ListObjects'
-        ];
+            'oss:HeadObject',
+            "oss:GetObjectMeta",
+            "oss:GetObjectACL",
+            'oss:ListObjects',
+            'oss:GetSymlink'
+          ];
         }
         else{
           actions = ['oss:*'];
@@ -85,22 +86,21 @@ angular.module('web')
               ]
             });
 
-            if(privType=='all'){
-              t.push({
-                "Effect": "Allow",
-                "Action": [
-                  "oss:ListObjects"
-                ],
-                "Resource": [
-                  "acs:oss:*:*:" + bucket
-                ],
-                "Condition": {
-                  "StringLike": {
-                    "oss:Prefix": key + "*"
-                  }
+            
+            t.push({
+              "Effect": "Allow",
+              "Action": [
+                "oss:ListObjects"
+              ],
+              "Resource": [
+                "acs:oss:*:*:" + bucket
+              ],
+              "Condition": {
+                "StringLike": {
+                  "oss:Prefix": key + "*"
                 }
-              });
-            }
+              }
+            }); 
 
           } else {
             //文件所有权限

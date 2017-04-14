@@ -2,10 +2,10 @@ angular.module('web')
   .controller('addressBarCtrl', ['$scope','Fav', 'AuthInfo','Toast','settingsSvs',
   function ($scope,Fav, AuthInfo,Toast,settingsSvs) {
 
-    var DEF_ADDR = 'oss://';
+    var DEF_ADDR =  'oss://';
 
     angular.extend($scope, {
-      address: DEF_ADDR,
+      address: AuthInfo.get().osspath || DEF_ADDR,
       goUp: goUp,
       go: go,
       goHome: goHome,
@@ -116,9 +116,11 @@ angular.module('web')
 
 
     $scope.$on('filesViewReady',function(){
-      goHome();
+ 
 
-      $scope.$on('goToOssAddress', function(e, addr){
+      goHome(); 
+
+      $scope.$on('goToOssAddress', function(e, addr){  
         $scope.address = addr;
         go();
       });
@@ -126,6 +128,7 @@ angular.module('web')
 
     function goHome(){
       $scope.address = getDefaultAddress();
+      
       go(true);
     }
 
@@ -136,7 +139,7 @@ angular.module('web')
     }
     function getDefaultAddress(){
       var info = AuthInfo.get();
-      return info['address'] || DEF_ADDR;
+      return info['osspath'] || info['address'] || DEF_ADDR;
     }
 
     //修正 address

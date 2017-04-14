@@ -5,9 +5,12 @@ angular.module('web')
 
       var KEY_REMEMBER = Const.KEY_REMEMBER;
       var SHOW_HIS = Const.SHOW_HIS;
+      var regions = angular.copy(Const.regions);
 
       angular.extend($scope, {
         hideTopNav: 1,
+        reg_osspath: /^oss\:\/\/[^\/]+\//,
+        regions: regions,
         onSubmit: onSubmit,
         showCleanHistories: showCleanHistories,
         useHis: useHis,
@@ -63,6 +66,7 @@ angular.module('web')
 
 
       function onSubmit(form1){
+    
         if(!form1.$valid)return;
 
         localStorage.setItem(KEY_REMEMBER,$scope.remember);
