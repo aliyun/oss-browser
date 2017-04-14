@@ -11,9 +11,20 @@ angular.module('web')
         var df = $q.defer();
 
         if (data.osspath) {
-          
-          AuthInfo.save(data);
-          df.resolve();
+
+          var info = ossSvs.parseOSSPath(data.osspath);
+          data.bucket = info.bucket;
+       
+          ossSvs.getClient(data).list({prefix: info.key}).then(function(result){
+
+            //登录成功
+            AuthInfo.save(data);
+            df.resolve();
+
+          }, function(err){
+            //失败
+             df.reject(err);
+          }); 
 
         } else {
           ossSvs.getClient(data).listBuckets().then(function(result) {
