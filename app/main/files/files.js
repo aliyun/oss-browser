@@ -132,6 +132,10 @@ angular.module('web')
 
             //has bucket , list objects
             $scope.currentBucket = info.bucket;
+            if(!$rootScope.bucketMap[info.bucket]){
+              Toast.error('No permission');
+              return;
+            }
             info.region = $rootScope.bucketMap[info.bucket].region;
             $scope.ref.isBucketList = false;
             listFiles(info, function(){
