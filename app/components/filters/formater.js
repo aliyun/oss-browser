@@ -173,8 +173,12 @@ angular.module('web')
   };
 })
 .filter('fileIcon', ['fileSvs', function(fileSvs){
-  return function(name){
-    var info = fileSvs.getFileType(name);
+  return function(item){
+    if(item.storageClass=='Archive'){
+      //restore
+      return 'square';
+    }
+    var info = fileSvs.getFileType(item);
 
     if(info.type=='picture') return 'file-image-o';
     if(info.type=='doc'){

@@ -95,7 +95,7 @@ angular.module('web')
       }
 
       function checkNeedRefreshFileList(bucket, key){
-        
+
         if($scope.currentInfo.bucket == bucket){
 
           var p = path.dirname(key) + '/';
@@ -128,7 +128,7 @@ angular.module('web')
           function _dig() {
             var n = filePaths[c];
             var dirPath = path.dirname(n);
-           
+
             dig(filePaths[c], dirPath, function (jobs) {
               t = t.concat(jobs);
               c++;
@@ -147,7 +147,7 @@ angular.module('web')
 
           //串行
           function inDig() {
-            
+
             dig(path.join(parentPath, arr[c]), dirPath,  function (jobs) {
               t = t.concat(jobs);
               c++;
@@ -158,7 +158,7 @@ angular.module('web')
         }
 
         function dig(absPath, dirPath,  callFn) {
-           
+
           var fileName = path.basename(absPath);
           var filePath = path.join(bucketInfo.key, path.relative(dirPath, absPath)).replace(/\\/g, '/');
 
@@ -183,11 +183,11 @@ angular.module('web')
               } else {
 
                 loop(absPath, dirPath,  arr, function (jobs) {
-                  
+
                   $timeout(function(){
                     callFn(jobs);
                   },1);
-                
+
                 });
               }
             });
@@ -206,11 +206,11 @@ angular.module('web')
               }
             });
             addEvents(job);
-             
+
             $timeout(function(){
               callFn([job]);
             },1);
-             
+
           }
         }
       }
@@ -263,6 +263,7 @@ angular.module('web')
             to: n.to,
             from: n.from,
             status: n.status,
+            message: n.message,
             prog: n.prog
           });
         });
@@ -293,7 +294,7 @@ angular.module('web')
         if(!fs.existsSync(folder)){
            fs.mkdirSync(folder);
         }
-      
+
         var username = AuthInfo.get().id || '';
         return path.join(folder, 'upprog_' + username + '.json');
       }

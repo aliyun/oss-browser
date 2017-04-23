@@ -1,7 +1,7 @@
 
 angular.module('web')
-  .controller('filesCtrl', ['$scope', '$rootScope', '$uibModal', '$timeout','AuthInfo', 'ossSvs','fileSvs','safeApply','Toast', 'Dialog',
-    function ($scope, $rootScope, $modal, $timeout, AuthInfo, ossSvs,fileSvs, safeApply,Toast, Dialog) {
+  .controller('filesCtrl', ['$scope', '$rootScope', '$uibModal', '$timeout','AuthInfo', 'ossSvs','ossSvs2','fileSvs','safeApply','Toast', 'Dialog',
+    function ($scope, $rootScope, $modal, $timeout, AuthInfo, ossSvs,ossSvs2,fileSvs, safeApply,Toast, Dialog) {
 
       angular.extend($scope, {
         showTab: 1,
@@ -32,6 +32,7 @@ angular.module('web')
 
         //全选相关
         sel: {
+          hasArchive: false,
           all: false, //boolean
           has: false, //[] item: ossObject={name,path,...}
           x: {}       //{} {'i_'+$index, true|false}
@@ -65,7 +66,9 @@ angular.module('web')
         showGrant: showGrant,
         //地址
         showAddress:showAddress,
-        showACL : showACL
+        showACL : showACL,
+
+        showRestore: showRestore
 
       });
 
@@ -77,11 +80,11 @@ angular.module('web')
         },600);
       });
 
-      init();
+      $timeout(init,100); 
 
       function init() {
         var authInfo = AuthInfo.get();
-       
+
         if(authInfo.osspath){
             $scope.ref.isBucketList = false;
             //bucketMap
@@ -92,26 +95,26 @@ angular.module('web')
 
             $timeout(function(){
               addEvents();
-              $rootScope.$broadcast('ossAddressChange', authInfo.osspath); 
-              $scope.$broadcast('filesViewReady'); 
+              $rootScope.$broadcast('ossAddressChange', authInfo.osspath);
+              $scope.$broadcast('filesViewReady');
             });
-            
+
         }
-        else{ 
-      
+        else{
+
           $scope.ref.isBucketList = true;
           listBuckets(function(){
             addEvents();
             $scope.$broadcast('filesViewReady');
           });
-        }  
-      
-        
+        }
+
+
       }
 
       function addEvents(){
         $scope.$on('ossAddressChange', function(e, addr, forceRefresh) {
- 
+
           var info = ossSvs.parseOSSPath(addr);
 
           if(info.key){
@@ -126,8 +129,8 @@ angular.module('web')
           }
 
           $scope.currentInfo = info;
- 
- 
+
+
           if(info.bucket){
 
             //has bucket , list objects
@@ -172,7 +175,7 @@ angular.module('web')
 
         if(bucket){
           ossPath = 'oss://'+bucket +'/'+ (prefix||'');
-        } 
+        }
         $rootScope.$broadcast('goToOssAddress', ossPath);
       }
 
@@ -183,6 +186,7 @@ angular.module('web')
         $scope.isLoading = true;
 
         ossSvs.listFiles(info.region, info.bucket, info.key).then(function(result){
+
           $scope.isLoading = false;
           $scope.objects = signPicURL(info,result);
           if(fn)fn(null);
@@ -206,7 +210,7 @@ angular.module('web')
 
       function listBuckets(fn){
         $scope.isLoading = true;
-        ossSvs.listAllBuckets().then(function(buckets){
+        ossSvs2.listAllBuckets().then(function(buckets){
           $scope.isLoading = false;
           $scope.buckets = buckets;
 
@@ -366,7 +370,7 @@ angular.module('web')
           templateUrl: templateUrl,
           controller: controller,
           size: 'lg',
-          backdrop: backdrop,
+          //backdrop: backdrop,
           resolve: {
             bucketInfo: function(){
               return angular.copy($scope.currentInfo);
@@ -379,6 +383,9 @@ angular.module('web')
             },
             showFn: function(){
               return {
+                callback: function(){
+                  return listFiles;
+                },
                 preview: showPreview,
                 download: function(){
                   showDownload(item);
@@ -628,6 +635,26 @@ angular.module('web')
              },
              currentInfo: function(){
                return angular.copy($scope.currentInfo);
+             }
+           }
+         });
+       }
+
+       function showRestore(item){
+         $modal.open({
+           templateUrl: 'main/files/modals/restore-modal.html',
+           controller: 'restoreModalCtrl',
+           resolve: {
+             item: function(){
+               return angular.copy(item);
+             },
+             currentInfo: function(){
+               return angular.copy($scope.currentInfo);
+             },
+             callback: function(){
+               return function(){
+                 listFiles();
+               };
              }
            }
          });

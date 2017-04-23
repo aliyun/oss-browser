@@ -1,20 +1,30 @@
 angular.module('web')
-  .controller('othersModalCtrl', ['$scope','$uibModalInstance','bucketInfo','objectInfo','fileType','showFn','ossSvs',
-    function ($scope, $modalInstance, bucketInfo, objectInfo, fileType, showFn, ossSvs) {
+  .controller('othersModalCtrl', ['$scope','$uibModalInstance','$uibModal','bucketInfo','objectInfo','fileType','showFn','ossSvs2','safeApply',
+    function ($scope, $modalInstance,$modal, bucketInfo, objectInfo, fileType, showFn, ossSvs2, safeApply) {
 
       angular.extend($scope, {
         bucketInfo: bucketInfo,
         objectInfo: objectInfo,
         fileType: fileType,
+        afterRestoreSubmit:afterRestoreSubmit,
+        afterCheckSuccess:afterCheckSuccess,
 
+        previewBarVisible: false,
         showFn: showFn,
-
         cancel: cancel,
+
         showAs: showAs,
         //showDownload: showDownload,
 
         showAsCodeBtn: shouldShowAsCodeBtn()
       });
+      function afterRestoreSubmit(){
+        showFn.callback();
+      }
+      function afterCheckSuccess() {
+        $scope.previewBarVisible = true;
+
+      }
 
       function shouldShowAsCodeBtn(){
         var name = objectInfo.name;
@@ -45,8 +55,8 @@ angular.module('web')
       // }
 
 
-        function endswith(s, ext){
-          return s.lastIndexOf(ext)== s.length-ext.length;
-        }
+      function endswith(s, ext){
+        return s.lastIndexOf(ext)== s.length-ext.length;
+      }
     }])
 ;

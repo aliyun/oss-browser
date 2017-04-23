@@ -50,6 +50,7 @@ class UploadJob extends Base {
         total: 0
       };
 
+    this.message = this._config.message;
     this.status = this._config.status || 'waiting';
 
     this.stopFlag = this.status!='running';
@@ -107,6 +108,7 @@ UploadJob.prototype.startUpload = function () {
   util.prepareChunks(self.from.path, self.checkPoints, function (err, checkPoints) {
 
     if (err) {
+      self.message= err.message;
       self._changeStatus('failed');
       self.emit('error', err);
 
@@ -186,6 +188,7 @@ UploadJob.prototype.uploadSingle = function () {
     var req = self.oss.putObject(params, function (err) {
 
       if (err) {
+        self.message=err.message;
         self._changeStatus('failed');
         self.emit('error', err);
       }
@@ -293,6 +296,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     fs.read(keepFd, bf, 0, len, start, function (err, bfRead, buf) {
 
       if (err) {
+        self.message=err.message;
         self._changeStatus('failed');
         self.emit('error', err);
         return;
@@ -350,8 +354,9 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
 
         console.warn('multiErr, upload part error:', multiErr);
         if (retries[partNumber] >= maxRetries) {
-          console.error('上传分片失败: #', partNumber);
+          //console.error('上传分片失败: #', partNumber);
           util.closeFD(keepFd);
+          self.message='上传分片失败: #'+partNumber;
           self._changeStatus('failed');
           self.emit('error', multiErr);
         }
@@ -443,6 +448,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     self.oss.completeMultipartUpload(doneParams, function(err, data){
 
       if (err) {
+        self.message=err.message;
         self._changeStatus('failed');
         self.emit('error', err);
         return;

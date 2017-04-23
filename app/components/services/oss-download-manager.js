@@ -65,7 +65,7 @@ angular.module('web')
       });
 
       job.on('error', function (err) {
-        console.log(err);
+        console.error(err);
         concurrency--;
         checkStart();
       });
@@ -99,7 +99,7 @@ angular.module('web')
       var authInfo = AuthInfo.get();
       var dirPath = path.dirname(fromOssInfos[0].path);
 
-      loop(fromOssInfos, function (jobs) { 
+      loop(fromOssInfos, function (jobs) {
         fn(jobs);
       });
 
@@ -205,13 +205,12 @@ angular.module('web')
 
         if (n.status == 'finished') return;
 
-        //console.log('---------saveProg:', n);
-
         t.push({
           checkPoints: n.checkPoints,
           region: n.region,
           to: n.to,
           from: n.from,
+          message: n.message,
           status: n.status,
           prog: n.prog
         });

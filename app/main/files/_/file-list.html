@@ -61,7 +61,7 @@
   </table>
 
   <div ng-if="!ref.isListView" class="pd10" style="height:100%"
-  ng-click="sel.all=false;selectAll();$event.stopPropagation()">
+  ng-click="sel.all=false;selectAll();">
 
     <div ng-repeat="item in objects|filter:{name:sch.objectName}"
     class="item-block"
@@ -72,8 +72,8 @@
      ng-change="selectChanged($event,$index)" ng-click="$event.stopPropagation()"/>
 
        <i class="fa fa-folder" style="color:orange" ng-if="!item.pic_url && item.isFolder==true"></i>
-       <i class="fa fa-{{item|fileIcon}}" ng-if="!item.pic_url && item.isFolder!=true"></i>
-       <img ng-if="item.pic_url" ng-src="{{item.pic_url}}"
+       <i class="fa fa-{{item|fileIcon}}" ng-if="(!item.pic_url || item.storageClass=='Archive') && item.isFolder!=true"></i>
+       <img ng-if="item.pic_url && item.storageClass!='Archive'" ng-src="{{item.pic_url}}"
        class="pull-left" style="max-width:32px;max-height:32px;margin:4px;"/>
 
        <div class="item-block-name" uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'">{{item.name}}</div>

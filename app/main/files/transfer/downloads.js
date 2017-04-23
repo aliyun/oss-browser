@@ -13,7 +13,7 @@ angular.module('web')
       checkStartJob: checkStartJob
     });
 
-    
+
 
     function checkStartJob(item){
       item.wait();
@@ -57,7 +57,7 @@ angular.module('web')
         }
       }
 
-      $scope.calcTotalProg(); 
+      $scope.calcTotalProg();
     }
 
 
@@ -92,28 +92,31 @@ angular.module('web')
 
       $timeout(function(){
         ossDownloadManager.saveProg();
-      },100); 
-      
+      },100);
+
     }
 
 
     function startAll(){
-      var arr = $scope.lists.downloadJobList; 
+      var arr = $scope.lists.downloadJobList;
        stopFlag = false;
-      //串行 
-      DelayDone.seriesRun(arr, function eachItemFn(n, fn){
-        if( stopFlag) return;
 
-        if (n.status == 'stopped' || n.status == 'failed'){
-          n.wait(); 
-        }
-        ossDownloadManager.checkStart();
-        fn();
-      }, function doneFy(){
-        
-      }); 
+      //串行
+      if(arr){
+        DelayDone.seriesRun(arr, function eachItemFn(n, fn){
+          if( stopFlag) return;
 
-      
+          if (n.status == 'stopped' || n.status == 'failed'){
+            n.wait();
+          }
+          ossDownloadManager.checkStart();
+          fn();
+        }, function doneFy(){
+
+        });
+      }
+
+
     }
 
   }])

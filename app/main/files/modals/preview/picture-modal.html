@@ -10,18 +10,20 @@
 </div>
 <div class="modal-body pd0">
 
-  <div class="bg-success pd4">oss://{{bucketInfo.bucket}}/{{objectInfo.path}}</div>
+  <header class="pd4">oss://{{bucketInfo.bucket}}/{{objectInfo.path}}</header>
 
-  <div style="overflow:auto; " class="text-center pd4">
-    <div ng-if="isLoading" is-loading></div>
-    <img ng-if="!isLoading" ng-src="{{imgsrc}}" alt="图像"
-    style="max-width:600px;max-height:400px;"/>
-  </div>
+  <restore-checker bucket-info="bucketInfo" object-info='objectInfo' file-type="fileType"
+  after-check-success="afterCheckSuccess()" after-restore-submit="afterRestoreSubmit()">
+
+    <div style="overflow:auto; " class="text-center">
+      <img ng-src="{{imgsrc}}" alt="图像" style="max-width:600px;max-height:400px;" />
+    </div>
+  </restore-checker>
 
 </div>
 <div class="modal-footer" style="text-align:left;">
 
-  <span ng-include="'main/files/modals/preview/preview-bar.html'"></span>
+  <span ng-if="previewBarVisible" ng-include="'main/files/modals/preview/preview-bar.html'"></span>
 
   <button type="button" class="pull-right btn btn-default btn-sm" ng-click="cancel()">
     <i class="glyphicon glyphicon-remove"></i>

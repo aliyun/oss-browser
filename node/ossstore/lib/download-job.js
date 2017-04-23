@@ -43,6 +43,7 @@ class DownloadJob extends Base {
         total: 0
       };
 
+    this.message = this._config.message;
     this.status = this._config.status || 'waiting';
 
     this.stopFlag = this.status!='running';
@@ -172,7 +173,8 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
   self.oss.headObject(objOpt, function (err, headers) {
 
     if(err){
-      console.error('failed to get oss object meta: ', err);
+      self.message='failed to get oss object meta: '+err.message;
+      //console.error(self.message);
       self._changeStatus('failed');
       self.emit('error', err);
       return;
@@ -186,7 +188,8 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
 
       fs.writeFile(self.to.path,'', function(err){
         if(err){
-          console.log('failed to open local file');
+          self.message='failed to open local file:'+err.message;
+          //console.error(self.message);
           self._changeStatus('failed');
           self.emit('error', err);
         }
@@ -247,7 +250,8 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
     //downloadPart(getNextPart());
     createFileIfNotExists(tmpName, (err)=>{
       if (err) {
-        console.error('failed to open local file');
+        self.message='failed to open local file:'+err.message;
+        //console.error(self.message);
         self._changeStatus('failed');
         self.emit('error', err);
         return;
@@ -331,8 +335,9 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
             doDownload(n);
           }
           else {
+            self.message=`failed to download part [${n}]: ${err.message}`;
+            //console.error(self.message);
             self._changeStatus('failed');
-            console.log(`failed to download part [${n}]`);
             self.emit('error', err);
             //util.closeFD(keepFd);
           }
@@ -349,7 +354,8 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
         writeFileRange(tmpName, data.Body, start, function(err){
 
           if (err) {
-            console.log('failed to write local file');
+            self.message='failed to write local file: '+err.message;
+            //console.error(self.message);
             self._changeStatus('failed');
             self.emit('error', err);
             //util.closeFD(keepFd);
@@ -383,9 +389,9 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
                   self.emit('partcomplete', {total:chunkNum, done:completedCount}, checkPoints);
                   self.emit('complete');
               }
-              
+
             });
-            
+
           }
           else {
             //self.emit('progress', progCp);

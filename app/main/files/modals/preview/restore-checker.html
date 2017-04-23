@@ -1,0 +1,10 @@
+<div is-loading ng-if="_Loading"></div>
+   <div ng-if="!_Loading && info.msg" class="pd4 bg-{{info.msgbg}}">{{info.msg}}
+     <span ng-if="info.needRestore">,
+      <a href=""  ng-click="showRestore()">立即恢复</a>
+    </span>
+  </div>
+  <section ng-if="!_Loading && info.showContent">
+    <ng-transclude></ng-transclude>
+  </section>
+</div>
