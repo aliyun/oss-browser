@@ -15,8 +15,17 @@ angular.module('web')
           acl: bucketACL[0].acl,
           region: regions[0].id,
           storageClass: 'Standard'
-        }
+        },
+        onRegionChanged: onRegionChanged
       });
+      function onRegionChanged(){
+        if(['oss-cn-beijing','oss-cn-hangzhou'].indexOf($scope.item.region)==-1){
+          $scope.storageClasses=[{value:'Standard',name:'标准类型'},{value:'IA',name:'低频访问类型'}];
+        }else{
+          $scope.storageClasses=[{value:'Standard',name:'标准类型'},{value:'IA',name:'低频访问类型'},{value:'Archive',name:'归档类型'}];
+        }
+        $scope.item.storageClass='Standard';
+      }
 
       function cancel() {
         $modalInstance.dismiss('cancel');
