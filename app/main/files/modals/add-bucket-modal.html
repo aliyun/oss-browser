@@ -21,7 +21,7 @@
       <label class="col-sm-2 control-label" for="region">区域:</label>
       <div class="col-sm-8">
         <select ng-model="item.region" ng-options="region.id as region.label for region in regions" name="region" required="required"
-        class="input-md form-control"></select>
+        class="input-md form-control" ng-change="onRegionChanged()"></select>
       </div>
     </div>
 

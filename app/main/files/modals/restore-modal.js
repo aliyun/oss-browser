@@ -6,7 +6,7 @@ angular.module('web')
         currentInfo: currentInfo,
         item: item,
         info: {
-          days: 7,
+          days: 1,
           msg: null
         },
         cancel: cancel,
