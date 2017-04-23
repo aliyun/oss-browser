@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('addBucketModalCtrl', ['$scope','$uibModalInstance','callback','ossSvs','Const',
-    function ($scope, $modalInstance, callback, ossSvs, Const) {
+  .controller('addBucketModalCtrl', ['$scope','$uibModalInstance','callback','ossSvs2','Const',
+    function ($scope, $modalInstance, callback, ossSvs2, Const) {
 
       var bucketACL= angular.copy(Const.bucketACL);
       var regions= angular.copy(Const.regions);
@@ -10,9 +10,11 @@ angular.module('web')
         regions: angular.copy(Const.regions),
         cancel: cancel,
         onSubmit: onSubmit,
+        storageClasses: [{value:'Standard',name:'标准类型'},{value:'IA',name:'低频访问类型'},{value:'Archive',name:'归档类型'}],
         item: {
           acl: bucketACL[0].acl,
-          region: regions[0].id
+          region: regions[0].id,
+          storageClass: 'Standard'
         }
       });
 
@@ -24,7 +26,7 @@ angular.module('web')
         if (!form.$valid) return;
         var item = angular.copy($scope.item);
 
-        ossSvs.createBucket(item.region, item.name, item.acl).then(function(result){
+        ossSvs2.createBucket(item.region, item.name, item.acl, item.storageClass).then(function(result){
            callback();
            cancel();
         });

@@ -87,26 +87,28 @@ angular.module('web')
           ossUploadManager.saveProg();
         }, 100);
 
-        
+
       }
 
       function startAll() {
         var arr = $scope.lists.uploadJobList;
         stopFlag = false;
         //串行
-        DelayDone.seriesRun(arr, function(n, fn){
-          if(stopFlag)return;
+        if(arr){
+          DelayDone.seriesRun(arr, function(n, fn){
+            if(stopFlag)return;
 
-          if (n.status == 'stopped' || n.status == 'failed'){
-            n.wait(); 
-          }
-          
-          ossUploadManager.checkStart();
+            if (n.status == 'stopped' || n.status == 'failed'){
+              n.wait();
+            }
 
-          fn();
-        }, function(){
-          //ossUploadManager.checkStart();
-        });
+            ossUploadManager.checkStart();
+
+            fn();
+          }, function(){
+            //ossUploadManager.checkStart();
+          });
+        }
       }
     }
   ]);

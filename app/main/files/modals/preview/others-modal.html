@@ -1,35 +1,36 @@
-
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="cancel()">
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
       <span aria-hidden="true">&times;</span>
     </button>
-    <h4 class="modal-title">
+  <h4 class="modal-title">
       <i style="color:orange" class="fa fa-folder"></i>
       预览 <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span></h4>
-  </div>
-  <div class="modal-body pd0">
+</div>
+<div class="modal-body pd0">
 
-     <div class="bg-success pd4">oss://{{bucketInfo.bucket}}/{{objectInfo.path}}</div>
+  <header class="pd4">oss://{{bucketInfo.bucket}}/{{objectInfo.path}}</header>
 
-     <div class="alert alert-warning">该文件类型无法预览。</div>
+  <restore-checker bucket-info="bucketInfo" object-info='objectInfo' file-type="fileType"
+  after-check-success="afterCheckSuccess()" after-restore-submit="afterRestoreSubmit()">
 
-     <div class="text-center">
+    <div class="alert alert-warning">该文件类型无法预览。</div>
 
-       <div class="btn-group">
+    <div class="text-center">
+      <div class="btn-group">
         <button ng-if="showAsCodeBtn" type="button" class="btn btn-default" ng-click="showAs('code');cancel()"><i class="fa fa-file-code-o"></i> 尝试作为文本文件打开</button>
         <!-- <button type="button" class="btn btn-default" ng-click="showFn.download();cancel()"><i class="fa fa-download text-success"></i> 直接下载</button> -->
       </div>
 
-     </div>
-
-
       <div class="clearfix">&nbsp;</div>
+    </div>
+  </restore-checker>
 
-  </div>
-  <div class="modal-footer" style="text-align:left;">
-    <span ng-include="'main/files/modals/preview/preview-bar.html'"></span>
 
-    <button type="button" class="pull-right btn btn-default btn-sm" ng-click="cancel()">
+</div>
+<div class="modal-footer" style="text-align:left;">
+  <span ng-if="previewBarVisible" ng-include="'main/files/modals/preview/preview-bar.html'"></span>
+
+  <button type="button" class="pull-right btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
       关闭</button>
-  </div>
+</div>

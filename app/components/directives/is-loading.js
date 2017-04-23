@@ -1,7 +1,7 @@
 angular.module('web')
 .directive('isLoading', function(){
 
-  return {
+  return { 
     templateUrl: 'components/directives/is-loading.html'
   };
 

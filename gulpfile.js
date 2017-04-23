@@ -20,7 +20,10 @@ var taskFns = {
         presets: ['es2015']
       }))
       .pipe(plugins.concat('app.js'))
-      .pipe(gulp.dest(DIST));
+      .pipe(gulp.dest(DIST))
+      .on('end', function(){
+        console.log('--done');
+      });
   },
   templates: function () {
     console.log('--rebuilding templates.js...');
@@ -28,13 +31,19 @@ var taskFns = {
     gulp.src(['!./app/index.html',
         './app/**/*.html'])
       .pipe(plugins.angularTemplatecache('templates.js', {standalone: true}))
-      .pipe(gulp.dest(DIST));
+      .pipe(gulp.dest(DIST))
+      .on('end', function(){
+        console.log('--done');
+      });
   },
   appCSS: function () {
     console.log('--rebuilding lib.css...');
     gulp.src('./app/**/*.css')
       .pipe(plugins.concat('app.css'))
-      .pipe(gulp.dest(DIST));
+      .pipe(gulp.dest(DIST))
+      .on('end', function(){
+        console.log('--done');
+      });
   }
 };
 

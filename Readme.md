@@ -12,26 +12,42 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 这是打包好的，下载地址如下，解压即可使用。
 
-> [Window x64版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.5.1/oss-browser-win32-x64.zip)
+> [Window x64版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.6.0/oss-browser-win32-x64.zip)
 
-> [Mac 版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.5.1/oss-browser-darwin-x64.zip)
+> [Mac 版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.6.0/oss-browser-darwin-x64.zip)
 
 > Linux版暂不提供，可以自行build。
 
 ### (1) AK登录
 
-![](preview/login.png)
+![AK登录](preview/login.png)
 
+* 子用户登录可以指定预设OSS路径，配合子用户授权使用。
 
 ### (2) Bucket列表
 
-![](preview/bucket-list.png)
+![Bucket列表](preview/bucket-list.png)
 
 
 ### (3) 文件列表 (支持拖拽上传)
 
-![](preview/file-list.png)
+![文件列表](preview/file-list.png)
 
+### (4) 授权给子用户 & 子用户登录
+
+![授权给子用户](preview/subuser-grant.png)
+
+![子用户登录](preview/subuser.png)
+
+### (5) 归档bucket支持
+
+![新建归档bucket](preview/create-archive-bucket.png)
+
+* `目前仅北京区域支持创建归档bucket`
+
+![restore](preview/need-restore.png)
+
+* 归档bucket下所有文件均为Archive存储类型, 需要恢复才能访问。
 
 
 ## 2. 开发环境搭建
@@ -107,33 +123,21 @@ npm run win64  # 打包win64程序， 可选: win32, mac, linux32, linux64
 ```
 oss-browser/
  |-- app/                 # 前端代码, 采用angular框架
- |-- mock_server/         # mock 的web服务
  |-- node/                # 前端调用的 node 模块
      |-- ossstore/        # 上传下载job类
  |-- vendor/              # 前端 aliyun-sdk 依赖
- |-- bower_components/    # 前端依赖的模块
  |-- node_modules         # node端依赖的模块
  |-- dist                 # 前端临时build出的代码
- |-- build                # node-webkit build出的应用
- |-- cache                # node-webkit 的下载缓存
+ |-- build                # electron build出的应用
  |-- gulpfile.js          # 项目管理文件
  |-- package.json         # 项目描述文件
 ```
 
 
-## 5. TODO
-
-* 自动更新
-* 图片预览放大缩小。
-* RAM授权
-* 错误堆栈
-* 优化批量删除
-* 跨区域复制
-
-## 6. 关于贡献
+## 5. 关于贡献
 
 * 暂不接受代码贡献，如有建议或发现bug，请直接开issue。
 
-## 7. 开源 LICENSE
+## 6. 开源 LICENSE
 
 [Apache License 2.0](LICENSE)

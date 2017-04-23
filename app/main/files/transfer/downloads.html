@@ -39,7 +39,11 @@
                 </div>
 
                 <div class="col-sm-2 text-overflow text-{{item.status|statusCls}}">
-                    <span ng-show="!item.speed">{{item.status|status}}</span>
+                    <span ng-show="!item.speed">{{item.status|status}}
+                       <i ng-if="item.message"
+                       uib-tooltip="{{item.message}}" tooltip-placement="left" tooltip-append-to-body="true"
+                       class="fa fa-info-circle"></i>
+                    </span>
                 <span ng-show="item.speed">
                     {{item.speed|sizeFormat}}/s
                 </span>
