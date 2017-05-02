@@ -16,7 +16,7 @@ angular.module('web')
       init();
       function init(){
         $scope.isLoading =true;
-        ossSvs2.getFileMeta(currentInfo.region, currentInfo.bucket, item.path).then(function(data){
+        ossSvs2.getFileInfo(currentInfo.region, currentInfo.bucket, item.path).then(function(data){
           if(data.Restore){
             var info = parseRestoreInfo(data.Restore);
             if(info['ongoing-request']=='true'){

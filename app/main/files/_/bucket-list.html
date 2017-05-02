@@ -17,7 +17,7 @@
       <td class="text-muted">&nbsp;{{$index+1}}.</td>
       <td>
         <div class="text-overflow">
-          <i class="fa fa-database text-warning"></i>
+          <i class="fa fa-database" ng-class="{'text-warning':item.storageClass!='Archive'}"></i>
           <a href="" ng-click="goIn(item.name)">
             <span>{{item.name}}</span>
           </a>
@@ -35,7 +35,7 @@
 
 
   <div ng-if="!ref.isListView" class="pd10"
-     ng-click="bucket_sel.item=null;">
+     ng-click="bucket_sel.item=null;toggleTransVisible(false);">
 
      <div ng-repeat="item in buckets|filter:sch.bucketName"
      ng-dblclick="goIn(item.name);$event.stopPropagation()"

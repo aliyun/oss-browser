@@ -143,11 +143,11 @@ angular.module('web')
           var t = [];
           var len = arr.length;
           var c = 0;
-          inDig();
+          if(len==0) callFn([]);
+          else inDig();
 
           //串行
           function inDig() {
-
             dig(path.join(parentPath, arr[c]), dirPath,  function (jobs) {
               t = t.concat(jobs);
               c++;
@@ -232,7 +232,7 @@ angular.module('web')
             accessKeyId: auth.id,
             secretAccessKey: auth.secret
           },
-          endpoint: ossSvs.getOssEndpoint(opt.region)
+          endpoint: ossSvs.getOssEndpoint(opt.region, opt.to.bucket)
         });
 
         return store.createUploadJob(opt);

@@ -14,7 +14,7 @@
     </tr>
 
     <tr ng-repeat="item in objects|filter:{name:sch.objectName}"
-    ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index)"
+    ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);"
      ng-class="{'info': sel.x['i_'+$index]}"
     >
       <td class="text-center">
@@ -61,7 +61,7 @@
   </table>
 
   <div ng-if="!ref.isListView" class="pd10" style="height:100%"
-  ng-click="sel.all=false;selectAll();">
+  ng-click="sel.all=false;selectAll();toggleTransVisible(false);">
 
     <div ng-repeat="item in objects|filter:{name:sch.objectName}"
     class="item-block"

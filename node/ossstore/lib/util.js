@@ -7,7 +7,6 @@ module.exports = {
   closeFD: closeFD
 };
 
-
 function parseLocalPath(p) {
   if (typeof(p) != 'string') {
     return p;

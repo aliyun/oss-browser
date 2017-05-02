@@ -14,14 +14,8 @@ function($scope ,ossUploadManager,ossDownloadManager, Toast){
      calcTotalProg: calcTotalProg,
 
      transTab: 1,
-     transVisible: localStorage.getItem('transVisible')=='true',
-     toggleTransVisible: function (f){
-       $scope.transVisible = f;
-       localStorage.setItem('transVisible', f);
-     }
 
    });
-
 
 
    //functions in parent scope
@@ -80,12 +74,12 @@ function($scope ,ossUploadManager,ossDownloadManager, Toast){
          }
        });
       //  $scope.totalNum.upRunning = c;
-      //  $scope.totalNum.downRunning = c; 
+      //  $scope.totalNum.downRunning = c;
        $scope.totalNum.running=c + c2;
 
        $scope.totalNum.upDone = $scope.lists.uploadJobList.length-c;
        $scope.totalNum.downDone = $scope.lists.downloadJobList.length-c2;
-       
+
        $scope.totalNum.total = $scope.lists.uploadJobList.length + $scope.lists.downloadJobList.length;
      }
 

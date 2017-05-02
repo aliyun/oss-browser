@@ -63,6 +63,7 @@ class UploadJob extends Base {
 
 
 UploadJob.prototype.start = function () {
+  self.message='';
   this.startTime = new Date().getTime();
   this.endTime = null;
   this._changeStatus('running');
