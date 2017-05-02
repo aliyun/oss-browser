@@ -17,6 +17,12 @@ angular.module('web')
 
         goIn:goIn,
 
+        transVisible: localStorage.getItem('transVisible')=='true',
+        toggleTransVisible: function (f){
+          $scope.transVisible = f;
+          localStorage.setItem('transVisible', f);
+        },
+
         //object 相关
         showAddFolder:showAddFolder,
         showDeleteFiles: showDeleteFiles,
@@ -80,7 +86,7 @@ angular.module('web')
         },600);
       });
 
-      $timeout(init,100); 
+      $timeout(init,100);
 
       function init() {
         var authInfo = AuthInfo.get();
@@ -407,8 +413,26 @@ angular.module('web')
                 },
                 acl: function(){
                   showACL(item);
+                },
+                crc: function(){
+                  showCRC(item);
                 }
               };
+            }
+          }
+        });
+      }
+      function showCRC(item){
+
+        $modal.open({
+          templateUrl: 'main/files/modals/crc-modal.html',
+          controller: 'crcModalCtrl',
+          resolve: {
+            item: function(){
+              return angular.copy(item);
+            },
+            currentInfo: function(){
+              return angular.copy($scope.currentInfo);
             }
           }
         });

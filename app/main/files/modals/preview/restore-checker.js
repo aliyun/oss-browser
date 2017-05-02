@@ -37,12 +37,12 @@ angular.module('web')
           $scope._Loading =true;
           $scope.info.needRestore = false;
 
-          ossSvs2.getFileMeta($scope.bucketInfo.region, $scope.bucketInfo.bucket, $scope.objectInfo.path).then(function(data){
+          ossSvs2.getFileInfo($scope.bucketInfo.region, $scope.bucketInfo.bucket, $scope.objectInfo.path).then(function(data){
 
             if(data.Restore){
               var info = ossSvs2.parseRestoreInfo(data.Restore);
               if(info['ongoing-request']=='true'){
-                $scope.info.msg = '归档文件正在恢复中，请耐心等待！';
+                $scope.info.msg = '归档文件正在恢复中，请耐心等待...';
                 $scope.info.showContent=false;
                 $scope.info.msgbg = 'warning';
               }else{

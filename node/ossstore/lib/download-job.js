@@ -20,7 +20,6 @@ class DownloadJob extends Base {
   constructor(ossClient, config) {
     super();
 
-
     this.oss = ossClient;
     this._config = {};
     Object.assign(this._config, config);
@@ -34,19 +33,19 @@ class DownloadJob extends Base {
       return;
     }
 
-    this.from = util.parseOssPath(this._config.from);  //oss path
-    this.to = util.parseLocalPath(this._config.to);  //local path
+    this.from = util.parseOssPath(this._config.from); //oss path
+    this.to = util.parseLocalPath(this._config.to); //local path
     this.region = this._config.region;
 
-    this.prog = this._config.prog ||  {
-        loaded: 0,
-        total: 0
-      };
+    this.prog = this._config.prog || {
+      loaded: 0,
+      total: 0
+    };
 
     this.message = this._config.message;
     this.status = this._config.status || 'waiting';
 
-    this.stopFlag = this.status!='running';
+    this.stopFlag = this.status != 'running';
 
     this.checkPoints = this._config.checkPoints;
 
@@ -54,18 +53,16 @@ class DownloadJob extends Base {
   }
 }
 
-
-
 DownloadJob.prototype.start = function () {
   var self = this;
-
+  self.message='';
   self.startTime = new Date().getTime();
   self.endTime = null;
 
   self.stopFlag = false;
   self._changeStatus('running');
 
-  self.checkPoints = self.checkPoints||{
+  self.checkPoints = self.checkPoints || {
     from: self.from,
     to: self.to,
     Parts: {}
@@ -93,58 +90,54 @@ DownloadJob.prototype.wait = function () {
   return self;
 };
 
-DownloadJob.prototype._changeStatus = function(status){
-  var self= this;
-  self.status=status;
-  self.emit('statuschange',self.status);
+DownloadJob.prototype._changeStatus = function (status) {
+  var self = this;
+  self.status = status;
+  self.emit('statuschange', self.status);
 
-  if(status=='failed' || status=='stopped' || status=='finished'){
+  if (status == 'failed' || status == 'stopped' || status == 'finished') {
     self.endTime = new Date().getTime();
-   // util.closeFD(this.keepFd);
+    // util.closeFD(this.keepFd);
   }
 };
 
-
-DownloadJob.prototype.startSpeedCounter = function(){
+DownloadJob.prototype.startSpeedCounter = function () {
   var self = this;
 
   self.lastLoaded = 0;
 
-  self.speedTid = setInterval(function(){
+  self.speedTid = setInterval(function () {
 
-    if(self.stopFlag){
+    if (self.stopFlag) {
       self.speed = 0;
-      self.predictLeftTime= 0;
+      self.predictLeftTime = 0;
       return;
     }
 
     self.speed = self.prog.loaded - self.lastLoaded;
-    self.lastLoaded=self.prog.loaded;
+    self.lastLoaded = self.prog.loaded;
 
     //推测耗时
-    self.predictLeftTime =  self.speed == 0 ? 0 : Math.floor((self.prog.total-self.prog.loaded)/self.speed*1000);
+    self.predictLeftTime = self.speed == 0 ? 0 : Math.floor((self.prog.total - self.prog.loaded) / self.speed * 1000);
 
-  },1000);
+  }, 1000);
 
-
-  function onFinished(){
+  function onFinished() {
     clearInterval(self.speedTid);
     self.speed = 0;
     //推测耗时
-    self.predictLeftTime=0;
+    self.predictLeftTime = 0;
   }
 
-  self.on('stopped',onFinished);
+  self.on('stopped', onFinished);
   self.on('error', onFinished);
-  self.on('complete',onFinished);
+  self.on('complete', onFinished);
 };
 
-
-
 /**
- * 开始上传
+ * 开始download
  */
-DownloadJob.prototype.startDownload = function startDownload(checkPoints){
+DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
   var self = this;
 
   var chunkNum = 0;
@@ -153,8 +146,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
   var chunks = [];
 
   var completedCount = 0;
-  var completedBytes= 0;
-
+  var completedBytes = 0;
 
   var maxRetries = 5;
   var maxConcurrency = 3;
@@ -163,48 +155,55 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
   //console.log('maxConcurrency:', maxConcurrency);
 
   var tmpName = self.to.path + '.download';
+  var fileMd5 = '';
 
   var objOpt = {
     Bucket: self.from.bucket,
     Key: self.from.key
   };
 
-
   self.oss.headObject(objOpt, function (err, headers) {
-
-    if(err){
-      self.message='failed to get oss object meta: '+err.message;
+    if (err) {
+      self.message = 'failed to get oss object meta: ' + err.message;
       //console.error(self.message);
       self._changeStatus('failed');
       self.emit('error', err);
       return;
     }
+    //console.log(headers)
+
+    fileMd5 = headers.ContentMD5;//.replace(/(^\"*)|(\"*$)/g, '');
+    //console.log('file md5:',fileMd5);
 
     var contentLength = parseInt(headers['ContentLength']);
     self.prog.total = contentLength;
     //console.log('got content length:', contentLength)
     //空文件
-    if(self.prog.total==0){
+    if (self.prog.total == 0) {
 
-      fs.writeFile(self.to.path,'', function(err){
-        if(err){
-          self.message='failed to open local file:'+err.message;
+      fs.writeFile(self.to.path, '', function (err) {
+        if (err) {
+          self.message = 'failed to open local file:' + err.message;
           //console.error(self.message);
           self._changeStatus('failed');
           self.emit('error', err);
-        }
-        else{
+        } else {
           self._changeStatus('finished');
-          self.emit('progress', {total:0, loaded:0});
-          self.emit('partcomplete', {total:0, done:0});
+          self.emit('progress', {
+            total: 0,
+            loaded: 0
+          });
+          self.emit('partcomplete', {
+            total: 0,
+            done: 0
+          });
           self.emit('complete');
         }
       });
       return;
     }
 
-
-    if(self.stopFlag){
+    if (self.stopFlag) {
       return;
     }
 
@@ -217,10 +216,10 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
     chunks = [];
     for (var i = 0; i < chunkNum; i++) {
 
-      if(!checkPoints.Parts[i+1] || !checkPoints.Parts[i+1].done){
+      if (!checkPoints.Parts[i + 1] || !checkPoints.Parts[i + 1].done) {
         chunks.push(i);
-        checkPoints.Parts[i+1] = {
-          PartNumber: i+1,
+        checkPoints.Parts[i + 1] = {
+          PartNumber: i + 1,
           loaded: 0,
           done: false
         };
@@ -230,33 +229,49 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
 
     completedCount = chunkNum - chunks.length;
 
-
-    if(chunks.length==0) {
+    //之前每个part都已经全部下载完成，状态还没改成完成的, 这种情况出现几率极少。
+    if (chunks.length == 0) {
       //done
 
-     for(var k in checkPoints.Parts) {
-       self.prog.loaded += checkPoints.Parts[k].loaded;
-     }
+      for (var k in checkPoints.Parts) {
+        self.prog.loaded += checkPoints.Parts[k].loaded;
+      }
 
-      var progCp = JSON.parse(JSON.stringify(self.prog));
-      self._changeStatus('finished');
-      self.emit('progress', progCp);
-      self.emit('partcomplete', {total:chunkNum, done:chunkNum});
-      self.emit('complete');
+      checkMd5(tmpName, fileMd5, function (err) {
+        if (err) {
+          self._changeStatus('failed');
+          self.emit('error', err);
+          return;
+        }
+
+        //临时文件重命名为正式文件
+        fs.rename(tmpName, self.to.path, function (err) {
+          if (err) {
+            console.log(err);
+          } else {
+            var progCp = JSON.parse(JSON.stringify(self.prog));
+            self._changeStatus('finished');
+            self.emit('progress', progCp);
+            self.emit('partcomplete', {
+              total: chunkNum,
+              done: chunkNum
+            });
+            self.emit('complete');
+          }
+        });
+      });
       return;
-
     }
 
     //downloadPart(getNextPart());
-    createFileIfNotExists(tmpName, (err)=>{
+    createFileIfNotExists(tmpName, (err) => {
       if (err) {
-        self.message='failed to open local file:'+err.message;
+        self.message = 'failed to open local file:' + err.message;
         //console.error(self.message);
         self._changeStatus('failed');
         self.emit('error', err);
         return;
       }
-
 
       if (self.stopFlag) {
         //util.closeFD(fd);
@@ -269,22 +284,21 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
 
   });
 
-  function createFileIfNotExists(p, fn){
-    if(!fs.existsSync(p)){
+  function createFileIfNotExists(p, fn) {
+    if (!fs.existsSync(p)) {
       //if todo: mkdir
-       fs.writeFile(tmpName, '', fn);
-    }else{
+      fs.writeFile(tmpName, '', fn);
+    } else {
       fn();
     }
   }
-
 
   function downloadPart(n) {
 
     var start = chunkSize * n;
     var end = (n + 1 < chunkNum) ? start + chunkSize : self.prog.total;
 
-    var partNumber = n+1;
+    var partNumber = n + 1;
 
     //checkPoints.Parts[partNumber] = {
     //  PartNumber: partNumber,
@@ -294,48 +308,45 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
 
     var retryCount = 0;
 
-
     var obj = JSON.parse(JSON.stringify(objOpt));
 
     obj.Range = `bytes=${start}-${end-1}`;
 
     //console.log(obj.Range);
 
-
     concurrency++;
     doDownload(n);
-
 
     if (hasNextPart() && concurrency < maxConcurrency) {
       concurrency++;
       downloadPart(getNextPart());
     }
 
-
     function doDownload(n) {
-      if(n==null)return;
+      if (n == null) return;
 
-      if(self.stopFlag){
+      if (self.stopFlag) {
         //util.closeFD(keepFd);
         return;
       }
 
       var req = self.oss.getObject(obj, (err, data) => {
+        // var md5 = ALY.util.crypto.md5(data.Body,'hex');
 
         if (err) {
-          if(err.code=='RequestAbortedError'){
+          if (err.code == 'RequestAbortedError') {
             //用户取消
             console.warn('用户取消');
             return;
           }
+
           if (retryCount < maxRetries) {
             retryCount++;
             console.log(`retry download part [${n}] error:${err}`);
             checkPoints.Parts[partNumber].loaded = 0;
             doDownload(n);
-          }
-          else {
-            self.message=`failed to download part [${n}]: ${err.message}`;
+          } else {
+            self.message = `failed to download part [${n}]: ${err.message}`;
             //console.error(self.message);
             self._changeStatus('failed');
             self.emit('error', err);
@@ -344,17 +355,16 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
           return;
         }
 
-
-        if(self.stopFlag){
+        if (self.stopFlag) {
           //util.closeFD(keepFd);
           return;
         }
 
         //console.log(0, end - start, start, end);
-        writeFileRange(tmpName, data.Body, start, function(err){
+        writeFileRange(tmpName, data.Body, start, function (err) {
 
           if (err) {
-            self.message='failed to write local file: '+err.message;
+            self.message = 'failed to write local file: ' + err.message;
             //console.error(self.message);
             self._changeStatus('failed');
             self.emit('error', err);
@@ -365,57 +375,67 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
           completedCount++;
           concurrency--;
 
-          completedBytes+= (end-start);
+          completedBytes += (end - start);
 
           //self.prog.loaded += (end-start);
 
-          checkPoints.Parts[partNumber].done=true;
+          checkPoints.Parts[partNumber].done = true;
 
           //var progCp = JSON.parse(JSON.stringify(self.prog));
 
           //console.log(`complete part [${n}]`);
 
-
           if (completedCount == chunkNum) {
-
+            //下载完成
             //util.closeFD(keepFd);
-            fs.rename(tmpName,  self.to.path, function(err){
-              if(err){
-                console.log(err);
+            //检验MD5
+            checkMd5(tmpName, fileMd5, function (err) {
+              if (err) {
+                self._changeStatus('failed');
+                self.emit('error', err);
+                return;
               }
-              else{
+
+              //临时文件重命名为正式文件
+              fs.rename(tmpName, self.to.path, function (err) {
+                if (err) {
+                  console.log(err);
+                } else {
                   self._changeStatus('finished');
                   //self.emit('progress', progCp);
-                  self.emit('partcomplete', {total:chunkNum, done:completedCount}, checkPoints);
+                  self.emit('partcomplete', {
+                    total: chunkNum,
+                    done: completedCount
+                  }, checkPoints);
                   self.emit('complete');
-              }
+                }
 
+              });
             });
-
-          }
-          else {
+          } else {
             //self.emit('progress', progCp);
-            self.emit('partcomplete', {total:chunkNum, done:completedCount}, checkPoints);
+            self.emit('partcomplete', {
+              total: chunkNum,
+              done: completedCount
+            }, checkPoints);
             downloadPart(getNextPart());
           }
         });
       });
 
-
       //fix abort: _abortCallback is not a function
-      req.httpRequest._abortCallback = function(){};
-
+      req.httpRequest._abortCallback = function () {};
 
       req.on('httpDownloadProgress', function (p) {
 
-        if(self.stopFlag){
+        if (self.stopFlag) {
           try {
             req.abort();
           } catch (e) {
             console.log(e.stack);
           }
           checkPoints.Parts[partNumber].loaded = 0;
-          checkPoints.Parts[partNumber].done=false;
+          checkPoints.Parts[partNumber].done = false;
           return;
         }
 
@@ -427,7 +447,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
         }
 
         self.prog.loaded = loaded;
-        self.emit('progress',  self.prog);
+        self.emit('progress', self.prog);
 
       });
     }
@@ -441,14 +461,36 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints){
     return chunks.length > 0;
   }
 
-  function writeFileRange(tmpName, data, start, fn){
-    var file = fs.createWriteStream(tmpName,{ start: start , flags:'r+'});
+  function checkMd5(filePath, fileMd5, fn) {
+    if(!fileMd5){
+      //没有MD5，不校验
+      console.log(filePath,',not found content md5, just pass');
+      fn(null);
+      return;
+    }
+    //检验MD5
+    util.getBigFileMd5(tmpName, function (err, md5str) {
+      if (err) {
+        fn(new Error('Checking md5 failed: ' + err.message));
+      } else if (md5str != fileMd5) {
+        fn(new Error('MD5 mismatch, file md5 should be:'+fileMd5+',got:'+md5str));
+      } else fn(null);
+    });
+  }
+
+  function writeFileRange(tmpName, data, start, fn) {
+    var file = fs.createWriteStream(tmpName, {
+      start: start,
+      flags: 'r+'
+    });
     file.end(data);
-    file.on('error', (err)=>{ fn(err); });
-    file.on('finish', ()=>{ fn(null); });
+    file.on('error', (err) => {
+      fn(err);
+    });
+    file.on('finish', () => {
+      fn(null);
+    });
   }
 };
-
-
 
 module.exports = DownloadJob;

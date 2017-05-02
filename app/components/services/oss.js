@@ -1,6 +1,6 @@
 angular.module('web')
-  .factory('ossSvs', ['$q','$state','Toast','Const','AuthInfo',
-  function ( $q, $state, Toast, Const, AuthInfo) {
+  .factory('ossSvs', ['$q','$rootScope','$state','Toast','Const','AuthInfo',
+  function ( $q, $rootScope, $state, Toast, Const, AuthInfo) {
     var AUTH_INFO = Const.AUTH_INFO_KEY;
     var DEF_ADDR = 'oss://';
     //var ALY = require('aliyun-sdk');
@@ -50,6 +50,7 @@ angular.module('web')
     * @param expiresSec {int} 有效期, default: 3600 单位：秒
     */
     function signatureUrl(region, bucket, key, expiresSec){
+
       var client = getClient({region:region, bucket:bucket});
       var url = client.signatureUrl(key, {
         expires: expiresSec||3600,
@@ -624,12 +625,13 @@ angular.module('web')
 
     /**
     * @param opt   {object|string}
-    *    object = {id, secret, region,bucket}
+    *    object = {id, secret, region or endpoint, bucket}
     *    string = bucket
     */
     function getClient(opt){
 
       var authInfo = AuthInfo.get();
+      //console.log($rootScope.bucketMap)
       var bucket;
       if(opt){
         if(typeof(opt)=='object'){
@@ -637,20 +639,36 @@ angular.module('web')
            bucket = opt.bucket;
         }
       }
-      var region = authInfo.region||'oss-cn-hangzhou';
-      //region = region.indexOf('oss-')!=0? 'oss-'+region : region;
+
+      var endpoint = getOssEndpoint( authInfo.region||'oss-cn-beijing', bucket);
 
       var client = new OSS.Wrapper({
         accessKeyId: authInfo.id||'a',
         accessKeySecret: authInfo.secret||'a',
-        region: region,
+        //region: region,
+        endpoint: endpoint,
         bucket: bucket
       });
       return client;
     }
 
+    function getOssEndpoint(region, bucket){
+      var isHttps = Global.ossEndpointProtocol=='https:';
+      //通过bucket获取endpoint
+      if(bucket && $rootScope.bucketMap && $rootScope.bucketMap[bucket]){
+          var endpoint = $rootScope.bucketMap[bucket].extranetEndpoint;
+          if(endpoint) return isHttps?('https://' + endpoint+':443'):('http://' + endpoint);
+      }
 
-    function getOssEndpoint(region){
+      //region是domain
+      if(region.indexOf('.')!=-1){
+        if(region.indexOf('http')!=0){
+          region = Global.ossEndpointProtocol=='https:'?('https://' + region+':443'):('http://' + region);
+        }
+        return region;
+      }
+
+      //region
       if(Global.ossEndpointProtocol=='https:'){
          return 'https://' + region + '.aliyuncs.com:443';
       }

@@ -1,6 +1,6 @@
 angular.module('web')
-  .factory('ossSvs2', ['$q','$state','Toast','Const','AuthInfo',
-  function ( $q, $state, Toast, Const, AuthInfo) {
+  .factory('ossSvs2', ['$q','$rootScope','$state','Toast','Const','AuthInfo',
+  function ( $q, $rootScope, $state, Toast, Const, AuthInfo) {
     var AUTH_INFO = Const.AUTH_INFO_KEY;
     var DEF_ADDR = 'oss://';
     //var ALY = require('aliyun-sdk');
@@ -9,7 +9,7 @@ angular.module('web')
     return {
       createBucket: createBucket,
       restoreFile: restoreFile,
-      getFileMeta: getFileMeta,
+      getFileInfo: getFileInfo,
       listAllBuckets: listAllBuckets,
 
       parseRestoreInfo: parseRestoreInfo
@@ -17,7 +17,7 @@ angular.module('web')
     function createBucket(region, bucket , acl, storageClass){
 
       return new Promise(function(a,b){
-        var client = getClient({region:region});
+        var client = getClient({region:region,bucket: bucket});
         client.createBucket({
           Bucket: bucket,
           CreateBucketConfiguration: {
@@ -44,9 +44,9 @@ angular.module('web')
       });
     }
 
-    function getFileMeta(region, bucket, key){
+    function getFileInfo(region, bucket, key){
       return new Promise(function(a,b){
-        var client = getClient({region:region});
+        var client = getClient({region:region, bucket: bucket});
         var opt = {Bucket:bucket,Key:key};
         client.headObject(opt, function(err, data){
 
@@ -64,10 +64,10 @@ angular.module('web')
 
     function restoreFile(region, bucket, key, days){
       return new Promise(function(a,b){
-        var client = getClient({region:region});
+        var client = getClient({region:region, bucket: bucket});
         var opt = {Bucket:bucket,Key:key, RestoreRequest: {Days: days||7}};
         client.restoreObject(opt, function(err, data){
-          console.log(err, data);
+          //console.log(err, data);
           if(err){
             handleError(err);
             b(err);
@@ -187,24 +187,25 @@ angular.module('web')
 
     /**
     * @param opt   {object|string}
-    *    object = {id, secret, region}
+    *    object = {id, secret, region, bucket}
     */
     function getClient(opt){
 
       var authInfo = AuthInfo.get();
+      var bucket;
       if(opt){
         if(typeof(opt)=='object'){
            angular.extend(authInfo, opt);
+           bucket = opt.bucket;
         }
       }
 
-      var region = authInfo.region||'oss-cn-beijing';
-      //region = region.indexOf('oss-')!=0? 'oss-'+region : region;
+      var endpoint = getOssEndpoint( authInfo.region||'oss-cn-beijing', bucket);
 
       var client = new ALY.OSS({
         accessKeyId: authInfo.id||'a',
         secretAccessKey: authInfo.secret||'a',
-        endpoint: getOssEndpoint(region),
+        endpoint: endpoint,
         apiVersion: '2013-10-15'
       });
 
@@ -212,7 +213,23 @@ angular.module('web')
     }
 
 
-    function getOssEndpoint(region){
+    function getOssEndpoint(region, bucket){ 
+      var isHttps = Global.ossEndpointProtocol=='https:';
+      //通过bucket获取endpoint
+      if(bucket && $rootScope.bucketMap && $rootScope.bucketMap[bucket]){
+          var endpoint = $rootScope.bucketMap[bucket].extranetEndpoint;
+          if(endpoint) return isHttps?('https://' + endpoint+':443'):('http://' + endpoint);
+      }
+
+      //region是domain
+      if(region.indexOf('.')!=-1){
+        if(region.indexOf('http')!=0){
+          region = Global.ossEndpointProtocol=='https:'?('https://' + region+':443'):('http://' + region);
+        }
+        return region;
+      }
+
+      //region
       if(Global.ossEndpointProtocol=='https:'){
          return 'https://' + region + '.aliyuncs.com:443';
       }

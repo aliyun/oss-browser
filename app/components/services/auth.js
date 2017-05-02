@@ -24,7 +24,7 @@ angular.module('web')
           }, function(err){
             //失败
              df.reject(err);
-          }); 
+          });
 
         } else {
           ossSvs.getClient(data).listBuckets().then(function(result) {

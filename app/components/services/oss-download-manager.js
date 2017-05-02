@@ -107,6 +107,12 @@ angular.module('web')
         var t = [];
         var len = arr.length;
         var c = 0;
+        
+        if(len==0){
+          callFn([]);
+          return;
+        }
+
         angular.forEach(arr, function (n) {
           dig(n, function (jobs) {
             t = t.concat(jobs);
@@ -192,7 +198,7 @@ angular.module('web')
           accessKeyId: auth.id,
           secretAccessKey: auth.secret
         },
-        endpoint: ossSvs.getOssEndpoint(opt.region)
+        endpoint: ossSvs.getOssEndpoint(opt.region, opt.from.bucket)
       });
 
       return store.createDownloadJob(opt);

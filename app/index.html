@@ -33,14 +33,22 @@
     <!-- ali-oss -->
     <script src="aliyun-oss-sdk.min.js"></script>
 
-     
+
 
     <script src="templates.js"></script>
     <script>
+      var shell = require('electron').shell;
+      function openExternal(url){
+        // Open a URL in the default way 
+        shell.openExternal(url);
+      }
+
+
       var pkg = require('./package');
       var ALY = require('aliyun-sdk');
 
       var Global = {
+        //ossEndpointProtocol:'https:',
         app: {
           logo: 'icons/icon.png', //logo
           name: 'OSS浏览器', //标题显示

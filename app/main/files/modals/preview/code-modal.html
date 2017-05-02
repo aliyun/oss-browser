@@ -8,7 +8,7 @@
 </div>
 <div class="modal-body pd0">
 
-  <header class="pd4">
+  <header class="pd4 bg-success">
     oss://{{bucketInfo.bucket}}/{{objectInfo.path}}
   </header>
 
@@ -40,7 +40,7 @@
       <i class="glyphicon glyphicon-remove"></i>
       取消</button>
 
-  <button type="button" class="pull-right btn btn-primary btn-sm" ng-click="saveContent()">
+  <button ng-if="previewBarVisible" type="button" class="pull-right btn btn-primary btn-sm" ng-click="saveContent()">
         <i class="fa fa-save"></i>
         保存</button>
 </div>
