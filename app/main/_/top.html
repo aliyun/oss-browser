@@ -20,6 +20,11 @@
 
             <li><a href="" ng-click="showFavList()"><i class="fa fa-star"></i> 书签管理</a></li>
             <li><a href="" ng-click="showSettings()"><i class="fa fa-cog"></i> 设置</a></li>
+            <li>
+                <a href="" ng-click="showAbout()"><i class="fa fa-about"></i> 关于
+                  <small style="color:#fff;background:red;border-radius:2px" 
+                  ng-if="!upgradeInfo.isLastVersion"> new </small>
+               </a></li>
             <li><a><i class="fa fa-user"></i>
               <span ng-if="authInfo.desc">{{authInfo.desc}}({{authInfo.id.substring(0,3)+'..'}})</span>
               <span ng-if="!authInfo.desc">{{authInfo.id}}</span>

@@ -1,0 +1,35 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  <h4 class="modal-title">
+    关于</h4>
+</div>
+<div class="modal-body">
+
+  <h4>
+      <img ng-src="{{app_logo}}" style="display:inline-block;" width="40"/>
+       &nbsp;&nbsp;OSS 浏览器  <small class="text-orange">v {{info.currentVersion}}</small>
+ </h4>
+
+  <small class="text-muted">开源：
+      <a href="" ng-click="open('https://github.com/aliyun/oss-browser')">https://github.com/aliyun/oss-browser</a>
+  </small>
+  
+  <hr/>
+ 
+
+  <div class="pd2">
+    <div ng-if="!isLoading && info.lastVersion">
+      <span ng-if="!info.isLastVersion" class="text-info">发现新版本：v {{info.lastVersion}} 
+               &nbsp;&nbsp;&nbsp;&nbsp; 
+               <a href="" ng-click="open(info.link)" class="btn btn-sm btn-success">
+                   <i class="fa fa-download"></i> 点此下载</a></span>
+    </div>
+   
+  </div>
+
+ 
+
+</div> 
+</div>
