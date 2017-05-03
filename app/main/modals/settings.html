@@ -4,28 +4,26 @@
       <span aria-hidden="true">&times;</span>
     </button>
     <h4 class="modal-title">
-      <i class="fa fa-database text-warning"></i>
-      设置</h4>
+      <i class="fa fa-cog text-warning"></i> 设置
+    </h4>
   </div>
   <div class="modal-body">
 
-      <div class="form-group">
-          <label class="col-sm-4 control-label">最大上传任务数:</label>
-          <div class="col-sm-7">
-              <input type="number" ng-model="set.maxUploadJobCount" required
-                     class=" form-control"/>
-          </div>
+    <div class="form-group">
+      <label class="col-sm-4 control-label">最大上传任务数:</label>
+      <div class="col-sm-7">
+        <input type="number" ng-model="set.maxUploadJobCount" required class=" form-control" />
       </div>
+    </div>
 
-      <div class="form-group">
-          <label class="col-sm-4 control-label">最大下载任务数:</label>
-          <div class="col-sm-7">
-              <input type="number" ng-model="set.maxDownloadJobCount" required
-                     class=" form-control"/>
-          </div>
+    <div class="form-group">
+      <label class="col-sm-4 control-label">最大下载任务数:</label>
+      <div class="col-sm-7">
+        <input type="number" ng-model="set.maxDownloadJobCount" required class=" form-control" />
       </div>
+    </div>
 
-      <!-- <div class="form-group">
+    <!-- <div class="form-group">
           <label class="col-sm-4 control-label">保存历史记录长度:</label>
           <div class="col-sm-7">
               <input type="number" ng-model="set.historiesLength" required
@@ -43,4 +41,5 @@
       <i class="glyphicon glyphicon-remove"></i>
       取消</button>
   </div>
-</div>
+  </div>
+</form>

@@ -1,7 +1,9 @@
 {
   "name": "oss-browser",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "main": "main-dev.js",
+  "upgrade_url": "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
+  
   "scripts": {
     "dev": "npm-run-all --parallel watch dev:run",
     "dev:run": "cross-env NODE_ENV=development electron .",

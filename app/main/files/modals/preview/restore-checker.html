@@ -1,9 +1,12 @@
 <div is-loading ng-if="_Loading"></div>
-<div ng-if="!_Loading && info.msg" class="text-center bg-{{info.msgbg}}" style="padding:20px">
-   {{info.msg}}
-   <span ng-if="info.needRestore">,
-    <a href=""  ng-click="showRestore()">立即恢复</a>
-  </span>
+<div ng-if="!_Loading && info.type">
+    
+   <div ng-if="info.type==1" class="text-center bg-danger" style="padding:20px">归档文件，需要恢复才能预览或下载  
+     <a href="" ng-click="showRestore()">立即恢复</a>
+   </div>
+   <div ng-if="info.type==2" class="text-center bg-warning" style="padding:20px">归档文件正在恢复中，请耐心等待...</div>
+   <div ng-if="info.type==3" class="text-right bg-primary pd-4">归档文件已恢复，可读截止时间：{{info.expired_time|timeFormat}}&nbsp;</div>
+ 
 </div>
 <section ng-if="!_Loading && info.showContent">
   <ng-transclude></ng-transclude>
