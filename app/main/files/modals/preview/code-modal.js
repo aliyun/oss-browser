@@ -40,7 +40,7 @@ angular.module('web')
           DiffModal.show('Diff', originalContent, v, function (v) {
             Toast.info('正在保存...');
 
-            ossSvs.saveContent(bucketInfo.region, bucketInfo.bucket, objectInfo.path, v).then(function (result) {
+            ossSvs2.saveContent(bucketInfo.region, bucketInfo.bucket, objectInfo.path, v).then(function (result) {
               Toast.success('保存成功');
               cancel();
             });
@@ -52,9 +52,10 @@ angular.module('web')
 
       function getContent() {
         $scope.isLoading = true;
-        ossSvs.getContent(bucketInfo.region, bucketInfo.bucket, objectInfo.path).then(function (result) {
+        ossSvs2.getContent(bucketInfo.region, bucketInfo.bucket, objectInfo.path).then(function (result) {
           $scope.isLoading = false;
-          var data = result.content.toString();
+    
+          var data = result.Body.toString();
           $scope.originalContent = data;
           $scope.content = data;
           editor.setValue(data);

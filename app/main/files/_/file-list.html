@@ -12,8 +12,8 @@
       <th>最后修改时间</th>
       <th class="text-right">操作&nbsp;</th>
     </tr>
-
-    <tr ng-repeat="item in objects|filter:{name:sch.objectName}"
+<!--|filter:{name:sch.objectName}-->
+    <tr ng-repeat="item in objects"
     ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);"
      ng-class="{'info': sel.x['i_'+$index]}"
     >
@@ -62,8 +62,8 @@
 
   <div ng-if="!ref.isListView" class="pd10" style="height:100%"
   ng-click="sel.all=false;selectAll();toggleTransVisible(false);">
-
-    <div ng-repeat="item in objects|filter:{name:sch.objectName}"
+<!--|filter:{name:sch.objectName}-->
+    <div ng-repeat="item in objects"
     item-index="{{$index}}"
     class="item-block"
     ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);$event.stopPropagation()"
@@ -78,7 +78,7 @@
        <img ng-if="item.isFolder!=true && item.pic_url && (item.storageClass!='Archive' || (item.storageClass=='Archive' && item.storageStatus==3))" ng-src="{{item.pic_url}}"
        class="pull-left" style="max-width:32px;max-height:32px;margin:4px;"/>
 
-       <div class="item-block-name" uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'">{{item.name}}</div>
+       <div class="item-block-name" uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'" tooltip-append-to-body="true">{{item.name}}</div>
        <div class="item-block-desc" ng-if="item.isFolder==true">目录</div>
        <div class="item-block-desc" ng-if="item.isFolder!=true">{{item.size|sizeFormat}}</div>
     </div>

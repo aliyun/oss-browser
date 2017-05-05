@@ -7,10 +7,10 @@ angular.module('web')
       var fs = require('fs');
 
       angular.extend($scope, {
-        logout: logout,
-        showReleaseNotes: showReleaseNotes,
+        logout: logout, 
         showFavList: showFavList,
         showAbout: showAbout,
+        showReleaseNote: showReleaseNote,
         upgradeInfo: {
           isLastVersion: true
         }
@@ -54,12 +54,17 @@ angular.module('web')
         },1);
       }
 
-      function showReleaseNotes(){
+      function showReleaseNote(){
         var converter = new showdown.Converter();
-        var text = fs.readFileSync('./release-notes.md');
-        text = text + '';
-        var html = converter.makeHtml(text);
-        Dialog.alert('Release Notes', html);
+        fs.readFile('./release-notes/'+pkg.version+'.md', function(err, text){
+            if(err){
+              console.error(err);
+              return;
+            }
+            text = text + '';
+            var html = converter.makeHtml(text);
+            Dialog.alert('主要更新', html, function(){}, {size:'lg'});
+        }); 
       }
 
       function showFavList(){
@@ -77,5 +82,7 @@ angular.module('web')
           size: 'sm'
         });
       }
+     
+
     }])
 ;

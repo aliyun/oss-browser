@@ -6,8 +6,13 @@ angular.module('web')
     return {
       load: load,
 
-      compareVersion: compareVersion
+      compareVersion: compareVersion,
+      getReleaseNote: getReleaseNote
     };
+    
+    function getReleaseNote(version, fn){
+      $.get('release-notes/'+version+'.md', fn);
+    }
 
     function load(fn) {
 
@@ -18,6 +23,7 @@ angular.module('web')
         var fileName = getUpgradeFileName();
         var link = data['package_url'].replace(/(\/*$)/g, '') +
           '/' + data['version'] + '/' + fileName;
+        
         fn({
           currentVersion: pkg.version,
           isLastVersion: isLastVersion,
@@ -56,5 +62,7 @@ angular.module('web')
         return NAME + '-linux-x64.zip';
       }
     }
+
+    
 
   }]);

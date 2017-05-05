@@ -12,10 +12,50 @@ angular.module('web')
         getFileInfo: getFileInfo,
         listAllBuckets: listAllBuckets,
 
-        listFiles: listFiles,
+        listFiles: listFiles, 
+        getContent: getContent,
+        saveContent: saveContent,
 
         parseRestoreInfo: parseRestoreInfo
       };
+
+      function getContent(region, bucket, key){
+        return new Promise(function (a, b) {
+          var client = getClient({region:region, bucket:bucket}); 
+          client.getObject({
+            Bucket: bucket,
+            Key: key
+          }, function(err, data){ 
+            if(err){
+              handleError(err);
+              b(err);
+            }else{
+              a(data);
+            }
+          });
+        });   
+      }
+
+      function saveContent(region, bucket, key, content){
+         return new Promise(function (a, b) {
+          var client = getClient({
+            region: region,
+            bucket: bucket
+          });
+          client.putObject({
+            Bucket: bucket, 
+            Key: key,
+            Body: content
+          }, function(err){
+            if(err){
+               handleError(err);
+              b(err);
+            }else{
+              a();
+            }
+          }); 
+         });
+      }
 
       function createBucket(region, bucket, acl, storageClass) {
 
@@ -104,6 +144,8 @@ angular.module('web')
         return p;
       }
 
+ 
+
       //同一时间只能有一个查询，上一个查询如果没有完成，则会被abort
       var keepListFilesJob;
       function listFiles(region, bucket, key, folderOnly) {
@@ -115,6 +157,7 @@ angular.module('web')
 
         return new Promise(function (a, b) {
           keepListFilesJob = new deepListJob(region, bucket, key, folderOnly, function(data){
+             
              a(data)
           }, function(err){
             handleError(err);
@@ -130,6 +173,8 @@ angular.module('web')
           region: region,
           bucket: bucket
         });
+
+        var endpoint = $rootScope.bucketMap[bucket].extranetEndpoint;
 
         var t = [];
         var t_pre = [];
@@ -149,12 +194,18 @@ angular.module('web')
               return;
             }
 
+
+            var prefix = opt.Prefix;
+            if(!prefix.endsWith('/')){
+              prefix = prefix.substring(0, prefix.lastIndexOf('/')+1)
+            }
+
             if (result.CommonPrefixes) {
               //目录
               result.CommonPrefixes.forEach(function (n) {
                 n = n.Prefix;
                 t_pre.push({
-                  name: n.substring(opt.Prefix.length).replace(/(\/$)/, ''),
+                  name: n.substring(prefix.length).replace(/(\/$)/, ''),
                   path: n,
                   //size: 0,
                   isFolder: true,
@@ -167,14 +218,18 @@ angular.module('web')
               //文件 
               result['Contents'].forEach(function (n) {
                 n.Prefix = n.Prefix || '';
-                if (n.Key != opt.Prefix) {
+
+                
+                if (!opt.Prefix.endsWith('/') || n.Key != opt.Prefix) {
                   n.isFile = true;
                   n.itemType = 'file';
                   n.path = n.Key;
-                  n.name = n.Key.substring(opt.Prefix.length);
+                  n.name =  n.Key.substring(prefix.length);
                   n.size = n.Size;
                   n.storageClass = n.StorageClass;
                   n.type = n.Type;
+                  n.url = 'http://'+ opt.Bucket+'.'+endpoint+'/'+ n.Key;
+ 
                   t.push(n);
                 }
               });

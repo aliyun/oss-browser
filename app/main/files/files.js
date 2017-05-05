@@ -13,6 +13,7 @@ angular.module('web')
           bucketName: '',
           objectName: ''
         },
+        searchObjectName: searchObjectName,
 
         goIn: goIn,
 
@@ -114,6 +115,19 @@ angular.module('web')
 
       }
 
+
+      //按名称过滤
+      var ttid2;
+      function searchObjectName(){
+         $timeout.cancel(ttid2);
+         ttid2 = $timeout(function(){ 
+           var info = angular.copy($scope.currentInfo);
+           info.key += $scope.sch.objectName;
+          listFiles(info); 
+         },600);
+              
+      }
+
       function addEvents() {
         $scope.$on('ossAddressChange', function (e, addr, forceRefresh) {
 
@@ -142,21 +156,16 @@ angular.module('web')
             }
             info.region = $rootScope.bucketMap[info.bucket].region;
             $scope.ref.isBucketList = false;
-            listFiles(info, function () {
+ 
+            if (fileName) { 
+              //search
+              $scope.sch.objectName =  fileName; 
+              searchObjectName();
 
-              if (fileKey) {
-                //show preview
-                var arr = $scope.objects;
-                for (var i = 0; i < arr.length; i++) {
-                  if (arr[i].path == fileKey) {
-                    showPreview(arr[i]);
-                    break;
-                  }
-                }
-                Toast.warn('找不到文件:' + fileName);
-
-              }
-            });
+            }else{
+              listFiles();
+            }
+            
           } else {
 
             //list buckets
