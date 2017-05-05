@@ -20,13 +20,17 @@ angular.module('web')
           if(data.Restore){
             var info = parseRestoreInfo(data.Restore);
             if(info['ongoing-request']=='true'){
-              $scope.info.msg = '正在恢复中，请耐心等待！';
+              $scope.info.type = 2;
+              //$scope.info.msg = '正在恢复中，请耐心等待！';
             }else{
-              $scope.info.msg = '可读截止时间：'+ info['expiry-date']
+              $scope.info.type = 3;
+              $scope.info.expiry_date = info['expiry-date'];
+              //$scope.info.msg = '可读截止时间：'+ info['expiry-date']
             }
           }
           else{
-             $scope.info.msg = null;
+            $scope.info.type = 1;
+            // $scope.info.msg = null;
           }
 
           $scope.isLoading = false;

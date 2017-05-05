@@ -17,7 +17,8 @@ var taskFns = {
       //.pipe(plugins.jshint())
       //.pipe(plugins.jshint.reporter('default'))
       .pipe(plugins.babel({
-        presets: ['es2015']
+        presets: ['es2015','stage-3'],
+        plugins: ['transform-runtime']
       }))
       .pipe(plugins.concat('app.js'))
       .pipe(gulp.dest(DIST))

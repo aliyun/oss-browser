@@ -26,7 +26,7 @@ angular.module('web')
         }
       }
 
-      function afterRestoreSubmit() {
+      function afterRestoreSubmit() { 
         showFn.callback();
       }
 

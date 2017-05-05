@@ -21,7 +21,7 @@
         <input type="checkbox" ng-model="sel.x['i_'+$index]" name="x" ng-change="selectChanged($event,$index)" ng-click="$event.stopPropagation()"/>
       </td>
       <td>
-        <div class="text-overflow" style="cursor:pointer;">
+        <div class="text-overflow file-item-name"  item-index="{{$index}}" style="cursor:pointer;">
 
           <span style="color:orange" ng-if="item.isFolder==true">
             <i class="fa fa-folder"></i>
@@ -64,6 +64,7 @@
   ng-click="sel.all=false;selectAll();toggleTransVisible(false);">
 
     <div ng-repeat="item in objects|filter:{name:sch.objectName}"
+    item-index="{{$index}}"
     class="item-block"
     ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);$event.stopPropagation()"
     ng-dblclick="item.isFolder!=true?showPreview(item):goIn(currentBucket,item.path);$event.stopPropagation()"
@@ -72,8 +73,9 @@
      ng-change="selectChanged($event,$index)" ng-click="$event.stopPropagation()"/>
 
        <i class="fa fa-folder" style="color:orange" ng-if="!item.pic_url && item.isFolder==true"></i>
-       <i class="fa fa-{{item|fileIcon}}" ng-if="(!item.pic_url || item.storageClass=='Archive') && item.isFolder!=true"></i>
-       <img ng-if="item.pic_url && item.storageClass!='Archive'" ng-src="{{item.pic_url}}"
+
+       <i class="fa fa-{{item|fileIcon}}" ng-if="item.isFolder!=true && (!item.pic_url || (item.storageClass=='Archive' && item.storageStatus!=3))"></i>
+       <img ng-if="item.isFolder!=true && item.pic_url && (item.storageClass!='Archive' || (item.storageClass=='Archive' && item.storageStatus==3))" ng-src="{{item.pic_url}}"
        class="pull-left" style="max-width:32px;max-height:32px;margin:4px;"/>
 
        <div class="item-block-name" uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'">{{item.name}}</div>

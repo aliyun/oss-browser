@@ -16,14 +16,13 @@
   <div auto-height="-130" class="file-list-box">
      <div ng-if="isLoading" is-loading></div>
 
-    <div ng-if="ref.isBucketList">
+    <section ng-if="ref.isBucketList">
       <div ng-include="'main/files/_/bucket-list.html'"></div>
-    </div>
+    </section>
 
-    <div ng-if="!ref.isBucketList" drop-zone="handlerDrop">
-      <div ng-include="'main/files/_/file-list.html'"  auto-height="-136"></div>
-
-    </div>
+    <section ng-if="!ref.isBucketList" drop-zone="handlerDrop">
+      <div ng-include="'main/files/_/file-list.html'" auto-height="-136" id="file-list"  when-scroll="whenScroll"></div>
+    </section>
 
   </div>
 

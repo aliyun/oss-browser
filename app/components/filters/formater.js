@@ -16,7 +16,7 @@ angular.module('web')
         if (s == 'Invalid date') {
           return de;
         }
-        return moment(d).format('YYYY-MM-DD HH:mm:ss');
+        return moment(s).format('YYYY-MM-DD HH:mm:ss');
       }
       catch(e){
         return de;
@@ -176,7 +176,11 @@ angular.module('web')
   return function(item){
     if(item.storageClass=='Archive'){
       //restore
-      return 'square';
+      if(item.storageStatus==2){
+        return 'hourglass-2 text-warning';
+      }else if(item.storageStatus!=3){
+         return 'square';
+      }
     }
     var info = fileSvs.getFileType(item);
 
