@@ -9,6 +9,7 @@ angular.module('web')
       set: {
         maxUploadJobCount: settingsSvs.maxUploadJobCount.get(),
         maxDownloadJobCount: settingsSvs.maxDownloadJobCount.get(),
+        showImageSnapshot: settingsSvs.showImageSnapshot.get(),
         historiesLength : settingsSvs.historiesLength.get(),
       },
       onSubmit:onSubmit,
@@ -20,6 +21,7 @@ angular.module('web')
 
       settingsSvs.maxUploadJobCount.set( $scope.set.maxUploadJobCount );
       settingsSvs.maxDownloadJobCount.set( $scope.set.maxDownloadJobCount );
+      settingsSvs.showImageSnapshot.set( $scope.set.showImageSnapshot );
       settingsSvs.historiesLength.set( $scope.set.historiesLength );
 
       Toast.success('保存成功');

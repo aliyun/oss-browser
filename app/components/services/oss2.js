@@ -1,5 +1,5 @@
 angular.module('web')
-  .factory('ossSvs2', ['$q', '$rootScope','$timeout', '$state', 'Toast', 'Const', 'AuthInfo',
+  .factory('ossSvs2', ['$q', '$rootScope', '$timeout', '$state', 'Toast', 'Const', 'AuthInfo',
     function ($q, $rootScope, $timeout, $state, Toast, Const, AuthInfo) {
       var AUTH_INFO = Const.AUTH_INFO_KEY;
       var DEF_ADDR = 'oss://';
@@ -9,52 +9,78 @@ angular.module('web')
       return {
         createBucket: createBucket,
         restoreFile: restoreFile,
-        getFileInfo: getFileInfo,
+        getFileInfo: getFileInfo, //head object
         listAllBuckets: listAllBuckets,
 
-        listFiles: listFiles, 
+        listAllFiles: listAllFiles,
+        listFiles: listFiles,
         getContent: getContent,
         saveContent: saveContent,
+
+        getACL: getACL,
 
         parseRestoreInfo: parseRestoreInfo
       };
 
-      function getContent(region, bucket, key){
+      function getACL(region, bucket, key) {
         return new Promise(function (a, b) {
-          var client = getClient({region:region, bucket:bucket}); 
-          client.getObject({
+          var client = getClient({
+            region: region,
+            bucket: bucket
+          });
+          client.getObjectAcl({
             Bucket: bucket,
             Key: key
-          }, function(err, data){ 
-            if(err){
+          }, function (err, data) {
+            if (err) {
               handleError(err);
               b(err);
-            }else{
+            } else {
               a(data);
             }
           });
-        });   
+        });
       }
 
-      function saveContent(region, bucket, key, content){
-         return new Promise(function (a, b) {
+      function getContent(region, bucket, key) {
+        return new Promise(function (a, b) {
+          var client = getClient({
+            region: region,
+            bucket: bucket
+          });
+          client.getObject({
+            Bucket: bucket,
+            Key: key
+          }, function (err, data) {
+            if (err) {
+              handleError(err);
+              b(err);
+            } else {
+              a(data);
+            }
+          });
+        });
+      }
+
+      function saveContent(region, bucket, key, content) {
+        return new Promise(function (a, b) {
           var client = getClient({
             region: region,
             bucket: bucket
           });
           client.putObject({
-            Bucket: bucket, 
+            Bucket: bucket,
             Key: key,
             Body: content
-          }, function(err){
-            if(err){
-               handleError(err);
+          }, function (err) {
+            if (err) {
+              handleError(err);
               b(err);
-            }else{
+            } else {
               a();
             }
-          }); 
-         });
+          });
+        });
       }
 
       function createBucket(region, bucket, acl, storageClass) {
@@ -137,18 +163,117 @@ angular.module('web')
         });
       }
 
-      function listAllBuckets() {
-        var client = getClient();
-        var p = deepList(client, 'listBuckets', {}, 'Buckets');
-        p.catch(handleError);
-        return p;
+      async function listFiles(region, bucket, key, marker) {
+
+        var result = await _listFilesOrigion(region, bucket, key, marker);
+        var arr = result.data;
+        if (arr && arr.length) { 
+          $timeout( ()=> {
+            asyncLoadStorageStatus(region, bucket, arr);
+          }); 
+        }
+        return result;
+      }
+      
+      async function asyncLoadStorageStatus(region, bucket, arr){
+         for (var item of arr) {
+            if (!item.isFile || item.storageClass != 'Archive') continue;
+
+            var data = await getFileInfo(region, bucket, item.path)
+            //console.log(data);
+            if (data.Restore) {
+              var info = parseRestoreInfo(data.Restore);
+              if (info['ongoing-request'] == 'true') {
+                item.storageStatus = 2; // '归档文件正在恢复中，请耐心等待...'; 
+              } else {
+                item.expired_time = info['expiry-date'];
+                item.storageStatus = 3; // '归档文件，已恢复，可读截止时间
+              }
+            }
+          }
       }
 
- 
+      function _listFilesOrigion(region, bucket, key, marker) {
+
+        return new Promise(function (resolve, reject) {
+          var client = getClient({
+            region: region,
+            bucket: bucket
+          });
+
+          var endpoint = $rootScope.bucketMap[bucket].extranetEndpoint;
+
+          var t = [];
+          var t_pre = [];
+          var opt = {
+            Bucket: bucket,
+            Prefix: key,
+            Delimiter: '/',
+            Marker: marker || ''
+          };
+
+          client.listObjects(opt, function (err, result) {
+
+            if (err) {
+              handleError(err);
+              reject(err);
+              return;
+            }
+
+            var prefix = opt.Prefix;
+            if (!prefix.endsWith('/')) {
+              prefix = prefix.substring(0, prefix.lastIndexOf('/') + 1)
+            }
+
+            if (result.CommonPrefixes) {
+              //目录
+              result.CommonPrefixes.forEach(function (n) {
+                n = n.Prefix;
+                t_pre.push({
+                  name: n.substring(prefix.length).replace(/(\/$)/, ''),
+                  path: n,
+                  //size: 0,
+                  isFolder: true,
+                  itemType: 'folder'
+                });
+              });
+            }
+
+            if (result['Contents']) {
+              //文件 
+              result['Contents'].forEach(function (n) {
+                n.Prefix = n.Prefix || '';
+
+                if (!opt.Prefix.endsWith('/') || n.Key != opt.Prefix) {
+                  n.isFile = true;
+                  n.itemType = 'file';
+                  n.path = n.Key;
+                  n.name = n.Key.substring(prefix.length);
+                  n.size = n.Size;
+                  n.storageClass = n.StorageClass;
+                  n.type = n.Type;
+                  n.url = 'http://' + opt.Bucket + '.' + endpoint + '/' + n.Key;
+
+                  t.push(n);
+                }
+              });
+            }
+
+            //console.log(result)
+            resolve({
+              data: t_pre.concat(t),
+              marker: result.NextMarker
+            });
+
+          });
+
+        });
+      }
 
       //同一时间只能有一个查询，上一个查询如果没有完成，则会被abort
       var keepListFilesJob;
-      function listFiles(region, bucket, key, folderOnly) {
+
+      function listAllFiles(region, bucket, key, folderOnly) {
 
         if (keepListFilesJob) {
           keepListFilesJob.abort();
@@ -156,18 +281,17 @@ angular.module('web')
         }
 
         return new Promise(function (a, b) {
-          keepListFilesJob = new deepListJob(region, bucket, key, folderOnly, function(data){
-             
-             a(data)
-          }, function(err){
+          keepListFilesJob = new DeepListJob(region, bucket, key, folderOnly, function (data) {
+            a(data)
+          }, function (err) {
             handleError(err);
-             b(err)
-          }); 
-        }); 
+            b(err)
+          });
+        });
       }
 
-      function deepListJob(region, bucket, key, folderOnly, succFn, errFn) {
-        var stopFlag=false;
+      function DeepListJob(region, bucket, key, folderOnly, succFn, errFn) {
+        var stopFlag = false;
 
         var client = getClient({
           region: region,
@@ -186,18 +310,17 @@ angular.module('web')
         _dig();
 
         function _dig() {
-          if(stopFlag)return;
+          if (stopFlag) return;
           client.listObjects(opt, function (err, result) {
-            if(stopFlag)return;
+            if (stopFlag) return;
             if (err) {
               errFn(err);
               return;
             }
 
-
             var prefix = opt.Prefix;
-            if(!prefix.endsWith('/')){
-              prefix = prefix.substring(0, prefix.lastIndexOf('/')+1)
+            if (!prefix.endsWith('/')) {
+              prefix = prefix.substring(0, prefix.lastIndexOf('/') + 1)
             }
 
             if (result.CommonPrefixes) {
@@ -219,17 +342,16 @@ angular.module('web')
               result['Contents'].forEach(function (n) {
                 n.Prefix = n.Prefix || '';
 
-                
                 if (!opt.Prefix.endsWith('/') || n.Key != opt.Prefix) {
                   n.isFile = true;
                   n.itemType = 'file';
                   n.path = n.Key;
-                  n.name =  n.Key.substring(prefix.length);
+                  n.name = n.Key.substring(prefix.length);
                   n.size = n.Size;
                   n.storageClass = n.StorageClass;
                   n.type = n.Type;
-                  n.url = 'http://'+ opt.Bucket+'.'+endpoint+'/'+ n.Key;
- 
+                  n.url = 'http://' + opt.Bucket + '.' + endpoint + '/' + n.Key;
+
                   t.push(n);
                 }
               });
@@ -239,7 +361,7 @@ angular.module('web')
               opt.Marker = result.NextMarker;
               $timeout(_dig, 10);
             } else {
-              if(stopFlag)return;
+              if (stopFlag) return;
               succFn(t_pre.concat(t));
             }
           });
@@ -247,72 +369,31 @@ angular.module('web')
 
         //////////////////////////
         this.abort = function () {
-           stopFlag = true;
+          stopFlag = true;
         }
       }
 
-      function listFiles2(region, bucket, key, folderOnly) {
-        var client = getClient({
-          region: region,
-          bucket: bucket
-        });
-        var p = deepList(client, 'listObjects', {
-          Bucket: bucket,
-          Prefix: key,
-          Delimiter: '/'
-        }, 'Contents', folderOnly);
-        p.catch(handleError);
-        return p;
-      }
+      function listAllBuckets() {
+        return new Promise(function (resolve, reject) {
+          var client = getClient();
 
-      function deepList(client, callFn, opt, resultKey, folderOnly) {
+          var t = [];
 
-        var df = $q.defer();
-        var t = [],
-          t_pre = [];
+          var opt = {};
+          _dig();
 
-        function _dig() {
-          client[callFn].call(client, opt || {}, function (err, result) {
+          function _dig() {
 
-            if (err) {
-              df.reject(err);
-              return;
-            }
+            client.listBuckets(opt, function (err, result) {
+              if (err) {
+                handleError(err);
+                reject(err);
+                return;
+              }
 
-            if (result.CommonPrefixes) {
-              //目录
-              result.CommonPrefixes.forEach(function (n) {
-                n = n.Prefix;
-                t_pre.push({
-                  name: n.substring(opt.Prefix.length).replace(/(\/$)/, ''),
-                  path: n,
-                  //size: 0,
-                  isFolder: true,
-                  itemType: 'folder'
-                });
-              });
-            }
-
-            if (result[resultKey]) {
-              //文件
-              if (resultKey == 'Contents') {
-                if (!folderOnly)
-                  result['Contents'].forEach(function (n) {
-                    n.Prefix = n.Prefix || '';
-                    if (n.Key != opt.Prefix) {
-                      n.isFile = true;
-                      n.itemType = 'file';
-                      n.path = n.Key;
-                      n.name = n.Key.substring(opt.Prefix.length);
-                      n.size = n.Size;
-                      n.storageClass = n.StorageClass;
-                      n.type = n.Type;
-                      t.push(n);
-                    }
-                  });
-              } else {
-                //bucket
-                result[resultKey].forEach(function (n) {
+              //bucket
+              if (result['Buckets']) {
+                result['Buckets'].forEach(function (n) {
                   n.creationDate = n.CreationDate;
                   n.region = n.Location;
                   n.name = n.Name;
@@ -323,20 +404,19 @@ angular.module('web')
                   n.isBucket = true;
                   n.itemType = 'bucket';
                 });
-                t = t.concat(result[resultKey]);
+                t = t.concat(result['Buckets']);
               }
-            }
 
-            if (result.NextMarker) {
-              opt.Marker = result.NextMarker;
-              _dig();
-            } else {
-              df.resolve(t_pre.concat(t));
-            }
-          });
-        }
-        _dig();
-        return df.promise;
+              if (result.NextMarker) {
+                opt.Marker = result.NextMarker;
+                _dig();
+              } else {
+                resolve(t);
+              }
+            });
+          }
+        });
+
       }
 
       function parseRestoreInfo(s) {

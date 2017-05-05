@@ -7,7 +7,7 @@ angular.module('web')
       transclude: false,
       scope: {
         autoHeight: '=',
-        whenScroll: '='
+        bottomLoader: '&'
       }
     };
 
@@ -35,13 +35,18 @@ angular.module('web')
       resize();
 
       //////////////////////////////
-      if (scope.whenScroll) { 
-        var tid2;
+      if (scope.bottomLoader) { 
+
+        var tid2; 
         function onScroll() { 
            $timeout.cancel(tid2);
-            tid2 = $timeout(function () { 
-              scope.whenScroll();
-            },500);
+           tid2 = $timeout(function () { 
+              
+              if($(ele)[0].scrollHeight>0 
+              && ($(ele).parent().height() +  $(ele).scrollTop() +10 >= $(ele)[0].scrollHeight) ){ 
+                scope.bottomLoader();
+              }
+           },500);
         } 
 
         $(window).resize(onScroll);

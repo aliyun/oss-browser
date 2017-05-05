@@ -1,6 +1,6 @@
 {
   "name": "oss-browser",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "main": "main-dev.js",
   "upgrade_url": "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
   

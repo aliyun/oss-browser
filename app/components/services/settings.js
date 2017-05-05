@@ -20,6 +20,15 @@ angular.module('web')
       }
     },
 
+    showImageSnapshot: {
+      get: function(){
+        return parseInt(localStorage.getItem('showImageSnapshot')||1);
+      },
+      set: function(v){
+        return localStorage.setItem('showImageSnapshot',v);
+      }
+    },
+
     historiesLength: {
       get: function(){
         return parseInt(localStorage.getItem('historiesLength')||100);

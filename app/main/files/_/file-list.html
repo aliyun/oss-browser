@@ -1,88 +1,99 @@
 <div ng-if="!isLoading && (!objects || objects.length==0)" no-data></div>
 
 <div ng-if="!isLoading && objects.length>0" style="height:100%">
+  <section ng-if="ref.isListView">
+    <table class="table table-condensed table-striped mg0">
+      <tr>
+        <th width="40" class="text-center">
+          <input type="checkbox" ng-model="sel.all" name="x-all" ng-click="selectAll()" />
+        </th>
+        <th>名称</th>
+        <th>大小</th>
+        <th>最后修改时间</th>
+        <th class="text-right">操作&nbsp;</th>
+      </tr>
+      <!--|filter:{name:sch.objectName}-->
+      <tr ng-repeat="item in objects" ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);" ng-class="{'info': sel.x['i_'+$index]}">
+        <td class="text-center">
+          <input type="checkbox" ng-model="sel.x['i_'+$index]" name="x" ng-change="selectChanged($event,$index)" ng-click="$event.stopPropagation()" />
+        </td>
+        <td>
+          <div class="text-overflow file-item-name" item-index="{{$index}}" style="cursor:pointer;">
 
-  <table class="table table-condensed table-striped" ng-if="ref.isListView">
-    <tr>
-      <th width="40" class="text-center">
-        <input type="checkbox" ng-model="sel.all" name="x-all" ng-click="selectAll()"/>
-      </th>
-      <th>名称</th>
-      <th>大小</th>
-      <th>最后修改时间</th>
-      <th class="text-right">操作&nbsp;</th>
-    </tr>
-<!--|filter:{name:sch.objectName}-->
-    <tr ng-repeat="item in objects"
-    ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);"
-     ng-class="{'info': sel.x['i_'+$index]}"
-    >
-      <td class="text-center">
-        <input type="checkbox" ng-model="sel.x['i_'+$index]" name="x" ng-change="selectChanged($event,$index)" ng-click="$event.stopPropagation()"/>
-      </td>
-      <td>
-        <div class="text-overflow file-item-name"  item-index="{{$index}}" style="cursor:pointer;">
-
-          <span style="color:orange" ng-if="item.isFolder==true">
+            <span style="color:orange" ng-if="item.isFolder==true">
             <i class="fa fa-folder"></i>
             &nbsp;
             <a ng-click="goIn(currentBucket,item.path);$event.stopPropagation()">
               <span>{{item.name}}</span>
             </a>
-          </span>
+            </span>
 
-          <span ng-if="item.isFolder!=true">
+            <span ng-if="item.isFolder!=true">
             <i class="fa fa-{{item|fileIcon}}"></i>
             &nbsp;
             <a ng-click="showPreview(item);$event.stopPropagation()">
               <span ng-class="{'text-muted': item.status=='uploading'}">{{item.name}}</span>
             </a>
-          </span>
-        </div>
-      </td>
-      <td>
-        <span ng-if="item.isFolder==true" class="text-muted">目录</span>
-        <span ng-if="item.isFolder!=true">{{item.size|sizeFormat}}</span>
-      </td>
-      <td>{{item.lastModified|timeFormat}}</td>
-      <td align="right">
-        <!-- <a href="" ng-if="item.isFolder!=true" ng-click="showPreview(item);$event.stopPropagation()">预览</a> -->
-        <!-- <a href="" ng-if="item.isFolder==true" ng-click="goIn(currentBucket,item.path);$event.stopPropagation()">进入</a>
+            </span>
+          </div>
+        </td>
+        <td>
+          <span ng-if="item.isFolder==true" class="text-muted">目录</span>
+          <span ng-if="item.isFolder!=true">{{item.size|sizeFormat}}</span>
+        </td>
+        <td>{{item.lastModified|timeFormat}}</td>
+        <td align="right">
+          <!-- <a href="" ng-if="item.isFolder!=true" ng-click="showPreview(item);$event.stopPropagation()">预览</a> -->
+          <!-- <a href="" ng-if="item.isFolder==true" ng-click="goIn(currentBucket,item.path);$event.stopPropagation()">进入</a>
         | -->
-        <span ng-if="!item.isFolder">
-        <a href=""
-            ng-click="showAddress(item);$event.stopPropagation()" class="text-info">获取地址</a> |</span>
-        <a href="" ng-click="showDownload(item);$event.stopPropagation()">下载</a> |
-        <a href="" ng-click="showDeleteFiles([item])" class="text-danger">删除</a>
-        <!-- <a href="" ng-click="showGrant([item]);$event.stopPropagation()" class="text-success">授权</a> -->
-        &nbsp;
-      </td>
-    </tr>
-  </table>
+          <span ng-if="!item.isFolder && (item.storageClass!='Archive' || item.storageStatus==3)">
+            <a href="" ng-click="showAddress(item);$event.stopPropagation()" class="text-info">获取地址</a> | 
+          </span>
 
-  <div ng-if="!ref.isListView" class="pd10" style="height:100%"
-  ng-click="sel.all=false;selectAll();toggleTransVisible(false);">
-<!--|filter:{name:sch.objectName}-->
-    <div ng-repeat="item in objects"
-    item-index="{{$index}}"
-    class="item-block"
-    ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);$event.stopPropagation()"
-    ng-dblclick="item.isFolder!=true?showPreview(item):goIn(currentBucket,item.path);$event.stopPropagation()"
-    ng-class={'active':sel.x['i_'+$index]}>
-       <input type="checkbox" ng-model="sel.x['i_'+$index]" name="x"  class="pull-right"
-     ng-change="selectChanged($event,$index)" ng-click="$event.stopPropagation()"/>
+          <span ng-if="item.storageClass!='Archive' || item.storageStatus==3">
+            <a href="" ng-click="showDownload(item);$event.stopPropagation()">下载</a> |
+          </span>
 
-       <i class="fa fa-folder" style="color:orange" ng-if="!item.pic_url && item.isFolder==true"></i>
+          <span ng-if="!item.isFolder && (item.storageClass=='Archive' && item.storageStatus!=3)">
+             <a href="" ng-click="showRestore(item);$event.stopPropagation()">恢复</a> |
+          </span>
 
-       <i class="fa fa-{{item|fileIcon}}" ng-if="item.isFolder!=true && (!item.pic_url || (item.storageClass=='Archive' && item.storageStatus!=3))"></i>
-       <img ng-if="item.isFolder!=true && item.pic_url && (item.storageClass!='Archive' || (item.storageClass=='Archive' && item.storageStatus==3))" ng-src="{{item.pic_url}}"
-       class="pull-left" style="max-width:32px;max-height:32px;margin:4px;"/>
 
-       <div class="item-block-name" uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'" tooltip-append-to-body="true">{{item.name}}</div>
-       <div class="item-block-desc" ng-if="item.isFolder==true">目录</div>
-       <div class="item-block-desc" ng-if="item.isFolder!=true">{{item.size|sizeFormat}}</div>
+          <a href="" ng-click="showDeleteFiles([item])" class="text-danger">删除</a>
+          <!-- <a href="" ng-click="showGrant([item]);$event.stopPropagation()" class="text-success">授权</a> -->
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    <div class="text-center clearfix pd2" ng-if="nextObjectsMarker">
+      正在加载更多..
+    </div>
+  </section>
+
+  <div ng-if="!ref.isListView" class="pd10" style="height:100%" ng-click="sel.all=false;selectAll();toggleTransVisible(false);">
+    <!--|filter:{name:sch.objectName}-->
+    <div ng-repeat="item in objects" item-index="{{$index}}" class="item-block" ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);$event.stopPropagation()" ng-dblclick="item.isFolder!=true?showPreview(item):goIn(currentBucket,item.path);$event.stopPropagation()"
+      ng-class="{ 'active':sel.x[ 'i_'+$index]}">
+      <input type="checkbox" ng-model="sel.x['i_'+$index]" name="x" class="pull-right" ng-change="selectChanged($event,$index)" ng-click="$event.stopPropagation()" />
+
+      <i class="fa fa-folder" style="color:orange" ng-if="!item.pic_url && item.isFolder==true"></i>
+
+      <i class="fa fa-{{item|fileIcon}}" ng-if="item.isFolder!=true && (!item.pic_url || (item.storageClass=='Archive' && item.storageStatus!=3))"></i>
+      <img ng-if="item.isFolder!=true && item.pic_url && (item.storageClass!='Archive' || (item.storageClass=='Archive' && item.storageStatus==3))" ng-src="{{item.pic_url}}" class="pull-left" style="max-width:32px;max-height:32px;margin:4px;" />
+
+      <div class="item-block-name" uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'" tooltip-append-to-body="true">{{item.name}}</div>
+      <div class="item-block-desc" ng-if="item.isFolder==true">目录</div>
+      <div class="item-block-desc" ng-if="item.isFolder!=true">{{item.size|sizeFormat}}</div>
     </div>
 
-    <div class="clearfix">&nbsp;</div>
+    <div class="clearfix"></div>
+
+    <div class="text-center clearfix pd2" ng-if="nextObjectsMarker">
+      正在加载更多..
+    </div>
+
+    <div class="clearfix"></div>
   </div>
+
+
 </div>

@@ -21,7 +21,7 @@
     </section>
 
     <section ng-if="!ref.isBucketList" drop-zone="handlerDrop">
-      <div ng-include="'main/files/_/file-list.html'" auto-height="-136" id="file-list"  when-scroll="whenScroll"></div>
+      <div ng-include="'main/files/_/file-list.html'" auto-height="-136" id="file-list"  bottom-loader="loadNext()"></div>
     </section>
 
   </div>

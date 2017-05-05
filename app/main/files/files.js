@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('filesCtrl', ['$scope', '$rootScope', '$uibModal', '$timeout', 'AuthInfo', 'ossSvs', 'ossSvs2', 'fileSvs', 'safeApply', 'Toast', 'Dialog',
-    function ($scope, $rootScope, $modal, $timeout, AuthInfo, ossSvs, ossSvs2, fileSvs, safeApply, Toast, Dialog) {
+  .controller('filesCtrl', ['$scope', '$rootScope', '$uibModal', '$timeout', 'AuthInfo', 'ossSvs', 'ossSvs2', 'settingsSvs', 'fileSvs', 'safeApply', 'Toast', 'Dialog',
+    function ($scope, $rootScope, $modal, $timeout, AuthInfo, ossSvs, ossSvs2, settingsSvs, fileSvs, safeApply, Toast, Dialog) {
 
       angular.extend($scope, {
         showTab: 1,
@@ -74,6 +74,8 @@ angular.module('web')
 
         showRestore: showRestore,
 
+        loadNext: loadNext
+
       });
 
       var ttid;
@@ -115,17 +117,17 @@ angular.module('web')
 
       }
 
-
       //按名称过滤
       var ttid2;
-      function searchObjectName(){
-         $timeout.cancel(ttid2);
-         ttid2 = $timeout(function(){ 
-           var info = angular.copy($scope.currentInfo);
-           info.key += $scope.sch.objectName;
-          listFiles(info); 
-         },600);
-              
+
+      function searchObjectName() {
+        $timeout.cancel(ttid2);
+        ttid2 = $timeout(function () {
+          var info = angular.copy($scope.currentInfo);
+          info.key += $scope.sch.objectName;
+          listFiles(info);
+        }, 600);
+
       }
 
       function addEvents() {
@@ -156,16 +158,16 @@ angular.module('web')
             }
             info.region = $rootScope.bucketMap[info.bucket].region;
             $scope.ref.isBucketList = false;
- 
-            if (fileName) { 
+
+            if (fileName) {
               //search
-              $scope.sch.objectName =  fileName; 
+              $scope.sch.objectName = fileName;
               searchObjectName();
 
-            }else{
+            } else {
               listFiles();
             }
-            
+
           } else {
 
             //list buckets
@@ -188,25 +190,46 @@ angular.module('web')
         $rootScope.$broadcast('goToOssAddress', ossPath);
       }
 
-      function listFiles(info, fn) {
+      function listFiles(info, marker, fn) {
+
         initSelect();
         info = info || $scope.currentInfo;
         $scope.objects = [];
         $scope.isLoading = true;
 
-        ossSvs2.listFiles(info.region, info.bucket, info.key).then(function (result) {
-
+        doListFiles(info, marker, function () {
           $scope.isLoading = false;
-          $scope.objects = signPicURL(info, result);
+        });
+      }
+
+      function doListFiles(info, marker, fn) {
+
+        ossSvs2.listFiles(info.region, info.bucket, info.key, marker || '').then(function (result) {
+
+          var arr = settingsSvs.showImageSnapshot.get()==1? signPicURL(info, result.data):result.data;
+
+          $scope.objects = $scope.objects.concat(arr);
+          $scope.nextObjectsMarker = result.marker || null;
+
+          $timeout(function () {
+            safeApply($scope);
+          });
 
           //临时的
-          initOnRefreshFileList();
+          //initOnRefreshFileList();
 
           if (fn) fn(null);
         }, function (err) {
-          $scope.isLoading = false;
           if (fn) fn(err);
         });
+      }
+
+      function loadNext() {
+
+        if ($scope.nextObjectsMarker) {
+          console.log('loadNext')
+          doListFiles($scope.currentInfo, $scope.nextObjectsMarker);
+        }
       }
 
       function signPicURL(info, result) {
@@ -693,104 +716,7 @@ angular.module('web')
         });
       }
 
-      /////////////////////////////////////////
-      // listObjects 没有 x-oss-archive 属性，
-      // 临时通过这种方法 
-      $scope.whenScroll = function () {
-        whenScroll();
-      }
-      var storageTypeMap = {};
-
-      //digRun(whenScroll, 10);
-
-      function initOnRefreshFileList() {
-        storageTypeMap = {};
-        digRun(whenScroll, 10);
-      }
-
-      function digRun(fn, times) {
-        function dig() {
-          var result = fn();
-          if (!result) {
-            times--;
-            if (times > 0) {
-              setTimeout(dig, 500);
-            }
-          }
-        }
-        dig();
-      }
-
-      var ttid3;
-
-      function whenScroll() {
-        var ele = $('#file-list');
-        if ($scope.ref.isListView) {
-          var arr = $('#file-list .file-item-name');
-        } else {
-          var arr = $('#file-list .item-block');
-        }
-
-        $timeout.cancel(ttid3);
-        ttid3 = $timeout(function () {
-
-          //console.log(arr)
-          // arr.css({
-          //   visibility: 'hidden'
-          // });
-
-          var t = [];
-          arr.each(function (n) {
-            if ($(this).offset().top > 80 &&
-              $(this).offset().top < ele.height() + 140) {
-              // $(this).css({
-              //   visibility: 'visible'
-              // });
-              t.push($(this).attr('item-index'));
-            }
-          });
-
-          //head object 
-          batchHeadStorageField(t);
-
-        }, 300);
-
-        return arr.size() > 0;
-      }
-
-      async function batchHeadStorageField(arr) {
-       // console.log(arr);
-        if (arr && arr.length > 0) {
-          //串行  head看看restore状态
-          for (var n of arr) {
-            var item = $scope.objects[parseInt(n)];
-            if (item.isFile && item.storageClass == 'Archive') {
-              //需要head看看restore状态
-              await checkRestore(item);
-            }
-          } 
-        }
-      }
-
-      async function checkRestore(item) {
-        if (storageTypeMap[item.path]) {
-          return;
-        } else storageTypeMap[item.path] = 1;
-
-        var data = await ossSvs2.getFileInfo($scope.currentInfo.region, $scope.currentInfo.bucket, item.path)
-        //console.log(data);
-        if (data.Restore) {
-          var info = ossSvs2.parseRestoreInfo(data.Restore);
-          if (info['ongoing-request'] == 'true') {
-            item.storageStatus = 2; // '归档文件正在恢复中，请耐心等待...'; 
-          } else {
-            item.expired_time = info['expiry-date'];
-            item.storageStatus = 3; // '归档文件，已恢复，可读截止时间：'+ moment(new Date(info['expiry-date'])).format('YYYY-MM-DD HH:mm:ss');
-          }
-
-          safeApply($scope);
-        }
-      }
+       
 
     }
   ]);
