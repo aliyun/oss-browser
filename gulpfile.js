@@ -17,7 +17,7 @@ var taskFns = {
       //.pipe(plugins.jshint())
       //.pipe(plugins.jshint.reporter('default'))
       .pipe(plugins.babel({
-        presets: ['es2015','stage-3'],
+        presets: ['es2015','stage-2'],
         plugins: ['transform-runtime']
       }))
       .pipe(plugins.concat('app.js'))
