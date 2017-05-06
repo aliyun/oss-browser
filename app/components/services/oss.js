@@ -149,7 +149,7 @@ angular.module('web')
             if(err){
               progress.errorCount++;
               if(progFn)progFn(progress);
-              t.push({item:item, err:err});
+              t.push({item:item, error:err});
             }
             progress.current++;
             if(progFn)progFn(progress);
@@ -185,7 +185,7 @@ angular.module('web')
               }
             });
           }, function(err){
-            t.push({item: source, err:err});
+            t.push({item: source, error:err});
           });
         }
       }
@@ -239,7 +239,7 @@ angular.module('web')
               if(err){
                 progress.errorCount++;
                 if(progFn)progFn(progress);
-                terr.push({item: items[c], err:err});
+                terr.push({item: items[c], error:err});
               }
               progress.current++;
               if(progFn)progFn(progress);

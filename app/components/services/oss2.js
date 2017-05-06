@@ -189,8 +189,11 @@ angular.module('web')
                 item.expired_time = info['expiry-date'];
                 item.storageStatus = 3; // '归档文件，已恢复，可读截止时间
               }
+            }else{
+              item.storageStatus = 1;
             }
           }
+          //console.log('----------done-----------')
       }
 
       function _listFilesOrigion(region, bucket, key, marker) {
