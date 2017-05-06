@@ -4,7 +4,8 @@ angular.module('web')
   .controller('topCtrl', ['$scope', '$rootScope','$uibModal', '$location', '$timeout','Dialog','Auth', 'AuthInfo','upgradeSvs','safeApply',
     function ($scope, $rootScope, $modal, $location, $timeout,Dialog,Auth, AuthInfo, upgradeSvs, safeApply) {
 
-      var fs = require('fs');
+      var fs = require('fs'); 
+      var path = require('path');
 
       angular.extend($scope, {
         logout: logout, 
@@ -56,7 +57,7 @@ angular.module('web')
 
       function showReleaseNote(){
         var converter = new showdown.Converter();
-        fs.readFile('./release-notes/'+pkg.version+'.md', function(err, text){
+        fs.readFile(path.join(__dirname, 'release-notes', pkg.version+'.md'), function(err, text){
             if(err){
               console.error(err);
               return;
