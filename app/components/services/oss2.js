@@ -163,38 +163,61 @@ angular.module('web')
         });
       }
 
-      async function listFiles(region, bucket, key, marker) {
-
-        var result = await _listFilesOrigion(region, bucket, key, marker);
-        var arr = result.data;
-        if (arr && arr.length) { 
-          $timeout( ()=> {
-            asyncLoadStorageStatus(region, bucket, arr);
-          }); 
-        }
-        return result;
+      function listFiles(region, bucket, key, marker) {
+        return new Promise(function(a,b){
+          _listFilesOrigion(region, bucket, key, marker).then(function(result){
+              var arr = result.data;
+              if (arr && arr.length) { 
+                $timeout( ()=> {
+                  loadStorageStatus(region, bucket, arr);
+                }); 
+              } 
+              a(result); 
+          }, function(err){
+            b(err);
+          });
+        });
       }
-      
-      async function asyncLoadStorageStatus(region, bucket, arr){
-         for (var item of arr) {
-            if (!item.isFile || item.storageClass != 'Archive') continue;
 
-            var data = await getFileInfo(region, bucket, item.path)
-            //console.log(data);
-            if (data.Restore) {
-              var info = parseRestoreInfo(data.Restore);
-              if (info['ongoing-request'] == 'true') {
-                item.storageStatus = 2; // '归档文件正在恢复中，请耐心等待...'; 
-              } else {
-                item.expired_time = info['expiry-date'];
-                item.storageStatus = 3; // '归档文件，已恢复，可读截止时间
-              }
-            }else{
-              item.storageStatus = 1;
+      function loadStorageStatus(region, bucket, arr){
+         return new Promise(function(a,b){
+            var len = arr.length;
+            var c = 0;
+            _dig();
+
+            function _dig(){
+               if(c >= len){
+                  a();
+                  return;   
+               }
+               var item = arr[c];
+               c++
+
+               if (!item.isFile || item.storageClass != 'Archive'){
+                 _dig();
+                 return;
+               }
+
+               getFileInfo(region, bucket, item.path).then(function(data){ 
+                  if (data.Restore) {
+                    var info = parseRestoreInfo(data.Restore);
+                    if (info['ongoing-request'] == 'true') {
+                      item.storageStatus = 2; // '归档文件正在恢复中，请耐心等待...'; 
+                    } else {
+                      item.expired_time = info['expiry-date'];
+                      item.storageStatus = 3; // '归档文件，已恢复，可读截止时间
+                    }
+                  }else{
+                    item.storageStatus = 1;
+                  }
+                  $timeout(_dig, 10); 
+               }, function(err){
+                 b(err); 
+                 $timeout(_dig, 100);
+               });
             }
-          }
-          //console.log('----------done-----------')
-      }
+         });
+      } 
 
       function _listFilesOrigion(region, bucket, key, marker) {
 

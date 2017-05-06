@@ -206,17 +206,12 @@ angular.module('web')
 
         ossSvs2.listFiles(info.region, info.bucket, info.key, marker || '').then(function (result) {
 
-          var arr = settingsSvs.showImageSnapshot.get()==1? signPicURL(info, result.data):result.data;
+          var arr = settingsSvs.showImageSnapshot.get() == 1 ? signPicURL(info, result.data) : result.data;
 
           $scope.objects = $scope.objects.concat(arr);
           $scope.nextObjectsMarker = result.marker || null;
 
-          $timeout(function () {
-            safeApply($scope);
-          });
-
-          //临时的
-          //initOnRefreshFileList();
+          safeApply($scope);
 
           if (fn) fn(null);
         }, function (err) {
@@ -715,8 +710,6 @@ angular.module('web')
           }
         });
       }
-
-       
 
     }
   ]);

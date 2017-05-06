@@ -2,7 +2,7 @@ node_modules
 .idea
 cache
 dist
-npm-debug.log
+npm-debug.log*
 bower_components
 build
 .DS_Store
