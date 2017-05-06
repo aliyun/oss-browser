@@ -16,9 +16,11 @@
 
     <div is-loading ng-if="isLoading"></div>
 
-    <div ng-if="!isLoading && info.msg" class="alert alert-success">{{info.msg}}</div>
+    <div ng-if="!isLoading && info.type==2" class="alert alert-warning">正在恢复中，请耐心等待！</div>
+     <div ng-if="!isLoading && info.type==3" class="alert alert-success">可读截止时间：{{info['expiry_date']}}</div>
 
-    <div ng-if="!isLoading && !info.msg" class="form-group" ng-class="{'has-error': form1.name.$dirty && !form1.name.$valid,
+    <div ng-if="!isLoading && info.type==1" class="form-group" 
+    ng-class="{'has-error': form1.name.$dirty && !form1.name.$valid,
   'has-success': form1.name.$dirty && form1.name.$valid}">
 
       <label class="col-sm-2 control-label" for="days">恢复天数:</label>

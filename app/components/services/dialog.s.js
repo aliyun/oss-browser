@@ -48,6 +48,8 @@ angular.module('web')
           case 1: opt = {cls: 'danger'};break;
           default: opt = {cls: 'primary'};break;
         }
+      }else{
+        opt = Object.assign({cls: 'primary'}, opt);
       }
       var putData = {
         title: title,
@@ -59,6 +61,7 @@ angular.module('web')
       $modal.open({
         templateUrl: 'components/services/dialog.html',
         controller: 'alertDialogCtrl',
+        size: opt.size || 'md',
         resolve: {
           putData: function () {
             return putData;
@@ -75,6 +78,8 @@ angular.module('web')
           case 1: opt = {cls: 'danger'};break;
           default: opt = {cls: 'primary'};break;
         }
+      }else{
+        opt = Object.assign({cls: 'primary'}, opt);
       }
       var putData = {
         title: title,
@@ -86,6 +91,7 @@ angular.module('web')
       $modal.open({
         templateUrl: 'components/services/dialog.html',
         controller: 'confirmDialogCtrl',
+        size: opt.size || 'md',
         resolve: {
           putData: function () {
             return putData;

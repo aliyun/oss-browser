@@ -42,7 +42,7 @@
      ng-click="selectBucket(item);$event.stopPropagation()"
       class="item-block" ng-class={'active':bucket_sel.item==item}>
         <i class="fa fa-database" ng-class="{'text-warning':item.storageClass!='Archive'}"></i>
-        <div class="item-block-name" uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'">{{item.name}}</div>
+        <div class="item-block-name" uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'"  tooltip-append-to-body="true">{{item.name}}</div>
         <div class="item-block-desc">{{item.region}}</div>
      </div>
 

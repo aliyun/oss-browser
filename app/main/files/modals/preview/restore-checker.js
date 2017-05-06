@@ -83,7 +83,7 @@ angular.module('web')
                 return angular.copy($scope.bucketInfo);
               },
               callback: function(){
-                return function(){
+                return function(){ 
                   if($scope.afterRestoreSubmit){
                       $scope.afterRestoreSubmit();
                   }
