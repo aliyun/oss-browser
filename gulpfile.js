@@ -66,8 +66,8 @@ gulp.task('libJS', function () {
   // ];
 
   var arr=[
-
       './node_modules/jquery/dist/jquery.js',
+
       './node_modules/moment/min/moment-with-locales.js',
       './node_modules/bootstrap/dist/js/bootstrap.js',
       './node_modules/angular/angular.js',
@@ -105,7 +105,8 @@ gulp.task('libCSS', function () {
       './node_modules/bootstrap/dist/css/bootstrap.css',
       './node_modules/font-awesome/css/font-awesome.css',
       './node_modules/codemirror/lib/codemirror.css',
-      './node_modules/codemirror/addon/merge/merge.css',
+      './node_modules/codemirror/addon/merge/merge.css'
+
     ])
     .pipe(plugins.concat('lib.css'))
     .pipe(gulp.dest(DIST + '/css'));

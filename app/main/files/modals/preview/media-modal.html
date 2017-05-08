@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="modal-title">
+    <i class="fa fa-image"></i>
+    预览
+    <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span>
+  </h4>
+</div>
+<div class="modal-body pd0">
+
+  <header class="pd4 bg-success">oss://{{bucketInfo.bucket}}/{{objectInfo.path}}</header>
+
+  <restore-checker bucket-info="bucketInfo" object-info='objectInfo' file-type="fileType"
+  after-check-success="afterCheckSuccess()" after-restore-submit="afterRestoreSubmit()">
+
+    <div style="overflow:auto; " class="text-center">
+
+      <audio ng-if="fileType.type=='audio'" ng-src="{{src}}" preload="none"
+         width="100%" height="auto" style="margin:10px auto;" controls>
+      </audio>
+
+      <video id="video-player" ng-if="fileType.type=='video'" preload="none"
+         ng-src="{{src}}"
+         width="100%" height="auto" controls>
+      </video>
+
+    </div>
+  </restore-checker>
+
+</div>
+<div class="modal-footer" style="text-align:left;">
+
+  <span ng-if="previewBarVisible" ng-include="'main/files/modals/preview/preview-bar.html'"></span>
+
+  <button type="button" class="pull-right btn btn-default btn-sm" ng-click="cancel()">
+    <i class="glyphicon glyphicon-remove"></i>
+    关闭</button>
+</div>

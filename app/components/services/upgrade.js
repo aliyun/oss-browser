@@ -7,11 +7,22 @@ angular.module('web')
       load: load,
 
       compareVersion: compareVersion,
-      getReleaseNote: getReleaseNote
+      getReleaseNote: getReleaseNote,
+      getLastestReleaseNote: getLastestReleaseNote
     };
-    
+
     function getReleaseNote(version, fn){
       $.get('release-notes/'+version+'.md', fn);
+    }
+
+    //获取最新releaseNote
+    function getLastestReleaseNote(version, fn){
+      var ind = pkg.upgrade_url.lastIndexOf('aliyun/oss-browser');
+      if(ind>0){
+        var pre = pkg.upgrade_url.substring(0, 'aliyun/oss-browser'.length+ind);
+        $.get(pre + '/master/release-notes/'+version+'.md', fn);
+      }
+
     }
 
     function load(fn) {
@@ -23,7 +34,7 @@ angular.module('web')
         var fileName = getUpgradeFileName();
         var link = data['package_url'].replace(/(\/*$)/g, '') +
           '/' + data['version'] + '/' + fileName;
-        
+
         fn({
           currentVersion: pkg.version,
           isLastVersion: isLastVersion,
@@ -53,6 +64,7 @@ angular.module('web')
       return 0;
     }
 
+
     function getUpgradeFileName() {
       if ((navigator.platform == "Win32") || (navigator.platform == "Windows")) {
         return NAME + '-win32-x64.zip';
@@ -63,6 +75,6 @@ angular.module('web')
       }
     }
 
-    
+
 
   }]);
