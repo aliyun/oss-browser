@@ -4,11 +4,11 @@ angular.module('web')
   .controller('topCtrl', ['$scope', '$rootScope','$uibModal', '$location', '$timeout','Dialog','Auth', 'AuthInfo','upgradeSvs','safeApply',
     function ($scope, $rootScope, $modal, $location, $timeout,Dialog,Auth, AuthInfo, upgradeSvs, safeApply) {
 
-      var fs = require('fs'); 
+      var fs = require('fs');
       var path = require('path');
 
       angular.extend($scope, {
-        logout: logout, 
+        logout: logout,
         showFavList: showFavList,
         showAbout: showAbout,
         showReleaseNote: showReleaseNote,
@@ -24,13 +24,15 @@ angular.module('web')
       //$scope.aid = AuthInfo.get().id;
       $scope.authInfo = AuthInfo.get();
 
-      init();
-      function init(){ 
+      $timeout(init, 2000);
+
+      function init(){
         $scope.isLoading=true;
+        //检查更新
         upgradeSvs.load(function(info){
           $scope.isLoading=false;
 
-          angular.extend($scope.upgradeInfo, info); 
+          angular.extend($scope.upgradeInfo, info);
 
           safeApply($scope);
         });
@@ -65,7 +67,7 @@ angular.module('web')
             text = text + '';
             var html = converter.makeHtml(text);
             Dialog.alert('主要更新', html, function(){}, {size:'lg'});
-        }); 
+        });
       }
 
       function showFavList(){
@@ -79,11 +81,11 @@ angular.module('web')
       function showAbout(){
         $modal.open({
           templateUrl: 'main/modals/about.html',
-          controller: 'aboutCtrl', 
-          size: 'sm'
+          controller: 'aboutCtrl',
+          size: 'md'
         });
       }
-     
+
 
     }])
 ;

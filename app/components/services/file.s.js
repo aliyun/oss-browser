@@ -9,7 +9,7 @@ angular.module('web')
       * 根据后缀判断
       * @param  item = {name, size}
       * @return obj = {type, ...}
-      *     type: [picture|code|others|doc]
+      *     type: [picture|code|others|doc|video|audio]
       */
       getFileType: function(item){
          var ext = (item.name.indexOf('.')!=-1)
@@ -25,6 +25,15 @@ angular.module('web')
            case 'doc':
            case 'docx':
            case 'pdf': return {type: 'doc', ext: [ext]};
+
+           case 'mp4': return {type:'video', ext: [ext], mineType: 'video/mp4'};
+           case 'webm': return {type:'video', ext: [ext], mineType: 'video/webm'};
+           case 'mov': return {type:'video', ext: [ext], mineType: 'video/quicktime'};
+           //case 'flv': return {type:'video', ext: [ext], mineType: 'video/x-flv'};
+           case 'ogv': return {type:'video', ext: [ext], mineType: 'video/ogg'};
+
+           case 'mp3': return {type:'audio', ext: [ext], mineType: 'audio/mp3'};
+           case 'ogg': return {type:'audio', ext: [ext], mineType: 'audio/ogg'};
          }
 
          var codeMode =  CodeMirror.findModeByExtension(ext);

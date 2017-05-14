@@ -184,8 +184,11 @@ angular.module('web')
     }
     var info = fileSvs.getFileType(item);
 
-    if(info.type=='picture') return 'file-image-o';
-    if(info.type=='doc'){
+    if(info.type=='video') return 'file-video-o';
+    else if(info.type=='audio') return 'file-audio-o';
+
+    else if(info.type=='picture') return 'file-image-o';
+    else if(info.type=='doc'){
       switch(info.ext[0]){
         case 'doc':
         case 'docx': return 'file-word-o';
@@ -196,10 +199,10 @@ angular.module('web')
       }
       return 'file-o';
     }
-    if(info.type=='code'){
+    else if(info.type=='code'){
       return 'file-text-o';
     }
-    if(info.type=='others'){
+    else if(info.type=='others'){
       switch(info.ext[0]){
         case 'gz':
         case 'tar':

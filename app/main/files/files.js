@@ -388,6 +388,14 @@ angular.module('web')
           controller = 'pictureModalCtrl';
           //backdrop = 'static';
         }
+        else if (fileType.type == 'video') {
+          templateUrl = 'main/files/modals/preview/media-modal.html';
+          controller = 'mediaModalCtrl';
+        }
+        else if (fileType.type == 'audio') {
+          templateUrl = 'main/files/modals/preview/media-modal.html';
+          controller = 'mediaModalCtrl';
+        }
         // else if(fileType.type=='doc'){
         //   templateUrl= 'main/files/modals/preview/doc-modal.html';
         //   controller= 'docModalCtrl';

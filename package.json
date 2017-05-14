@@ -1,6 +1,6 @@
 {
   "name": "oss-browser",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "main": "main-dev.js",
   "upgrade_url": "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
   "scripts": {
@@ -52,13 +52,13 @@
     "mocha": "~2.4.5",
     "moment": "~2.10.6",
     "node-httpclient": "0.0.2",
+    "npm-run-all": "^4.0.2",
     "request": "^2.72.0",
     "shelljs": "~0.7.0",
     "should": "~9.0.0",
     "showdown": "^1.4.2"
   },
   "dependencies": {
-    "aliyun-sdk": "^1.10.4",
-    "npm-run-all": "^4.0.1"
+    "aliyun-sdk": "^1.10.4"
   }
 }
