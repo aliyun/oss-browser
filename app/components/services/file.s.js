@@ -29,8 +29,9 @@ angular.module('web')
            case 'mp4': return {type:'video', ext: [ext], mineType: 'video/mp4'};
            case 'webm': return {type:'video', ext: [ext], mineType: 'video/webm'};
            case 'mov': return {type:'video', ext: [ext], mineType: 'video/quicktime'};
-           //case 'flv': return {type:'video', ext: [ext], mineType: 'video/x-flv'};
+
            case 'ogv': return {type:'video', ext: [ext], mineType: 'video/ogg'};
+           //case 'flv': return {type:'video', ext: [ext], mineType: 'video/x-flv'};
 
            case 'mp3': return {type:'audio', ext: [ext], mineType: 'audio/mp3'};
            case 'ogg': return {type:'audio', ext: [ext], mineType: 'audio/ogg'};

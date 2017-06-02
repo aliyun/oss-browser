@@ -7,7 +7,7 @@ angular.module('web')
         objectInfo: objectInfo,
         fileType: fileType,
         afterCheckSuccess: afterCheckSuccess,
-        afterRestoreSubmit: afterRestoreSubmit,
+        afterRestoreSubmit: afterRestoreSubmit, 
 
         previewBarVisible: false,
         showFn: showFn,
@@ -32,11 +32,12 @@ angular.module('web')
       function genURL() {
         var url = ossSvs.signatureUrl(bucketInfo.region, bucketInfo.bucket, objectInfo.path, 3600);
         $timeout(function () {
+      
+          $scope.src_origin = url;  
           $scope.src = $sce.trustAsResourceUrl(url);
 
           $timeout(function(){
             var ele  = $('#video-player');
-       
             if( parseInt(ele.css('height')) > parseInt(ele.css('width')) ){
                ele.css('height', $(document).height()-240);
                ele.css('width', 'auto');
@@ -45,5 +46,6 @@ angular.module('web')
         }, 300);
       }
 
+      
     }
   ]);

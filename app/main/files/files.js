@@ -80,6 +80,7 @@ angular.module('web')
 
       var ttid;
       $scope.$on('needrefreshfilelists', function (e) {
+        console.log('on:needrefreshfilelists');
         $timeout.cancel(ttid);
         ttid = $timeout(function () {
           goIn($scope.currentInfo.bucket, $scope.currentInfo.key);
@@ -102,7 +103,7 @@ angular.module('web')
 
           $timeout(function () {
             addEvents();
-            $rootScope.$broadcast('ossAddressChange', authInfo.osspath);
+            //$rootScope.$broadcast('ossAddressChange', authInfo.osspath);
             $scope.$broadcast('filesViewReady');
           });
 
@@ -132,6 +133,7 @@ angular.module('web')
 
       function addEvents() {
         $scope.$on('ossAddressChange', function (e, addr, forceRefresh) {
+          console.log('on:ossAddressChange:',addr, 'forceRefresh:',forceRefresh);
 
           var info = ossSvs.parseOSSPath(addr);
 
@@ -154,6 +156,9 @@ angular.module('web')
             $scope.currentBucket = info.bucket;
             if (!$rootScope.bucketMap[info.bucket]) {
               Toast.error('No permission');
+
+              clearObjectsList();
+
               return;
             }
             info.region = $rootScope.bucketMap[info.bucket].region;
@@ -176,7 +181,7 @@ angular.module('web')
             //只有从来没有 list buckets 过，才list，减少http请求开销
             if (!$scope.buckets || forceRefresh) listBuckets();
 
-            $scope.objects = []; //手动gc
+            clearObjectsList();
           }
         });
       }
@@ -192,18 +197,20 @@ angular.module('web')
 
       function listFiles(info, marker, fn) {
 
-        initSelect();
+        clearObjectsList();
+
         info = info || $scope.currentInfo;
-        $scope.objects = [];
+
         $scope.isLoading = true;
 
-        doListFiles(info, marker, function () {
+        doListFiles(info, marker, function (err) {
           $scope.isLoading = false;
+          safeApply($scope);
         });
       }
 
       function doListFiles(info, marker, fn) {
-
+        console.log('---doListFiles', info, marker);
         ossSvs2.listFiles(info.region, info.bucket, info.key, marker || '').then(function (result) {
 
           var arr = settingsSvs.showImageSnapshot.get() == 1 ? signPicURL(info, result.data) : result.data;
@@ -212,9 +219,11 @@ angular.module('web')
           $scope.nextObjectsMarker = result.marker || null;
 
           safeApply($scope);
-
           if (fn) fn(null);
         }, function (err) {
+          console.log(err)
+          clearObjectsList();
+
           if (fn) fn(err);
         });
       }
@@ -227,8 +236,13 @@ angular.module('web')
         }
       }
 
-      function signPicURL(info, result) {
+      function clearObjectsList(){
+        initSelect();
+        $scope.objects = [];
+        $scope.nextObjectsMarker = null;
+      }
 
+      function signPicURL(info, result) {
         angular.forEach(result, function (n) {
           if (!n.isFolder && fileSvs.getFileType(n).type == 'picture') {
             n.pic_url = ossSvs.signatureUrl(info.region, info.bucket, n.path, 3600);
@@ -253,6 +267,12 @@ angular.module('web')
 
         }, function (err) {
           $scope.isLoading = false;
+
+          clearObjectsList();
+
+          $scope.buckets = [];
+          $rootScope.bucketMap = {};
+
           if (fn) fn();
         });
       }
@@ -485,6 +505,7 @@ angular.module('web')
           $scope.handlers.downloadFilesHandler([fromInfo], to);
         });
       }
+
 
       ////////////////////////
       function initSelect() {

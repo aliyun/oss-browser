@@ -8,8 +8,13 @@ angular.module('web')
       var regions = angular.copy(Const.regions);
 
       angular.extend($scope, {
+        gtab: 1,
+        flags: {
+          remember: 'NO',
+          showHis: 'NO'
+        },
         hideTopNav: 1,
-        reg_osspath: /^oss\:\/\/[^\/]+\//,
+        reg_osspath: /^oss\:\/\//,
         regions: regions,
         onSubmit: onSubmit,
         showCleanHistories: showCleanHistories,
@@ -19,26 +24,28 @@ angular.module('web')
 
       init();
       function init(){
-        $scope.remember = localStorage.getItem(KEY_REMEMBER) || 'NO';
-        $scope.showHis = localStorage.getItem(SHOW_HIS) || 'NO';
+        $scope.flags.remember = localStorage.getItem(KEY_REMEMBER) || 'NO';
+        $scope.flags.showHis = localStorage.getItem(SHOW_HIS) || 'NO';
         $scope.item = AuthInfo.getRemember();
         listHistories();
 
-        $scope.$watch('remember',function(v){
+        $scope.$watch('flags.remember',function(v){
           if(v=='NO'){
             AuthInfo.unremember();
             localStorage.setItem(KEY_REMEMBER,'NO');
           }
         });
-        $scope.$watch('showHis',function(v){
+
+        $scope.$watch('flags.showHis',function(v){
           localStorage.setItem(SHOW_HIS,v);
         });
       }
 
       function useHis(h){
-        $scope.item.id=h.id;
-        $scope.item.secret = h.secret;
-        $scope.item.desc = h.desc;
+        angular.extend($scope.item, h);
+        // $scope.item.id=h.id;
+        // $scope.item.secret = h.secret;
+        // $scope.item.desc = h.desc;
       }
       function showRemoveHis(h){
         Dialog.confirm('删除AK','ID：'+h.id+', 确定删除?',function(b){
@@ -66,13 +73,13 @@ angular.module('web')
 
 
       function onSubmit(form1){
-    
+
         if(!form1.$valid)return;
 
-        localStorage.setItem(KEY_REMEMBER,$scope.remember);
+        localStorage.setItem(KEY_REMEMBER,$scope.flags.remember);
 
         var data = angular.copy($scope.item);
-        if($scope.remember=='YES'){
+        if($scope.flags.remember=='YES'){
           AuthInfo.remember(data);
         }
 
