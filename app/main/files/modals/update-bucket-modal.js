@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('updateBucketModalCtrl', ['$scope','$uibModalInstance', 'item','callback','ossSvs','safeApply','Const',
-    function ($scope, $modalInstance, item, callback, ossSvs,safeApply, Const) {
+  .controller('updateBucketModalCtrl', ['$scope','$uibModalInstance', 'item','callback','ossSvs2','safeApply','Const',
+    function ($scope, $modalInstance, item, callback, ossSvs2, safeApply, Const) {
 
       var bucketACL= angular.copy(Const.bucketACL);
       var regions= angular.copy(Const.regions);
@@ -13,8 +13,7 @@ angular.module('web')
         item: item
       });
 
-      ossSvs.getBucketACL(item.region, item.name).then(function(result){
-        //console.log(result);
+      ossSvs2.getBucketACL(item.region, item.name).then(function(result){
         $scope.item.acl = result.acl;
         safeApply($scope);
       });
@@ -27,7 +26,7 @@ angular.module('web')
         if (!form.$valid) return;
         var item = angular.copy($scope.item);
 
-        ossSvs.updateBucketACL(item.region, item.name, item.acl).then(function(result){
+        ossSvs2.updateBucketACL(item.region, item.name, item.acl).then(function(result){
            callback();
            cancel();
         });

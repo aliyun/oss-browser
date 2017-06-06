@@ -83,12 +83,12 @@ angular.module('web')
       var arr = $scope.lists.downloadJobList;
       stopFlag = true;
 
-      Toast.info('正在停止...');
+      Toast.info('正在暂停...');
 
       angular.forEach(arr, function(n){
         if (n.status == 'running' || n.status == 'waiting') n.stop();
       });
-      Toast.success('停止成功');
+      Toast.success('暂停成功');
 
       $timeout(function(){
         ossDownloadManager.saveProg();

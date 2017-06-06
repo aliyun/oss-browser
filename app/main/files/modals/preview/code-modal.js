@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('codeModalCtrl', ['$scope', '$uibModalInstance', '$uibModal', 'bucketInfo', 'objectInfo', 'fileType', 'showFn', 'Toast', 'DiffModal', 'ossSvs', 'ossSvs2', 'safeApply',
-    function ($scope, $modalInstance, $modal, bucketInfo, objectInfo, fileType, showFn, Toast, DiffModal, ossSvs, ossSvs2, safeApply) {
+  .controller('codeModalCtrl', ['$scope', '$uibModalInstance', '$uibModal', 'bucketInfo', 'objectInfo', 'fileType', 'showFn', 'Toast', 'DiffModal', 'ossSvs2', 'safeApply',
+    function ($scope, $modalInstance, $modal, bucketInfo, objectInfo, fileType, showFn, Toast, DiffModal, ossSvs2, safeApply) {
 
       angular.extend($scope, {
         bucketInfo: bucketInfo,
@@ -26,7 +26,7 @@ angular.module('web')
         }
       }
 
-      function afterRestoreSubmit() { 
+      function afterRestoreSubmit() {
         showFn.callback();
       }
 
@@ -54,7 +54,7 @@ angular.module('web')
         $scope.isLoading = true;
         ossSvs2.getContent(bucketInfo.region, bucketInfo.bucket, objectInfo.path).then(function (result) {
           $scope.isLoading = false;
-    
+
           var data = result.Body.toString();
           $scope.originalContent = data;
           $scope.content = data;

@@ -1,6 +1,12 @@
 'use strict';
 
 angular.module('web')
+  .filter('sub', function(){
+    return function(s, len){
+      if(s.length < len) return s;
+      else return s.substring(0,len) + '...';
+    };
+  })
   .filter('hideSecret', function(){
     return function(s){
       if(s.length < 6) return '******';
@@ -167,7 +173,7 @@ angular.module('web')
       case 'running': return isUp? '正在上传':'正在下载';
       case 'failed': return '失败';
       case 'finished': return '完成';
-      case 'stopped': return '停止';
+      case 'stopped': return '暂停';
       default : return '等待';
     }
   };

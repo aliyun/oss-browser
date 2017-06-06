@@ -19,7 +19,7 @@
         <div class="clearfix"></div>
     </header>
 
-    <div class="clearfix" style="overflow:auto;height:350px;">
+    <div class="clearfix" style="overflow:auto;height:343px;"  >
 
 
         <ul class="list-group list-condensed">
@@ -28,7 +28,7 @@
                 <div class="col-sm-4">
                     <div class="text-overflow"
                          uib-tooltip-template="'upload-path-tooltip-tpl.html'"
-                         tooltip-placement="left" tooltip-append-to-body="true">{{item.from.name}}
+                         tooltip-placement="left" tooltip-append-to-body="true">{{::item.from.name}}
                     </div>
 
                     <div class="progress mg0" style="height:4px;">
@@ -69,7 +69,7 @@
 
                     <a ng-if="item.status=='stopped' || item.status=='failed'" href="" ng-click="checkStartJob(item)"
                        class="btn btn-default btn-xs">
-                        <i class="glyphicon glyphicon-play text-success "></i>
+                        <i class="glyphicon glyphicon-play text-success"></i>
                     </a>
 
                 </div>
@@ -77,7 +77,7 @@
             </li>
         </ul>
 
-        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix" style="height:5px"></div>
     </div>
 </div>
 

@@ -1,7 +1,7 @@
 
 angular.module('web')
-  .controller('loginCtrl', ['$scope', '$rootScope','Auth','AuthInfo','$location','Const','Dialog','Toast','Cipher',
-    function ($scope, $rootScope, Auth, AuthInfo, $location, Const,Dialog, Toast, Cipher) {
+  .controller('loginCtrl', ['$scope', '$rootScope','Auth','AuthInfo','$timeout','$location','Const','Dialog','Toast','Cipher',
+    function ($scope, $rootScope, Auth, AuthInfo,$timeout, $location, Const,Dialog, Toast, Cipher) {
 
       var KEY_REMEMBER = Const.KEY_REMEMBER;
       var SHOW_HIS = Const.SHOW_HIS;
@@ -19,8 +19,32 @@ angular.module('web')
         onSubmit: onSubmit,
         showCleanHistories: showCleanHistories,
         useHis: useHis,
-        showRemoveHis: showRemoveHis
+        showRemoveHis: showRemoveHis,
+
+
+        onSubmit2: onSubmit2,
+        authTokenChange:authTokenChange
       });
+
+      var tid;
+      function authTokenChange(){
+        $timeout.cancel(tid);
+        tid=$timeout(function(){
+          var authToken = $scope.item.authToken;
+          var str = Buffer.from(authToken, 'base64').toString();
+          try{
+            var info = JSON.parse(str);
+
+            if(info.id && info.secret && info.stoken && info.privilege && info.expiration && info.osspath){
+               $scope.authTokenInfo = info;
+            }else if(new Date(info.expiration).getTime() < new Date().getTime()){
+               $scope.authTokenInfo = null;
+            }
+          }catch(e){
+             $scope.authTokenInfo = null;
+          }
+        },600)
+      }
 
       init();
       function init(){
@@ -79,9 +103,37 @@ angular.module('web')
         localStorage.setItem(KEY_REMEMBER,$scope.flags.remember);
 
         var data = angular.copy($scope.item);
+        delete data.authToken;
+        delete data.securityToken;
+        
         if($scope.flags.remember=='YES'){
           AuthInfo.remember(data);
         }
+
+        Toast.info('正在登录中...', 1000);
+
+
+        Auth.login(data).then(function(){
+          Toast.success('登录成功，正在跳转...', 1000);
+          $location.url('/');
+        },function(err){
+          Toast.error(err.code+':'+err.message);
+        });
+
+        return false;
+      }
+
+      //token login
+      function onSubmit2(form2){
+
+        if(!form2.$valid)return;
+
+
+        if(!$scope.authTokenInfo){
+          return;
+        }
+
+        var data = angular.copy($scope.authTokenInfo);
 
         Toast.info('正在登录...', 1000);
 

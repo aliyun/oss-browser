@@ -33,17 +33,30 @@
         </button>
 
 
+    </div>
 
-        <button type="button" class="btn btn-default btn-sm" ng-disabled="!bucket_sel.item"
-        ng-click="showDeleteBucket(bucket_sel.item)">
-            <i class="fa fa-remove text-danger"></i> 删除
-        </button>
-
-
-
-
-
-
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-default btn-sm dropdown-toggle" ng-disabled="!bucket_sel.item" data-toggle="dropdown">
+        更多
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <!-- <li>
+          <a href=""
+             ng-disabled="!bucket_sel.item"
+             ng-click="showGrantToken(bucket_sel.item)">
+              <i class="fa fa-shield text-warning"></i> 生成授权码
+          </a>
+        </li> -->
+        <li>
+          <a href=""
+             ng-disabled="!bucket_sel.item"
+          ng-click="showDeleteBucket(bucket_sel.item)">
+              <i class="fa fa-remove text-danger"></i> 删除
+          </a>
+        </li>
+      </ul>
     </div>
 
   </div>

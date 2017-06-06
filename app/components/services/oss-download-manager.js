@@ -1,6 +1,6 @@
 angular.module('web')
-  .factory('ossDownloadManager', ['$q', '$state', '$timeout', 'AuthInfo', 'ossSvs', 'Toast', 'Const', 'DelayDone', 'safeApply', 'settingsSvs',
-   function ($q, $state, $timeout, AuthInfo, ossSvs, Toast, Const, DelayDone, safeApply, settingsSvs) {
+  .factory('ossDownloadManager', ['$q', '$state', '$timeout', 'AuthInfo', 'ossSvs2', 'Toast', 'Const', 'DelayDone', 'safeApply', 'settingsSvs',
+   function ($q, $state, $timeout, AuthInfo, ossSvs2, Toast, Const, DelayDone, safeApply, settingsSvs) {
 
     var OssStore = require('./node/ossstore');
     var fs = require('fs');
@@ -107,22 +107,34 @@ angular.module('web')
         var t = [];
         var len = arr.length;
         var c = 0;
-        
+
         if(len==0){
           callFn([]);
           return;
         }
 
-        angular.forEach(arr, function (n) {
-          dig(n, function (jobs) {
-            t = t.concat(jobs);
-            c++;
-            if (c == len) callFn(t);
-          });
-        });
+        _kdig();
+        function _kdig(){
+          dig(arr[c], t);
+          c++;
+          if(c==len){
+            callFn(t);
+          }
+          else _kdig();
+        }
+
+
+        // angular.forEach(arr, function (n) {
+        //   dig(n, function (jobs) {
+        //     t = t.concat(jobs);
+        //     c++;
+        //     console.log(c,'/',len);
+        //     if (c == len) callFn(t);
+        //   });
+        // });
       }
 
-      function dig(ossInfo, callFn) {
+      function dig(ossInfo, t, callFn) {
 
         var fileName = path.basename(ossInfo.path);
         var filePath = path.join(toLocalPath, path.relative(dirPath, ossInfo.path));
@@ -137,31 +149,75 @@ angular.module('web')
                 return;
               }
               //遍历 oss 目录
-              ossSvs.listFiles(ossInfo.region, ossInfo.bucket, ossInfo.path).then(function (arr2) {
+              function progDig(marker){
+                ossSvs2.listFiles(ossInfo.region, ossInfo.bucket, ossInfo.path, marker).then(function (result) {
+console.log(result)
+                  var arr2 = result.data;
+                  arr2.forEach(function (n) {
+                    n.region = ossInfo.region;
+                    n.bucket = ossInfo.bucket;
+                  });
+                  loop(arr2, function (jobs) {
+                    t=t.concat(jobs);
+                    if(result.marker){
+                      progDig(result.marker);
+                    }else{
+                      $timeout(function(){
+                        if(callFn)callFn();
+                      },10);
+                    }
+                  });
+                });
+              }
+              progDig();
+              // ossSvs2.listAllFiles(ossInfo.region, ossInfo.bucket, ossInfo.path).then(function (arr2) {
+              //   arr2.forEach(function (n) {
+              //     n.region = ossInfo.region;
+              //     n.bucket = ossInfo.bucket;
+              //   });
+              //   loop(arr2, function (jobs) {
+              //     $timeout(function(){
+              //       callFn(jobs);
+              //     },1);
+              //   });
+              // });
+            });
+          } else {
+            //遍历 oss 目录
+            function progDig(marker){
+              ossSvs2.listFiles(ossInfo.region, ossInfo.bucket, ossInfo.path, marker).then(function (result) {
+                console.log(result)
+                var arr2 = result.data;
                 arr2.forEach(function (n) {
                   n.region = ossInfo.region;
                   n.bucket = ossInfo.bucket;
                 });
                 loop(arr2, function (jobs) {
-                  $timeout(function(){
-                    callFn(jobs);
-                  },1);
+                  t=t.concat(jobs);
+                  if(result.marker){
+                    progDig(result.marker);
+                  }else{
+                    $timeout(function(){
+                      if(callFn)callFn();
+                    },10);
+                  }
                 });
               });
-            });
-          } else {
-            //遍历 oss 目录
-            ossSvs.listFiles(ossInfo.region, ossInfo.bucket, ossInfo.path).then(function (arr2) {
-              arr2.forEach(function (n) {
-                n.region = ossInfo.region;
-                n.bucket = ossInfo.bucket;
-              });
-              loop(arr2, function (jobs) {
-                $timeout(function(){
-                  callFn(jobs);
-                },1);
-              });
-            });
+            }
+            progDig();
+
+
+            // ossSvs2.listAllFiles(ossInfo.region, ossInfo.bucket, ossInfo.path).then(function (arr2) {
+            //   arr2.forEach(function (n) {
+            //     n.region = ossInfo.region;
+            //     n.bucket = ossInfo.bucket;
+            //   });
+            //   loop(arr2, function (jobs) {
+            //     $timeout(function(){
+            //       callFn(jobs);
+            //     },1);
+            //   });
+            // });
           }
 
         } else {
@@ -179,8 +235,9 @@ angular.module('web')
           });
           addEvents(job);
           $timeout(function(){
-            callFn([job]);
-          },1);
+            t.push(job);
+            if(callFn)callFn();
+          },10);
         }
       }
     }
@@ -198,7 +255,7 @@ angular.module('web')
           accessKeyId: auth.id,
           secretAccessKey: auth.secret
         },
-        endpoint: ossSvs.getOssEndpoint(opt.region, opt.from.bucket)
+        endpoint: ossSvs2.getOssEndpoint(opt.region, opt.from.bucket)
       });
 
       return store.createDownloadJob(opt);

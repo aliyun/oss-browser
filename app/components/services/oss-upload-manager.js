@@ -1,6 +1,6 @@
 angular.module('web')
-  .factory('ossUploadManager', ['$q', '$state','$timeout', 'ossSvs', 'AuthInfo', 'Toast', 'Const', 'DelayDone', 'safeApply', 'settingsSvs',
-    function ($q, $state, $timeout, ossSvs, AuthInfo, Toast, Const, DelayDone, safeApply, settingsSvs) {
+  .factory('ossUploadManager', ['$q', '$state','$timeout', 'ossSvs2', 'AuthInfo', 'Toast', 'Const', 'DelayDone', 'safeApply', 'settingsSvs',
+    function ($q, $state, $timeout, ossSvs2, AuthInfo, Toast, Const, DelayDone, safeApply, settingsSvs) {
 
       var OssStore = require('./node/ossstore');
       var fs = require('fs');
@@ -151,6 +151,7 @@ angular.module('web')
             dig(path.join(parentPath, arr[c]), dirPath,  function (jobs) {
               t = t.concat(jobs);
               c++;
+              console.log(c,'/',len);
               if (c >= len) callFn(t);
               else inDig();
             });
@@ -164,7 +165,7 @@ angular.module('web')
 
           if (fs.statSync(absPath).isDirectory()) {
             //创建目录
-            ossSvs.createFolder(bucketInfo.region, bucketInfo.bucket, filePath+ '/').then(function(){
+            ossSvs2.createFolder(bucketInfo.region, bucketInfo.bucket, filePath+ '/').then(function(){
               //判断是否刷新文件列表
               checkNeedRefreshFileList(bucketInfo.bucket, filePath+ '/');
             });
@@ -232,7 +233,7 @@ angular.module('web')
             accessKeyId: auth.id,
             secretAccessKey: auth.secret
           },
-          endpoint: ossSvs.getOssEndpoint(opt.region, opt.to.bucket)
+          endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket)
         });
 
         return store.createUploadJob(opt);

@@ -6,13 +6,17 @@
     <div class="clearfix" style="height:40px;"></div>
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default shadow10">
-            <div class="panel-heading pd0">
+          <div class="panel-heading">
+          AK登录
+           </div>
+            <!-- <div class="panel-heading pd0">
+
                 <ul class="nav nav-tabs">
                   <li role="presentation" ng-class="{active:gtab==1}"><a href="" ng-click="gtab=1">AK登录</a></li>
                   <li role="presentation" ng-class="{active:gtab==2}"><a href="" ng-click="gtab=2">授权码登录</a></li>
                 </ul>
 
-            </div>
+            </div> -->
             <div class="panel-body">
 
                 <form ng-if="gtab==1" class="form-horizontal" name="form1" ng-submit="onSubmit(form1)">
@@ -36,7 +40,7 @@
                         <label for="input3" class="col-sm-4 control-label"> 预设OSS路径(可选):</label>
                         <div class="col-sm-8">
                             <input type="text" name="osspath" ng-pattern="reg_osspath" ng-model="item.osspath"
-                             class="form-control" id="input3" placeholder="可选,格式: oss://bucket/key/">
+                             class="form-control" id="input3" placeholder="可选,格式如: oss://bucket/key/">
                         </div>
                     </div>
 
@@ -85,14 +89,16 @@
                 </form>
 
 
-                <form ng-if="gtab==2" class="form-horizontal" name="form2" ng-submit="onSubmit(form2)">
+                <form ng-if="gtab==2" class="form-horizontal" name="form2" ng-submit="onSubmit2(form2)">
 
                     <div class="form-group">
                         <label for="input-x" class="col-sm-2 control-label"><span class="red">*</span> 授权码:</label>
                         <div class="col-sm-10">
-                            <textarea required ng-model="item.authToken"  rows="6"
+                            <textarea required ng-model="item.authToken"  rows="6" ng-change="authTokenChange()"
                              class="form-control" id="input-x" placeholder="请输入授权码">
                              </textarea>
+                             <small class="text-danger" ng-if="!authTokenInfo">无效的授权码</small>
+                             <small class="text-success" ng-if="authTokenInfo">({{authTokenInfo.osspath}}的{{authTokenInfo.privilege=='all'?'读写':'只读'}}权限，有效期至{{authTokenInfo.expiration|timeFormat}})</small>
                         </div>
                     </div>
 

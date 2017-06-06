@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('updateACLModalCtrl', ['$scope','$uibModalInstance','item','currentInfo','ossSvs','Toast',
-    function ($scope, $modalInstance, item, currentInfo, ossSvs, Toast) {
+  .controller('updateACLModalCtrl', ['$scope','$uibModalInstance','item','currentInfo','ossSvs2','Toast','safeApply',
+    function ($scope, $modalInstance, item, currentInfo, ossSvs2, Toast,safeApply) {
 
 
       angular.extend($scope, {
@@ -9,12 +9,13 @@ angular.module('web')
         cancel: cancel,
         onSubmit: onSubmit,
         info: {
-          acl: ''
+          acl: 'default'
         }
       });
 
-      ossSvs.getACL(currentInfo.region, currentInfo.bucket, item.path).then(function(res){
+      ossSvs2.getACL(currentInfo.region, currentInfo.bucket, item.path).then(function(res){
         $scope.info.acl = res.acl||'default';
+        safeApply($scope);
       });
 
       function cancel() {
@@ -24,7 +25,7 @@ angular.module('web')
       function onSubmit(form) {
         if (!form.$valid)return;
         var acl = $scope.info.acl;
-        ossSvs.updateACL(currentInfo.region, currentInfo.bucket, item.path, acl).then(function(res){
+        ossSvs2.updateACL(currentInfo.region, currentInfo.bucket, item.path, acl).then(function(res){
           Toast.success('修改ACL权限成功');
           cancel();
         });

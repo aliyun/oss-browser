@@ -1,7 +1,7 @@
 angular.module('web')
   .factory('ossSvs', ['$q','$rootScope','$state','Toast','Const','AuthInfo',
   function ( $q, $rootScope, $state, Toast, Const, AuthInfo) {
-    var AUTH_INFO = Const.AUTH_INFO_KEY;
+
     var DEF_ADDR = 'oss://';
     //var ALY = require('aliyun-sdk');
     var path = require('path');
@@ -629,6 +629,7 @@ angular.module('web')
     *    string = bucket
     */
     function getClient(opt){
+      console.log('oss1:----getClient----->',opt)
 
       var authInfo = AuthInfo.get();
       //console.log($rootScope.bucketMap)

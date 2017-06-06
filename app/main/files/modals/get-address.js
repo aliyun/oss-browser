@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('getAddressModalCtrl', ['$scope', '$q', '$uibModalInstance', 'item', 'currentInfo', 'ossSvs','safeApply',
-    function ($scope, $q, $modalInstance, item, currentInfo, ossSvs ,safeApply) {
+  .controller('getAddressModalCtrl', ['$scope', '$q', '$uibModalInstance', 'item', 'currentInfo', 'ossSvs2','safeApply',
+    function ($scope, $q, $modalInstance, item, currentInfo, ossSvs2 ,safeApply) {
 
 
       angular.extend($scope, {
@@ -24,8 +24,10 @@ angular.module('web')
         $scope.step=2;
         var ignoreError = true;
 
+        console.log(item, currentInfo)
+
         $.ajax({url: item.url,
-          headers: {'Range':'bytes=0-1','x-random':Math.random()},
+          headers: {'Range':'bytes=0-1','x-random':Math.random(),'Cache-Control':"no-cache"},
           complete: function(xhr){
             $scope.isLoading = false;
             if(xhr.status < 300){
@@ -48,7 +50,7 @@ angular.module('web')
         if(!form1.$valid)return;
 
         var v = $scope.info.sec;
-        var url = ossSvs.signatureUrl(currentInfo.region, currentInfo.bucket, item.path, v);
+        var url = ossSvs2.signatureUrl(currentInfo.region, currentInfo.bucket, item.path, v);
         $scope.info.url = url;
       }
 

@@ -25,8 +25,8 @@
               ng-click="toggleTransVisible(false)"><i class="fa fa-close"></i></span></button>
       </ul>
 
-      <div ng-if="transTab==1" ng-include="'main/files/transfer/uploads.html'"></div>
-      <div ng-if="transTab==2" ng-include="'main/files/transfer/downloads.html'"></div>
+      <div ng-show="transTab==1" ng-include="'main/files/transfer/uploads.html'"></div>
+      <div ng-show="transTab==2" ng-include="'main/files/transfer/downloads.html'"></div>
 
   </div>
 </section>

@@ -11,7 +11,7 @@ angular.module('web')
        createPolicy: createPolicy,
        attachPolicyToRole: attachPolicyToRole,
        attachPolicyToGroup: attachPolicyToGroup,
-       attachPolicyToUser: attachPolicyToUser
+       attachPolicyToUser: attachPolicyToUser,
     };
 
     function createPolicy(name, doc, desc){

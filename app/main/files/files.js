@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('filesCtrl', ['$scope', '$rootScope', '$uibModal', '$timeout', 'AuthInfo', 'ossSvs', 'ossSvs2', 'settingsSvs', 'fileSvs', 'safeApply', 'Toast', 'Dialog',
-    function ($scope, $rootScope, $modal, $timeout, AuthInfo, ossSvs, ossSvs2, settingsSvs, fileSvs, safeApply, Toast, Dialog) {
+  .controller('filesCtrl', ['$scope', '$rootScope', '$uibModal', '$timeout', 'AuthInfo', 'ossSvs2', 'settingsSvs', 'fileSvs', 'safeApply', 'Toast', 'Dialog',
+    function ($scope, $rootScope, $modal, $timeout, AuthInfo, ossSvs2, settingsSvs, fileSvs, safeApply, Toast, Dialog) {
 
       angular.extend($scope, {
         showTab: 1,
@@ -8,6 +8,8 @@ angular.module('web')
           isBucketList: false,
           isListView: true
         },
+
+        keepMoveOptions: null,
 
         sch: {
           bucketName: '',
@@ -68,15 +70,22 @@ angular.module('web')
 
         //授权
         showGrant: showGrant,
+        showGrantToken: showGrantToken,
         //地址
         showAddress: showAddress,
         showACL: showACL,
 
         showRestore: showRestore,
 
-        loadNext: loadNext
+        loadNext: loadNext,
+
+        paste: paste,
+        cancelPaste: cancelPaste,
+        getCurrentOssPath: getCurrentOssPath
 
       });
+
+
 
       var ttid;
       $scope.$on('needrefreshfilelists', function (e) {
@@ -96,7 +105,7 @@ angular.module('web')
           $scope.ref.isBucketList = false;
           //bucketMap
           $rootScope.bucketMap = {};
-          var bucket = ossSvs.parseOSSPath(authInfo.osspath).bucket;
+          var bucket = ossSvs2.parseOSSPath(authInfo.osspath).bucket;
           $rootScope.bucketMap[bucket] = {
             region: authInfo.region
           };
@@ -135,7 +144,7 @@ angular.module('web')
         $scope.$on('ossAddressChange', function (e, addr, forceRefresh) {
           console.log('on:ossAddressChange:',addr, 'forceRefresh:',forceRefresh);
 
-          var info = ossSvs.parseOSSPath(addr);
+          var info = ossSvs2.parseOSSPath(addr);
 
           if (info.key) {
             var lastGan = info.key.lastIndexOf('/');
@@ -210,7 +219,7 @@ angular.module('web')
       }
 
       function doListFiles(info, marker, fn) {
-        console.log('---doListFiles', info, marker);
+         
         ossSvs2.listFiles(info.region, info.bucket, info.key, marker || '').then(function (result) {
 
           var arr = settingsSvs.showImageSnapshot.get() == 1 ? signPicURL(info, result.data) : result.data;
@@ -245,7 +254,7 @@ angular.module('web')
       function signPicURL(info, result) {
         angular.forEach(result, function (n) {
           if (!n.isFolder && fileSvs.getFileType(n).type == 'picture') {
-            n.pic_url = ossSvs.signatureUrl(info.region, info.bucket, n.path, 3600);
+            n.pic_url = ossSvs2.signatureUrl(info.region, info.bucket, n.path, 3600);
           }
         });
         return result;
@@ -280,7 +289,7 @@ angular.module('web')
       function showDeleteBucket(item) {
         Dialog.confirm('删除Bucket', 'Bucket名称:<code>' + item.name + '</code>, 所在区域:<code>' + item.region + '</code>, 确定删除？', function (b) {
           if (b) {
-            ossSvs.deleteBucket(item.region, item.name).then(function () {
+            ossSvs2.deleteBucket(item.region, item.name).then(function () {
               Toast.success('删除Bucket成功');
               //删除Bucket不是实时的，等待1秒后刷新
               $timeout(function () {
@@ -642,6 +651,22 @@ angular.module('web')
         });
       }
 
+      //生成授权码
+      function showGrantToken(item) {
+        $modal.open({
+          templateUrl: 'main/files/modals/grant-token-modal.html',
+          controller: 'grantTokenModalCtrl',
+          resolve: {
+            item: function () {
+              return item;
+            },
+            currentInfo: function () {
+              return angular.copy($scope.currentInfo);
+            }
+          }
+        });
+      }
+
       //重命名
       function showRename(item) {
         $modal.open({
@@ -664,29 +689,57 @@ angular.module('web')
         });
       }
 
-      //移动
-      function showMove(items, isCopy) {
+      function getCurrentOssPath(){
+        return 'oss://'+$scope.currentInfo.bucket+'/'+$scope.currentInfo.key
+      }
+      function cancelPaste(){
+        $scope.keepMoveOptions=null;
+        safeApply($scope);
+      }
+      function paste(){
+        if($scope.keepMoveOptions.originPath==getCurrentOssPath()){
+          $scope.keepMoveOptions = null;
+          return;
+        }
+
         $modal.open({
           templateUrl: 'main/files/modals/move-modal.html',
           controller: 'moveModalCtrl',
           backdrop: 'static',
           resolve: {
             items: function () {
-              return angular.copy(items);
+              return angular.copy($scope.keepMoveOptions.items);
+            },
+            moveTo: function(){
+              return angular.copy($scope.currentInfo);
             },
             isCopy: function () {
-              return isCopy;
+              return $scope.keepMoveOptions.isCopy;
             },
-            currentInfo: function () {
-              return angular.copy($scope.currentInfo);
+            fromInfo: function () {
+              return angular.copy($scope.keepMoveOptions.currentInfo);
             },
             callback: function () {
               return function () {
+                $scope.keepMoveOptions = null;
                 listFiles();
               };
             }
           }
         });
+
+      }
+
+      //移动
+      function showMove(items, isCopy) {
+
+        $scope.keepMoveOptions = {
+          items: items,
+          isCopy: isCopy,
+          currentInfo: angular.copy($scope.currentInfo),
+          originPath : getCurrentOssPath()
+        };
+
       }
       //地址
       function showAddress(item) {
@@ -739,6 +792,7 @@ angular.module('web')
           }
         });
       }
+
 
     }
   ]);

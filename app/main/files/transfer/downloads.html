@@ -19,7 +19,7 @@
         <div class="clearfix"></div>
     </header>
 
-    <div class="clearfix" style="overflow:auto;height:350px;">
+    <div class="clearfix" style="overflow:auto;height:343px;">
 
         <ul class="list-group list-condensed">
             <li class="list-group-item" ng-repeat="item in lists.downloadJobList">
@@ -27,8 +27,8 @@
                 <div class="col-sm-4">
 
                     <div class="text-overflow" uib-tooltip-template="'download-path-tooltip-tpl.html'"
-                        tooltip-trigger="mouseenter"
-                         tooltip-placement="left" tooltip-append-to-body="true">{{item.to.name}}
+                        tooltip-trigger="mouseenter" tooltip-delay="500"
+                         tooltip-placement="left" tooltip-append-to-body="true">{{::item.to.name}}
                     </div>
 
                     <div class="progress mg0" style="height:4px;width:100%">
@@ -78,7 +78,9 @@
             </li>
 
         </ul>
-        <div class="clearfix">&nbsp;</div>
+
+        <div class="clearfix" style="height:5px"></div>
+
     </div>
 </div>
 
