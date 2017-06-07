@@ -14,8 +14,23 @@ angular.module('web')
         showReleaseNote: showReleaseNote,
         upgradeInfo: {
           isLastVersion: true
-        }
+        },
+        click10: click10
       });
+
+      var ctime = 0;
+      var tid;
+      function click10(){
+        ctime++;
+        if(ctime > 10){
+          console.log('---open dev tool---');
+          openDevTools();
+        }
+        $timeout.cancel(tid);
+        tid=$timeout(function(){
+          ctime = 0;
+        },600);
+      }
 
       $rootScope.app = {};
 

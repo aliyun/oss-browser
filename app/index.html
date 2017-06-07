@@ -36,11 +36,16 @@
 
 
     <script src="templates.js"></script>
-    <script>
-      var shell = require('electron').shell;
+    <script> 
+      const {ipcRenderer,shell} = require('electron');
+
       function openExternal(url){
         // Open a URL in the default way
         shell.openExternal(url);
+      }
+
+      function openDevTools(){
+        ipcRenderer.send('asynchronous-message', 'openDevTools');
       }
 
 
