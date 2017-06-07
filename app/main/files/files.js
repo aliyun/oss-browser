@@ -219,7 +219,7 @@ angular.module('web')
       }
 
       function doListFiles(info, marker, fn) {
-         
+
         ossSvs2.listFiles(info.region, info.bucket, info.key, marker || '').then(function (result) {
 
           var arr = settingsSvs.showImageSnapshot.get() == 1 ? signPicURL(info, result.data) : result.data;
@@ -275,6 +275,7 @@ angular.module('web')
           if (fn) fn();
 
         }, function (err) {
+          console.log(err)
           $scope.isLoading = false;
 
           clearObjectsList();

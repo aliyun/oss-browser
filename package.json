@@ -12,12 +12,12 @@
     "postinstall": "npm run build",
     "build": "gulp build",
     "mirror": "set ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ || export ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/",
-    "win64": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.6.6 --platform=win32 --arch=x64",
-    "win32": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.6.6 --platform=win32 --arch=ia32",
-    "mac": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.6.6 --platform=darwin --arch=x64 --icon=./app/icons/icon.icns",
-    "linux32": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.6.6 --platform=linux --arch=ia32",
-    "linux64": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.6.6 --platform=linux --arch=x64",
-    "all": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.6.6 --all"
+    "win64": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.6.10 --platform=win32 --arch=x64",
+    "win32": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.6.10 --platform=win32 --arch=ia32",
+    "mac": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.6.10 --platform=darwin --arch=x64 --icon=./app/icons/icon.icns",
+    "linux32": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.6.10 --platform=linux --arch=ia32",
+    "linux64": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.6.10 --platform=linux --arch=x64",
+    "all": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.6.10 --all"
   },
   "engines": {
     "node": ">=4.5.0"
