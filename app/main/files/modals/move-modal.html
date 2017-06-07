@@ -14,7 +14,7 @@
 
   <div class="modal-body">
 
-<div ng-if="step==1">
+<!-- <div ng-if="step==1">
      <div class="text-warning">将以下目录或文件 (共 {{items.length}} 个):</div>
      <ul>
        <li ng-repeat="item in items" ng-if="$index<5">
@@ -37,7 +37,7 @@
         selected-item="moveTo" height="220"
         show-buckets="false" folder-only="true"></div>
 </div>
-
+ -->
 
 <div ng-if="step==2">
  <div class="text-info">正在{{isCopy?"复制":"移动"}}...</div>
@@ -92,10 +92,10 @@
 
   <div class="modal-footer">
 
-      <button ng-if="step==1" ng-disabled="moveTo.ossPath==originPath"
+      <!-- <button ng-if="step==1" ng-disabled="moveTo.ossPath==originPath"
        type="button" class="btn btn-success btn-sm" ng-click="start()">
         <i class="glyphicon glyphicon-ok"></i>
-        确定</button>
+        确定</button> -->
 
       <button ng-if="step==2" type="button" class="btn btn-warning btn-sm" ng-click="stop()">
         <i class="glyphicon glyphicon-remove"></i>

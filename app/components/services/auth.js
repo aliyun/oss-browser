@@ -1,6 +1,6 @@
 angular.module('web')
-  .factory('Auth', ['$q', '$location', 'ossSvs', 'AuthInfo', 'Const', 'Cipher',
-    function($q, $location, ossSvs, AuthInfo, Const, Cipher) {
+  .factory('Auth', ['$q', '$location', 'ossSvs2', 'AuthInfo', 'Const', 'Cipher',
+    function($q, $location, ossSvs2, AuthInfo, Const, Cipher) {
 
       return {
         login: login,
@@ -12,34 +12,36 @@ angular.module('web')
 
         if (data.osspath) {
 
-          var info = ossSvs.parseOSSPath(data.osspath);
+          var info = ossSvs2.parseOSSPath(data.osspath);
           data.bucket = info.bucket;
-       
-          ossSvs.getClient(data).list({prefix: info.key}).then(function(result){
 
-            //登录成功
-            AuthInfo.save(data);
-            df.resolve();
-
-          }, function(err){
-            //失败
-             df.reject(err);
-          });
-
-        } else {
-          ossSvs.getClient(data).listBuckets().then(function(result) {
-            //登录成功
-            AuthInfo.save(data);
-            df.resolve();
-
-          }, function(err) {
-            if (err.code == 'AccessDeniedError') {
+          ossSvs2.getClient(data).listObjects({Bucket: info.bucket, Prefix: info.key, Marker:'',MaxKeys:1}, function(err, result){
+            if(err){
+              df.reject(err);
+            }
+            else{
               //登录成功
               AuthInfo.save(data);
               df.resolve();
-            } else {
-              //失败
-              df.reject(err);
+            }
+          });
+
+        } else {
+          ossSvs2.getClient(data).listBuckets( function(err, result) {
+            
+            if(err){
+              if (err.code == 'AccessDeniedError') {
+                //登录成功
+                AuthInfo.save(data);
+                df.resolve();
+              } else {
+                //失败
+                df.reject(err);
+              }
+            }else{
+              //登录成功
+              AuthInfo.save(data);
+              df.resolve();
             }
           });
         }

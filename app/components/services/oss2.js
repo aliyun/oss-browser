@@ -1,15 +1,19 @@
 angular.module('web')
   .factory('ossSvs2', ['$q', '$rootScope', '$timeout', '$state', 'Toast', 'Const', 'AuthInfo',
     function ($q, $rootScope, $timeout, $state, Toast, Const, AuthInfo) {
-      var AUTH_INFO = Const.AUTH_INFO_KEY;
+
       var DEF_ADDR = 'oss://';
       //var ALY = require('aliyun-sdk');
       var path = require('path');
 
       return {
+        createFolder: createFolder,
         createBucket: createBucket,
         restoreFile: restoreFile,
+
+        getMeta: getFileInfo,
         getFileInfo: getFileInfo, //head object
+
         listAllBuckets: listAllBuckets,
 
         listAllFiles: listAllFiles,
@@ -17,11 +21,569 @@ angular.module('web')
         getContent: getContent,
         saveContent: saveContent,
 
-        getACL: getACL,
+        //重命名
+        moveFile: moveFile,
+        //复制，移动
+        copyFiles: copyFiles,
+        stopCopyFiles: stopCopyFiles,
 
-        parseRestoreInfo: parseRestoreInfo
+        //删除
+        deleteFiles: deleteFiles,
+        stopDeleteFiles: stopDeleteFiles,
+
+        //碎片
+        listAllUploads: listAllUploads,
+        abortAllUploads: abortAllUploads,
+
+        deleteBucket: deleteBucket,
+
+        getBucketACL: getBucketACL,
+        updateBucketACL: updateBucketACL,
+        getACL: getACL,
+        updateACL: updateACL,
+
+
+        getClient: getClient,
+        parseOSSPath: parseOSSPath,
+        getOssEndpoint: getOssEndpoint,
+        parseRestoreInfo: parseRestoreInfo,
+        signatureUrl: signatureUrl,
       };
 
+
+      var stopDeleteFilesFlag=false;
+      function stopDeleteFiles(){
+        stopDeleteFilesFlag = true;
+      }
+
+      /**
+      * 批量删除文件或目录
+      * @param region {string}
+      * @param bucket {string}
+      * @param items   {array}  item={path,isFolder}
+      * @param progCb  {function} 可选， 进度回调  (current,total)
+      */
+      function deleteFiles(region, bucket, items, progCb){
+
+        stopDeleteFilesFlag = false;
+
+        var df = $q.defer();
+
+        var client = getClient({region:region, bucket:bucket});
+        var progress={current:0,total:0, errorCount:0};
+
+        function delArr(arr, fn){
+          var c = 0;
+          var len = arr.length;
+          var terr = [];
+
+          function dig(){
+
+            if(c>=len){
+              if(progCb) progCb(progress);
+              fn(terr);
+              return;
+            }
+
+            if(stopDeleteFilesFlag){
+              //停止删除
+              for(var i=c;i<arr.length;i++){
+                terr.push({item: arr[i], error: new Error('User cancelled')});
+              }
+              if(progCb) progCb(progress);
+              fn(terr);
+              return;
+            };
+
+
+            if(progCb) progCb(progress);
+
+            var item = arr[c];
+
+            if(item.isFolder){
+              listAllFiles(region, bucket, item.path).then(function(arr2){
+
+                progress.total += arr2.length;
+                //删除所有文件
+                delArr(arr2, function(terr2){
+                  if(terr2) terr = terr.concat(terr2);
+                  //删除目录本身
+                  delFile(item);
+                });
+              }, function(err){
+                //删除目录本身
+                delFile(item);
+              });
+            }
+            else{
+              //删除文件
+              delFile(item);
+            }
+
+            function delFile(item){
+              if(stopDeleteFilesFlag){
+                dig();
+                return;
+              }
+
+              // c++;
+              // setTimeout(function(){
+              //   progress.current++;
+              //   dig();
+              // },1000)
+
+              client.deleteObject({Bucket:bucket, Key: item.path}, function(err){
+                if(err){
+                  terr.push({item:item, error:err});
+                  progress.errorCount++;
+                  c++;
+                  dig();
+                }
+                else{
+                  c++;
+                  progress.current++;
+                  dig();
+                }
+              });
+            }
+          }
+          dig();
+        }
+
+        progress.total += items.length;
+
+        delArr(items, function(terr){
+          if(terr && terr.length>0){
+            df.resolve(terr);
+          }else{
+            df.resolve();
+          }
+        });
+        return df.promise;
+      }
+
+
+      var stopCopyFilesFlag=false;
+      function stopCopyFiles(){
+        stopCopyFilesFlag = true;
+      }
+      /**
+      * 批量复制或移动文件
+      * @param retion {string} 要求相同region
+      * @param items {array} 需要被复制的文件列表，可能为folder，可能为file
+      * @param target {object} {bucket,key}
+      * @param progFn {Function} 进度回调  {current:1, total: 11, errorCount: 0}
+      * @param removeAfterCopy {boolean} 移动flag，复制后删除。 默认false
+      */
+      function copyFiles(region, items, target, progFn, removeAfterCopy){
+        var progress = {
+          total: 0,
+          current: 0,
+          errorCount: 0
+        };
+        stopCopyFilesFlag = false;
+
+        //入口
+        var df = $q.defer();
+        digArr(items, target, function(terr){
+          df.resolve(terr);
+        });
+        return df.promise;
+
+        //copy oss file
+        function copyOssFile(client, from, to, fn){
+          if(stopCopyFilesFlag) return;
+
+          var toKey = to.key;
+          var fromKeyOrigin = '/'+from.bucket+'/'+(from.key);
+          var fromKey = '/'+from.bucket+'/'+encodeURIComponent(from.key);
+          console.log(removeAfterCopy?'move':'copy', '::',fromKeyOrigin, '==>', toKey);
+
+          client.copyObject({Bucket: to.bucket, Key:toKey, CopySource: fromKey},function(err){
+            if(err){
+              fn(err);
+              return;
+            }
+
+            if(removeAfterCopy){
+              var client2 = getClient({region: region, bucket: from.bucket});
+              client2.deleteObject({Bucket: from.bucket, Key: from.key}, function(err){
+                if(err) fn(err);
+                else fn();
+              });
+            }
+            else{
+              fn();
+            }
+          });
+        }
+
+        //打平，一条一条 copy
+        function doCopyOssFiles(bucket, pkey, arr, target, fn){
+          var len = arr.length;
+          var c= 0;
+          var t=[];
+
+          progress.total+=len;
+
+          var client = getClient({region: region, bucket: target.bucket});
+
+          function _dig(){
+            if(c>=len){
+              fn(t);
+              return;
+            }
+
+
+            if(stopCopyFilesFlag){
+              //停止
+              for(var i=c;i<arr.length;i++){
+                t.push({item: arr[i], error: new Error('User cancelled')});
+              }
+              if(progFn) progFn(progress);
+              fn(t);
+              return;
+            };
+
+
+            var item = arr[c];
+            var toKey = target.key.replace(/\/$/,'')+'/'+ (item.path.substring(pkey.length));
+            copyOssFile(client, {bucket:bucket,key: item.path},{bucket:bucket, key: toKey}, function(err){
+              if(err){
+                progress.errorCount++;
+                if(progFn)progFn(progress);
+                t.push({item:item, error:err});
+              }
+              progress.current++;
+              if(progFn)progFn(progress);
+              c++;
+              _dig();
+            });
+          }
+          _dig();
+        }
+
+        function doCopyFolder(source, target, fn){
+          var t=[];
+          var client = getClient({region: region, bucket: source.bucket});
+
+          nextList();
+
+          function nextList(marker){
+            var opt = {Bucket: source.bucket, Prefix: source.path};
+            if(marker) opt.Marker=marker;
+
+            client.listObjects(opt, function(err, result){
+
+              if(err){
+                t.push({item: source, error:err});
+                fn(t);
+                return;
+              }
+              var newTarget = {
+                key: target.key,
+                bucket: target.bucket
+              };
+
+
+              var prefix = opt.Prefix;
+              if (!prefix.endsWith('/')) {
+                prefix = prefix.substring(0, prefix.lastIndexOf('/') + 1)
+              }
+
+              var objs = [];
+              result['Contents'].forEach(function (n) {
+                n.Prefix = n.Prefix || '';
+
+                //if (!opt.Prefix.endsWith('/') || n.Key != opt.Prefix) {
+                  n.isFile = true;
+                  n.itemType = 'file';
+                  n.path = n.Key;
+                  n.name = n.Key.substring(prefix.length);
+                  n.size = n.Size;
+                  n.storageClass = n.StorageClass;
+                  n.type = n.Type;
+                  n.url = getOssUrl(region, opt.Bucket, n.Key);
+
+                  objs.push(n);
+                //}
+              });
+
+              doCopyOssFiles(source.bucket, source.path, objs, newTarget, function(terr){
+
+                if(terr)t=t.concat(terr);
+                if(result.NextMarker){
+                  nextList(result.NextMarker);
+                }
+                else{
+                  if(removeAfterCopy && terr.length==0){
+                    //移动全部成功， 删除目录
+                    client.deleteObject({Bucket: source.bucket, Key: source.path}, function(err){
+                      fn(t);
+                    });
+                  }
+                  else fn(t);
+                }
+              });
+
+
+            });
+          }
+        }
+
+        function doCopyFile(source, target, fn){
+          var client = getClient({region: region, bucket: target.bucket});
+          copyOssFile(client, {bucket: source.bucket, key: source.path}, {bucket: target.bucket, key:target.key}, function(err){
+            if(err){
+              fn(err);
+            }
+            else{
+              fn();
+            }
+          });
+        }
+
+        function digArr(items, target, fn){
+          var len = items.length;
+          var c=0;
+          var terr=[];
+
+          progress.total+=len;
+          if(progFn)progFn(progress);
+
+          function _(){
+
+            if(c>=len){
+              fn(terr);
+              return;
+            }
+
+            if(stopCopyFilesFlag){
+              //停止
+              for(var i=c;i<items.length;i++){
+                terr.push({item: items[i], error: new Error('User cancelled')});
+              }
+              if(progFn) progFn(progress);
+              fn(terr);
+              return;
+            };
+
+            var item = items[c];
+            var newTarget = {
+              key: target.key.replace(/\/$/,'')+'/'+items[c].name,
+              bucket: target.bucket
+            };
+            c++;
+
+            if(item.isFile){
+              doCopyFile(item, newTarget, function(err){
+                if(err){
+                  progress.errorCount++;
+                  if(progFn)progFn(progress);
+                  terr.push({item: items[c], error:err});
+                }
+                progress.current++;
+                if(progFn)progFn(progress);
+                _();
+              });
+            }
+            else{
+              doCopyFolder(item, newTarget, function(errs){
+                if(errs){
+                  terr = terr.concat(errs);
+                }
+                progress.current++;
+                if(progFn)progFn(progress);
+                _();
+              });
+            }
+          }
+          _();
+        }
+      }
+
+      //移动文件，重命名文件
+      function moveFile(region, bucket, oldKey, newKey){
+        var df = $q.defer();
+        var client = getClient({region:region, bucket:bucket});
+        client.copyObject({
+          Bucket: bucket,
+          Key: newKey,
+          CopySource: '/'+bucket+'/'+encodeURIComponent(oldKey),
+          MetadataDirective: 'REPLACE'     // 'REPLACE' 表示覆盖 meta 信息，'COPY' 表示不覆盖，只拷贝
+        }, function(err){
+          if(err){
+            df.reject(err);
+            handleError(err);
+          }
+          else{
+            client.deleteObject({Bucket: bucket, Key: oldKey}, function(err){
+              if(err){
+                df.reject(err);
+                handleError(err);
+              }else  df.resolve();
+            });
+          }
+        });
+        return df.promise;
+      }
+      /**************************************/
+
+
+      function listAllUploads(region, bucket){
+        var maxUploads = 100;
+        var client = getClient({region:region, bucket:bucket});
+        var t=[];
+        var df = $q.defer();
+        function dig(opt){
+          opt = angular.extend({Bucket: bucket, Prefix: '', 'MaxUploads':maxUploads}, opt);
+          client.listMultipartUploads(opt, function(err, result){
+            console.log(err, result)
+            if(err){
+              df.reject(err);
+              return;
+            }
+
+            angular.forEach(result.Uploads, function(n){
+              n.initiated = n.Initiated;
+              n.name = n.Key;
+              n.storageClass = n.StorageClass;
+              n.uploadId = n.UploadId;
+            });
+
+            t = t.concat(result.Uploads);
+
+            if(result.Uploads.length==maxUploads){
+              dig({'KeyMarker':result.NextKeyMarker, 'UploadIdMarker':result.NextUploadIdMarker});
+            }
+            else{
+              df.resolve(t);
+            }
+          });
+        }
+        dig({});
+        return df.promise;
+      }
+      function abortAllUploads(region, bucket, uploads){
+        var df=$q.defer();
+        var client = getClient({region:region, bucket:bucket});
+        var len = uploads.length;
+        var c=0;
+        function dig(){
+          if(c>=len){
+            df.resolve();
+            return;
+          }
+          client.abortMultipartUpload({
+            Bucket: bucket,
+            Key: uploads[c].name,
+            UploadId: uploads[c].uploadId
+          }, function(err, result){
+            if(err) df.reject(err);
+            else{
+              c++;
+              dig();
+            }
+          });
+        }
+        dig();
+        return df.promise;
+      }
+
+      function createFolder(region, bucket, prefix){
+        return new Promise(function (a, b) {
+          var client = getClient({
+            region: region,
+            bucket: bucket
+          });
+          client.putObject({
+            Bucket: bucket,
+            Key: prefix,
+            Body: ''
+          }, function (err, data) {
+            if (err) {
+              handleError(err);
+              b(err);
+            } else {
+              a(data);
+            }
+          });
+        });
+
+      }
+
+      function deleteBucket(region, bucket){
+        return new Promise(function (a, b) {
+          var client = getClient({
+            region: region,
+            bucket: bucket
+          });
+          client.deleteBucket({
+            Bucket: bucket
+          }, function (err, data) {
+            if (err) {
+              handleError(err);
+              b(err);
+            } else {
+              a(data);
+            }
+          });
+        });
+      }
+      function signatureUrl(region, bucket, key, expiresSec){
+        var client = getClient({
+          region: region,
+          bucket: bucket
+        });
+
+        var url= client.getSignedUrl('getObject',{
+          Bucket: bucket,
+          Key: key,
+          Expires: expiresSec || 60
+        });
+        return url;
+      }
+
+      function getBucketACL(region, bucket){
+        var df = $q.defer();
+        var client = getClient({region:region, bucket:bucket});
+        client.getBucketAcl({
+          Bucket: bucket
+        }, function(err, data){
+          if(err){
+            handleError(err);
+            df.reject(err);
+          }else{
+            if(data.Grants && data.Grants.length==1){
+              var t=[];
+              for(var k in data.Grants[0]){
+                t.push(data.Grants[0][k]);
+              }
+              data.acl = t.join('');
+            }else{
+              data.acl = 'default';
+            }
+            df.resolve(data);
+          }
+        });
+        return df.promise;
+      }
+      function updateBucketACL(region, bucket, acl){
+        var df = $q.defer();
+        var client = getClient({region:region, bucket:bucket});
+        client.putBucketAcl({
+          Bucket: bucket,
+          ACL: acl
+        }, function(err, data){
+          if(err){
+            handleError(err);
+            df.reject(err);
+          }else{
+            df.resolve(data);
+          }
+        });
+        return df.promise;
+      }
       function getACL(region, bucket, key) {
         return new Promise(function (a, b) {
           var client = getClient({
@@ -31,6 +593,35 @@ angular.module('web')
           client.getObjectAcl({
             Bucket: bucket,
             Key: key
+          }, function (err, data) {
+            if (err) {
+              handleError(err);
+              b(err);
+            } else {
+              if(data.Grants && data.Grants.length==1){
+                var t=[];
+                for(var k in data.Grants[0]){
+                  t.push(data.Grants[0][k]);
+                }
+                data.acl = t.join('');
+              }else{
+                data.acl = 'default';
+              }
+              a(data);
+            }
+          });
+        });
+      }
+      function updateACL(region, bucket, key, acl) {
+        return new Promise(function (a, b) {
+          var client = getClient({
+            region: region,
+            bucket: bucket
+          });
+          client.putObjectAcl({
+            Bucket: bucket,
+            Key: key,
+            ACL: acl
           }, function (err, data) {
             if (err) {
               handleError(err);
@@ -167,12 +758,12 @@ angular.module('web')
         return new Promise(function(a,b){
           _listFilesOrigion(region, bucket, key, marker).then(function(result){
               var arr = result.data;
-              if (arr && arr.length) { 
+              if (arr && arr.length) {
                 $timeout( ()=> {
                   loadStorageStatus(region, bucket, arr);
-                }); 
-              } 
-              a(result); 
+                });
+              }
+              a(result);
           }, function(err){
             b(err);
           });
@@ -188,7 +779,7 @@ angular.module('web')
             function _dig(){
                if(c >= len){
                   a();
-                  return;   
+                  return;
                }
                var item = arr[c];
                c++
@@ -198,11 +789,11 @@ angular.module('web')
                  return;
                }
 
-               getFileInfo(region, bucket, item.path).then(function(data){ 
+               getFileInfo(region, bucket, item.path).then(function(data){
                   if (data.Restore) {
                     var info = parseRestoreInfo(data.Restore);
                     if (info['ongoing-request'] == 'true') {
-                      item.storageStatus = 2; // '归档文件正在恢复中，请耐心等待...'; 
+                      item.storageStatus = 2; // '归档文件正在恢复中，请耐心等待...';
                     } else {
                       item.expired_time = info['expiry-date'];
                       item.storageStatus = 3; // '归档文件，已恢复，可读截止时间
@@ -210,14 +801,14 @@ angular.module('web')
                   }else{
                     item.storageStatus = 1;
                   }
-                  $timeout(_dig, 10); 
+                  $timeout(_dig, 10);
                }, function(err){
-                 b(err); 
+                 b(err);
                  $timeout(_dig, 100);
                });
             }
          });
-      } 
+      }
 
       function _listFilesOrigion(region, bucket, key, marker) {
 
@@ -227,7 +818,6 @@ angular.module('web')
             bucket: bucket
           });
 
-          var endpoint = $rootScope.bucketMap[bucket].extranetEndpoint;
 
           var t = [];
           var t_pre = [];
@@ -266,7 +856,7 @@ angular.module('web')
             }
 
             if (result['Contents']) {
-              //文件 
+              //文件
               result['Contents'].forEach(function (n) {
                 n.Prefix = n.Prefix || '';
 
@@ -278,7 +868,7 @@ angular.module('web')
                   n.size = n.Size;
                   n.storageClass = n.StorageClass;
                   n.type = n.Type;
-                  n.url = 'http://' + opt.Bucket + '.' + endpoint + '/' + n.Key;
+                  n.url =  getOssUrl(region, opt.Bucket, n.Key);
 
                   t.push(n);
                 }
@@ -295,6 +885,7 @@ angular.module('web')
 
         });
       }
+
 
       //同一时间只能有一个查询，上一个查询如果没有完成，则会被abort
       var keepListFilesJob;
@@ -324,7 +915,6 @@ angular.module('web')
           bucket: bucket
         });
 
-        var endpoint = $rootScope.bucketMap[bucket].extranetEndpoint;
 
         var t = [];
         var t_pre = [];
@@ -364,7 +954,7 @@ angular.module('web')
             }
 
             if (!folderOnly && result['Contents']) {
-              //文件 
+              //文件
               result['Contents'].forEach(function (n) {
                 n.Prefix = n.Prefix || '';
 
@@ -376,13 +966,13 @@ angular.module('web')
                   n.size = n.Size;
                   n.storageClass = n.StorageClass;
                   n.type = n.Type;
-                  n.url = 'http://' + opt.Bucket + '.' + endpoint + '/' + n.Key;
+                  n.url = getOssUrl(region, opt.Bucket, n.Key);
 
                   t.push(n);
                 }
               });
             }
-            //console.log(result)
+            console.log(result)
             if (result.NextMarker) {
               opt.Marker = result.NextMarker;
               $timeout(_dig, 10);
@@ -482,8 +1072,8 @@ angular.module('web')
        *    object = {id, secret, region, bucket}
        */
       function getClient(opt) {
-
         var authInfo = AuthInfo.get();
+
         var bucket;
         if (opt) {
           if (typeof (opt) == 'object') {
@@ -493,15 +1083,64 @@ angular.module('web')
         }
 
         var endpoint = getOssEndpoint(authInfo.region || 'oss-cn-beijing', bucket);
-
-        var client = new ALY.OSS({
+        var options = {
           accessKeyId: authInfo.id || 'a',
           secretAccessKey: authInfo.secret || 'a',
           endpoint: endpoint,
           apiVersion: '2013-10-15'
-        });
-
+        };
+        
+        if(authInfo.id && authInfo.id.indexOf('STS.')==0){
+            options.securityToken= authInfo.stoken || null;
+        }
+        var client = new ALY.OSS(options);
         return client;
+      }
+
+      function parseOSSPath(ossPath) {
+         if(!ossPath || ossPath.indexOf(DEF_ADDR)==-1 || ossPath==DEF_ADDR){
+           return {};
+         }
+
+         var str = ossPath.substring(DEF_ADDR.length);
+         var ind = str.indexOf('/');
+         if(ind==-1){
+           var bucket = str;
+           var key = '';
+         }else{
+           var bucket = str.substring(0, ind);
+           var key = str.substring(ind+1);
+         }
+         return {bucket:bucket, key:key};
+      }
+
+
+      function getOssUrl(region, bucket, key){
+        var isHttps = Global.ossEndpointProtocol == 'https:';
+
+
+        if (bucket && $rootScope.bucketMap && $rootScope.bucketMap[bucket]) {
+          var endpoint = $rootScope.bucketMap[bucket].extranetEndpoint;
+          if (endpoint){
+            return isHttps ? ('https://'+ bucket+'.'+ endpoint + ':443' +'/' + key) : ('http://'+ bucket+'.' + endpoint + '/' + key);
+          }
+        }
+
+        //region是domain
+        if (region.indexOf('.') != -1) {
+          if (region.indexOf('http') != 0) {
+            region = Global.ossEndpointProtocol == 'https:' ? ('https://'+ bucket+'.' + region + ':443'+'/' + key) : ('http://' + bucket+'.'+ region+'/' + key);
+          }
+          return region;
+        }
+
+
+        //region
+        if (Global.ossEndpointProtocol == 'https:') {
+          return 'https://' + bucket+'.'+ region + '.aliyuncs.com:443'+'/' + key;
+        }
+        return 'http://' + bucket+'.'+ region + '.aliyuncs.com'+'/' + key;
+
       }
 
       function getOssEndpoint(region, bucket) {

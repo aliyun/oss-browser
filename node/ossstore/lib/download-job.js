@@ -19,7 +19,7 @@ class DownloadJob extends Base {
    */
   constructor(ossClient, config) {
     super();
-
+    this.id= 'dj-'+new Date().getTime()+'-'+ ((''+Math.random()).substring(2));
     this.oss = ossClient;
     this._config = {};
     Object.assign(this._config, config);

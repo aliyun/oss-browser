@@ -116,11 +116,11 @@ angular.module('web')
 
 
     $scope.$on('filesViewReady',function(){
- 
 
-      goHome(); 
+      goHome();
 
-      $scope.$on('goToOssAddress', function(e, addr){  
+      $scope.$on('goToOssAddress', function(e, addr){
+        console.log('on:goToOssAddress', addr);
         $scope.address = addr;
         go();
       });
@@ -128,7 +128,7 @@ angular.module('web')
 
     function goHome(){
       $scope.address = getDefaultAddress();
-      
+
       go(true);
     }
 

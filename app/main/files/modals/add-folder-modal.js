@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('addFolderModalCtrl', ['$scope','$uibModalInstance','currentInfo', 'callback','ossSvs',
-    function ($scope, $modalInstance, currentInfo, callback,ossSvs) {
+  .controller('addFolderModalCtrl', ['$scope','$uibModalInstance','currentInfo', 'callback','ossSvs2',
+    function ($scope, $modalInstance, currentInfo, callback,ossSvs2) {
 
 
       angular.extend($scope, {
@@ -22,7 +22,7 @@ angular.module('web')
 
         var folderName = $scope.item.name;
 
-        ossSvs.createFolder(currentInfo.region, currentInfo.bucket, currentInfo.key+folderName+'/').then(function(){
+        ossSvs2.createFolder(currentInfo.region, currentInfo.bucket, currentInfo.key+folderName+'/').then(function(){
           callback();
           cancel();
         });

@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('othersModalCtrl', ['$scope','$uibModalInstance','$uibModal','bucketInfo','objectInfo','fileType','showFn','ossSvs2','safeApply',
-    function ($scope, $modalInstance,$modal, bucketInfo, objectInfo, fileType, showFn, ossSvs2, safeApply) {
+  .controller('othersModalCtrl', ['$scope','$uibModalInstance','$uibModal','bucketInfo','objectInfo','fileType','showFn','safeApply',
+    function ($scope, $modalInstance,$modal, bucketInfo, objectInfo, fileType, showFn, safeApply) {
 
       angular.extend($scope, {
         bucketInfo: bucketInfo,

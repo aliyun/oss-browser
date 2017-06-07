@@ -1,7 +1,7 @@
+
 # OSS Browser
 
 OSS Browser 提供类似windows资源管理器功能。用户可以很方便的浏览文件，上传下载文件，支持断点续传等。
-
 
 本工具使用开源框架 Angular 1.x + [Electron](http://electron.atom.io/)制作。
 
@@ -10,13 +10,13 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 ## 1. 客户端下载：
 
-这是打包好的，下载地址如下，解压即可使用。
+最新版本0.8.3，下载地址如下，解压即可使用。
 
-> [Window x64版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.8.2/oss-browser-win32-x64.zip)
+> [Window x64版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.8.3/oss-browser-win32-x64.zip)
 
-> [Mac 版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.8.2/oss-browser-darwin-x64.zip)
+> [Mac 版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.8.3/oss-browser-darwin-x64.zip)
 
-> [Linux x64版](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.8.2/oss-browser-linux-x64.zip)
+> [Linux x64版](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.8.3/oss-browser-linux-x64.zip)
 
 其他版本暂不提供，可以自行build。
 

@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('pictureModalCtrl', ['$scope', '$uibModalInstance', '$timeout', '$uibModal', 'ossSvs2', 'safeApply', 'showFn', 'bucketInfo', 'objectInfo', 'fileType', 'ossSvs',
-    function ($scope, $modalInstance, $timeout, $modal, ossSvs2, safeApply, showFn, bucketInfo, objectInfo, fileType, ossSvs) {
+  .controller('pictureModalCtrl', ['$scope', '$uibModalInstance', '$timeout', '$uibModal', 'ossSvs2', 'safeApply', 'showFn', 'bucketInfo', 'objectInfo', 'fileType',
+    function ($scope, $modalInstance, $timeout, $modal, ossSvs2, safeApply, showFn, bucketInfo, objectInfo, fileType) {
 
       angular.extend($scope, {
         bucketInfo: bucketInfo,
@@ -16,7 +16,7 @@ angular.module('web')
         MAX_SIZE: 5 * 1024 * 1024 //5MB
       });
 
-      function afterRestoreSubmit() { 
+      function afterRestoreSubmit() {
         showFn.callback();
       }
 
@@ -32,7 +32,7 @@ angular.module('web')
       }
 
       function getContent() {
-        var url = ossSvs.signatureUrl(bucketInfo.region, bucketInfo.bucket, objectInfo.path);
+        var url = ossSvs2.signatureUrl(bucketInfo.region, bucketInfo.bucket, objectInfo.path);
         $timeout(function () {
           $scope.imgsrc = url;
         }, 300);

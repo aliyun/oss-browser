@@ -39,13 +39,16 @@
     <script>
       var shell = require('electron').shell;
       function openExternal(url){
-        // Open a URL in the default way 
+        // Open a URL in the default way
         shell.openExternal(url);
       }
-      
+
 
       var pkg = require('./package');
       var ALY = require('aliyun-sdk');
+      ALY.util.isBrowser = function(){
+        return false;
+      };
 
       var Global = {
         //ossEndpointProtocol:'https:',

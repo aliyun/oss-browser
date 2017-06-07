@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('restoreModalCtrl', ['$scope','$uibModalInstance','ossSvs2','item','currentInfo', 'callback','ossSvs','Toast','safeApply',
-    function ($scope, $modalInstance, ossSvs2, item, currentInfo, callback, ossSvs, Toast, safeApply) {
+  .controller('restoreModalCtrl', ['$scope','$uibModalInstance','ossSvs2','item','currentInfo', 'callback','Toast','safeApply',
+    function ($scope, $modalInstance, ossSvs2, item, currentInfo, callback, Toast, safeApply) {
 
       angular.extend($scope, {
         currentInfo: currentInfo,

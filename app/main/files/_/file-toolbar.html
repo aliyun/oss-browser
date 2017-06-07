@@ -31,10 +31,12 @@
         下载
       </button>
 
-      <button type="button" class="btn btn-default btn-sm" ng-disabled="!sel.has" ng-click="showDeleteFilesSelected()">
-       <i class="fa fa-remove text-danger"></i>
-        删除
+      <button type="button" class="btn btn-default btn-sm"
+      ng-disabled="!sel.has" ng-click="showMove(sel.has, true)">
+      <i class="fa fa-clone text-primary"></i>
+        复制
       </button>
+
 
     </div>
 
@@ -45,12 +47,6 @@
         <span class="sr-only">Toggle Dropdown</span>
       </button>
       <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="" class="" ng-if="sel.has" ng-click="showMove(sel.has, true)">
-            <i class="fa fa-clone text-primary"></i>
-            复制
-          </a>
-        </li>
         <li>
           <a href="" class="" ng-if="sel.has" ng-click="showMove(sel.has)">
             <i class="fa fa-cut text-primary"></i>
@@ -64,6 +60,8 @@
             重命名
           </a>
         </li>
+
+
         <li>
           <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder"
             ng-click="showACL(sel.has[0])">
@@ -80,6 +78,14 @@
             简化Policy授权
           </a>
         </li>
+        <!-- <li>
+          <a href="" ng-if="sel.has.length==1 && sel.has[0].isFolder"
+            ng-class="{'text-success':sel.has}"
+            ng-click="showGrantToken(sel.has[0])">
+            <i class="fa fa-shield text-warning"></i>
+            生成授权码
+          </a>
+        </li> -->
 
         <li>
           <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder" ng-click="showAddress(sel.has[0])">
@@ -87,8 +93,32 @@
             获取地址
           </a>
         </li>
+
+
+        <li>
+          <a href="" class="" ng-if="sel.has" ng-click="showDeleteFilesSelected()">
+             <i class="fa fa-remove text-danger"></i>
+            删除
+          </a>
+        </li>
       </ul>
 
+    </div>
+
+    <div class="btn-group" role="toolbar" ng-if="keepMoveOptions">
+      <button class="btn btn-default btn-sm" type="button"
+      uib-tooltip-html="'<div class=\'break\'>将{{keepMoveOptions.items[0].name|sub:50}}等粘贴到本目录</div>'"
+      tooltip-placement="bottom" tooltip-append-to-body="true"
+      ng-click="paste()">
+      <span class="text-primary"><i class="fa fa-paste"></i> 粘贴
+      </button>
+
+      <button class="btn btn-default btn-sm" style="padding-left:3px;padding-right:3px;" type="button"
+      uib-tooltip="取消{{keepMoveOptions.isCopy?'复制':'粘贴'}}"
+      tooltip-placement="bottom" tooltip-append-to-body="true"
+        ng-click="cancelPaste()">
+        <span class="text-danger"><i class="fa fa-close"></i></span>
+      </button>
     </div>
 
   </div>

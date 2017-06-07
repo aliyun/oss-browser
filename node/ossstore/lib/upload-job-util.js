@@ -144,7 +144,7 @@ function prepareChunks(filePath, checkPoints, fn){
  */
 function getSensibleChunkSize(total) {
 
-  var minChunkSize = 1024 * 1024;  //1MB
+  var minChunkSize = 5 * 1024 * 1024;  //5MB
   if(total <= minChunkSize){
     return minChunkSize;
   }

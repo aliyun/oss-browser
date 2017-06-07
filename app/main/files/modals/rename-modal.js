@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('renameModalCtrl', ['$scope','$uibModalInstance','item','currentInfo', 'callback','ossSvs','Toast',
-    function ($scope, $modalInstance, item, currentInfo, callback, ossSvs, Toast) {
+  .controller('renameModalCtrl', ['$scope','$uibModalInstance','item','currentInfo', 'callback','ossSvs2','Toast',
+    function ($scope, $modalInstance, item, currentInfo, callback, ossSvs2, Toast) {
 
 
       angular.extend($scope, {
@@ -22,7 +22,7 @@ angular.module('web')
 
         if($scope.item.isFolder){
           // var newPath = currentInfo.key==''?item.name: (currentInfo.key.replace(/(\/$)/,'') +'/' + item.name);
-          // ossSvs.moveFolder(currentInfo.region, currentInfo.bucket, item.path, newPath).then(function(){
+          // ossSvs2.moveFolder(currentInfo.region, currentInfo.bucket, item.path, newPath).then(function(){
           //   Toast.success('重命名成功');
           //   callback();
           //   cancel();
@@ -31,7 +31,7 @@ angular.module('web')
         else{
           var newPath = currentInfo.key==''?item.name: (currentInfo.key.replace(/(\/$)/,'') +'/' + item.name);
 
-          ossSvs.moveFile(currentInfo.region, currentInfo.bucket, item.path, newPath).then(function(){
+          ossSvs2.moveFile(currentInfo.region, currentInfo.bucket, item.path, newPath).then(function(){
             Toast.success('重命名成功');
             callback();
             cancel();

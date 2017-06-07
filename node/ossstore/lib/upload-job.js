@@ -27,6 +27,7 @@ class UploadJob extends Base {
    */
   constructor(ossClient, config) {
     super();
+    this.id= 'uj-'+new Date().getTime()+'-'+ ((''+Math.random()).substring(2));
 
     this.oss = ossClient;
     this._config = {};

@@ -17,11 +17,11 @@
      <div ng-if="isLoading" is-loading></div>
 
     <section ng-if="ref.isBucketList">
-      <div ng-include="'main/files/_/bucket-list.html'"></div>
+      <div ng-include="'main/files/_/bucket-list.html'" auto-height="-134"></div>
     </section>
 
     <section ng-if="!ref.isBucketList" drop-zone="handlerDrop">
-      <div ng-include="'main/files/_/file-list.html'" auto-height="-136" id="file-list"  bottom-loader="loadNext()"></div>
+      <div ng-include="'main/files/_/file-list.html'" auto-height="-134" id="file-list"  bottom-loader="loadNext()"></div>
     </section>
 
   </div>

@@ -1,44 +1,46 @@
 angular.module('web')
-  .controller('moveModalCtrl', ['$scope','$uibModalInstance','items','isCopy','currentInfo', 'callback','ossSvs','Toast','AuthInfo','safeApply',
-    function ($scope, $modalInstance, items, isCopy, currentInfo, callback, ossSvs, Toast,AuthInfo, safeApply) {
+  .controller('moveModalCtrl', ['$scope','$uibModalInstance','items','isCopy','fromInfo','moveTo', 'callback','ossSvs2','Toast','AuthInfo','safeApply',
+    function ($scope, $modalInstance, items, isCopy, fromInfo, moveTo, callback, ossSvs2, Toast,AuthInfo, safeApply) {
 
       var authInfo = AuthInfo.get();
 
 
       angular.extend($scope, {
-        currentInfo: currentInfo,
+        fromInfo: fromInfo,
         items: items,
         isCopy: isCopy,
-        step : 1,
+        step : 2,
 
         cancel: cancel,
         start: start,
         stop: stop,
 
 
-        reg: {
-          folderName: /^[^\/]+$/
-        },
-        ossFsConfig: {
-          id: authInfo.id,
-          secret: authInfo.secret,
-          region: currentInfo.region,
-          bucket: currentInfo.bucket,
-          key: currentInfo.key
-        },
+        // reg: {
+        //   folderName: /^[^\/]+$/
+        // },
+        // ossFsConfig: {
+        //   id: authInfo.id,
+        //   secret: authInfo.secret,
+        //   region: currentInfo.region,
+        //   bucket: currentInfo.bucket,
+        //   key: currentInfo.key
+        // },
         moveTo: {
-          ossPath:'',
-          region: ''
+          region: moveTo.region,
+          bucket: moveTo.bucket,
+          key: moveTo.key,
         },
         canMove: false
       });
 
-      $scope.originPath = 'oss://'+currentInfo.bucket+'/'+currentInfo.key;
+      //$scope.originPath = 'oss://'+currentInfo.bucket+'/'+currentInfo.key;
+      start();
 
       function stop() {
         //$modalInstance.dismiss('cancel');
         $scope.isStop=true;
-        ossSvs.stopCopyFiles();
+        ossSvs2.stopCopyFiles();
         callback();
       }
 
@@ -50,17 +52,17 @@ angular.module('web')
         $scope.isStop=false;
         $scope.step = 2;
 
-        var target = ossSvs.parseOSSPath($scope.moveTo.ossPath);
-        target.region= $scope.moveTo.region;
+
+        var target = angular.copy($scope.moveTo);
         var items = angular.copy($scope.items);
 
         angular.forEach(items, function(n){
           //n.region = currentInfo.region;
-          n.bucket = currentInfo.bucket;
+          n.bucket = fromInfo.bucket;
         });
 
         //复制 or 移动
-        ossSvs.copyFiles(currentInfo.region, items, target, function progress(prog){
+        ossSvs2.copyFiles(fromInfo.region, items, target, function progress(prog){
           //进度
           $scope.progress = angular.copy(prog);
           safeApply($scope);

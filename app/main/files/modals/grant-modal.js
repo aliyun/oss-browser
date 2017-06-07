@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('grantModalCtrl', ['$scope', '$q', '$uibModalInstance', 'items', 'currentInfo', 'ossSvs','ramSvs','Toast', 'safeApply',
-    function ($scope, $q, $modalInstance, items, currentInfo, ossSvs,ramSvs, Toast, safeApply) {
+  .controller('grantModalCtrl', ['$scope', '$q', '$uibModalInstance', 'items', 'currentInfo','ramSvs','Toast', 'safeApply',
+    function ($scope, $q, $modalInstance, items, currentInfo,ramSvs, Toast, safeApply) {
 
       angular.extend($scope, {
         cancel: cancel,
@@ -86,7 +86,7 @@ angular.module('web')
               ]
             });
 
-            
+
             t.push({
               "Effect": "Allow",
               "Action": [
@@ -100,7 +100,7 @@ angular.module('web')
                   "oss:Prefix": key + "*"
                 }
               }
-            }); 
+            });
 
           } else {
             //文件所有权限
