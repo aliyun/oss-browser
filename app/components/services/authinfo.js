@@ -11,7 +11,6 @@ angular.module('web')
       },
       save: function(obj){
         save(AUTH_INFO,obj);
-        addToHistories(obj);
       },
       remove: function(){
         remove(AUTH_INFO);
@@ -37,10 +36,11 @@ angular.module('web')
       cleanHistories: function(){
         remove(AUTH_HIS);
       },
-      removeFromHistories: removeFromHistories
+      removeFromHistories: removeFromHistories,
+      addToHistories: addToHistories
     };
 
-    function addToHistories(obj){ 
+    function addToHistories(obj){
       var arr = get(AUTH_HIS,[]);
       for(var i=0;i<arr.length;i++){
         if(arr[i].id==obj.id){

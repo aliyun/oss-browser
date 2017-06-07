@@ -5,7 +5,8 @@ angular.module('web')
     restrict: 'EA',
     transclude: true,
     scope: {
-      effectiveSize: '='
+      loadMoreFn : '=loadMore',
+      triggerSize: '='
     },
     template: '<div ng-transclude></div>',
 
@@ -13,36 +14,42 @@ angular.module('web')
       var t = ele.offset().top;
       var h = $(ele).height();
 
-      var SIZE = scope.effectiveSize || 1000;
+      var SIZE = scope.triggerSize || 20;
 
       $(ele).scroll(onScroll);
-      effect();
+      //effect();
 
       var tid;
       function onScroll(){
         $timeout.cancel(tid);
         tid = $timeout(function(){
           effect();
-        },100);
+        },200);
       }
 
       function effect(){
         var scrollTop = $(ele).scrollTop();
-        var arr = $($(ele).find('li.list-group-item'));
-        if(arr.length<SIZE){
-          $($(ele).find('li.list-group-item')).removeClass('invisible');
+        var scrollHeight = $(ele)[0].scrollHeight;
+
+        if(scrollTop+ h > scrollHeight - SIZE){
+          if(typeof scope.loadMoreFn == 'function') scope.loadMoreFn();
         }
-        else{
-          arr.each(function(){
-            var iTop = $(this).offset().top - t;
-            //console.log(iTop, h, t)
-            if(iTop < -350 || iTop > h + 350){
-              $(this).addClass('invisible');
-            }else{
-              $(this).removeClass('invisible');
-            }
-          });
-        }
+
+        // var arr = $($(ele).find('li.list-group-item'));
+        // if(arr.length<SIZE){
+        //   $($(ele).find('li.list-group-item')).removeClass('invisible');
+        // }
+        // else{
+        //   arr.each(function(){
+        //     var iTop = $(this).offset().top - t;
+        //     //console.log(iTop, h, t)
+        //     if(iTop < -350 || iTop > h + 350){
+        //       $(this).addClass('invisible');
+        //     }else{
+        //       $(this).removeClass('invisible');
+        //     }
+        //   });
+        // }
       }
     }
   };

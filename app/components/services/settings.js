@@ -4,7 +4,7 @@ angular.module('web')
   return {
     maxUploadJobCount: {
       get: function(){
-        return parseInt(localStorage.getItem('maxUploadJobCount')||2);
+        return parseInt(localStorage.getItem('maxUploadJobCount')||3);
       },
       set: function(v){
         return localStorage.setItem('maxUploadJobCount',v);
@@ -13,7 +13,7 @@ angular.module('web')
 
     maxDownloadJobCount: {
       get: function(){
-        return parseInt(localStorage.getItem('maxDownloadJobCount')||2);
+        return parseInt(localStorage.getItem('maxDownloadJobCount')||3);
       },
       set: function(v){
         return localStorage.setItem('maxDownloadJobCount',v);
