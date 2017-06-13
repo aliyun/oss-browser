@@ -151,7 +151,7 @@ angular.module('web')
               //遍历 oss 目录
               function progDig(marker){
                 ossSvs2.listFiles(ossInfo.region, ossInfo.bucket, ossInfo.path, marker).then(function (result) {
-console.log(result)
+
                   var arr2 = result.data;
                   arr2.forEach(function (n) {
                     n.region = ossInfo.region;
@@ -186,7 +186,7 @@ console.log(result)
             //遍历 oss 目录
             function progDig(marker){
               ossSvs2.listFiles(ossInfo.region, ossInfo.bucket, ossInfo.path, marker).then(function (result) {
-                console.log(result)
+                //console.log(result)
                 var arr2 = result.data;
                 arr2.forEach(function (n) {
                   n.region = ossInfo.region;

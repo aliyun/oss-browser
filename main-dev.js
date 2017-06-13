@@ -2,7 +2,8 @@ const electron = require('electron');
 // Module to control application life.
 const {
   app,
-  Menu
+  Menu,
+  ipcMain
 } = electron;
 // Module to create native browser window.
 const {
@@ -51,6 +52,10 @@ function createWindow() {
   });
 
 }
+
+ipcMain.on('asynchronous-message', (event, msg) => {
+   if(msg=='openDevTools') win.webContents.openDevTools();
+});
 
 //singleton
 const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {

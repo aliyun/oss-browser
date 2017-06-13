@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('moveModalCtrl', ['$scope','$uibModalInstance','items','isCopy','fromInfo','moveTo', 'callback','ossSvs2','Toast','AuthInfo','safeApply',
-    function ($scope, $modalInstance, items, isCopy, fromInfo, moveTo, callback, ossSvs2, Toast,AuthInfo, safeApply) {
+  .controller('moveModalCtrl', ['$scope','$uibModalInstance','$timeout','items','isCopy','fromInfo','moveTo', 'callback','ossSvs2','Toast','AuthInfo','safeApply',
+    function ($scope, $modalInstance, $timeout, items, isCopy, fromInfo, moveTo, callback, ossSvs2, Toast,AuthInfo, safeApply) {
 
       var authInfo = AuthInfo.get();
 
@@ -41,7 +41,6 @@ angular.module('web')
         //$modalInstance.dismiss('cancel');
         $scope.isStop=true;
         ossSvs2.stopCopyFiles();
-        callback();
       }
 
       function cancel(){

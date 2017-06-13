@@ -1,6 +1,10 @@
 <div class="" ng-controller="transferDownloadsCtrl">
     <header class="pd4 text-right" style="border-bottom:1px solid #ddd;">
 
+        <div class="pull-left" style="position:relative">
+          <input type="text"  cleanable-input placeholder="搜索" class="form-control input-sm" style="width:140px;" ng-model="sch.downname">
+        </div>
+        
         <button type="button" class="btn btn-default btn-sm" ng-click="startAll()">
             <span class=""><i class="glyphicon glyphicon-play"></i> 启动全部</span>
         </button>
@@ -19,16 +23,17 @@
         <div class="clearfix"></div>
     </header>
 
-    <div class="clearfix" style="overflow:auto;height:343px;">
+    <div class="clearfix" style="overflow:auto;height:343px;"
+    long-scroll-list load-more="loadMoreDownloadItems" trigger-size="100">
 
-        <ul class="list-group list-condensed">
-            <li class="list-group-item" ng-repeat="item in lists.downloadJobList">
+        <ul class="list-group list-condensed" style="margin:0px;">
+            <li class="list-group-item" ng-repeat="item in lists.downloadJobList|listFilter:schKeyFn:sch.downname|limitTo:limitToNum track by item.id">
 
                 <div class="col-sm-4">
 
                     <div class="text-overflow" uib-tooltip-template="'download-path-tooltip-tpl.html'"
                         tooltip-trigger="mouseenter" tooltip-delay="500"
-                         tooltip-placement="left" tooltip-append-to-body="true">{{::item.to.name}}
+                         tooltip-placement="left" tooltip-append-to-body="true">{{$index+1}}. {{::item.to.name}}
                     </div>
 
                     <div class="progress mg0" style="height:4px;width:100%">
@@ -76,10 +81,11 @@
                 </div>
                 <div class="clearfix"></div>
             </li>
-
         </ul>
 
-        <div class="clearfix" style="height:5px"></div>
+        <div class="clearfix text-center" style="padding:4px;">
+          {{limitToNum < (lists.downloadJobList|listFilter:schKeyFn:sch.downname).length?'正在载入...':''}}
+        </div>
 
     </div>
 </div>

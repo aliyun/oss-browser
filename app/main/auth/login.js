@@ -105,7 +105,7 @@ angular.module('web')
         var data = angular.copy($scope.item);
         delete data.authToken;
         delete data.securityToken;
-        
+
         if($scope.flags.remember=='YES'){
           AuthInfo.remember(data);
         }
@@ -114,6 +114,7 @@ angular.module('web')
 
 
         Auth.login(data).then(function(){
+          if($scope.flags.remember=='YES') AuthInfo.addToHistories(data);
           Toast.success('登录成功，正在跳转...', 1000);
           $location.url('/');
         },function(err){

@@ -151,7 +151,7 @@ angular.module('web')
             dig(path.join(parentPath, arr[c]), dirPath,  function (jobs) {
               t = t.concat(jobs);
               c++;
-              console.log(c,'/',len);
+              //console.log(c,'/',len);
               if (c >= len) callFn(t);
               else inDig();
             });

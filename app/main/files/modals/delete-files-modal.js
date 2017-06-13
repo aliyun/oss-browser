@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('deleteFilesModalCtrl', ['$scope','$q','$uibModalInstance','items','currentInfo','callback','ossSvs2','safeApply',
-    function ($scope, $q, $modalInstance, items, currentInfo, callback, ossSvs2,safeApply) {
+  .controller('deleteFilesModalCtrl', ['$scope','$q','$uibModalInstance','$timeout','items','currentInfo','callback','ossSvs2','safeApply',
+    function ($scope, $q, $modalInstance, $timeout, items, currentInfo, callback, ossSvs2,safeApply) {
 
       angular.extend($scope, {
         items: items,
@@ -16,7 +16,6 @@ angular.module('web')
         //$modalInstance.dismiss('cancel');
         $scope.isStop=true;
         ossSvs2.stopDeleteFiles();
-        callback();
       }
       function close(){
         $modalInstance.dismiss('cancel');

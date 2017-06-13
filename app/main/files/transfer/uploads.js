@@ -10,8 +10,24 @@ angular.module('web')
         clearAll: clearAll,
         stopAll: stopAll,
         startAll: startAll,
-        checkStartJob: checkStartJob
+        checkStartJob: checkStartJob,
+
+        sch: {
+          upname: null,
+        },
+        schKeyFn: function(item){
+          return item.from.name;
+        },
+        limitToNum: 100,
+        loadMoreUploadItems: loadMoreItems
       });
+
+      function loadMoreItems(){
+        var len = $scope.lists.uploadJobList.length;
+        if($scope.limitToNum < len){
+          $scope.limitToNum += Math.min(100, len - $scope.limitToNum);
+        }
+      }
 
       function checkStartJob(item) {
         item.wait();
