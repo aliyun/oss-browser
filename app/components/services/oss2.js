@@ -1062,8 +1062,10 @@ angular.module('web')
               message: err.message
             };
           }
-
-          Toast.error(err.code + ': ' + err.message);
+          if(err.code=='NetworkingError' && err.message.indexOf('ENOTFOUND')!=-1){
+            console.log(err);
+          }
+          else Toast.error(err.code + ': ' + err.message);
         }
       }
 
