@@ -20,7 +20,7 @@
     "all": "npm run mirror && electron-packager ./dist --overwrite --out=build --version=1.6.11 --all --icon=./app/icons/"
   },
   "engines": {
-    "node": ">=4.5.0"
+    "node": "7.4.0"
   },
   "devDependencies": {
     "angular": "1.5.8",

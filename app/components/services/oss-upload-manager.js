@@ -248,29 +248,30 @@ angular.module('web')
        * 保存进度
        */
       function saveProg() {
-        var t = [];
-        angular.forEach($scope.lists.uploadJobList, function (n) {
-
-          if (n.status == 'finished') return;
-
-          if (n.checkPoints && n.checkPoints.chunks) {
-            var checkPoints = angular.copy(n.checkPoints);
-            delete checkPoints.chunks;
-          }
-
-          t.push({
-            checkPoints: checkPoints,
-            region: n.region,
-            to: n.to,
-            from: n.from,
-            status: n.status,
-            message: n.message,
-            prog: n.prog
-          });
-        });
-
-        //console.log('request save upload:', t);
         DelayDone.delayRun('save_upload_prog', 1000, function () {
+          var t = [];
+          angular.forEach($scope.lists.uploadJobList, function (n) {
+
+            if (n.status == 'finished') return;
+
+            if (n.checkPoints && n.checkPoints.chunks) {
+              var checkPoints = angular.copy(n.checkPoints);
+              delete checkPoints.chunks;
+            }
+
+            t.push({
+              checkPoints: checkPoints,
+              region: n.region,
+              to: n.to,
+              from: n.from,
+              status: n.status,
+              message: n.message,
+              prog: n.prog
+            });
+          });
+
+          //console.log('request save upload:', t);
+
           //console.log('-save')
           fs.writeFileSync(getUpProgFilePath(), JSON.stringify(t, ' ', 2));
           $scope.calcTotalProg();

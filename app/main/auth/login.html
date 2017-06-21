@@ -6,17 +6,17 @@
     <div class="clearfix" style="height:40px;"></div>
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default shadow10">
-          <div class="panel-heading">
+          <!-- <div class="panel-heading">
           AK登录
-           </div>
-            <!-- <div class="panel-heading pd0">
+           </div> -->
+            <div class="panel-heading pd0">
 
                 <ul class="nav nav-tabs">
                   <li role="presentation" ng-class="{active:gtab==1}"><a href="" ng-click="gtab=1">AK登录</a></li>
                   <li role="presentation" ng-class="{active:gtab==2}"><a href="" ng-click="gtab=2">授权码登录</a></li>
                 </ul>
 
-            </div> -->
+            </div>
             <div class="panel-body">
 
                 <form ng-if="gtab==1" class="form-horizontal" name="form1" ng-submit="onSubmit(form1)">
@@ -97,7 +97,7 @@
                             <textarea required ng-model="item.authToken"  rows="6" ng-change="authTokenChange()"
                              class="form-control" id="input-x" placeholder="请输入授权码">
                              </textarea>
-                             <small class="text-danger" ng-if="!authTokenInfo">无效的授权码</small>
+                             <small class="text-danger" ng-if="!authTokenInfo">请输入有效的授权码</small>
                              <small class="text-success" ng-if="authTokenInfo">({{authTokenInfo.osspath}}的{{authTokenInfo.privilege=='all'?'读写':'只读'}}权限，有效期至{{authTokenInfo.expiration|timeFormat}})</small>
                         </div>
                     </div>

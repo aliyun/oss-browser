@@ -162,9 +162,7 @@ angular.module('web')
                     if(result.marker){
                       progDig(result.marker);
                     }else{
-                      $timeout(function(){
-                        if(callFn)callFn();
-                      },10);
+                      if(callFn)callFn();
                     }
                   });
                 });
@@ -197,9 +195,7 @@ angular.module('web')
                   if(result.marker){
                     progDig(result.marker);
                   }else{
-                    $timeout(function(){
-                      if(callFn)callFn();
-                    },10);
+                    if(callFn)callFn();
                   }
                 });
               });
@@ -234,10 +230,9 @@ angular.module('web')
             }
           });
           addEvents(job);
-          $timeout(function(){
-            t.push(job);
-            if(callFn)callFn();
-          },10);
+
+          t.push(job);
+          if(callFn)callFn();
         }
       }
     }
@@ -262,25 +257,25 @@ angular.module('web')
     }
 
     function saveProg() {
-      var t = [];
-
-      angular.forEach($scope.lists.downloadJobList, function (n) {
-
-        if (n.status == 'finished') return;
-
-        t.push({
-          checkPoints: n.checkPoints,
-          region: n.region,
-          to: n.to,
-          from: n.from,
-          message: n.message,
-          status: n.status,
-          prog: n.prog
-        });
-      });
 
       //console.log('request save:', t);
       DelayDone.delayRun('save_download_prog', 1000, function () {
+
+        var t = [];
+        angular.forEach($scope.lists.downloadJobList, function (n) {
+
+          if (n.status == 'finished') return;
+
+          t.push({
+            checkPoints: n.checkPoints,
+            region: n.region,
+            to: n.to,
+            from: n.from,
+            message: n.message,
+            status: n.status,
+            prog: n.prog
+          });
+        });
         //console.log('save:', t);
 
         fs.writeFileSync(getDownProgFilePath(), JSON.stringify(t, ' ', 2));

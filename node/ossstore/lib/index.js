@@ -52,7 +52,7 @@ function OssStore(config) {
       endpoint: this._config.endpoint,
       apiVersion: '2013-10-15',
       httpOptions: {
-        timeout: 10000
+        timeout: 60000
       }
     });
   }
@@ -63,7 +63,7 @@ function OssStore(config) {
       endpoint: this._config.endpoint,
       apiVersion: '2013-10-15',
       httpOptions: {
-        timeout: 10000
+        timeout: 60000
       }
     });
   }
@@ -89,7 +89,7 @@ OssStore.prototype.setStsToken = function(stsToken){
     endpoint: this._config.endpoint,
     apiVersion: '2013-10-15',
     httpOptions: {
-      timeout: 10000
+      timeout: 60000
     }
   });
 };

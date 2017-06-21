@@ -1089,7 +1089,7 @@ angular.module('web')
           endpoint: endpoint,
           apiVersion: '2013-10-15'
         };
-        
+
         if(authInfo.id && authInfo.id.indexOf('STS.')==0){
             options.securityToken= authInfo.stoken || null;
         }
@@ -1147,7 +1147,7 @@ angular.module('web')
         var isHttps = Global.ossEndpointProtocol == 'https:';
         //通过bucket获取endpoint
         if (bucket && $rootScope.bucketMap && $rootScope.bucketMap[bucket]) {
-          var endpoint = $rootScope.bucketMap[bucket].extranetEndpoint;
+          var endpoint = $rootScope.bucketMap[bucket][$rootScope.internalSupported?'intranetEndpoint':'extranetEndpoint'];
           if (endpoint) return isHttps ? ('https://' + endpoint + ':443') : ('http://' + endpoint);
         }
 
@@ -1161,9 +1161,13 @@ angular.module('web')
 
         //region
         if (Global.ossEndpointProtocol == 'https:') {
-          return 'https://' + region + '.aliyuncs.com:443';
+          return $rootScope.internalSupported
+              ?'https://' + region + '-internal.aliyuncs.com:443'
+              :'https://' + region + '.aliyuncs.com:443';
         }
-        return 'http://' + region + '.aliyuncs.com';
+        return $rootScope.internalSupported
+              ? 'http://' + region + '-internal.aliyuncs.com'
+              : 'http://' + region + '.aliyuncs.com';
       }
 
     }

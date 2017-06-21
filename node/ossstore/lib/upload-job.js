@@ -59,6 +59,7 @@ class UploadJob extends Base {
     this.checkPoints = this._config.checkPoints;
 
     //console.log('created upload job');
+    this.maxConcurrency = 3;
   }
 }
 
@@ -135,6 +136,7 @@ UploadJob.prototype.startSpeedCounter = function(){
 
   self.lastLoaded = 0;
 
+  var tick = 0;
   self.speedTid = setInterval(function(){
 
     if(self.stopFlag){
@@ -147,6 +149,17 @@ UploadJob.prototype.startSpeedCounter = function(){
 
     //推测耗时
     self.predictLeftTime = self.speed == 0 ? 0 : Math.floor((self.prog.total-self.prog.loaded)/self.speed*1000);
+
+    //根据speed 动态调整 maxConcurrency, 5秒修改一次
+    tick++;
+    if(tick>5){
+      tick=0;
+      if(self.speed > 5*1024*1024) self.maxConcurrency=10;
+      else if(self.speed > 3*1024*1024) self.maxConcurrency=7;
+      else if(self.speed > 2*1024*1024) self.maxConcurrency=5;
+      else self.maxConcurrency=3;
+      console.log('max concurrency:', self.maxConcurrency);
+    }
 
   },1000);
 
@@ -225,8 +238,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
 
   var self = this;
 
-  var maxRetries = 5;
-  var maxConcurrency = 3;
+  var maxRetries = 100;
 
 
   var retries = {}; //重试次数 [partNumber]
@@ -315,7 +327,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
       doUpload(partParams);
 
       //如果concurrency允许, 再上传一块
-      if (concurrency <maxConcurrency && uploadNumArr.length>0 && !self.stopFlag) {
+      if (concurrency < self.maxConcurrency && uploadNumArr.length>0 && !self.stopFlag) {
         uploadPart(uploadNumArr.shift());
       }
 
@@ -365,8 +377,12 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
         else {
           checkPoints.Parts[partNumber].loaded = 0;
           retries[partNumber]++;
-          console.warn('重新上传分片: #', partNumber, ', 还可以重试'+(maxRetries-retries[partNumber])+'次');
-          doUpload(partParams);
+
+          console.warn('将要重新上传分片: #', partNumber, ', 还可以重试'+(maxRetries-retries[partNumber])+'次');
+          setTimeout(function(){
+            console.warn('重新上传分片: #', partNumber);
+            doUpload(partParams);
+          }, 2000);
         }
         return;
       }

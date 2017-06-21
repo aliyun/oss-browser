@@ -50,6 +50,8 @@ class DownloadJob extends Base {
     this.checkPoints = this._config.checkPoints;
 
     //console.log('created download job');
+
+    this.maxConcurrency = 3;
   }
 }
 
@@ -105,7 +107,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
   var self = this;
 
   self.lastLoaded = 0;
-
+  var tick=0;
   self.speedTid = setInterval(function () {
 
     if (self.stopFlag) {
@@ -120,6 +122,16 @@ DownloadJob.prototype.startSpeedCounter = function () {
     //推测耗时
     self.predictLeftTime = self.speed == 0 ? 0 : Math.floor((self.prog.total - self.prog.loaded) / self.speed * 1000);
 
+    //根据speed 动态调整 maxConcurrency, 5秒修改一次
+    tick++;
+    if(tick>5){
+      tick=0;
+      if(self.speed > 5*1024*1024) self.maxConcurrency=10;
+      else if(self.speed > 3*1024*1024) self.maxConcurrency=7;
+      else if(self.speed > 2*1024*1024) self.maxConcurrency=5;
+      else self.maxConcurrency=3;
+      console.log('max concurrency:', self.maxConcurrency);
+    }
   }, 1000);
 
   function onFinished() {
@@ -148,8 +160,8 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
   var completedCount = 0;
   var completedBytes = 0;
 
-  var maxRetries = 5;
-  var maxConcurrency = 3;
+  var maxRetries = 100;
+
   var concurrency = 0;
 
   //console.log('maxConcurrency:', maxConcurrency);
@@ -317,7 +329,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
     concurrency++;
     doDownload(n);
 
-    if (hasNextPart() && concurrency < maxConcurrency) {
+    if (hasNextPart() && concurrency < self.maxConcurrency) {
       concurrency++;
       downloadPart(getNextPart());
     }
@@ -334,6 +346,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
         // var md5 = ALY.util.crypto.md5(data.Body,'hex');
 
         if (err) {
+          console.log(err);
           if (err.code == 'RequestAbortedError') {
             //用户取消
             console.warn('用户取消');
@@ -344,7 +357,10 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
             retryCount++;
             console.log(`retry download part [${n}] error:${err}`);
             checkPoints.Parts[partNumber].loaded = 0;
-            doDownload(n);
+            setTimeout(function(){
+              doDownload(n);
+            },2000);
+
           } else {
             self.message = `failed to download part [${n}]: ${err.message}`;
             //console.error(self.message);

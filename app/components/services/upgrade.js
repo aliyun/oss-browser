@@ -69,7 +69,8 @@ angular.module('web')
       if ((navigator.platform == "Win32") || (navigator.platform == "Windows")) {
         return NAME + '-win32-x64.zip';
       } else if ((navigator.platform == "Mac68K") || (navigator.platform == "MacPPC") || (navigator.platform == "Macintosh") || (navigator.platform == "MacIntel")) {
-        return NAME + '-darwin-x64.zip';
+        return NAME + '.dmg';
+        //return NAME + '-darwin-x64.zip';
       } else {
         return NAME + '-linux-x64.zip';
       }
