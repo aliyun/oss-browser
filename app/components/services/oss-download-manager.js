@@ -120,7 +120,9 @@ angular.module('web')
           if(c==len){
             callFn(t);
           }
-          else _kdig();
+          else{
+            $timeout(_kdig,10);
+          }
         }
 
 
@@ -141,52 +143,16 @@ angular.module('web')
 
         if (ossInfo.isFolder) {
           //目录
-          if (!fs.existsSync(filePath)) {
-            //如果不存在， mkdir
-            fs.mkdir(filePath, function (err) {
-              if(err){
+          fs.mkdir(filePath, function (err) {
+
+            if(err && err.code!='EEXIST'){
                 Toast.error('创建目录['+filePath+']失败:'+err.message);
                 return;
-              }
-              //遍历 oss 目录
-              function progDig(marker){
-                ossSvs2.listFiles(ossInfo.region, ossInfo.bucket, ossInfo.path, marker).then(function (result) {
-
-                  var arr2 = result.data;
-                  arr2.forEach(function (n) {
-                    n.region = ossInfo.region;
-                    n.bucket = ossInfo.bucket;
-                  });
-                  loop(arr2, function (jobs) {
-                    t=t.concat(jobs);
-                    if(result.marker){
-                      progDig(result.marker);
-                    }else{
-                      $timeout(function(){
-                        if(callFn)callFn();
-                      },10);
-                    }
-                  });
-                });
-              }
-              progDig();
-              // ossSvs2.listAllFiles(ossInfo.region, ossInfo.bucket, ossInfo.path).then(function (arr2) {
-              //   arr2.forEach(function (n) {
-              //     n.region = ossInfo.region;
-              //     n.bucket = ossInfo.bucket;
-              //   });
-              //   loop(arr2, function (jobs) {
-              //     $timeout(function(){
-              //       callFn(jobs);
-              //     },1);
-              //   });
-              // });
-            });
-          } else {
+            }
             //遍历 oss 目录
             function progDig(marker){
               ossSvs2.listFiles(ossInfo.region, ossInfo.bucket, ossInfo.path, marker).then(function (result) {
-                //console.log(result)
+
                 var arr2 = result.data;
                 arr2.forEach(function (n) {
                   n.region = ossInfo.region;
@@ -195,30 +161,17 @@ angular.module('web')
                 loop(arr2, function (jobs) {
                   t=t.concat(jobs);
                   if(result.marker){
-                    progDig(result.marker);
-                  }else{
                     $timeout(function(){
-                      if(callFn)callFn();
-                    },10);
+                       progDig(result.marker);
+                     },10);
+                  }else{
+                    if(callFn)callFn();
                   }
                 });
               });
             }
             progDig();
-
-
-            // ossSvs2.listAllFiles(ossInfo.region, ossInfo.bucket, ossInfo.path).then(function (arr2) {
-            //   arr2.forEach(function (n) {
-            //     n.region = ossInfo.region;
-            //     n.bucket = ossInfo.bucket;
-            //   });
-            //   loop(arr2, function (jobs) {
-            //     $timeout(function(){
-            //       callFn(jobs);
-            //     },1);
-            //   });
-            // });
-          }
+          });
 
         } else {
           //文件
@@ -234,10 +187,9 @@ angular.module('web')
             }
           });
           addEvents(job);
-          $timeout(function(){
-            t.push(job);
-            if(callFn)callFn();
-          },10);
+
+          t.push(job);
+          if(callFn)callFn();
         }
       }
     }
@@ -262,25 +214,25 @@ angular.module('web')
     }
 
     function saveProg() {
-      var t = [];
-
-      angular.forEach($scope.lists.downloadJobList, function (n) {
-
-        if (n.status == 'finished') return;
-
-        t.push({
-          checkPoints: n.checkPoints,
-          region: n.region,
-          to: n.to,
-          from: n.from,
-          message: n.message,
-          status: n.status,
-          prog: n.prog
-        });
-      });
 
       //console.log('request save:', t);
       DelayDone.delayRun('save_download_prog', 1000, function () {
+
+        var t = [];
+        angular.forEach($scope.lists.downloadJobList, function (n) {
+
+          if (n.status == 'finished') return;
+
+          t.push({
+            checkPoints: n.checkPoints,
+            region: n.region,
+            to: n.to,
+            from: n.from,
+            message: n.message,
+            status: n.status,
+            prog: n.prog
+          });
+        });
         //console.log('save:', t);
 
         fs.writeFileSync(getDownProgFilePath(), JSON.stringify(t, ' ', 2));

@@ -66,6 +66,7 @@
       <input type="text" ng-model="sch.bucketName" class="form-control" cleanable-input placeholder="Bucket名称">
       <span class="input-group-addon">
         <i class="fa fa-search"></i>
+        {{(buckets|filter:sch.bucketName).length}}
       </span>
     </div>
 

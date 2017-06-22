@@ -15,8 +15,8 @@ angular.module('web')
     //link: linkFn,
     restrict: 'EA',
     template:
-      '<div class="toast-list" style="position: fixed; bottom: 0px;left: 10px;right: 50%;z-index:10000;">'
-      +'<div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}">{{alert.msg}}</div>'
+      '<div class="toast-list" style="position: fixed; bottom: 0px;left: 10px;right: 70%;z-index:10000;">'
+      +'<div ng-repeat="alert in alerts" style="padding:4px;margin-bottom:10px;" class="alert alert-{{alert.type}}">{{alert.msg}}</div>'
       +'</div>',
     controller: ['$scope','$timeout','$location', function($scope, $timeout, $location){
 

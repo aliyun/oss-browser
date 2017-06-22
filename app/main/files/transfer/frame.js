@@ -20,9 +20,15 @@ function($scope ,ossUploadManager,ossDownloadManager, Toast){
 
    //functions in parent scope
    $scope.handlers.uploadFilesHandler = uploadFilesHandler;
-   ossUploadManager.init($scope);
+
    $scope.handlers.downloadFilesHandler = downloadFilesHandler;
-   ossDownloadManager.init($scope);
+
+
+   $scope.netInit().then(function(){
+     //确认是否可以使用内部网络，再初始化
+     ossUploadManager.init($scope);
+     ossDownloadManager.init($scope);
+   });
 
 
    /**
@@ -35,7 +41,7 @@ function($scope ,ossUploadManager,ossDownloadManager, Toast){
      ossDownloadManager.createDownloadJobs(fromOssPath, toLocalPath, function(jobs){
        //console.log(jobs);
 
-       Toast.success('已添加到下载队列');
+       //Toast.info('正在添加到下载队列');
        $scope.toggleTransVisible(true);
        $scope.transTab = 2;
      });
@@ -50,7 +56,7 @@ function($scope ,ossUploadManager,ossDownloadManager, Toast){
       ossUploadManager.createUploadJobs(filePaths, bucketInfo, function(jobs){
         //console.log(jobs);
 
-        Toast.success('已添加到上传队列');
+        //Toast.info('正在添加到上传队列');
         $scope.toggleTransVisible(true);
         $scope.transTab = 1;
       });

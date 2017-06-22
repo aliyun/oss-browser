@@ -26,15 +26,20 @@ if (process.platform == 'darwin') {
 }
 
 function createWindow() {
-  // Create the browser window.   http://electron.atom.io/docs/api/browser-window/
-  win = new BrowserWindow({
+  var opt = {
     width: 1020,
     height: 700,
     minWidth: 1020,
     minHeight: 660,
     title: "OSS浏览器",
     icon: path.join(__dirname, 'icons', 'icon.ico')
-  });
+  };
+
+  if(process.platform=='linux'){
+    opt.icon = path.join(__dirname, 'icons', 'icon.png');
+  }
+  // Create the browser window.   http://electron.atom.io/docs/api/browser-window/
+  win = new BrowserWindow(opt);
 
   win.setTitle("OSS浏览器");
 
@@ -55,7 +60,9 @@ function createWindow() {
 
 
   // drawin 就是 MacOS
-  if (process.platform === 'darwin') {
+  if(process.env.NODE_ENV=='development'){
+    console.log('开发模式');
+  }else if (process.platform === 'darwin') {
     // Create the Application's main menu
     let template = getMenuTemplate();
     //注册菜单, 打包后可以复制, 但是不能打开 devTools

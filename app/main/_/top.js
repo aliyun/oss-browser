@@ -38,7 +38,7 @@ angular.module('web')
 
       //$scope.aid = AuthInfo.get().id;
       $scope.authInfo = AuthInfo.get();
-
+      
       $timeout(init, 2000);
 
       function init(){

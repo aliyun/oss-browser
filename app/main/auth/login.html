@@ -97,7 +97,7 @@
                             <textarea required ng-model="item.authToken"  rows="6" ng-change="authTokenChange()"
                              class="form-control" id="input-x" placeholder="请输入授权码">
                              </textarea>
-                             <small class="text-danger" ng-if="!authTokenInfo">无效的授权码</small>
+                             <small class="text-danger" ng-if="!authTokenInfo">请输入有效的授权码</small>
                              <small class="text-success" ng-if="authTokenInfo">({{authTokenInfo.osspath}}的{{authTokenInfo.privilege=='all'?'读写':'只读'}}权限，有效期至{{authTokenInfo.expiration|timeFormat}})</small>
                         </div>
                     </div>

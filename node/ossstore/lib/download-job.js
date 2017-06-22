@@ -50,6 +50,8 @@ class DownloadJob extends Base {
     this.checkPoints = this._config.checkPoints;
 
     //console.log('created download job');
+
+    this.maxConcurrency = 3;
   }
 }
 
@@ -105,7 +107,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
   var self = this;
 
   self.lastLoaded = 0;
-
+  var tick=0;
   self.speedTid = setInterval(function () {
 
     if (self.stopFlag) {
@@ -120,6 +122,16 @@ DownloadJob.prototype.startSpeedCounter = function () {
     //推测耗时
     self.predictLeftTime = self.speed == 0 ? 0 : Math.floor((self.prog.total - self.prog.loaded) / self.speed * 1000);
 
+    //根据speed 动态调整 maxConcurrency, 5秒修改一次
+    tick++;
+    if(tick>5){
+      tick=0;
+      if(self.speed > 5*1024*1024) self.maxConcurrency=10;
+      else if(self.speed > 3*1024*1024) self.maxConcurrency=7;
+      else if(self.speed > 2*1024*1024) self.maxConcurrency=5;
+      else self.maxConcurrency=3;
+      console.log('max concurrency:', self.maxConcurrency);
+    }
   }, 1000);
 
   function onFinished() {
@@ -148,14 +160,15 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
   var completedCount = 0;
   var completedBytes = 0;
 
-  var maxRetries = 5;
-  var maxConcurrency = 3;
+  var maxRetries = 100;
+
   var concurrency = 0;
 
   //console.log('maxConcurrency:', maxConcurrency);
 
   var tmpName = self.to.path + '.download';
   var fileMd5 = '';
+  var hashCrc64ecma = '';
 
   var objOpt = {
     Bucket: self.from.bucket,
@@ -174,6 +187,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
     fileMd5 = headers.ContentMD5;//.replace(/(^\"*)|(\"*$)/g, '');
     //console.log('file md5:',fileMd5);
+    hashCrc64ecma = headers.HashCrc64ecma;
 
     var contentLength = parseInt(headers['ContentLength']);
     self.prog.total = contentLength;
@@ -237,7 +251,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
         self.prog.loaded += checkPoints.Parts[k].loaded;
       }
 
-      checkMd5(tmpName, fileMd5, function (err) {
+      checkFileHash(tmpName, fileMd5, hashCrc64ecma, function (err) {
         if (err) {
           self._changeStatus('failed');
           self.emit('error', err);
@@ -317,7 +331,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
     concurrency++;
     doDownload(n);
 
-    if (hasNextPart() && concurrency < maxConcurrency) {
+    if (hasNextPart() && concurrency < self.maxConcurrency) {
       concurrency++;
       downloadPart(getNextPart());
     }
@@ -334,6 +348,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
         // var md5 = ALY.util.crypto.md5(data.Body,'hex');
 
         if (err) {
+          console.log(err);
           if (err.code == 'RequestAbortedError') {
             //用户取消
             console.warn('用户取消');
@@ -344,7 +359,10 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
             retryCount++;
             console.log(`retry download part [${n}] error:${err}`);
             checkPoints.Parts[partNumber].loaded = 0;
-            doDownload(n);
+            setTimeout(function(){
+              doDownload(n);
+            },2000);
+
           } else {
             self.message = `failed to download part [${n}]: ${err.message}`;
             //console.error(self.message);
@@ -389,7 +407,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
             //下载完成
             //util.closeFD(keepFd);
             //检验MD5
-            checkMd5(tmpName, fileMd5, function (err) {
+            checkFileHash(tmpName, fileMd5, hashCrc64ecma, function (err) {
               if (err) {
                 self._changeStatus('failed');
                 self.emit('error', err);
@@ -461,21 +479,38 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
     return chunks.length > 0;
   }
 
-  function checkMd5(filePath, fileMd5, fn) {
-    if(!fileMd5){
+  function checkFileHash(filePath, fileMd5, hashCrc64ecma, fn) {
+    console.time('check crc64');
+    if(hashCrc64ecma){
+      util.getFileCrc64(filePath, function(err, crc64Str){
+        console.timeEnd('check crc64');
+        if (err) {
+          fn(new Error('Checking file['+filePath+'] crc64 hash failed: ' + err.message));
+        } else if (crc64Str!=null && crc64Str != hashCrc64ecma) {
+          fn(new Error('HashCrc64ecma mismatch, file['+filePath+'] crc64 hash should be:'+hashCrc64ecma+', but we got:'+crc64Str));
+        } else{
+          console.info('check crc success: file['+filePath+']')
+          fn(null);
+        }
+      });
+    }
+    else if(fileMd5){
+
+      //检验MD5
+      util.getBigFileMd5(tmpName, function (err, md5str) {
+        if (err) {
+          fn(new Error('Checking md5 failed: ' + err.message));
+        } else if (md5str != fileMd5) {
+          fn(new Error('MD5 mismatch, file md5 should be:'+fileMd5+', but we got:'+md5str));
+        } else fn(null);
+      });
+    }
+    else{
       //没有MD5，不校验
       console.log(filePath,',not found content md5, just pass');
       fn(null);
       return;
     }
-    //检验MD5
-    util.getBigFileMd5(tmpName, function (err, md5str) {
-      if (err) {
-        fn(new Error('Checking md5 failed: ' + err.message));
-      } else if (md5str != fileMd5) {
-        fn(new Error('MD5 mismatch, file md5 should be:'+fileMd5+',got:'+md5str));
-      } else fn(null);
-    });
   }
 
   function writeFileRange(tmpName, data, start, fn) {

@@ -1,0 +1,20 @@
+{
+  "name": "crc64",
+  "version": "1.0.0",
+  "description": "",
+  "main": "crc64.js",
+  "scripts": {
+    "test": "node-gyp rebuild && NODE_ENV=test node test",
+    "testInWin": "node-gyp rebuild&&set NODE_ENV=test&&node test",
+    "postinstall": "node build.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "gypfile": true,
+  "devDependencies": {
+    "shelljs": "^0.7.8"
+  },
+  "engines": {
+    "node": ">=4.5.0"
+  }
+}

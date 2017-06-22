@@ -2,14 +2,30 @@ var fs = require('fs');
 var crypto = require('crypto');
 var util = require('./util');
 
+try{
+  var crc64 = require('../../crc64');
+}catch(e){
+  console.error(e);
+}
+
 module.exports = {
   getSensibleChunkSize: getSensibleChunkSize,
   closeFD: util.closeFD,
   parseLocalPath: util.parseLocalPath,
   parseOssPath: util.parseOssPath,
-  getBigFileMd5: getBigFileMd5
+  getBigFileMd5: getBigFileMd5,
+  getFileCrc64: getFileCrc64
 };
-
+function getFileCrc64(p, fn){
+  if(!crc64){
+    console.log('not found crc64 module')
+    fn(null, null);
+    return;
+  }
+  crc64.check_stream(fs.createReadStream(p), function(err, data){
+    fn(err, data);
+  });
+};
 
 function getBigFileMd5(p, fn){
    var md5sum = crypto.createHash('md5');
