@@ -2,7 +2,7 @@
 const version_path = process.platform + '-' + process.arch;
 const path = require('path');
 
-var _crc64 = process.env.NODE_ENV = 'test' ?
+var _crc64 = process.env.NODE_ENV == 'test' ?
   require(path.join(__dirname, 'build/Release/crc64')) :
   require(path.join(__dirname, 'lib/' + version_path + '/Release/crc64'));
 
