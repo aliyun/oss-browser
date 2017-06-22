@@ -1,0 +1,16 @@
+{
+  "name": "crc64",
+  "version": "1.0.0",
+  "description": "",
+  "main": "crc64.js",
+  "scripts": {
+    "test": "node test",
+    "install": "node build.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "gypfile": true,
+  "devDependencies": {
+    "shelljs": "^0.7.8"
+  }
+}
