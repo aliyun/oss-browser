@@ -14,7 +14,7 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 > [Window x64版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.0/oss-browser-win32-x64.zip)
 
-> [Mac 版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.0/oss-browser-darwin-x64.zip)
+> [Mac 版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.0/oss-browser.dmg)
 
 > [Ubuntu x64版](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.0/oss-browser-linux-x64.zip)
 
