@@ -10,13 +10,13 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 ## 1. 客户端下载：
 
-最新版本0.8.4，下载地址如下，解压即可使用。
+最新版本0.9.0，下载地址如下，解压即可使用。
 
-> [Window x64版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.8.4/oss-browser-win32-x64.zip)
+> [Window x64版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.0/oss-browser-win32-x64.zip)
 
-> [Mac 版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.8.4/oss-browser-darwin-x64.zip)
+> [Mac 版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.0/oss-browser-darwin-x64.zip)
 
-> [Ubuntu x64版](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.8.4/oss-browser-linux-x64.zip)
+> [Ubuntu x64版](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.0/oss-browser-linux-x64.zip)
 
 其他版本暂不提供，可以自行build。
 
@@ -97,7 +97,7 @@ npm run build  # build前端代码到dist目录
 ```
 
 ```
-npm run win64  # 打包win64程序， 可选: win32, mac, linux32, linux64
+npm run win64  # 打包win64程序， 可选: mac, linux64 等
 ```
 
 

@@ -7,4 +7,4 @@ bower_components
 build
 .DS_Store
 releases
-Makefile
+_up.sh
