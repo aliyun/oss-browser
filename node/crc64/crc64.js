@@ -1,9 +1,11 @@
 'use strict';
 const version_path = process.platform + '-' + process.arch;
+const path = require('path');
 
-var _crc64;
-if (process.env.NODE_ENV = 'test') _crc64 = require('./build/Release/crc64');
-else _crc64 = require('./lib/' + version_path + '/Release/crc64');
+var _crc64 = process.env.NODE_ENV = 'test' ?
+  require(path.join(__dirname, 'build/Release/crc64')) :
+  require(path.join(__dirname, 'lib/' + version_path + '/Release/crc64'));
+
 const _stream = require('stream');
 
 class CRC64 {

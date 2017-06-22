@@ -65,6 +65,15 @@
     "nodedir": "/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.11",
     "copy_dev_lib": "true",
     "standalone_static_library": 1,
-    "target": "1.6.11"
+    "target": "1.6.11",
+    "forbidden_licenses": "AGPL,CPAL,OSL",
+    "registry": "http://registry.npm.alibaba-inc.com",
+    "userconfig": "/Users/zu/.tnpmrc",
+    "r": "http://registry.npm.alibaba-inc.com",
+    "custom_china_mirror_url": "https://tnpm-hz.oss-cn-hangzhou.aliyuncs.com/dist",
+    "disturl": "https://tnpm-hz.oss-cn-hangzhou.aliyuncs.com/dist/node",
+    "cache": "/Users/zu/.npminstall_tarball",
+    "tmp": "/Users/zu/.tnpm_tmp",
+    "prefix": "/usr/local"
   }
 }

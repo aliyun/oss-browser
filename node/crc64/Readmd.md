@@ -1,8 +1,16 @@
 # crc64 prebuild module
 
 
-## dist/darwin-x64
-## dist/linux-x64
-## dist/win-x64
+## 1. 仅支持一下版本:
 
+```
+darwin-x64
+linux-x64
+win32-x64
+```
 
+## 2. 测试
+
+```
+npm test
+```
