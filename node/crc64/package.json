@@ -4,7 +4,7 @@
   "description": "",
   "main": "crc64.js",
   "scripts": {
-    "test": "node test",
+    "test": "NODE_ENV=test node-gyp rebuild && node test",
     "install": "node build.js"
   },
   "author": "",
@@ -12,5 +12,8 @@
   "gypfile": true,
   "devDependencies": {
     "shelljs": "^0.7.8"
+  },
+  "engines": {
+    "node": ">=4.5.0"
   }
 }

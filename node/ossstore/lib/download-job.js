@@ -168,6 +168,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
   var tmpName = self.to.path + '.download';
   var fileMd5 = '';
+  var hashCrc64ecma = '';
 
   var objOpt = {
     Bucket: self.from.bucket,
@@ -186,6 +187,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
     fileMd5 = headers.ContentMD5;//.replace(/(^\"*)|(\"*$)/g, '');
     //console.log('file md5:',fileMd5);
+    hashCrc64ecma = headers.HashCrc64ecma;
 
     var contentLength = parseInt(headers['ContentLength']);
     self.prog.total = contentLength;
@@ -249,7 +251,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
         self.prog.loaded += checkPoints.Parts[k].loaded;
       }
 
-      checkMd5(tmpName, fileMd5, function (err) {
+      checkFileHash(tmpName, fileMd5, hashCrc64ecma, function (err) {
         if (err) {
           self._changeStatus('failed');
           self.emit('error', err);
@@ -405,7 +407,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
             //下载完成
             //util.closeFD(keepFd);
             //检验MD5
-            checkMd5(tmpName, fileMd5, function (err) {
+            checkFileHash(tmpName, fileMd5, hashCrc64ecma, function (err) {
               if (err) {
                 self._changeStatus('failed');
                 self.emit('error', err);
@@ -477,21 +479,38 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
     return chunks.length > 0;
   }
 
-  function checkMd5(filePath, fileMd5, fn) {
-    if(!fileMd5){
+  function checkFileHash(filePath, fileMd5, hashCrc64ecma, fn) {
+    console.time('check crc64');
+    if(hashCrc64ecma){
+      util.getFileCrc64(filePath, function(err, crc64Str){
+        console.timeEnd('check crc64');
+        if (err) {
+          fn(new Error('Checking file['+filePath+'] crc64 hash failed: ' + err.message));
+        } else if (crc64Str!=null && crc64Str != hashCrc64ecma) {
+          fn(new Error('HashCrc64ecma mismatch, file['+filePath+'] crc64 hash should be:'+hashCrc64ecma+', but we got:'+crc64Str));
+        } else{
+          console.info('check crc success: file['+filePath+']')
+          fn(null);
+        }
+      });
+    }
+    else if(fileMd5){
+
+      //检验MD5
+      util.getBigFileMd5(tmpName, function (err, md5str) {
+        if (err) {
+          fn(new Error('Checking md5 failed: ' + err.message));
+        } else if (md5str != fileMd5) {
+          fn(new Error('MD5 mismatch, file md5 should be:'+fileMd5+', but we got:'+md5str));
+        } else fn(null);
+      });
+    }
+    else{
       //没有MD5，不校验
       console.log(filePath,',not found content md5, just pass');
       fn(null);
       return;
     }
-    //检验MD5
-    util.getBigFileMd5(tmpName, function (err, md5str) {
-      if (err) {
-        fn(new Error('Checking md5 failed: ' + err.message));
-      } else if (md5str != fileMd5) {
-        fn(new Error('MD5 mismatch, file md5 should be:'+fileMd5+',got:'+md5str));
-      } else fn(null);
-    });
   }
 
   function writeFileRange(tmpName, data, start, fn) {
