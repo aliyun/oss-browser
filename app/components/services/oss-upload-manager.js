@@ -260,6 +260,7 @@ angular.module('web')
             }
 
             t.push({
+              crc64Str: n.crc64Str,
               checkPoints: checkPoints,
               region: n.region,
               to: n.to,

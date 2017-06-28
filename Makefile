@@ -10,8 +10,12 @@ clean:
 	npm run clean
 	find . -name .DS_Store | xargs rm -rf
 
+dev:
+	NODE_ENV=development electron .
+
 run:
 	npm run dev
+
 prod:
 	npm run prod
 watch:

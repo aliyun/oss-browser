@@ -15,7 +15,12 @@ module.exports = {
   getPartProgress: getPartProgress,
   checkAllPartCompleted: checkAllPartCompleted,
   closeFD: util.closeFD,
-  getUploadId: getUploadId
+  getUploadId: getUploadId,
+  getFileCrc64: getFileCrc64
+};
+
+function getFileCrc64(p, fn){
+  util.getFileCrc64(p,fn);
 };
 
 /*************************************

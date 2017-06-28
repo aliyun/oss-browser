@@ -188,7 +188,7 @@ angular.module('web')
             $scope.currentBucket = null;
             $scope.ref.isBucketList = true;
             //只有从来没有 list buckets 过，才list，减少http请求开销
-            if (!$scope.buckets || forceRefresh) listBuckets();
+            if (!$scope.buckets && forceRefresh) listBuckets();
 
             clearObjectsList();
           }

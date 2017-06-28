@@ -16,6 +16,7 @@ class UploadJob extends Base {
    *    config.checkPoints  {object}
    *    config.status     {string} default 'waiting'
    *    config.prog   {object}  {loaded, total}
+   *    config.crc64Str {string}
    *
    * events:
    *    statuschange(state) 'running'|'waiting'|'stopped'|'failed'|'finished'
@@ -58,6 +59,8 @@ class UploadJob extends Base {
 
     this.checkPoints = this._config.checkPoints;
 
+    this.crc64Str = this._config.crc64Str;
+
     //console.log('created upload job');
     this.maxConcurrency = 3;
   }
@@ -65,13 +68,26 @@ class UploadJob extends Base {
 
 
 UploadJob.prototype.start = function () {
+  var self = this;
   self.message='';
   this.startTime = new Date().getTime();
   this.endTime = null;
   this._changeStatus('running');
   this.stopFlag = false;
-  this.startUpload();
-  this.startSpeedCounter();
+
+  util.getFileCrc64(self.from.path, function(err, crc64Str){
+    if(err){
+      self.message= err.message;
+      self._changeStatus('failed');
+      self.emit('error', err);
+    }
+    else{
+      self.crc64Str = crc64Str || '';
+      self.startUpload();
+      self.startSpeedCounter();
+    }
+  });
+
   return this;
 };
 
@@ -86,6 +102,15 @@ UploadJob.prototype.wait = function () {
   this._changeStatus('waiting');
   this.stopFlag = true;
   return this;
+};
+
+//crc 校验失败，删除oss文件
+UploadJob.prototype.deleteOssFile = function(){
+   var self = this;
+   self.oss.deleteObject({Bucket: self.to.bucket, Key: self.to.key}, function(err){
+     if(err) console.error(err);
+     else console.log('oss file [oss://'+  self.to.bucket+'/'+self.to.key+'] has been delete');
+   });
 };
 
 
@@ -114,7 +139,6 @@ UploadJob.prototype.startUpload = function () {
       self.message= err.message;
       self._changeStatus('failed');
       self.emit('error', err);
-
       return;
     }
 
@@ -200,7 +224,7 @@ UploadJob.prototype.uploadSingle = function () {
       total: Buffer.byteLength(data)
     };
 
-    var req = self.oss.putObject(params, function (err) {
+    var req = self.oss.putObject(params, function (err,data) {
 
       if (err) {
         self.message=err.message;
@@ -208,8 +232,17 @@ UploadJob.prototype.uploadSingle = function () {
         self.emit('error', err);
       }
       else {
-        self._changeStatus('finished');
-        self.emit('complete');
+        console.log('checking crc64Str:', self.crc64Str, data['HashCrc64ecma']);
+        if(!self.crc64Str || self.crc64Str == data['HashCrc64ecma']){
+          self._changeStatus('finished');
+          self.emit('complete');
+        }else{
+          self.message="HashCrc64ecma not match";
+          self._changeStatus('failed');
+          self.emit('error', new Error(self.message));
+
+          self.deleteOssFile();
+        }
       }
     });
 
@@ -469,13 +502,20 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
         self.message=err.message;
         self._changeStatus('failed');
         self.emit('error', err);
-        return;
       }
-
-      checkPoints.done=true;
-
-      self._changeStatus('finished');
-      self.emit('complete');
+      else{
+        console.log('checking crc64Str:', self.crc64Str, data['HashCrc64ecma']);
+        if(!self.crc64Str || self.crc64Str == data['HashCrc64ecma']){
+          checkPoints.done=true;
+          self._changeStatus('finished');
+          self.emit('complete');
+        }else{
+          self.message="HashCrc64ecma mismatch";
+          self._changeStatus('failed');
+          self.emit('error', new Error(self.message));
+          self.deleteOssFile();
+        }
+      }
 
     });
   }

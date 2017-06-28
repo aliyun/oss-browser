@@ -8,7 +8,7 @@
     "dev:run": "cross-env NODE_ENV=development electron .",
     "prod": "cross-env NODE_ENV=production  cd dist && electron .",
     "clean": "rm -rf dist node_modules build releases",
-    "watch": "gulp",
+    "watch": "gulp watch",
     "postinstall": "npm run build",
     "build": "gulp build",
     "mirror": "set ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ || export ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/",
