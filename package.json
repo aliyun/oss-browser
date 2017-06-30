@@ -1,12 +1,12 @@
 {
   "name": "oss-browser",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "main": "dist/main.js",
   "upgrade_url": "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
   "scripts": {
-    "dev": "npm-run-all --parallel watch dev:run",
+    "dev": "npm-run-all --parallel build watch dev:run",
     "dev:run": "cross-env NODE_ENV=development electron .",
-    "prod": "cross-env NODE_ENV=production  cd dist && electron .",
+    "prod": "cross-env NODE_ENV=production cd dist && electron .",
     "clean": "rm -rf dist node_modules build releases",
     "watch": "gulp watch",
     "postinstall": "npm run build",
