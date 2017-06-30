@@ -16,10 +16,10 @@
         <i class="glyphicon glyphicon-plus text-success"></i>
         新建目录
       </button>
-
-      <div style="position:absolute;width:1px;height:1px;opacity:0.01;overflow:hidden;">
-         <input type="text" ng-model="mock.uploads" ng-change="mock.uploadsChange()"/>
-         <input type="text" ng-model="mock.downloads" ng-change="mock.downloadsChange()"/>
+      <!-- mock -->
+      <div style="position:absolute;width:2px;height:1px;opacity:0.01;overflow:hidden;">
+         <input type="text" style="position:absolute;top:0;left:0" ng-model="mock.uploads" ng-change="mock.uploadsChange()"/>
+         <input type="text" style="position:absolute;top:0;left:1" ng-model="mock.downloads" ng-change="mock.downloadsChange()"/>
       </div>
     </div>
 
