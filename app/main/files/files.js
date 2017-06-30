@@ -81,9 +81,35 @@ angular.module('web')
 
         paste: paste,
         cancelPaste: cancelPaste,
-        getCurrentOssPath: getCurrentOssPath
+        getCurrentOssPath: getCurrentOssPath,
 
+        mock: {
+          uploads: '',
+          downloads: '',
+          uploadsChange: uploadsChange,
+          downloadsChange: downloadsChange,
+        }
       });
+
+      var tid_uploads;
+      function uploadsChange(){
+        $timeout.cancel(tid_uploads);
+        tid_uploads = $timeout(function(){
+          if($scope.mock.uploads){
+            var arr = $scope.mock.uploads.split(',');
+            $scope.handlers.uploadFilesHandler(arr, $scope.currentInfo);
+          }
+        },600);
+      }
+      var tid_downloads;
+      function downloadsChange(){
+        $timeout.cancel(tid_downloads);
+        tid_downloads = $timeout(function(){
+          if($scope.mock.downloads){
+            _downloadMulti($scope.mock.downloads);
+          }
+        },600);
+      }
 
 
 
@@ -599,20 +625,24 @@ angular.module('web')
           if (!folderPaths || folderPaths.length == 0 || !$scope.sel.has) return;
 
           var to = folderPaths[0];
-          to = to.replace(/(\/*$)/g, '');
-
-          var fromArr = angular.copy($scope.sel.has);
-          angular.forEach(fromArr, function (n) {
-            n.region = $scope.currentInfo.region;
-            n.bucket = $scope.currentInfo.bucket;
-          });
-
-          /**
-           * @param fromOssPath {array}  item={region, bucket, path, name, size }
-           * @param toLocalPath {string}
-           */
-          $scope.handlers.downloadFilesHandler(fromArr, to);
+          _downloadMulti(to);
         });
+      }
+
+      function _downloadMulti(to){
+        to = to.replace(/(\/*$)/g, '');
+
+        var fromArr = angular.copy($scope.sel.has);
+        angular.forEach(fromArr, function (n) {
+          n.region = $scope.currentInfo.region;
+          n.bucket = $scope.currentInfo.bucket;
+        });
+
+        /**
+         * @param fromOssPath {array}  item={region, bucket, path, name, size }
+         * @param toLocalPath {string}
+         */
+        $scope.handlers.downloadFilesHandler(fromArr, to);
       }
 
       /**
