@@ -21,7 +21,9 @@ function getFileCrc64(p, fn){
     fn(null, null);
     return;
   }
-  crc64.check_stream(fs.createReadStream(p), function(err, data){
+  var stream = fs.createReadStream(p);
+  crc64.check_stream(stream, function(err, data){
+    stream.close();
     fn(err, data);
   });
 };

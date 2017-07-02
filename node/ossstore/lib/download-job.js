@@ -99,7 +99,7 @@ DownloadJob.prototype._changeStatus = function (status) {
 
   if (status == 'failed' || status == 'stopped' || status == 'finished') {
     self.endTime = new Date().getTime();
-    // util.closeFD(this.keepFd);
+    util.closeFD(this.keepFd);
   }
 };
 
@@ -126,8 +126,8 @@ DownloadJob.prototype.startSpeedCounter = function () {
     tick++;
     if(tick>5){
       tick=0;
-      if(self.speed > 5*1024*1024) self.maxConcurrency=10;
-      else if(self.speed > 3*1024*1024) self.maxConcurrency=7;
+      if(self.speed > 8*1024*1024) self.maxConcurrency=10;
+      else if(self.speed > 5*1024*1024) self.maxConcurrency=7;
       else if(self.speed > 2*1024*1024) self.maxConcurrency=5;
       else self.maxConcurrency=3;
       console.log('max concurrency:', self.maxConcurrency);
@@ -175,7 +175,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
     Key: self.from.key
   };
 
-  self.oss.headObject(objOpt, function (err, headers) {
+  util.headObject(self.oss, objOpt, function (err, headers) {
     if (err) {
       self.message = 'failed to get oss object meta: ' + err.message;
       //console.error(self.message);
@@ -253,6 +253,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
       checkFileHash(tmpName, fileMd5, hashCrc64ecma, function (err) {
         if (err) {
+          self.message="failed to check crc64:"+ (err.message||err);
           self._changeStatus('failed');
           self.emit('error', err);
           return;
@@ -348,7 +349,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
         // var md5 = ALY.util.crypto.md5(data.Body,'hex');
 
         if (err) {
-          console.log(err);
+          //console.log(err);
           if (err.code == 'RequestAbortedError') {
             //用户取消
             console.warn('用户取消');
@@ -409,6 +410,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
             //检验MD5
             checkFileHash(tmpName, fileMd5, hashCrc64ecma, function (err) {
               if (err) {
+                self.message = 'failed to check crc64:'+ (err.message||err);
                 self._changeStatus('failed');
                 self.emit('error', err);
                 return;

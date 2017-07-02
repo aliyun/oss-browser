@@ -15,17 +15,23 @@ module.exports = {
   getPartProgress: getPartProgress,
   checkAllPartCompleted: checkAllPartCompleted,
   closeFD: util.closeFD,
+
   getUploadId: getUploadId,
+  completeMultipartUpload: completeMultipartUpload,
+
   getFileCrc64: getFileCrc64
 };
 
-function getFileCrc64(p, fn){
-  util.getFileCrc64(p,fn);
-};
 
 /*************************************
  //  以下是纯函数
  ************************************/
+
+
+function getFileCrc64(p, fn){
+ util.getFileCrc64(p,fn);
+};
+
 
 function getPartProgress(checkPoints){
   var total = checkPoints.chunks.length;
@@ -45,6 +51,33 @@ function checkAllPartCompleted(checkPoints){
 }
 
 
+function completeMultipartUpload(client, doneParams ,fn){
+  var retryTimes  = 0;
+  _dig();
+  function _dig(){
+    client.completeMultipartUpload(doneParams, function(err, data){
+      if (err) {
+        if(err.message.indexOf('The specified upload does not exist')!=-1){
+          fn(err);
+          return;
+        }
+
+        if(retryTimes > 10){
+          fn(err);
+        }else{
+          retryTimes++;
+          console.error('completeMultipartUpload error', err, ', ----- retrying...', retryTimes+'/'+10);
+          setTimeout(function(){
+            _dig();
+          },2000);
+        }
+      }
+      else{
+        fn(null, data);
+      }
+    });
+  };
+}
 
 function getUploadId(checkPoints, client, params, fn){
 
@@ -53,17 +86,31 @@ function getUploadId(checkPoints, client, params, fn){
     return;
   }
 
-  client.createMultipartUpload(params, function (err, res) {
+  var retryTimes  = 0;
+  _dig();
+  function _dig(){
+    client.createMultipartUpload(params, function (err, res) {
 
-    //console.log(err, res, '<========')
-    if (err) {
-      fn(err);
-      return;
-    }
+      //console.log(err, res, '<========')
+      if (err) {
+        if(retryTimes > 10){
+          fn(err);
+        }else{
 
-    checkPoints.uploadId = res.UploadId;
-    fn(err, res.UploadId);
-  });
+          retryTimes++;
+          console.warn('createMultipartUpload error', err, ', ----- retrying...', retryTimes+'/'+10);
+          setTimeout(function(){
+            _dig();
+          },2000);
+        }
+        return;
+      }
+      else{
+        checkPoints.uploadId = res.UploadId;
+        fn(null, res.UploadId);
+      }
+    });
+  }
 }
 
 function genUploadNumArr(result){
@@ -125,7 +172,6 @@ function prepareChunks(filePath, checkPoints, fn){
         len: (i + 1 == chunkNum) ? (state.size - start) : chunkSize
       };
     }
-
 
     fn(null, {
       chunks: chunks,

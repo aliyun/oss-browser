@@ -10,8 +10,34 @@ module.exports = {
   parseLocalPath: util.parseLocalPath,
   parseOssPath: util.parseOssPath,
   getBigFileMd5: getBigFileMd5,
-  getFileCrc64: getFileCrc64
+  getFileCrc64: getFileCrc64,
+
+  headObject: headObject
 };
+function headObject(client, objOpt, fn){
+  var retryTimes = 0;
+  _dig();
+  function _dig(){
+    client.headObject(objOpt, function (err, headers) {
+      if (err) {
+        if(retryTimes > 10){
+          fn(err);
+        }else{
+
+          retryTimes++;
+          console.warn('headObject error', err, ', ----- retrying...', retryTimes+'/'+10);
+          setTimeout(function(){
+            _dig();
+          },2000);
+        }
+        return;
+      }
+      else{
+         fn(null, headers);
+      }
+    });
+  }
+}
 function getFileCrc64(p, fn){
   util.getFileCrc64(p,fn);
 };
