@@ -5,7 +5,7 @@
   "main": "crc64.js",
   "scripts": {
     "test": "node-gyp rebuild && NODE_ENV=test node test",
-    "testInWin": "node-gyp rebuild&&set NODE_ENV=test&&node test",
+    "testwin": "node-gyp rebuild&&set NODE_ENV=test&&node test",
     "postinstall": "node build.js"
   },
   "author": "",

@@ -2,7 +2,12 @@
   "name": "ossstore",
   "version": "1.0.0",
   "scripts": {
-    "test": "mocha test"
+    "test": "NODE_ENV=test mocha test",
+    "testwin": "set NODE_ENV=test&&mocha test"
   },
-  "main": "lib/index.js"
+  "main": "lib/index.js",
+  "devDependencies": {
+    "mocha": "^3.4.2",
+    "should": "^11.2.1"
+  }
 }

@@ -65,6 +65,11 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 cnpm 是 npm（node 包管理工具）的中国镜像，可以提高下载依赖包的效率。
 
+### (3) 在windows系统下，需要安装 windows-build-tools
+
+```
+cnpm i -g windows-build-tools
+```
 
 ### (3) 下载代码
 
