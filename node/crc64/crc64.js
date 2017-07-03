@@ -52,4 +52,4 @@ class CRC64 {
   }
 }
 
-module.exports = new CRC64();
+module.exports = CRC64;

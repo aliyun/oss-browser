@@ -2,7 +2,7 @@
 'use strict';
 var ALY = require('aliyun-sdk');
 require('events').EventEmitter.prototype._maxListeners = 1000;
-var TIMEOUT = 10000; //1min
+var TIMEOUT = 10000; //10秒
 //fix
 ALY.util.isBrowser = function(){
   return false;

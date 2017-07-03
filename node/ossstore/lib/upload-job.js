@@ -69,45 +69,39 @@ class UploadJob extends Base {
 
 UploadJob.prototype.start = function () {
   var self = this;
+
+  if(this.status=='running')return;
+  //console.log('-----start')
+
   self.message='';
   this.startTime = new Date().getTime();
   this.endTime = null;
   this._changeStatus('running');
   this.stopFlag = false;
+  self._hasCallComplete=false;
 
-  var errorTimes=0;
-  _dig();
-  function _dig(){
 
-    util.getFileCrc64(self.from.path, function(err, crc64Str){
-      //console.log('CRC64:', self.from.path, err, crc64Str);
+  //console.log('getFileCrc64',self.from.path)
+  util.getFileCrc64(self, self.from.path, function(err, crc64Str){
+    //console.log('CRC64:', self.from.path, err, crc64Str);
 
-      if(self.stopFlag){
-        return;
-      }
+    if(self.stopFlag){
+      return;
+    }
 
-      if(err){
-        if(errorTimes>3){
-          console.error('getFileCrc64 error:', err);
-          self.message= err.message;
-          self._changeStatus('failed');
-          self.emit('error', err);
-        }
-        else{
-          console.warn('getFileCrc64 error:', err, ', -------retrying...');
-          errorTimes++;
-          _dig();
-        }
-        //todo:
-        //Error: EBADF: bad file descriptor, close
-      }
-      else{
-        self.crc64Str = crc64Str || '';
-        self.startUpload();
-        self.startSpeedCounter();
-      }
-    });
-  }
+    if(err){
+      self.message= err.message;
+      self._changeStatus('failed');
+      self.emit('error', err);
+      //todo:
+      //Error: EBADF: bad file descriptor, close
+    }
+    else{
+      self.crc64Str = crc64Str || '';
+      self.startUpload();
+      self.startSpeedCounter();
+    }
+  });
 
 
   return this;
@@ -115,6 +109,7 @@ UploadJob.prototype.start = function () {
 
 UploadJob.prototype.stop = function () {
   this.stopFlag = true;
+  clearInterval(self.speedTid);
   this._changeStatus('stopped');
   this.speed = 0;
   this.predictLeftTime = 0;
@@ -145,6 +140,12 @@ UploadJob.prototype._changeStatus = function(status){
   if(status=='failed' || status=='stopped' || status=='finished'){
     self.endTime = new Date().getTime();
     util.closeFD(self.keepFd);
+
+    //console.log('clear speed tid')
+    clearInterval(self.speedTid);
+    self.speed = 0;
+    //推测耗时
+    self.predictLeftTime=0;
   }
 };
 
@@ -155,6 +156,7 @@ UploadJob.prototype.startUpload = function () {
 
   var self = this;
 
+  //console.log('prepareChunks',self.from.path)
   util.prepareChunks(self.from.path, self.checkPoints, function (err, checkPoints) {
 
     if (err) {
@@ -165,12 +167,14 @@ UploadJob.prototype.startUpload = function () {
     }
 
     self.checkPoints = checkPoints;
+    //console.log(checkPoints)
 
     //console.log('chunks.length:',checkPoints.chunks.length)
     if (checkPoints.chunks.length == 1 && checkPoints.chunks[0].start==0) {
       //console.log('uploadSingle')
       self.uploadSingle();
     } else {
+      //console.log('uploadMultipart')
       self.uploadMultipart(checkPoints);
     }
   });
@@ -183,6 +187,7 @@ UploadJob.prototype.startSpeedCounter = function(){
   self.lastLoaded = 0;
 
   var tick = 0;
+  clearInterval(self.speedTid);
   self.speedTid = setInterval(function(){
 
     if(self.stopFlag){
@@ -200,25 +205,12 @@ UploadJob.prototype.startSpeedCounter = function(){
     tick++;
     if(tick>5){
       tick=0;
-      if(self.speed > 8*1024*1024) self.maxConcurrency=10;
-      else if(self.speed > 5*1024*1024) self.maxConcurrency=7;
-      else if(self.speed > 2*1024*1024) self.maxConcurrency=5;
-      else self.maxConcurrency=3;
+      self.maxConcurrency = util.computeMaxConcurrency(self.speed);
       console.info('max concurrency:', self.maxConcurrency);
     }
 
   },1000);
 
-  function onFinished(){
-    clearInterval(self.speedTid);
-    self.speed = 0;
-    //推测耗时
-    self.predictLeftTime=0;
-  }
-
-  self.on('stopped',onFinished);
-  self.on('error', onFinished);
-  self.on('complete',onFinished);
 };
 
 
@@ -252,7 +244,8 @@ UploadJob.prototype.uploadSingle = function () {
       var req = self.oss.putObject(params, function (err,data) {
 
         if (err) {
-          if(retryTimes>10){
+
+          if(retryTimes>10 ){
             self.message=err.message;
             self._changeStatus('failed');
             self.emit('error', err);
@@ -340,7 +333,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
   }
 
 
-  util.getUploadId(checkPoints, self.oss, params, function (err, uploadId) {
+  util.getUploadId(checkPoints, self, params, function (err, uploadId) {
 
     if(err){
       console.error('can not get uploadId:', err);
@@ -350,9 +343,10 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
       return;
     }
 
-    //console.info("Got upload ID", err, uploadId);
+    //console.info("Got upload ID", err, uploadId, checkPoints.file.path);
 
     fs.open(checkPoints.file.path, 'r', function (err, fd) {
+      //console.log('fs. open', err, fd)
       if(err){
         console.error('can not open file', checkPoints.file.path, err);
         self.message=err.message;
@@ -378,6 +372,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
 
   // partNum: 0-n
   function doUploadPart(partNum) {
+    //console.log('doUploadPart:', partNum, self.stopFlag)
     if (partNum == null) return;
     //if(!keepFd) return;
 
@@ -435,12 +430,11 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
       return;
     }
 
-    //console.log('doUp-->:', partNumber);
-
     checkPoints.Parts[partNumber] = {
       PartNumber: partNumber,
       loaded: 0
     };
+
 
     var req = self.oss.uploadPart(partParams, function (multiErr, mData) {
 
@@ -449,7 +443,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
         return;
       }
 
-      if (multiErr) {
+      if (multiErr ) {
 
         if(multiErr.code=='RequestAbortedError'){
           //用户取消
@@ -457,7 +451,9 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
         }
 
         console.warn('multiErr, upload part error:', multiErr.message||multiErr, partParams);
-        if (retries[partNumber] >= maxRetries) {
+
+        if (retries[partNumber] >= maxRetries
+        || multiErr.message.indexOf('The specified upload does not exist')!=-1) {
           //console.error('上传分片失败: #', partNumber);
           //util.closeFD(keepFd);
           self.message='上传分片失败: #'+partNumber;
@@ -533,7 +529,15 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
   }
 
   function complete() {
-    //console.info("Completing upload..., uploadId: ", checkPoints.uploadId);
+    console.info("Completing upload..., uploadId: ", checkPoints.uploadId);
+
+    //防止多次complete
+    if(self._hasCallComplete){
+      //console.log('多次提交')
+      return;
+    }
+    self._hasCallComplete=true;
+
 
     var parts = JSON.parse(JSON.stringify(checkPoints.Parts));
     var t=[];
@@ -554,9 +558,16 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
       UploadId: checkPoints.uploadId
     };
 
-
-    util.completeMultipartUpload(self.oss, doneParams, function(err, data){
+    // console.log('4444444', doneParams)
+    //
+    // if(!self._mm) self._mm={};
+    // if(!self._mm[doneParams.UploadId]) self._mm[doneParams.UploadId]=1;
+    // else console.error(doneParams.UploadId, '已经complete过一次了');
+    //
+    // console.log('-->completeMultipartUpload', doneParams.UploadId)
+    util.completeMultipartUpload(self, doneParams, function(err, data){
       if (err) {
+        console.error('['+doneParams.UploadId+']', err, doneParams);
         self.message=err.message;
         self._changeStatus('failed');
         self.emit('error', err);

@@ -57,6 +57,7 @@ class DownloadJob extends Base {
 
 DownloadJob.prototype.start = function () {
   var self = this;
+  if(this.status=='running')return;
   self.message='';
   self.startTime = new Date().getTime();
   self.endTime = null;
@@ -77,6 +78,7 @@ DownloadJob.prototype.start = function () {
 };
 
 DownloadJob.prototype.stop = function () {
+  if(this.status=='stopped')return;
   var self = this;
   self.stopFlag = true;
   self._changeStatus('stopped');
@@ -86,6 +88,7 @@ DownloadJob.prototype.stop = function () {
 };
 
 DownloadJob.prototype.wait = function () {
+  if(this.status=='waiting')return;
   var self = this;
   self.stopFlag = true;
   self._changeStatus('waiting');
@@ -99,7 +102,13 @@ DownloadJob.prototype._changeStatus = function (status) {
 
   if (status == 'failed' || status == 'stopped' || status == 'finished') {
     self.endTime = new Date().getTime();
-    util.closeFD(this.keepFd);
+    util.closeFD(self.keepFd);
+
+    console.log('clear speed tid')
+    clearInterval(self.speedTid);
+    self.speed = 0;
+    //推测耗时
+    self.predictLeftTime=0;
   }
 };
 
@@ -108,6 +117,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
 
   self.lastLoaded = 0;
   var tick=0;
+  clearInterval(self.speedTid);
   self.speedTid = setInterval(function () {
 
     if (self.stopFlag) {
@@ -126,24 +136,21 @@ DownloadJob.prototype.startSpeedCounter = function () {
     tick++;
     if(tick>5){
       tick=0;
-      if(self.speed > 8*1024*1024) self.maxConcurrency=10;
-      else if(self.speed > 5*1024*1024) self.maxConcurrency=7;
-      else if(self.speed > 2*1024*1024) self.maxConcurrency=5;
-      else self.maxConcurrency=3;
+      self.maxConcurrency = util.computeMaxConcurrency(self.speed);
       console.log('max concurrency:', self.maxConcurrency);
     }
   }, 1000);
 
-  function onFinished() {
-    clearInterval(self.speedTid);
-    self.speed = 0;
-    //推测耗时
-    self.predictLeftTime = 0;
-  }
-
-  self.on('stopped', onFinished);
-  self.on('error', onFinished);
-  self.on('complete', onFinished);
+  // function onFinished() {
+  //   clearInterval(self.speedTid);
+  //   self.speed = 0;
+  //   //推测耗时
+  //   self.predictLeftTime = 0;
+  // }
+  //
+  // self.on('stopped', onFinished);
+  // self.on('error', onFinished);
+  // self.on('complete', onFinished);
 };
 
 /**
@@ -175,7 +182,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
     Key: self.from.key
   };
 
-  util.headObject(self.oss, objOpt, function (err, headers) {
+  util.headObject(self, objOpt, function (err, headers) {
     if (err) {
       self.message = 'failed to get oss object meta: ' + err.message;
       //console.error(self.message);
@@ -347,6 +354,10 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
       var req = self.oss.getObject(obj, (err, data) => {
         // var md5 = ALY.util.crypto.md5(data.Body,'hex');
+        if (self.stopFlag) {
+          //util.closeFD(keepFd);
+          return;
+        }
 
         if (err) {
           //console.log(err);
@@ -374,13 +385,14 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
           return;
         }
 
-        if (self.stopFlag) {
-          //util.closeFD(keepFd);
-          return;
-        }
 
         //console.log(0, end - start, start, end);
         writeFileRange(tmpName, data.Body, start, function (err) {
+
+          if (self.stopFlag) {
+            //util.closeFD(keepFd);
+            return;
+          }
 
           if (err) {
             self.message = 'failed to write local file: ' + err.message;
@@ -402,8 +414,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
           //var progCp = JSON.parse(JSON.stringify(self.prog));
 
-          //console.log(`complete part [${n}]`);
-
+          console.log(`complete part [${n}]`);
           if (completedCount == chunkNum) {
             //下载完成
             //util.closeFD(keepFd);
