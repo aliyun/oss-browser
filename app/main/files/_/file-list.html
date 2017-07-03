@@ -79,15 +79,19 @@
 
   <div ng-if="!ref.isListView" class="pd10" style="height:100%" ng-click="sel.all=false;selectAll();">
     <!--|filter:{name:sch.objectName}-->
-    <div ng-repeat="item in objects" item-index="{{$index}}" class="item-block" ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);$event.stopPropagation()" ng-dblclick="item.isFolder!=true?showPreview(item):goIn(currentBucket,item.path);$event.stopPropagation()"
+    <div ng-repeat="item in objects" item-index="{{$index}}" class="item-block"
+    ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);$event.stopPropagation()"
+    ng-dblclick="item.isFolder!=true?showPreview(item):goIn(currentBucket,item.path);$event.stopPropagation()"
       ng-class="{ 'active':sel.x[ 'i_'+$index]}">
-      <input type="checkbox" ng-model="sel.x['i_'+$index]" name="x" class="pull-right" ng-change="selectChanged($event,$index)" ng-click="$event.stopPropagation()" />
+      <input type="checkbox" ng-model="sel.x['i_'+$index]" name="x" class="pull-right"
+      ng-change="selectChanged($event,$index)" ng-click="$event.stopPropagation()" />
 
       <i class="fa fa-folder" style="color:orange" ng-if="!item.pic_url && item.isFolder==true"></i>
 
       <i class="fa fa-{{item|fileIcon}}" ng-if="item.isFolder!=true && (!item.pic_url || (item.storageClass=='Archive' && item.storageStatus!=3))"
         ng-class="{'text-muted': item.storageClass=='Archive' && !item.storageStatus}"></i>
-      <img ng-if="item.isFolder!=true && item.pic_url && (item.storageClass!='Archive' || (item.storageClass=='Archive' && item.storageStatus==3))" ng-src="{{item.pic_url}}" class="pull-left" style="max-width:32px;max-height:32px;margin:4px;" />
+      <img ng-if="item.isFolder!=true && item.pic_url && (item.storageClass!='Archive' || (item.storageClass=='Archive' && item.storageStatus==3))"
+       ng-src="{{item.pic_url}}" class="pull-left" style="max-width:32px;max-height:32px;margin:4px;" />
 
       <div class="item-block-name" uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'"
       tooltip-append-to-body="true" tooltip-popup-delay="500">{{item.name}}</div>

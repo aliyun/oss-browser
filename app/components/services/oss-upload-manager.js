@@ -113,13 +113,15 @@ angular.module('web')
        * 上传
        * @param filePaths []  {array<string>}  有可能是目录，需要遍历
        * @param bucketInfo {object} {bucket, region, key}
+       * @param jobsAddingFn {Function} 快速加入列表回调方法， 返回jobs引用，但是该列表长度还在增长。
+       * @param jobsAddedFn {Function} 加入列表完成回调方法， jobs列表已经稳定
        */
-      function createUploadJobs(filePaths, bucketInfo, fn) {
+      function createUploadJobs(filePaths, bucketInfo, jobsAddingFn) {
         //console.log('--------uploadFilesHandler:',  filePaths, bucketInfo);
 
         var authInfo = AuthInfo.get();
 
-        digArr(filePaths, fn);
+        digArr(filePaths, jobsAddingFn);
         return;
 
         function digArr(filePaths, fn) {

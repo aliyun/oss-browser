@@ -102,7 +102,7 @@
 
         <li>
           <a href="" class="" ng-if="sel.has" ng-click="showDeleteFilesSelected()">
-             <i class="fa fa-remove text-danger"></i>
+            <i class="fa fa-remove text-danger"></i>
             删除
           </a>
         </li>
@@ -114,7 +114,7 @@
       <button class="btn btn-default btn-sm" type="button"
       uib-tooltip-html="'<div class=\'break\'>将{{keepMoveOptions.items[0].name|sub:50}}等粘贴到本目录</div>'"
       tooltip-placement="bottom" tooltip-append-to-body="true"
-      ng-click="paste()">
+      ng-click="showPaste()">
       <span class="text-primary"><i class="fa fa-paste"></i> 粘贴
       </button>
 
@@ -131,7 +131,8 @@
   <div class="col-sm-3 pd0">
 
     <div class="input-group input-group-sm">
-      <input type="text" ng-model="sch.objectName" ng-change="searchObjectName()" class="form-control" cleanable-input placeholder="按名称前缀过滤">
+      <input type="text" ng-model="sch.objectName" ng-change="searchObjectName()" class="form-control"
+       cleanable-input placeholder="按名称前缀过滤">
       <span class="input-group-addon">
         <i class="fa fa-search"></i> {{objects.length}}
         <span ng-if="nextObjectsMarker">+</span>

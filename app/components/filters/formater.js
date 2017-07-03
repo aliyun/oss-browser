@@ -155,29 +155,15 @@ angular.module('web')
     return Math.floor(a/b*10000)/100;
   };
 })
-.filter('statusCls', function(){
+.filter('statusCls', ['jobUtil', function(jobUtil){
   return function(s){
-    if(!s)return 'default';
-    switch(s.toLowerCase()){
-      case 'running': return 'info';
-      case 'failed': return 'danger';
-      case 'finished': return 'success';
-      case 'stopped': return 'warning';
-      default : return 'default';
-    }
+    return jobUtil.getStatusCls(s);
   };
-}).filter('status', function(){
+}]).filter('status', ['jobUtil', function(jobUtil){
   return function(s, isUp){
-    if(!s)return s;
-    switch(s.toLowerCase()){
-      case 'running': return isUp? '正在上传':'正在下载';
-      case 'failed': return '失败';
-      case 'finished': return '完成';
-      case 'stopped': return '暂停';
-      default : return '等待';
-    }
+    return jobUtil.getStatusLabel(s,isUp);
   };
-})
+}])
 .filter('fileIcon', ['fileSvs', function(fileSvs){
   return function(item){
     if(item.storageClass=='Archive'){

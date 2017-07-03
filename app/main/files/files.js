@@ -79,7 +79,7 @@ angular.module('web')
 
         loadNext: loadNext,
 
-        paste: paste,
+        showPaste: showPaste,
         cancelPaste: cancelPaste,
         getCurrentOssPath: getCurrentOssPath,
 
@@ -727,38 +727,49 @@ angular.module('web')
         $scope.keepMoveOptions=null;
         safeApply($scope);
       }
-      function paste(){
+      function showPaste(){
         if($scope.keepMoveOptions.originPath==getCurrentOssPath()){
           $scope.keepMoveOptions = null;
           return;
         }
+        var keyword = $scope.keepMoveOptions.isCopy ? '<span class="text-primary">复制</span>' : '<span class="text-danger">移动</span>';
 
-        $modal.open({
-          templateUrl: 'main/files/modals/move-modal.html',
-          controller: 'moveModalCtrl',
-          backdrop: 'static',
-          resolve: {
-            items: function () {
-              return angular.copy($scope.keepMoveOptions.items);
-            },
-            moveTo: function(){
-              return angular.copy($scope.currentInfo);
-            },
-            isCopy: function () {
-              return $scope.keepMoveOptions.isCopy;
-            },
-            fromInfo: function () {
-              return angular.copy($scope.keepMoveOptions.currentInfo);
-            },
-            callback: function () {
-              return function () {
-                $scope.keepMoveOptions = null;
-                listFiles();
-              };
-            }
-          }
+        var msg = '将 <span class="text-info">'+$scope.keepMoveOptions.items[0].name
+            + ($scope.keepMoveOptions.items.length>1?' 等':' ')
+            + '</span> ' + keyword+' 到';
+
+        msg+= '<br/><span class="text-warning">(oss://'+$scope.currentInfo.bucket+'/'+ $scope.currentInfo.key+')</span>目录下面?';
+
+
+        Dialog.confirm(keyword, msg, function(b){
+          if(b){
+             $modal.open({
+               templateUrl: 'main/files/modals/move-modal.html',
+               controller: 'moveModalCtrl',
+               backdrop: 'static',
+               resolve: {
+                 items: function () {
+                   return angular.copy($scope.keepMoveOptions.items);
+                 },
+                 moveTo: function(){
+                   return angular.copy($scope.currentInfo);
+                 },
+                 isCopy: function () {
+                   return $scope.keepMoveOptions.isCopy;
+                 },
+                 fromInfo: function () {
+                   return angular.copy($scope.keepMoveOptions.currentInfo);
+                 },
+                 callback: function () {
+                   return function () {
+                     $scope.keepMoveOptions = null;
+                     listFiles();
+                   };
+                 }
+               }
+             });
+           }
         });
-
       }
 
       //移动

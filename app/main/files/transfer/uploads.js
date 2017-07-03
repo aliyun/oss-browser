@@ -16,7 +16,7 @@ angular.module('web')
           upname: null,
         },
         schKeyFn: function(item){
-          return item.from.name;
+          return item.from.name +' '+ item.status + ' ' + jobUtil.getStatusLabel(item.status);
         },
         limitToNum: 100,
         loadMoreUploadItems: loadMoreItems

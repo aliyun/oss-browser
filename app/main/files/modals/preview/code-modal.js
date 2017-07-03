@@ -49,7 +49,7 @@ angular.module('web')
             });
           });
         } else {
-          Toast.info('内容没有被修改');
+          Toast.info('内容没有修改');
         }
       }
 

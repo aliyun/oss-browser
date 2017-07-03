@@ -76,7 +76,7 @@ angular.module('web')
     function checkStart() {
       var maxConcurrency = settingsSvs.maxDownloadJobCount.get();
       concurrency = Math.max(0,concurrency);
-      
+
       if (concurrency < maxConcurrency) {
         var arr = $scope.lists.downloadJobList;
         for (var i = 0; i < arr.length; i++) {
@@ -95,29 +95,41 @@ angular.module('web')
      * 下载
      * @param fromOssInfos {array}  item={region, bucket, path, name, size=0, isFolder=false}  有可能是目录，需要遍历
      * @param toLocalPath {string}
+     * @param jobsAddedFn {Function} 加入列表完成回调方法， jobs列表已经稳定
      */
-    function createDownloadJobs(fromOssInfos, toLocalPath, fn) {
+    function createDownloadJobs(fromOssInfos, toLocalPath, jobsAddedFn) {
       //console.log('--------downloadFilesHandler', fromOssInfos, toLocalPath);
       var authInfo = AuthInfo.get();
       var dirPath = path.dirname(fromOssInfos[0].path);
 
       loop(fromOssInfos, function (jobs) {
-        fn(jobs);
+        
+      }, function(){
+        if(jobsAddedFn) jobsAddedFn();
       });
 
-      function loop(arr, callFn) {
+      function loop(arr, callFn, callFn2) {
         var t = [];
         var len = arr.length;
         var c = 0;
+        var c2 =0;
 
         if(len==0){
-          callFn([]);
+          callFn(t);
+          callFn2(t);
           return;
         }
 
         _kdig();
         function _kdig(){
-          dig(arr[c], t);
+          dig(arr[c], t, function(){
+
+          }, function(){
+            c2++;
+            if(c2>=len){
+              callFn2(t);
+            }
+          });
           c++;
           if(c==len){
             callFn(t);
@@ -138,7 +150,7 @@ angular.module('web')
         // });
       }
 
-      function dig(ossInfo, t, callFn) {
+      function dig(ossInfo, t, callFn, callFn2) {
 
         var fileName = path.basename(ossInfo.path);
         var filePath = path.join(toLocalPath, path.relative(dirPath, ossInfo.path));
@@ -169,7 +181,7 @@ angular.module('web')
                   }else{
                     if(callFn)callFn();
                   }
-                });
+                }, callFn2);
               });
             }
             progDig();
@@ -188,10 +200,13 @@ angular.module('web')
               path: filePath
             }
           });
+
           addEvents(job);
 
           t.push(job);
+
           if(callFn)callFn();
+          if(callFn2)callFn2();
         }
       }
     }

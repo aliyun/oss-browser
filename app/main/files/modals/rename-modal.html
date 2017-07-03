@@ -29,7 +29,7 @@
 
   </div>
   <div class="modal-footer">
-    <button type="submit" class="btn btn-success btn-sm">
+    <button ng-disabled="isLoading || keep.name==item.name" type="submit" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-ok"></i>
       确定</button>
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">

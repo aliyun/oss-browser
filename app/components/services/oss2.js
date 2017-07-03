@@ -374,7 +374,7 @@ angular.module('web')
             var item = items[c];
             var toKey = target.key.replace(/\/$/,'');
             toKey = (toKey?toKey+'/': '')+ (items[c].name);
-            
+
             var newTarget = {
               key: toKey, //target.key.replace(/\/$/,'')+'/'+items[c].name,
               bucket: target.bucket
@@ -735,6 +735,7 @@ angular.module('web')
       }
 
       function restoreFile(region, bucket, key, days) {
+
         return new Promise(function (a, b) {
           var client = getClient({
             region: region,
@@ -747,6 +748,7 @@ angular.module('web')
               Days: days || 7
             }
           };
+
           client.restoreObject(opt, function (err, data) {
             if (err) {
               handleError(err);

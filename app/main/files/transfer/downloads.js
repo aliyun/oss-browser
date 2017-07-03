@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('web')
-  .controller('transferDownloadsCtrl', ['$scope','$timeout','$interval','ossDownloadManager','DelayDone','Toast','Dialog','safeApply',
-    function($scope,$timeout,$interval,ossDownloadManager,DelayDone,Toast, Dialog,safeApply){
+  .controller('transferDownloadsCtrl', ['$scope','$timeout','$interval', 'jobUtil','ossDownloadManager','DelayDone','Toast','Dialog','safeApply',
+    function($scope,$timeout,$interval,jobUtil, ossDownloadManager,DelayDone,Toast, Dialog,safeApply){
 
     angular.extend($scope, {
       showRemoveItem: showRemoveItem,
@@ -16,7 +16,7 @@ angular.module('web')
         downname: null,
       },
       schKeyFn: function(item){
-        return item.to.name;
+        return item.to.name +' '+ item.status + ' ' + jobUtil.getStatusLabel(item.status);
       },
       limitToNum: 100,
       loadMoreDownloadItems: loadMoreItems
