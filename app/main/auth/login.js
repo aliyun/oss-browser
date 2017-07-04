@@ -37,6 +37,7 @@ angular.module('web')
         $timeout.cancel(tid);
         tid=$timeout(function(){
           var authToken = $scope.item.authToken;
+
           localStorage.setItem(KEY_AUTHTOKEN, authToken);
           var str = Buffer.from(authToken, 'base64').toString();
           try{

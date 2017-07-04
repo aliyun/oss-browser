@@ -2,7 +2,8 @@
 
 <div>
 
-  <div ng-include="'main/files/_/address-bar.html'"></div>
+  <div ng-if="currentAuthInfo.id.indexOf('STS.')!=0" ng-include="'main/files/_/address-bar.html'"></div>
+  <div ng-if="currentAuthInfo.id.indexOf('STS.')==0" ng-include="'main/files/_/sub-address-bar.html'"></div>
 
 
   <div ng-if="ref.isBucketList">

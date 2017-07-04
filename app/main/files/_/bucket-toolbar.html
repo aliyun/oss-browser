@@ -2,7 +2,7 @@
 
   <div class="col-sm-6">
     <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default btn-sm" ng-click="showAddBucket()">
+      <button ng-disabled="currentAuthInfo.id.indexOf('STS.')==0" type="button" class="btn btn-default btn-sm" ng-click="showAddBucket()">
         <i class="glyphicon glyphicon-plus text-success"></i>
         新建 Bucket
       </button>
