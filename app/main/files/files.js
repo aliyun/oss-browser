@@ -752,9 +752,7 @@ angular.module('web')
 
         var msg = '将 <span class="text-info">'+$scope.keepMoveOptions.items[0].name
             + ($scope.keepMoveOptions.items.length>1?' 等':' ')
-            + '</span> ' + keyword+' 到';
-
-        msg+= '<br/><span class="text-warning">(oss://'+$scope.currentInfo.bucket+'/'+ $scope.currentInfo.key+')</span>目录下面?';
+            + '</span> ' + keyword+' 到这个目录下面?'; 
 
 
         Dialog.confirm(keyword, msg, function(b){

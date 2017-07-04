@@ -44,6 +44,14 @@ angular.module('web')
             var info = JSON.parse(str);
 
             if(info.id && info.secret && info.stoken && info.privilege && info.expiration && info.osspath){
+
+               //过期
+               try{
+                 var d = new Date(info.expiration).getTime();
+                 info.isExpired = d <= new Date().getTime();
+               }catch(e){
+
+               } 
                $scope.authTokenInfo = info;
             }else if(new Date(info.expiration).getTime() < new Date().getTime()){
                $scope.authTokenInfo = null;
