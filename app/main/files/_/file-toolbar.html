@@ -59,7 +59,7 @@
           </a>
         </li>
         <li>
-          <a href="" ng-if="(sel.has.length==1 && !sel.has[0].isFolder) && currentAuthInfo.privilege!='readOnly'"
+          <a href="" ng-if="(sel.has.length==1 && !sel.has[0].isFolder) && currentAuthInfo.privilege!='readOnly' && sel.has[0].storageClass!='Archive'"
           ng-click="showRename(sel.has[0])">
             <i class="fa fa-edit text-info"></i>
             重命名

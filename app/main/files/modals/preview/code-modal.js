@@ -30,7 +30,7 @@ angular.module('web')
       }
 
       function afterRestoreSubmit() {
-        showFn.callback();
+        showFn.callback(true);
       }
 
       function saveContent() {

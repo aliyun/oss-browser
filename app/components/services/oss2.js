@@ -10,6 +10,7 @@ angular.module('web')
         createFolder: createFolder,
         createBucket: createBucket,
         restoreFile: restoreFile,
+        loadStorageStatus: loadStorageStatus,
 
         getMeta: getFileInfo,
         getFileInfo: getFileInfo, //head object
@@ -763,7 +764,7 @@ angular.module('web')
       function listFiles(region, bucket, key, marker) {
         return new Promise(function(a,b){
           _listFilesOrigion(region, bucket, key, marker).then(function(result){
-              var arr = result.data;
+              var arr = result.data; 
               if (arr && arr.length) {
                 $timeout( ()=> {
                   loadStorageStatus(region, bucket, arr);

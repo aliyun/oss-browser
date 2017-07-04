@@ -19,7 +19,7 @@ angular.module('web')
         showAsCodeBtn: shouldShowAsCodeBtn()
       });
       function afterRestoreSubmit(){
-        showFn.callback();
+        showFn.callback(true);
       }
       function afterCheckSuccess() {
         $scope.previewBarVisible = true;

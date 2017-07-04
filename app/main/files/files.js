@@ -236,11 +236,8 @@ angular.module('web')
       }
 
       function listFiles(info, marker, fn) {
-
         clearObjectsList();
-
         info = info || $scope.currentInfo;
-
         $scope.isLoading = true;
 
         doListFiles(info, marker, function (err) {
@@ -270,7 +267,7 @@ angular.module('web')
       }
 
       function loadNext() {
-        
+
         if ($scope.nextObjectsMarker) {
           console.log('loadNext')
           doListFiles($scope.currentInfo, $scope.nextObjectsMarker);
@@ -351,7 +348,9 @@ angular.module('web')
             },
             callback: function () {
               return function () {
-                listFiles();
+                $timeout(function () {
+                  listFiles();
+                },300);
               };
             }
           }
@@ -390,7 +389,9 @@ angular.module('web')
             callback: function () {
               return function () {
                 Toast.success('创建目录成功');
-                listFiles();
+                $timeout(function () {
+                  listFiles();
+                },300);
               };
             }
           }
@@ -408,7 +409,9 @@ angular.module('web')
             callback: function () {
               return function () {
                 Toast.success('修改Bucket权限成功');
-                listBuckets();
+                $timeout(function () {
+                  listBuckets();
+                },300);
               };
             }
           }
@@ -480,8 +483,13 @@ angular.module('web')
             },
             showFn: function () {
               return {
-                callback: function () {
-                  listFiles();
+                callback: function (reloadStorageStatus) {
+                  if(reloadStorageStatus){
+                    $timeout(function () {
+                      //listFiles();
+                      ossSvs2.loadStorageStatus($scope.currentInfo.region, $scope.currentInfo.bucket, [item])
+                    },300);
+                  }
                 },
                 preview: showPreview,
                 download: function () {
@@ -719,7 +727,9 @@ angular.module('web')
             },
             callback: function () {
               return function () {
-                listFiles();
+                $timeout(function () {
+                  listFiles();
+                },300);
               };
             }
           }
@@ -769,7 +779,9 @@ angular.module('web')
                  callback: function () {
                    return function () {
                      $scope.keepMoveOptions = null;
-                     listFiles();
+                     $timeout(function(){
+                       listFiles();
+                     },100);
                    };
                  }
                }
@@ -834,7 +846,10 @@ angular.module('web')
             },
             callback: function () {
               return function () {
-                listFiles();
+                $timeout(function () {
+                  //listFiles();
+                  ossSvs2.loadStorageStatus($scope.currentInfo.region, $scope.currentInfo.bucket, [item]);
+                },300);
               };
             }
           }
