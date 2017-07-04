@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('web')
-  .controller('transferUploadsCtrl', ['$scope', '$timeout', '$interval', 'DelayDone', 'ossUploadManager', 'Toast','Dialog',
-    function ($scope, $timeout, $interval, DelayDone, ossUploadManager, Toast, Dialog) {
+  .controller('transferUploadsCtrl', ['$scope', '$timeout', '$interval','jobUtil', 'DelayDone', 'ossUploadManager', 'Toast','Dialog',
+    function ($scope, $timeout, $interval, jobUtil, DelayDone, ossUploadManager, Toast, Dialog) {
 
       angular.extend($scope, {
         showRemoveItem: showRemoveItem,
