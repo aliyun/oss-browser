@@ -232,13 +232,28 @@ angular.module('web')
       */
       function createJob(auth, opt) {
 
-        var store = new OssStore({
-          aliyunCredential: {
-            accessKeyId: auth.id,
-            secretAccessKey: auth.secret
-          },
-          endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket)
-        });
+        //stsToken
+        if(auth.stoken && auth.id.indexOf('STS.')==0){
+          var store = new OssStore({
+            stsToken: {
+              Credentials: {
+                AccessKeyId: auth.id,
+                AccessKeySecret: auth.secret,
+                SecurityToken: auth.stoken
+              }
+            },
+            endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket)
+          });
+        }
+        else{
+          var store = new OssStore({
+            aliyunCredential: {
+              accessKeyId: auth.id,
+              secretAccessKey: auth.secret
+            },
+            endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket)
+          });
+        }
 
         return store.createUploadJob(opt);
         // {

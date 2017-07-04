@@ -32,7 +32,14 @@ function headObject(self, objOpt, fn){
   _dig();
   function _dig(){
     self.oss.headObject(objOpt, function (err, headers) {
+
       if (err) {
+        if(err.code=='Forbidden'){
+          err.message='Forbidden';
+          fn(err);
+          return;
+        }
+
         if(retryTimes > 10){
           fn(err);
         }else{

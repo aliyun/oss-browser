@@ -5,6 +5,7 @@ angular.module('web')
 
       var KEY_REMEMBER = Const.KEY_REMEMBER;
       var SHOW_HIS = Const.SHOW_HIS;
+      var KEY_AUTHTOKEN = 'key-authtoken';
       var regions = angular.copy(Const.regions);
 
       angular.extend($scope, {
@@ -21,16 +22,22 @@ angular.module('web')
         useHis: useHis,
         showRemoveHis: showRemoveHis,
 
+        open: open,
 
         onSubmit2: onSubmit2,
         authTokenChange:authTokenChange
       });
+
+      function open(a){
+        openExternal(a);
+      }
 
       var tid;
       function authTokenChange(){
         $timeout.cancel(tid);
         tid=$timeout(function(){
           var authToken = $scope.item.authToken;
+          localStorage.setItem(KEY_AUTHTOKEN, authToken);
           var str = Buffer.from(authToken, 'base64').toString();
           try{
             var info = JSON.parse(str);
@@ -51,6 +58,11 @@ angular.module('web')
         $scope.flags.remember = localStorage.getItem(KEY_REMEMBER) || 'NO';
         $scope.flags.showHis = localStorage.getItem(SHOW_HIS) || 'NO';
         $scope.item = AuthInfo.getRemember();
+
+        //临时token
+        $scope.item.authToken = localStorage.getItem(KEY_AUTHTOKEN) || '';
+        authTokenChange();
+
         listHistories();
 
         $scope.$watch('flags.remember',function(v){

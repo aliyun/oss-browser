@@ -103,7 +103,7 @@ angular.module('web')
       var dirPath = path.dirname(fromOssInfos[0].path);
 
       loop(fromOssInfos, function (jobs) {
-        
+
       }, function(){
         if(jobsAddedFn) jobsAddedFn();
       });
@@ -218,14 +218,28 @@ angular.module('web')
      * @return job  { start(), stop(), status, progress }
      */
     function createJob(auth, opt) {
-
-      var store = new OssStore({
-        aliyunCredential: {
-          accessKeyId: auth.id,
-          secretAccessKey: auth.secret
-        },
-        endpoint: ossSvs2.getOssEndpoint(opt.region, opt.from.bucket)
-      });
+      //stsToken
+      if(auth.stoken && auth.id.indexOf('STS.')==0){
+        var store = new OssStore({
+          stsToken: {
+            Credentials: {
+              AccessKeyId: auth.id,
+              AccessKeySecret: auth.secret,
+              SecurityToken: auth.stoken
+            }
+          },
+          endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket)
+        });
+      }
+      else{
+        var store = new OssStore({
+          aliyunCredential: {
+            accessKeyId: auth.id,
+            secretAccessKey: auth.secret
+          },
+          endpoint: ossSvs2.getOssEndpoint(opt.region, opt.from.bucket)
+        });
+      }
 
       return store.createDownloadJob(opt);
     }

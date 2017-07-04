@@ -10,8 +10,24 @@
 
 步骤: https://help.aliyun.com/knowledge_detail/39709.html
 
+
 ## 1. 授权码格式
 
 ```
-待续
+var opt = {
+  id: '',
+  secret: '',
+  stoken: '',
+  privilege: '',
+  expiration: '',
+  osspath: ''
+};
+
+//toString
+opt = JSON.stringify(opt);
+
+//base64 encode
+Buffer.from(opt, 'base64').toString();
 ```
+
+具体可以参考代码: [app/main/files/modals/grant-token-modal.js](app/main/files/modals/grant-token-modal.js)
