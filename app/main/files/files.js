@@ -138,11 +138,11 @@ angular.module('web')
             region: authInfo.region
           };
 
-          $timeout(function () {
+          //$timeout(function () {
             addEvents();
             //$rootScope.$broadcast('ossAddressChange', authInfo.osspath);
             $scope.$broadcast('filesViewReady');
-          });
+          //});
 
         } else {
 
@@ -207,7 +207,10 @@ angular.module('web')
               searchObjectName();
 
             } else {
-              listFiles();
+              //fix ubuntu
+              $timeout(function(){
+                listFiles();
+              },100);
             }
 
           } else {
@@ -247,7 +250,7 @@ angular.module('web')
       }
 
       function doListFiles(info, marker, fn) {
-
+        
         ossSvs2.listFiles(info.region, info.bucket, info.key, marker || '').then(function (result) {
 
           var arr = settingsSvs.showImageSnapshot.get() == 1 ? signPicURL(info, result.data) : result.data;
@@ -257,6 +260,7 @@ angular.module('web')
 
           safeApply($scope);
           if (fn) fn(null);
+
         }, function (err) {
           console.log(err)
           clearObjectsList();
