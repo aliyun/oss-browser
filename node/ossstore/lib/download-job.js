@@ -57,6 +57,14 @@ class DownloadJob extends Base {
 
 DownloadJob.prototype.start = function () {
   var self = this;
+  if(this.status=='running')return;
+
+  if(this._lastStatusFailed){
+    //从头开始
+    this.checkPoints = {};
+    this.crc64Str = '';
+  }
+
   self.message='';
   self.startTime = new Date().getTime();
   self.endTime = null;
@@ -64,11 +72,12 @@ DownloadJob.prototype.start = function () {
   self.stopFlag = false;
   self._changeStatus('running');
 
-  self.checkPoints = self.checkPoints || {
+  self.checkPoints =  (self.checkPoints && self.checkPoints.Parts) ? self.checkPoints: {
     from: self.from,
     to: self.to,
     Parts: {}
   };
+
   self.startDownload(self.checkPoints);
 
   self.startSpeedCounter();
@@ -78,15 +87,18 @@ DownloadJob.prototype.start = function () {
 
 DownloadJob.prototype.stop = function () {
   var self = this;
+  if(self.status=='stopped')return;
   self.stopFlag = true;
   self._changeStatus('stopped');
-  this.speed = 0;
-  this.predictLeftTime = 0;
+  self.speed = 0;
+  self.predictLeftTime = 0;
   return self;
 };
 
 DownloadJob.prototype.wait = function () {
   var self = this;
+  if(this.status=='waiting')return;
+  this._lastStatusFailed = this.status=='failed';
   self.stopFlag = true;
   self._changeStatus('waiting');
   return self;
@@ -99,7 +111,13 @@ DownloadJob.prototype._changeStatus = function (status) {
 
   if (status == 'failed' || status == 'stopped' || status == 'finished') {
     self.endTime = new Date().getTime();
-    // util.closeFD(this.keepFd);
+    util.closeFD(self.keepFd);
+
+    console.log('clear speed tid', self.status)
+    clearInterval(self.speedTid);
+    self.speed = 0;
+    //推测耗时
+    self.predictLeftTime=0;
   }
 };
 
@@ -108,6 +126,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
 
   self.lastLoaded = 0;
   var tick=0;
+  clearInterval(self.speedTid);
   self.speedTid = setInterval(function () {
 
     if (self.stopFlag) {
@@ -126,30 +145,27 @@ DownloadJob.prototype.startSpeedCounter = function () {
     tick++;
     if(tick>5){
       tick=0;
-      if(self.speed > 5*1024*1024) self.maxConcurrency=10;
-      else if(self.speed > 3*1024*1024) self.maxConcurrency=7;
-      else if(self.speed > 2*1024*1024) self.maxConcurrency=5;
-      else self.maxConcurrency=3;
+      self.maxConcurrency = util.computeMaxConcurrency(self.speed);
       console.log('max concurrency:', self.maxConcurrency);
     }
   }, 1000);
 
-  function onFinished() {
-    clearInterval(self.speedTid);
-    self.speed = 0;
-    //推测耗时
-    self.predictLeftTime = 0;
-  }
-
-  self.on('stopped', onFinished);
-  self.on('error', onFinished);
-  self.on('complete', onFinished);
+  // function onFinished() {
+  //   clearInterval(self.speedTid);
+  //   self.speed = 0;
+  //   //推测耗时
+  //   self.predictLeftTime = 0;
+  // }
+  //
+  // self.on('stopped', onFinished);
+  // self.on('error', onFinished);
+  // self.on('complete', onFinished);
 };
 
 /**
  * 开始download
  */
-DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
+DownloadJob.prototype.startDownload = function (checkPoints) {
   var self = this;
 
   var chunkNum = 0;
@@ -175,10 +191,11 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
     Key: self.from.key
   };
 
-  self.oss.headObject(objOpt, function (err, headers) {
+  util.headObject(self, objOpt, function (err, headers) {
     if (err) {
       self.message = 'failed to get oss object meta: ' + err.message;
       //console.error(self.message);
+      console.error(self.message, self.to.path);
       self._changeStatus('failed');
       self.emit('error', err);
       return;
@@ -199,8 +216,10 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
         if (err) {
           self.message = 'failed to open local file:' + err.message;
           //console.error(self.message);
+          console.error(self.message, self.to.path);
           self._changeStatus('failed');
           self.emit('error', err);
+
         } else {
           self._changeStatus('finished');
           self.emit('progress', {
@@ -223,13 +242,13 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
     chunkSize = checkPoints.chunkSize || self._config.chunkSize || util.getSensibleChunkSize(self.prog.total);
 
-    //console.log('chunkSize:',chunkSize);
+    console.log('chunkSize:',chunkSize);
 
     chunkNum = Math.ceil(self.prog.total / chunkSize);
 
     chunks = [];
-    for (var i = 0; i < chunkNum; i++) {
 
+    for (var i = 0; i < chunkNum; i++) {
       if (!checkPoints.Parts[i + 1] || !checkPoints.Parts[i + 1].done) {
         chunks.push(i);
         checkPoints.Parts[i + 1] = {
@@ -238,7 +257,6 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
           done: false
         };
       }
-
     }
 
     completedCount = chunkNum - chunks.length;
@@ -253,6 +271,8 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
       checkFileHash(tmpName, fileMd5, hashCrc64ecma, function (err) {
         if (err) {
+          self.message="failed to check crc64:"+ (err.message||err);
+          console.error(self.message, self.to.path);
           self._changeStatus('failed');
           self.emit('error', err);
           return;
@@ -282,6 +302,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
       if (err) {
         self.message = 'failed to open local file:' + err.message;
         //console.error(self.message);
+        console.error(self.message, self.to.path);
         self._changeStatus('failed');
         self.emit('error', err);
         return;
@@ -308,11 +329,18 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
   }
 
   function downloadPart(n) {
+    if (n == null) return;
+
+    var partNumber = n + 1;
+    if(checkPoints.Parts[partNumber].done){
+      console.error('tmd', n);
+      return;
+    }
 
     var start = chunkSize * n;
     var end = (n + 1 < chunkNum) ? start + chunkSize : self.prog.total;
 
-    var partNumber = n + 1;
+
 
     //checkPoints.Parts[partNumber] = {
     //  PartNumber: partNumber,
@@ -346,9 +374,13 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
       var req = self.oss.getObject(obj, (err, data) => {
         // var md5 = ALY.util.crypto.md5(data.Body,'hex');
+        if (self.stopFlag) {
+          //util.closeFD(keepFd);
+          return;
+        }
 
         if (err) {
-          console.log(err);
+          //console.log(err);
           if (err.code == 'RequestAbortedError') {
             //用户取消
             console.warn('用户取消');
@@ -357,7 +389,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
           if (retryCount < maxRetries) {
             retryCount++;
-            console.log(`retry download part [${n}] error:${err}`);
+            console.log(`retry download part [${n}] error:${err}, ${self.to.path}`);
             checkPoints.Parts[partNumber].loaded = 0;
             setTimeout(function(){
               doDownload(n);
@@ -366,6 +398,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
           } else {
             self.message = `failed to download part [${n}]: ${err.message}`;
             //console.error(self.message);
+            console.error(self.message, self.to.path);
             self._changeStatus('failed');
             self.emit('error', err);
             //util.closeFD(keepFd);
@@ -373,17 +406,19 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
           return;
         }
 
-        if (self.stopFlag) {
-          //util.closeFD(keepFd);
-          return;
-        }
 
         //console.log(0, end - start, start, end);
         writeFileRange(tmpName, data.Body, start, function (err) {
 
+          if (self.stopFlag) {
+            //util.closeFD(keepFd);
+            return;
+          }
+
           if (err) {
             self.message = 'failed to write local file: ' + err.message;
             //console.error(self.message);
+            console.error(self.message, self.to.path);
             self._changeStatus('failed');
             self.emit('error', err);
             //util.closeFD(keepFd);
@@ -401,14 +436,15 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
           //var progCp = JSON.parse(JSON.stringify(self.prog));
 
-          //console.log(`complete part [${n}]`);
-
+          console.log(`complete part [${n}] ${self.to.path}`);
           if (completedCount == chunkNum) {
             //下载完成
             //util.closeFD(keepFd);
             //检验MD5
             checkFileHash(tmpName, fileMd5, hashCrc64ecma, function (err) {
               if (err) {
+                self.message = 'failed to check crc64:'+ (err.message||err);
+                console.error(self.message, self.to.path);
                 self._changeStatus('failed');
                 self.emit('error', err);
                 return;
@@ -417,8 +453,9 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
               //临时文件重命名为正式文件
               fs.rename(tmpName, self.to.path, function (err) {
                 if (err) {
-                  console.log(err);
+                  console.error(err, self.to.path);
                 } else {
+
                   self._changeStatus('finished');
                   //self.emit('progress', progCp);
                   self.emit('partcomplete', {
@@ -480,10 +517,10 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
   }
 
   function checkFileHash(filePath, fileMd5, hashCrc64ecma, fn) {
-    console.time('check crc64');
+    console.time(`check crc64 ${filePath}`);
     if(hashCrc64ecma){
       util.getFileCrc64(filePath, function(err, crc64Str){
-        console.timeEnd('check crc64');
+        console.timeEnd(`check crc64 ${filePath}`);
         if (err) {
           fn(new Error('Checking file['+filePath+'] crc64 hash failed: ' + err.message));
         } else if (crc64Str!=null && crc64Str != hashCrc64ecma) {

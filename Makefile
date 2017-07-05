@@ -1,7 +1,7 @@
 ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/
 ELECTRON_VERSION=1.6.11
 BUILD=ELECTRON_MIRROR=$(ELECTRON_MIRROR) electron-packager ./dist --overwrite --out=build --version $(ELECTRON_VERSION)
-VERSION=0.9.0
+VERSION=0.9.1
 NAME=oss-browser
 
 i:
@@ -10,8 +10,12 @@ clean:
 	npm run clean
 	find . -name .DS_Store | xargs rm -rf
 
+dev:
+	NODE_ENV=development electron .
+
 run:
 	npm run dev
+
 prod:
 	npm run prod
 watch:

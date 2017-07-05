@@ -10,6 +10,7 @@ angular.module('web')
         createFolder: createFolder,
         createBucket: createBucket,
         restoreFile: restoreFile,
+        loadStorageStatus: loadStorageStatus,
 
         getMeta: getFileInfo,
         getFileInfo: getFileInfo, //head object
@@ -171,11 +172,12 @@ angular.module('web')
       * 批量复制或移动文件
       * @param retion {string} 要求相同region
       * @param items {array} 需要被复制的文件列表，可能为folder，可能为file
-      * @param target {object} {bucket,key}
+      * @param target {object} {bucket,key} 目标目录路径
       * @param progFn {Function} 进度回调  {current:1, total: 11, errorCount: 0}
       * @param removeAfterCopy {boolean} 移动flag，复制后删除。 默认false
       */
       function copyFiles(region, items, target, progFn, removeAfterCopy){
+
         var progress = {
           total: 0,
           current: 0,
@@ -197,7 +199,7 @@ angular.module('web')
           var toKey = to.key;
           var fromKeyOrigin = '/'+from.bucket+'/'+(from.key);
           var fromKey = '/'+from.bucket+'/'+encodeURIComponent(from.key);
-          console.log(removeAfterCopy?'move':'copy', '::',fromKeyOrigin, '==>', toKey);
+          console.info(removeAfterCopy?'move':'copy', '::',fromKeyOrigin, '==>', toKey);
 
           client.copyObject({Bucket: to.bucket, Key:toKey, CopySource: fromKey},function(err){
             if(err){
@@ -247,7 +249,9 @@ angular.module('web')
 
 
             var item = arr[c];
-            var toKey = target.key.replace(/\/$/,'')+'/'+ (item.path.substring(pkey.length));
+            var toKey = target.key.replace(/\/$/,'');
+            toKey = (toKey?toKey+'/': '')+ (item.path.substring(pkey.length));
+
             copyOssFile(client, {bucket:bucket,key: item.path},{bucket:bucket, key: toKey}, function(err){
               if(err){
                 progress.errorCount++;
@@ -369,8 +373,11 @@ angular.module('web')
             };
 
             var item = items[c];
+            var toKey = target.key.replace(/\/$/,'');
+            toKey = (toKey?toKey+'/': '')+ (items[c].name);
+
             var newTarget = {
-              key: target.key.replace(/\/$/,'')+'/'+items[c].name,
+              key: toKey, //target.key.replace(/\/$/,'')+'/'+items[c].name,
               bucket: target.bucket
             };
             c++;
@@ -438,7 +445,6 @@ angular.module('web')
         function dig(opt){
           opt = angular.extend({Bucket: bucket, Prefix: '', 'MaxUploads':maxUploads}, opt);
           client.listMultipartUploads(opt, function(err, result){
-            console.log(err, result)
             if(err){
               df.reject(err);
               return;
@@ -730,6 +736,7 @@ angular.module('web')
       }
 
       function restoreFile(region, bucket, key, days) {
+
         return new Promise(function (a, b) {
           var client = getClient({
             region: region,
@@ -742,8 +749,8 @@ angular.module('web')
               Days: days || 7
             }
           };
+
           client.restoreObject(opt, function (err, data) {
-            //console.log(err, data);
             if (err) {
               handleError(err);
               b(err);
@@ -757,7 +764,7 @@ angular.module('web')
       function listFiles(region, bucket, key, marker) {
         return new Promise(function(a,b){
           _listFilesOrigion(region, bucket, key, marker).then(function(result){
-              var arr = result.data;
+              var arr = result.data; 
               if (arr && arr.length) {
                 $timeout( ()=> {
                   loadStorageStatus(region, bucket, arr);
@@ -875,7 +882,7 @@ angular.module('web')
               });
             }
 
-            //console.log(result)
+
             resolve({
               data: t_pre.concat(t),
               marker: result.NextMarker
@@ -972,7 +979,7 @@ angular.module('web')
                 }
               });
             }
-            console.log(result)
+
             if (result.NextMarker) {
               opt.Marker = result.NextMarker;
               $timeout(_dig, 10);
@@ -1063,7 +1070,7 @@ angular.module('web')
             };
           }
           if(err.code=='NetworkingError' && err.message.indexOf('ENOTFOUND')!=-1){
-            console.log(err);
+            console.error(err);
           }
           else Toast.error(err.code + ': ' + err.message);
         }

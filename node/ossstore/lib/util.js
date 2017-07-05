@@ -1,11 +1,35 @@
 var path = require('path');
 var fs = require('fs');
 
+try{
+  var CRC64 = require('../../crc64');
+}catch(e){
+  console.error('Can not load crc64 module:',e);
+}
+
 module.exports = {
   parseLocalPath: parseLocalPath,
   parseOssPath: parseOssPath,
-  closeFD: closeFD
+  closeFD: closeFD,
+  getFileCrc64: getFileCrc64
 };
+
+
+function getFileCrc64(p, fn){
+  if(!CRC64){
+    console.warn('not found crc64 module');
+    fn(null, null);
+    return;
+  }
+  console.time('get crc64 hash for ['+p+']');
+  var stream = fs.createReadStream(p);
+  CRC64.check_stream(stream, function(err, data){
+    stream.close();
+    console.timeEnd('get crc64 hash for ['+p+']');
+    fn(err, data);
+  });
+};
+
 
 function parseLocalPath(p) {
   if (typeof(p) != 'string') {

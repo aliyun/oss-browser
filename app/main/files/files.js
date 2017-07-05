@@ -79,11 +79,37 @@ angular.module('web')
 
         loadNext: loadNext,
 
-        paste: paste,
+        showPaste: showPaste,
         cancelPaste: cancelPaste,
-        getCurrentOssPath: getCurrentOssPath
+        getCurrentOssPath: getCurrentOssPath,
 
+        mock: {
+          uploads: '',
+          downloads: '',
+          uploadsChange: uploadsChange,
+          downloadsChange: downloadsChange,
+        }
       });
+
+      var tid_uploads;
+      function uploadsChange(){
+        $timeout.cancel(tid_uploads);
+        tid_uploads = $timeout(function(){
+          if($scope.mock.uploads){
+            var arr = $scope.mock.uploads.split(',');
+            $scope.handlers.uploadFilesHandler(arr, $scope.currentInfo);
+          }
+        },600);
+      }
+      var tid_downloads;
+      function downloadsChange(){
+        $timeout.cancel(tid_downloads);
+        tid_downloads = $timeout(function(){
+          if($scope.mock.downloads){
+            _downloadMulti($scope.mock.downloads);
+          }
+        },600);
+      }
 
 
 
@@ -100,6 +126,8 @@ angular.module('web')
 
       function init() {
         var authInfo = AuthInfo.get();
+
+        $scope.currentAuthInfo = authInfo;
 
         if (authInfo.osspath) {
           $scope.ref.isBucketList = false;
@@ -179,7 +207,10 @@ angular.module('web')
               searchObjectName();
 
             } else {
-              listFiles();
+              //fix ubuntu
+              $timeout(function(){
+                listFiles();
+              },100);
             }
 
           } else {
@@ -188,7 +219,7 @@ angular.module('web')
             $scope.currentBucket = null;
             $scope.ref.isBucketList = true;
             //只有从来没有 list buckets 过，才list，减少http请求开销
-            if (!$scope.buckets || forceRefresh) listBuckets();
+            if (!$scope.buckets && forceRefresh) listBuckets();
 
             clearObjectsList();
           }
@@ -205,11 +236,8 @@ angular.module('web')
       }
 
       function listFiles(info, marker, fn) {
-
         clearObjectsList();
-
         info = info || $scope.currentInfo;
-
         $scope.isLoading = true;
 
         doListFiles(info, marker, function (err) {
@@ -229,6 +257,7 @@ angular.module('web')
 
           safeApply($scope);
           if (fn) fn(null);
+
         }, function (err) {
           console.log(err)
           clearObjectsList();
@@ -319,7 +348,9 @@ angular.module('web')
             },
             callback: function () {
               return function () {
-                listFiles();
+                $timeout(function () {
+                  listFiles();
+                },300);
               };
             }
           }
@@ -358,7 +389,9 @@ angular.module('web')
             callback: function () {
               return function () {
                 Toast.success('创建目录成功');
-                listFiles();
+                $timeout(function () {
+                  listFiles();
+                },300);
               };
             }
           }
@@ -376,7 +409,9 @@ angular.module('web')
             callback: function () {
               return function () {
                 Toast.success('修改Bucket权限成功');
-                listBuckets();
+                $timeout(function () {
+                  listBuckets();
+                },300);
               };
             }
           }
@@ -448,8 +483,13 @@ angular.module('web')
             },
             showFn: function () {
               return {
-                callback: function () {
-                  listFiles();
+                callback: function (reloadStorageStatus) {
+                  if(reloadStorageStatus){
+                    $timeout(function () {
+                      //listFiles();
+                      ossSvs2.loadStorageStatus($scope.currentInfo.region, $scope.currentInfo.bucket, [item])
+                    },300);
+                  }
                 },
                 preview: showPreview,
                 download: function () {
@@ -599,20 +639,24 @@ angular.module('web')
           if (!folderPaths || folderPaths.length == 0 || !$scope.sel.has) return;
 
           var to = folderPaths[0];
-          to = to.replace(/(\/*$)/g, '');
-
-          var fromArr = angular.copy($scope.sel.has);
-          angular.forEach(fromArr, function (n) {
-            n.region = $scope.currentInfo.region;
-            n.bucket = $scope.currentInfo.bucket;
-          });
-
-          /**
-           * @param fromOssPath {array}  item={region, bucket, path, name, size }
-           * @param toLocalPath {string}
-           */
-          $scope.handlers.downloadFilesHandler(fromArr, to);
+          _downloadMulti(to);
         });
+      }
+
+      function _downloadMulti(to){
+        to = to.replace(/(\/*$)/g, '');
+
+        var fromArr = angular.copy($scope.sel.has);
+        angular.forEach(fromArr, function (n) {
+          n.region = $scope.currentInfo.region;
+          n.bucket = $scope.currentInfo.bucket;
+        });
+
+        /**
+         * @param fromOssPath {array}  item={region, bucket, path, name, size }
+         * @param toLocalPath {string}
+         */
+        $scope.handlers.downloadFilesHandler(fromArr, to);
       }
 
       /**
@@ -683,7 +727,9 @@ angular.module('web')
             },
             callback: function () {
               return function () {
-                listFiles();
+                $timeout(function () {
+                  listFiles();
+                },300);
               };
             }
           }
@@ -697,38 +743,49 @@ angular.module('web')
         $scope.keepMoveOptions=null;
         safeApply($scope);
       }
-      function paste(){
+      function showPaste(){
         if($scope.keepMoveOptions.originPath==getCurrentOssPath()){
           $scope.keepMoveOptions = null;
           return;
         }
+        var keyword = $scope.keepMoveOptions.isCopy ? '<span class="text-primary">复制</span>' : '<span class="text-danger">移动</span>';
 
-        $modal.open({
-          templateUrl: 'main/files/modals/move-modal.html',
-          controller: 'moveModalCtrl',
-          backdrop: 'static',
-          resolve: {
-            items: function () {
-              return angular.copy($scope.keepMoveOptions.items);
-            },
-            moveTo: function(){
-              return angular.copy($scope.currentInfo);
-            },
-            isCopy: function () {
-              return $scope.keepMoveOptions.isCopy;
-            },
-            fromInfo: function () {
-              return angular.copy($scope.keepMoveOptions.currentInfo);
-            },
-            callback: function () {
-              return function () {
-                $scope.keepMoveOptions = null;
-                listFiles();
-              };
-            }
-          }
+        var msg = '将 <span class="text-info">'+$scope.keepMoveOptions.items[0].name
+            + ($scope.keepMoveOptions.items.length>1?' 等':' ')
+            + '</span> ' + keyword+' 到这个目录下面?'; 
+
+
+        Dialog.confirm(keyword, msg, function(b){
+          if(b){
+             $modal.open({
+               templateUrl: 'main/files/modals/move-modal.html',
+               controller: 'moveModalCtrl',
+               backdrop: 'static',
+               resolve: {
+                 items: function () {
+                   return angular.copy($scope.keepMoveOptions.items);
+                 },
+                 moveTo: function(){
+                   return angular.copy($scope.currentInfo);
+                 },
+                 isCopy: function () {
+                   return $scope.keepMoveOptions.isCopy;
+                 },
+                 fromInfo: function () {
+                   return angular.copy($scope.keepMoveOptions.currentInfo);
+                 },
+                 callback: function () {
+                   return function () {
+                     $scope.keepMoveOptions = null;
+                     $timeout(function(){
+                       listFiles();
+                     },100);
+                   };
+                 }
+               }
+             });
+           }
         });
-
       }
 
       //移动
@@ -787,7 +844,10 @@ angular.module('web')
             },
             callback: function () {
               return function () {
-                listFiles();
+                $timeout(function () {
+                  //listFiles();
+                  ossSvs2.loadStorageStatus($scope.currentInfo.region, $scope.currentInfo.bucket, [item]);
+                },300);
               };
             }
           }

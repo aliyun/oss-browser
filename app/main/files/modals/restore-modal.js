@@ -57,7 +57,7 @@ angular.module('web')
         if(!form1.$valid)return;
 
         var days = $scope.info.days;
-
+        
         Toast.info('提交中...');
         ossSvs2.restoreFile(currentInfo.region, currentInfo.bucket, item.path, days).then(function(){
           Toast.success('恢复请求已经提交');

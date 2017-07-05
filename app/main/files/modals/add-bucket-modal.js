@@ -4,6 +4,10 @@ angular.module('web')
 
       var bucketACL= angular.copy(Const.bucketACL);
       var regions= angular.copy(Const.regions);
+      var storageClassesMap = {};
+      angular.forEach(regions, function(n){
+        storageClassesMap[n.id] = n.storageClasses
+      });
 
       angular.extend($scope, {
         bucketACL: angular.copy(Const.bucketACL),
@@ -19,12 +23,14 @@ angular.module('web')
         onRegionChanged: onRegionChanged
       });
       function onRegionChanged(){
-        if(['oss-cn-beijing','oss-cn-hangzhou'].indexOf($scope.item.region)==-1){
-          $scope.storageClasses=[{value:'Standard',name:'标准类型'},{value:'IA',name:'低频访问类型'}];
-        }else{
-          $scope.storageClasses=[{value:'Standard',name:'标准类型'},{value:'IA',name:'低频访问类型'},{value:'Archive',name:'归档类型'}];
-        }
-        $scope.item.storageClass='Standard';
+        console.log(storageClassesMap, $scope.item.region)
+          $scope.storageClasses = angular.copy(storageClassesMap[$scope.item.region]);
+        // if(['oss-cn-beijing','oss-cn-hangzhou'].indexOf($scope.item.region)==-1){
+        //   $scope.storageClasses=[{value:'Standard',name:'标准类型'},{value:'IA',name:'低频访问类型'}];
+        // }else{
+        //   $scope.storageClasses=[{value:'Standard',name:'标准类型'},{value:'IA',name:'低频访问类型'},{value:'Archive',name:'归档类型'}];
+        // }
+         $scope.item.storageClass='Standard';
       }
 
       function cancel() {

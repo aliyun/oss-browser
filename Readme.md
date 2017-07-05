@@ -10,13 +10,13 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 ## 1. 客户端下载：
 
-最新版本0.9.0，下载地址如下，解压即可使用。
+最新版本0.9.1，下载地址如下，解压即可使用。
 
-> [Window x64版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.0/oss-browser-win32-x64.zip)
+> [Window x64版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.1/oss-browser-win32-x64.zip)
 
-> [Mac 版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.0/oss-browser.dmg)
+> [Mac 版下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.1/oss-browser.dmg)
 
-> [Ubuntu x64版](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.0/oss-browser-linux-x64.zip)
+> [Ubuntu x64版](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.1/oss-browser-linux-x64.zip)
 
 其他版本暂不提供，可以自行build。
 
@@ -25,6 +25,11 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 ![AK登录](preview/login.png)
 
 * 子用户登录可以指定预设OSS路径，配合子用户授权使用。
+
+![临时授权码登录](preview/auth-token-login.png)
+
+* 临时授权码登录。
+
 
 ### (2) Bucket列表
 
@@ -44,8 +49,6 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 ### (5) 归档bucket支持
 
 ![新建归档bucket](preview/create-archive-bucket.png)
-
-* `目前仅北京区域支持创建归档bucket`
 
 ![restore](preview/need-restore.png)
 
@@ -67,6 +70,11 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 cnpm 是 npm（node 包管理工具）的中国镜像，可以提高下载依赖包的效率。
 
+### (3) 在windows系统下，需要安装 windows-build-tools
+
+```
+cnpm i -g windows-build-tools
+```
 
 ### (3) 下载代码
 

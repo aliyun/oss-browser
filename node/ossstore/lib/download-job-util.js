@@ -2,11 +2,7 @@ var fs = require('fs');
 var crypto = require('crypto');
 var util = require('./util');
 
-try{
-  var crc64 = require('../../crc64');
-}catch(e){
-  console.error(e);
-}
+
 
 module.exports = {
   getSensibleChunkSize: getSensibleChunkSize,
@@ -14,17 +10,54 @@ module.exports = {
   parseLocalPath: util.parseLocalPath,
   parseOssPath: util.parseOssPath,
   getBigFileMd5: getBigFileMd5,
-  getFileCrc64: getFileCrc64
+  getFileCrc64: getFileCrc64,
+
+  headObject: headObject,
+  computeMaxConcurrency: computeMaxConcurrency
 };
-function getFileCrc64(p, fn){
-  if(!crc64){
-    console.log('not found crc64 module')
-    fn(null, null);
-    return;
+
+
+
+//根据网速调整下载并发量
+function computeMaxConcurrency(speed){
+  if(speed > 8*1024*1024) return 10;
+  else if(speed > 5*1024*1024) return 7;
+  else if(speed > 2*1024*1024) return 5;
+  else return 3;
+}
+
+
+function headObject(self, objOpt, fn){
+  var retryTimes = 0;
+  _dig();
+  function _dig(){
+    self.oss.headObject(objOpt, function (err, headers) {
+
+      if (err) {
+        if(err.code=='Forbidden'){
+          err.message='Forbidden';
+          fn(err);
+          return;
+        }
+
+        if(retryTimes > 10){
+          fn(err);
+        }else{
+          retryTimes++;
+          console.warn('headObject error', err, ', ----- retrying...', retryTimes+'/'+10);
+          setTimeout(function(){
+            if(!self.stopFlag) _dig();
+          },2000);
+        }
+      }
+      else{
+         fn(null, headers);
+      }
+    });
   }
-  crc64.check_stream(fs.createReadStream(p), function(err, data){
-    fn(err, data);
-  });
+}
+function getFileCrc64(p, fn){
+  util.getFileCrc64(p,fn);
 };
 
 function getBigFileMd5(p, fn){

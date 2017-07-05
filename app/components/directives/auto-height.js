@@ -7,7 +7,7 @@ angular.module('web')
       transclude: false,
       scope: {
         autoHeight: '=',
-        bottomLoader: '&'
+        //bottomLoader: '&'
       }
     };
 
@@ -16,7 +16,7 @@ angular.module('web')
       var h = parseInt(scope.autoHeight);
 
       ele.css({
-        'border-bottom': '1px solid #ccc',
+        //'border-bottom': '1px solid #ccc',
         'overflow': 'auto',
         'position': 'relative'
       });
@@ -34,24 +34,24 @@ angular.module('web')
       $(window).resize(resize);
       resize();
 
-      //////////////////////////////
-      if (scope.bottomLoader) { 
-
-        var tid2; 
-        function onScroll() { 
-           $timeout.cancel(tid2);
-           tid2 = $timeout(function () { 
-              
-              if($(ele)[0].scrollHeight>0 
-              && ($(ele).parent().height() +  $(ele).scrollTop() +10 >= $(ele)[0].scrollHeight) ){ 
-                scope.bottomLoader();
-              }
-           },500);
-        } 
-
-        $(window).resize(onScroll);
-        $(ele).scroll(onScroll);
-      }
+      // //////////////////////////////
+      // if (scope.bottomLoader) {
+      //
+      //   var tid2;
+      //   function onScroll() {
+      //      $timeout.cancel(tid2);
+      //      tid2 = $timeout(function () {
+      //
+      //         if($(ele)[0].scrollHeight>0
+      //         && ($(ele).parent().height() +  $(ele).scrollTop() +10 >= $(ele)[0].scrollHeight) ){
+      //           scope.bottomLoader();
+      //         }
+      //      },500);
+      //   }
+      //
+      //   $(window).resize(onScroll);
+      //   $(ele).scroll(onScroll);
+      // }
 
     }
 

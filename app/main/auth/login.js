@@ -5,6 +5,7 @@ angular.module('web')
 
       var KEY_REMEMBER = Const.KEY_REMEMBER;
       var SHOW_HIS = Const.SHOW_HIS;
+      var KEY_AUTHTOKEN = 'key-authtoken';
       var regions = angular.copy(Const.regions);
 
       angular.extend($scope, {
@@ -21,21 +22,42 @@ angular.module('web')
         useHis: useHis,
         showRemoveHis: showRemoveHis,
 
+        open: open,
 
         onSubmit2: onSubmit2,
         authTokenChange:authTokenChange
       });
 
+      function open(a){
+        openExternal(a);
+      }
+
       var tid;
       function authTokenChange(){
         $timeout.cancel(tid);
         tid=$timeout(function(){
-          var authToken = $scope.item.authToken;
-          var str = Buffer.from(authToken, 'base64').toString();
+          var authToken = $scope.item.authToken||'';
+
+          localStorage.setItem(KEY_AUTHTOKEN, authToken);
+
+          if(!authToken){
+            $scope.authTokenInfo = null;
+            return;
+          }
+
           try{
+            var str = Buffer.from(authToken, 'base64').toString();
             var info = JSON.parse(str);
 
             if(info.id && info.secret && info.stoken && info.privilege && info.expiration && info.osspath){
+
+               //过期
+               try{
+                 var d = new Date(info.expiration).getTime();
+                 info.isExpired = d <= new Date().getTime();
+               }catch(e){
+
+               }
                $scope.authTokenInfo = info;
             }else if(new Date(info.expiration).getTime() < new Date().getTime()){
                $scope.authTokenInfo = null;
@@ -51,6 +73,11 @@ angular.module('web')
         $scope.flags.remember = localStorage.getItem(KEY_REMEMBER) || 'NO';
         $scope.flags.showHis = localStorage.getItem(SHOW_HIS) || 'NO';
         $scope.item = AuthInfo.getRemember();
+
+        //临时token
+        $scope.item.authToken = localStorage.getItem(KEY_AUTHTOKEN) || '';
+        authTokenChange();
+
         listHistories();
 
         $scope.$watch('flags.remember',function(v){

@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('codeModalCtrl', ['$scope', '$uibModalInstance', '$uibModal', 'bucketInfo', 'objectInfo', 'fileType', 'showFn', 'Toast', 'DiffModal', 'ossSvs2', 'safeApply',
-    function ($scope, $modalInstance, $modal, bucketInfo, objectInfo, fileType, showFn, Toast, DiffModal, ossSvs2, safeApply) {
+  .controller('codeModalCtrl', ['$scope', '$uibModalInstance','$timeout', '$uibModal', 'bucketInfo', 'objectInfo', 'fileType', 'showFn', 'Toast', 'DiffModal', 'ossSvs2', 'safeApply',
+    function ($scope, $modalInstance, $timeout, $modal, bucketInfo, objectInfo, fileType, showFn, Toast, DiffModal, ossSvs2, safeApply) {
 
       angular.extend($scope, {
         bucketInfo: bucketInfo,
@@ -22,12 +22,15 @@ angular.module('web')
       function afterCheckSuccess() {
         $scope.previewBarVisible = true;
         if (objectInfo.size < $scope.MAX_SIZE) {
-          getContent();
+          //修复ubuntu下无法获取的bug
+          $timeout(function(){
+            getContent();
+          },100);
         }
       }
 
       function afterRestoreSubmit() {
-        showFn.callback();
+        showFn.callback(true);
       }
 
       function saveContent() {
@@ -46,7 +49,7 @@ angular.module('web')
             });
           });
         } else {
-          Toast.info('内容没有被修改');
+          Toast.info('内容没有修改');
         }
       }
 

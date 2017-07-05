@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('web')
-  .controller('transferUploadsCtrl', ['$scope', '$timeout', '$interval', 'DelayDone', 'ossUploadManager', 'Toast','Dialog',
-    function ($scope, $timeout, $interval, DelayDone, ossUploadManager, Toast, Dialog) {
+  .controller('transferUploadsCtrl', ['$scope', '$timeout', '$interval','jobUtil', 'DelayDone', 'ossUploadManager', 'Toast','Dialog',
+    function ($scope, $timeout, $interval, jobUtil, DelayDone, ossUploadManager, Toast, Dialog) {
 
       angular.extend($scope, {
         showRemoveItem: showRemoveItem,
@@ -16,7 +16,7 @@ angular.module('web')
           upname: null,
         },
         schKeyFn: function(item){
-          return item.from.name;
+          return item.from.name +' '+ item.status + ' ' + jobUtil.getStatusLabel(item.status);
         },
         limitToNum: 100,
         loadMoreUploadItems: loadMoreItems
@@ -70,6 +70,9 @@ angular.module('web')
       }
 
       function clearAll() {
+        if(!$scope.lists.uploadJobList || $scope.lists.uploadJobList.length==0){
+          return;
+        }
         Dialog.confirm('清空所有', '确定清空所有上传任务?', function (btn) {
           if (btn) {
 
@@ -89,6 +92,8 @@ angular.module('web')
 
       var stopFlag = false;
       function stopAll() {
+        $scope.allActionBtnDisabled=true;
+
         var arr = $scope.lists.uploadJobList;
         stopFlag = true;
 
@@ -101,28 +106,33 @@ angular.module('web')
 
         $timeout(function () {
           ossUploadManager.saveProg();
+          $scope.allActionBtnDisabled=false;
         }, 100);
 
 
       }
 
       function startAll() {
+        $scope.allActionBtnDisabled=true;
+
         var arr = $scope.lists.uploadJobList;
         stopFlag = false;
         //串行
-        if(arr){
+        if(arr && arr.length>0){
           DelayDone.seriesRun(arr, function(n, fn){
-            if(stopFlag)return;
+            if(stopFlag){
+              return;
+            }
 
-            if (n.status == 'stopped' || n.status == 'failed'){
+            if (n && (n.status == 'stopped' || n.status == 'failed')){
               n.wait();
             }
 
             ossUploadManager.checkStart();
 
             fn();
-          }, function(){
-            //ossUploadManager.checkStart();
+          }, function doneFn(){
+            $scope.allActionBtnDisabled=false;
           });
         }
       }

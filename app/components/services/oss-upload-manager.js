@@ -29,6 +29,7 @@ angular.module('web')
         angular.forEach(arr, function (n) {
           //console.log(n,'<=====');
           var job = createJob(authInfo, n);
+          if(job.status=='waiting' || job.status=='running') job.stop();
           addEvents(job);
         });
       }
@@ -52,7 +53,7 @@ angular.module('web')
 
           if (status == 'stopped') {
             concurrency--;
-            checkStart();
+            $timeout(checkStart,100);
           }
 
           safeApply($scope);
@@ -77,14 +78,13 @@ angular.module('web')
         //流控, 同时只能有 n 个上传任务.
         var maxConcurrency = settingsSvs.maxUploadJobCount.get();
         //console.log(concurrency , maxConcurrency);
+        concurrency = Math.max(0,concurrency);
         if (concurrency < maxConcurrency) {
-
           var arr = $scope.lists.uploadJobList;
           for (var i = 0; i < arr.length; i++) {
             if (concurrency >= maxConcurrency) return;
 
             var n = arr[i];
-
             if (n.status == 'waiting') {
               n.start();
               concurrency++;
@@ -111,13 +111,15 @@ angular.module('web')
        * 上传
        * @param filePaths []  {array<string>}  有可能是目录，需要遍历
        * @param bucketInfo {object} {bucket, region, key}
+       * @param jobsAddingFn {Function} 快速加入列表回调方法， 返回jobs引用，但是该列表长度还在增长。
+       * @param jobsAddedFn {Function} 加入列表完成回调方法， jobs列表已经稳定
        */
-      function createUploadJobs(filePaths, bucketInfo, fn) {
+      function createUploadJobs(filePaths, bucketInfo, jobsAddingFn) {
         //console.log('--------uploadFilesHandler:',  filePaths, bucketInfo);
 
         var authInfo = AuthInfo.get();
 
-        digArr(filePaths, fn);
+        digArr(filePaths, jobsAddingFn);
         return;
 
         function digArr(filePaths, fn) {
@@ -228,13 +230,28 @@ angular.module('web')
       */
       function createJob(auth, opt) {
 
-        var store = new OssStore({
-          aliyunCredential: {
-            accessKeyId: auth.id,
-            secretAccessKey: auth.secret
-          },
-          endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket)
-        });
+        //stsToken
+        if(auth.stoken && auth.id.indexOf('STS.')==0){
+          var store = new OssStore({
+            stsToken: {
+              Credentials: {
+                AccessKeyId: auth.id,
+                AccessKeySecret: auth.secret,
+                SecurityToken: auth.stoken
+              }
+            },
+            endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket)
+          });
+        }
+        else{
+          var store = new OssStore({
+            aliyunCredential: {
+              accessKeyId: auth.id,
+              secretAccessKey: auth.secret
+            },
+            endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket)
+          });
+        }
 
         return store.createUploadJob(opt);
         // {
@@ -260,6 +277,7 @@ angular.module('web')
             }
 
             t.push({
+              crc64Str: n.crc64Str,
               checkPoints: checkPoints,
               region: n.region,
               to: n.to,

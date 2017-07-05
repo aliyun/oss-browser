@@ -2,7 +2,7 @@
 'use strict';
 var ALY = require('aliyun-sdk');
 require('events').EventEmitter.prototype._maxListeners = 1000;
-
+var TIMEOUT = 10000; //10秒
 //fix
 ALY.util.isBrowser = function(){
   return false;
@@ -52,7 +52,7 @@ function OssStore(config) {
       endpoint: this._config.endpoint,
       apiVersion: '2013-10-15',
       httpOptions: {
-        timeout: 60000
+        timeout: TIMEOUT
       }
     });
   }
@@ -63,7 +63,7 @@ function OssStore(config) {
       endpoint: this._config.endpoint,
       apiVersion: '2013-10-15',
       httpOptions: {
-        timeout: 60000
+        timeout: TIMEOUT
       }
     });
   }
@@ -89,7 +89,7 @@ OssStore.prototype.setStsToken = function(stsToken){
     endpoint: this._config.endpoint,
     apiVersion: '2013-10-15',
     httpOptions: {
-      timeout: 60000
+      timeout: TIMEOUT
     }
   });
 };

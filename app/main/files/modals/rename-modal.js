@@ -6,11 +6,15 @@ angular.module('web')
       angular.extend($scope, {
         currentInfo: currentInfo,
         item: item,
+        keep: {
+          name: item.name
+        },
         cancel: cancel,
         onSubmit: onSubmit,
         reg: {
           folderName: /^[^\/]+$/
-        }
+        },
+        isLoading: false
       });
 
       function cancel() {
@@ -29,12 +33,17 @@ angular.module('web')
           // });
         }
         else{
-          var newPath = currentInfo.key==''?item.name: (currentInfo.key.replace(/(\/$)/,'') +'/' + item.name);
-
+          var newPath = currentInfo.key=='' ? item.name : (currentInfo.key.replace(/(\/$)/,'') +'/' + item.name);
+          if(item.path==newPath)return;
+          
+          $scope.isLoading=true;
           ossSvs2.moveFile(currentInfo.region, currentInfo.bucket, item.path, newPath).then(function(){
             Toast.success('重命名成功');
+            $scope.isLoading=false;
             callback();
             cancel();
+          }, function(){
+            $scope.isLoading=false;
           });
         }
 

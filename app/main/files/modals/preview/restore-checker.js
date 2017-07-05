@@ -43,11 +43,11 @@ angular.module('web')
               var info = ossSvs2.parseRestoreInfo(data.Restore);
               if(info['ongoing-request']=='true'){
                 $scope.info.type = 2;// '归档文件正在恢复中，请耐心等待...';
-                $scope.info.showContent=false; 
+                $scope.info.showContent=false;
               }else{
                 $scope.info.expired_time = info['expiry-date'];
                 $scope.info.type= 3;// '归档文件，已恢复，可读截止时间：'+ moment(new Date(info['expiry-date'])).format('YYYY-MM-DD HH:mm:ss');
-                $scope.info.showContent=true; 
+                $scope.info.showContent=true;
                 $scope.info.needRestore=true;
                 if(fn)fn()
               }
@@ -83,7 +83,7 @@ angular.module('web')
                 return angular.copy($scope.bucketInfo);
               },
               callback: function(){
-                return function(){ 
+                return function(){
                   if($scope.afterRestoreSubmit){
                       $scope.afterRestoreSubmit();
                   }

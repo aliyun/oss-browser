@@ -9,13 +9,18 @@
     <!-- &nbsp; -->
     <div class="btn-group" role="group" ng-if="!copy.pwd">
 
-      <button type="button" class="btn btn-default btn-sm" ng-click="showUploadDialog()">
+      <button ng-disabled="currentAuthInfo.privilege=='readOnly'" type="button" class="btn btn-default btn-sm" ng-click="showUploadDialog()">
         <i class="glyphicon glyphicon-cloud-upload text-info"></i>上传
       </button>
-      <button type="button" class="btn btn-default btn-sm" ng-click="showAddFolder()">
+      <button ng-disabled="currentAuthInfo.privilege=='readOnly'" type="button" class="btn btn-default btn-sm" ng-click="showAddFolder()">
         <i class="glyphicon glyphicon-plus text-success"></i>
         新建目录
       </button>
+      <!-- mock -->
+      <div style="position:absolute;width:2px;height:1px;opacity:0.01;overflow:hidden;">
+         <input type="text" style="position:absolute;top:0;left:0" ng-model="mock.uploads" ng-change="mock.uploadsChange()"/>
+         <input type="text" style="position:absolute;top:0;left:1" ng-model="mock.downloads" ng-change="mock.downloadsChange()"/>
+      </div>
     </div>
 
     &nbsp;
@@ -32,7 +37,7 @@
       </button>
 
       <button type="button" class="btn btn-default btn-sm"
-      ng-disabled="!sel.has" ng-click="showMove(sel.has, true)">
+      ng-disabled="!sel.has || currentAuthInfo.privilege=='readOnly'" ng-click="showMove(sel.has, true)">
       <i class="fa fa-clone text-primary"></i>
         复制
       </button>
@@ -48,13 +53,13 @@
       </button>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="" class="" ng-if="sel.has" ng-click="showMove(sel.has)">
+          <a href="" class="" ng-if="sel.has && currentAuthInfo.privilege!='readOnly'" ng-click="showMove(sel.has)">
             <i class="fa fa-cut text-primary"></i>
             移动
           </a>
         </li>
         <li>
-          <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder"
+          <a href="" ng-if="(sel.has.length==1 && !sel.has[0].isFolder) && currentAuthInfo.privilege!='readOnly' && sel.has[0].storageClass!='Archive'"
           ng-click="showRename(sel.has[0])">
             <i class="fa fa-edit text-info"></i>
             重命名
@@ -63,7 +68,7 @@
 
 
         <li>
-          <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder"
+          <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.privilege!='readOnly'"
             ng-click="showACL(sel.has[0])">
             <i class="fa fa-shield text-success"></i>
             ACL权限
@@ -71,33 +76,32 @@
         </li>
 
         <li>
-          <a href="" ng-if="sel.has"
+          <a href="" ng-if="sel.has && currentAuthInfo.id.indexOf('STS.')!=0"
             ng-class="{'text-success':sel.has}"
             ng-click="showGrant(sel.has)">
             <i class="fa fa-shield text-warning"></i>
             简化Policy授权
           </a>
         </li>
-        <!-- <li>
-          <a href="" ng-if="sel.has.length==1 && sel.has[0].isFolder"
+        <li>
+          <a href="" ng-if="sel.has.length==1 && sel.has[0].isFolder && currentAuthInfo.id.indexOf('STS.')!=0"
             ng-class="{'text-success':sel.has}"
             ng-click="showGrantToken(sel.has[0])">
-            <i class="fa fa-shield text-warning"></i>
+            <i class="fa fa-shield text-success"></i>
             生成授权码
           </a>
-        </li> -->
+        </li>
 
         <li>
-          <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder" ng-click="showAddress(sel.has[0])">
+          <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.id.indexOf('STS.')!=0" ng-click="showAddress(sel.has[0])">
             <i class="fa fa-download"></i>
             获取地址
           </a>
         </li>
 
-
         <li>
-          <a href="" class="" ng-if="sel.has" ng-click="showDeleteFilesSelected()">
-             <i class="fa fa-remove text-danger"></i>
+          <a href="" class="" ng-if="sel.has && currentAuthInfo.privilege!='readOnly'" ng-click="showDeleteFilesSelected()">
+            <i class="fa fa-remove text-danger"></i>
             删除
           </a>
         </li>
@@ -109,7 +113,7 @@
       <button class="btn btn-default btn-sm" type="button"
       uib-tooltip-html="'<div class=\'break\'>将{{keepMoveOptions.items[0].name|sub:50}}等粘贴到本目录</div>'"
       tooltip-placement="bottom" tooltip-append-to-body="true"
-      ng-click="paste()">
+      ng-click="showPaste()">
       <span class="text-primary"><i class="fa fa-paste"></i> 粘贴
       </button>
 
@@ -126,7 +130,8 @@
   <div class="col-sm-3 pd0">
 
     <div class="input-group input-group-sm">
-      <input type="text" ng-model="sch.objectName" ng-change="searchObjectName()" class="form-control" cleanable-input placeholder="按名称前缀过滤">
+      <input type="text" ng-model="sch.objectName" ng-change="searchObjectName()" class="form-control"
+       cleanable-input placeholder="按名称前缀过滤">
       <span class="input-group-addon">
         <i class="fa fa-search"></i> {{objects.length}}
         <span ng-if="nextObjectsMarker">+</span>
@@ -136,7 +141,7 @@
   </div>
   <div class="col-sm-3 pd0">
     <span ng-include="'main/files/_/list-view-options.html'"></span>
-    <span class="f8 text-muted pull-right" style="line-height:30px;">区域:
+    <span ng-if="currentAuthInfo.id.indexOf('STS.')!=0" class="f8 text-muted pull-right" style="line-height:30px;">区域:
       {{currentInfo.region}}
       &nbsp;</span>
   </div>

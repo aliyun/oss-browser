@@ -8,9 +8,9 @@ var _crc64 = process.env.NODE_ENV == 'test' ?
 
 const _stream = require('stream');
 
-class CRC64 {
+module.exports = {
 
-  check() {
+  check : function() {
     var init_crc = 0;
     var content = null;
     var typeErrorMessage = "Only (string|buffer) or (string|number, string|bufffer) accepted!";
@@ -34,9 +34,9 @@ class CRC64 {
       throw new TypeError(typeErrorMessage);
     }
     return _crc64.get(init_crc, content);
-  }
+  },
 
-  check_stream(stream, callback) {
+  check_stream: function(stream, callback) {
     if (!(stream instanceof _stream.Stream))
       throw new TypeError("Only (stream, callback) accepted!");
     var init_crc = 0;
@@ -51,5 +51,3 @@ class CRC64 {
     });
   }
 }
-
-module.exports = new CRC64();

@@ -15,12 +15,53 @@ module.exports = {
   getPartProgress: getPartProgress,
   checkAllPartCompleted: checkAllPartCompleted,
   closeFD: util.closeFD,
-  getUploadId: getUploadId
+
+  getUploadId: getUploadId,
+  completeMultipartUpload: completeMultipartUpload,
+
+  getFileCrc64: getFileCrc64,
+  computeMaxConcurrency: computeMaxConcurrency
 };
+
+
 
 /*************************************
  //  以下是纯函数
  ************************************/
+
+//根据网速调整上传并发量
+function computeMaxConcurrency(speed){
+  if(speed > 8*1024*1024) return 10;
+  else if(speed > 5*1024*1024) return 7;
+  else if(speed > 2*1024*1024) return 5;
+  else return 3;
+}
+
+function getFileCrc64(self, p, fn){
+  if(self.crc64Str){
+    fn(null, self.crc64Str);
+    return;
+  }
+   var retryTimes = 0;
+   _dig();
+   function _dig(){
+     util.getFileCrc64(p,function(err,data){
+       if(err){
+         if(retryTimes>5){
+           fn(err);
+         }else{
+           retryTimes ++;
+           setTimeout(function(){
+             if(!self.stopFlag)_dig();
+           },1000);
+         }
+       }else{
+         fn(null,data);
+       }
+     });
+   }
+};
+
 
 function getPartProgress(checkPoints){
   var total = checkPoints.chunks.length;
@@ -40,25 +81,78 @@ function checkAllPartCompleted(checkPoints){
 }
 
 
+function completeMultipartUpload(self, doneParams ,fn){
+  var retryTimes  = 0;
+  _dig();
+  function _dig(){
+    self.oss.completeMultipartUpload(doneParams, function(err, data){
 
-function getUploadId(checkPoints, client, params, fn){
+      if (err) {
+        if(err.message.indexOf('The specified upload does not exist')!=-1){
+
+          self.oss.headObject({
+            Bucket: self.to.bucket,
+            Key: self.to.key
+          }, function(err2, data2){
+            //console.log('headobject: ', err2, err2.message, data);
+            if(err2){
+              fn(err2);
+            }else{
+              fn(null, data2);
+            }
+          });
+          return;
+        }
+
+        if(retryTimes > 10){
+          fn(err);
+        }else{
+          retryTimes++;
+          console.error('completeMultipartUpload error', err, ', ----- retrying...', retryTimes+'/'+10);
+          setTimeout(function(){
+            if(!self.stopFlag) _dig();
+          },2000);
+        }
+      }
+      else{
+        fn(null, data);
+      }
+    });
+  };
+}
+
+function getUploadId(checkPoints, self, params, fn){
 
   if(checkPoints.uploadId){
     fn(null, checkPoints.uploadId);
     return;
   }
 
-  client.createMultipartUpload(params, function (err, res) {
+  var retryTimes  = 0;
+  _dig();
+  function _dig(){
+    self.oss.createMultipartUpload(params, function (err, res) {
 
-    //console.log(err, res, '<========')
-    if (err) {
-      fn(err);
-      return;
-    }
+      //console.log(err, res, '<========')
+      if (err) {
+        if(retryTimes > 10){
+          fn(err);
+        }else{
 
-    checkPoints.uploadId = res.UploadId;
-    fn(err, res.UploadId);
-  });
+          retryTimes++;
+          console.warn('createMultipartUpload error', err, ', ----- retrying...', retryTimes+'/'+10);
+          setTimeout(function(){
+            if(!self.stopFlag)_dig();
+          },2000);
+        }
+        return;
+      }
+      else{
+        checkPoints.uploadId = res.UploadId;
+        fn(null, res.UploadId);
+      }
+    });
+  }
 }
 
 function genUploadNumArr(result){
@@ -120,7 +214,6 @@ function prepareChunks(filePath, checkPoints, fn){
         len: (i + 1 == chunkNum) ? (state.size - start) : chunkSize
       };
     }
-
 
     fn(null, {
       chunks: chunks,

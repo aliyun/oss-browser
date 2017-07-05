@@ -6,17 +6,17 @@
     <div class="clearfix" style="height:40px;"></div>
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default shadow10">
-          <div class="panel-heading">
+          <!-- <div class="panel-heading">
           AK登录
-           </div>
-            <!-- <div class="panel-heading pd0">
+           </div> -->
+            <div class="panel-heading pd0" style="border:0">
 
                 <ul class="nav nav-tabs">
                   <li role="presentation" ng-class="{active:gtab==1}"><a href="" ng-click="gtab=1">AK登录</a></li>
                   <li role="presentation" ng-class="{active:gtab==2}"><a href="" ng-click="gtab=2">授权码登录</a></li>
                 </ul>
 
-            </div> -->
+            </div>
             <div class="panel-body">
 
                 <form ng-if="gtab==1" class="form-horizontal" name="form1" ng-submit="onSubmit(form1)">
@@ -92,19 +92,22 @@
                 <form ng-if="gtab==2" class="form-horizontal" name="form2" ng-submit="onSubmit2(form2)">
 
                     <div class="form-group">
-                        <label for="input-x" class="col-sm-2 control-label"><span class="red">*</span> 授权码:</label>
+                        <label for="input-x" class="col-sm-2 control-label"><span class="red">*</span> 授权码:
+                          <a href="" uib-tooltip="点击查看帮助" ng-click="open('https://github.com/aliyun/oss-browser/blob/master/authToken.md')">
+                            <i class="fa fa-question-circle"></i></a></label>
                         <div class="col-sm-10">
-                            <textarea required ng-model="item.authToken"  rows="6" ng-change="authTokenChange()"
+                            <textarea required ng-model="item.authToken"  rows="10" ng-change="authTokenChange()"
                              class="form-control" id="input-x" placeholder="请输入授权码">
                              </textarea>
                              <small class="text-danger" ng-if="!authTokenInfo">请输入有效的授权码</small>
-                             <small class="text-success" ng-if="authTokenInfo">({{authTokenInfo.osspath}}的{{authTokenInfo.privilege=='all'?'读写':'只读'}}权限，有效期至{{authTokenInfo.expiration|timeFormat}})</small>
+                             <small class="text-danger" ng-if="authTokenInfo && authTokenInfo.isExpired">授权码已经过期</small>
+                             <small class="text-success" ng-if="authTokenInfo && !authTokenInfo.isExpired">({{authTokenInfo.osspath}}的{{authTokenInfo.privilege=='all'?'读写':'只读'}}权限，有效期至{{authTokenInfo.expiration|timeFormat}}, <my-timer class="text-warning" expiration="authTokenInfo.expiration"></my-timer>后失效)</small>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                          <button type="submit" class="btn btn-primary">登入</button>
+                          <button ng-disabled="!authTokenInfo || authTokenInfo.isExpired" type="submit" class="btn btn-primary">登入</button>
 
                         </div>
                     </div>

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('web')
-  .controller('transferDownloadsCtrl', ['$scope','$timeout','$interval','ossDownloadManager','DelayDone','Toast','Dialog','safeApply',
-    function($scope,$timeout,$interval,ossDownloadManager,DelayDone,Toast, Dialog,safeApply){
+  .controller('transferDownloadsCtrl', ['$scope','$timeout','$interval', 'jobUtil','ossDownloadManager','DelayDone','Toast','Dialog','safeApply',
+    function($scope,$timeout,$interval,jobUtil, ossDownloadManager,DelayDone,Toast, Dialog,safeApply){
 
     angular.extend($scope, {
       showRemoveItem: showRemoveItem,
@@ -16,7 +16,7 @@ angular.module('web')
         downname: null,
       },
       schKeyFn: function(item){
-        return item.to.name;
+        return item.to.name +' '+ item.status + ' ' + jobUtil.getStatusLabel(item.status);
       },
       limitToNum: 100,
       loadMoreDownloadItems: loadMoreItems
@@ -78,6 +78,9 @@ angular.module('web')
 
 
     function clearAll() {
+      if(!$scope.lists.downloadJobList || $scope.lists.downloadJobList.length==0){
+        return;
+      }
       Dialog.confirm('清空所有', '确定清空所有下载任务?', function (btn) {
         if (btn) {
           var arr = $scope.lists.downloadJobList;
@@ -95,6 +98,7 @@ angular.module('web')
 
     var  stopFlag = false;
     function stopAll() {
+      $scope.allActionBtnDisabled=true;
 
       var arr = $scope.lists.downloadJobList;
       stopFlag = true;
@@ -108,27 +112,30 @@ angular.module('web')
 
       $timeout(function(){
         ossDownloadManager.saveProg();
+        $scope.allActionBtnDisabled=false;
       },100);
 
     }
 
 
     function startAll(){
+      $scope.allActionBtnDisabled=true;
+
       var arr = $scope.lists.downloadJobList;
        stopFlag = false;
 
       //串行
-      if(arr){
+      if(arr && arr.length>0){
         DelayDone.seriesRun(arr, function eachItemFn(n, fn){
           if( stopFlag) return;
 
-          if (n.status == 'stopped' || n.status == 'failed'){
+          if (n && (n.status == 'stopped' || n.status == 'failed')){
             n.wait();
           }
           ossDownloadManager.checkStart();
           fn();
         }, function doneFy(){
-
+          $scope.allActionBtnDisabled=false;
         });
       }
 

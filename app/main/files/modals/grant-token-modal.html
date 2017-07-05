@@ -99,7 +99,7 @@
   <div class="modal-footer">
     <button type="submit" ng-disabled="!form1.$valid" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-ok"></i>
-      确定生成
+      {{token?'重新':'确定'}}生成
     </button>
 
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
