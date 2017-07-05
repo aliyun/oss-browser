@@ -80,7 +80,6 @@ angular.module('web')
         //console.log(concurrency , maxConcurrency);
         concurrency = Math.max(0,concurrency);
         if (concurrency < maxConcurrency) {
-
           var arr = $scope.lists.uploadJobList;
           for (var i = 0; i < arr.length; i++) {
             if (concurrency >= maxConcurrency) return;

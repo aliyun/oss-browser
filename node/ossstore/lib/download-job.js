@@ -72,11 +72,12 @@ DownloadJob.prototype.start = function () {
   self.stopFlag = false;
   self._changeStatus('running');
 
-  self.checkPoints = self.checkPoints || {
+  self.checkPoints =  (self.checkPoints && self.checkPoints.Parts) ? self.checkPoints: {
     from: self.from,
     to: self.to,
     Parts: {}
   };
+
   self.startDownload(self.checkPoints);
 
   self.startSpeedCounter();
@@ -85,19 +86,19 @@ DownloadJob.prototype.start = function () {
 };
 
 DownloadJob.prototype.stop = function () {
-  if(this.status=='stopped')return;
   var self = this;
+  if(self.status=='stopped')return;
   self.stopFlag = true;
   self._changeStatus('stopped');
-  this.speed = 0;
-  this.predictLeftTime = 0;
+  self.speed = 0;
+  self.predictLeftTime = 0;
   return self;
 };
 
 DownloadJob.prototype.wait = function () {
+  var self = this;
   if(this.status=='waiting')return;
   this._lastStatusFailed = this.status=='failed';
-  var self = this;
   self.stopFlag = true;
   self._changeStatus('waiting');
   return self;
@@ -164,7 +165,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
 /**
  * 开始download
  */
-DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
+DownloadJob.prototype.startDownload = function (checkPoints) {
   var self = this;
 
   var chunkNum = 0;
@@ -194,6 +195,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
     if (err) {
       self.message = 'failed to get oss object meta: ' + err.message;
       //console.error(self.message);
+      console.error(self.message, self.to.path);
       self._changeStatus('failed');
       self.emit('error', err);
       return;
@@ -214,6 +216,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
         if (err) {
           self.message = 'failed to open local file:' + err.message;
           //console.error(self.message);
+          console.error(self.message, self.to.path);
           self._changeStatus('failed');
           self.emit('error', err);
 
@@ -239,13 +242,13 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
     chunkSize = checkPoints.chunkSize || self._config.chunkSize || util.getSensibleChunkSize(self.prog.total);
 
-    //console.log('chunkSize:',chunkSize);
+    console.log('chunkSize:',chunkSize);
 
     chunkNum = Math.ceil(self.prog.total / chunkSize);
 
     chunks = [];
-    for (var i = 0; i < chunkNum; i++) {
 
+    for (var i = 0; i < chunkNum; i++) {
       if (!checkPoints.Parts[i + 1] || !checkPoints.Parts[i + 1].done) {
         chunks.push(i);
         checkPoints.Parts[i + 1] = {
@@ -254,7 +257,6 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
           done: false
         };
       }
-
     }
 
     completedCount = chunkNum - chunks.length;
@@ -270,6 +272,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
       checkFileHash(tmpName, fileMd5, hashCrc64ecma, function (err) {
         if (err) {
           self.message="failed to check crc64:"+ (err.message||err);
+          console.error(self.message, self.to.path);
           self._changeStatus('failed');
           self.emit('error', err);
           return;
@@ -299,6 +302,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
       if (err) {
         self.message = 'failed to open local file:' + err.message;
         //console.error(self.message);
+        console.error(self.message, self.to.path);
         self._changeStatus('failed');
         self.emit('error', err);
         return;
@@ -394,6 +398,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
           } else {
             self.message = `failed to download part [${n}]: ${err.message}`;
             //console.error(self.message);
+            console.error(self.message, self.to.path);
             self._changeStatus('failed');
             self.emit('error', err);
             //util.closeFD(keepFd);
@@ -413,6 +418,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
           if (err) {
             self.message = 'failed to write local file: ' + err.message;
             //console.error(self.message);
+            console.error(self.message, self.to.path);
             self._changeStatus('failed');
             self.emit('error', err);
             //util.closeFD(keepFd);
@@ -438,6 +444,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
             checkFileHash(tmpName, fileMd5, hashCrc64ecma, function (err) {
               if (err) {
                 self.message = 'failed to check crc64:'+ (err.message||err);
+                console.error(self.message, self.to.path);
                 self._changeStatus('failed');
                 self.emit('error', err);
                 return;

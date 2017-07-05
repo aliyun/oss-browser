@@ -49,17 +49,15 @@ class UploadJob extends Base {
     this.region = this._config.region;
 
     this.prog = this._config.prog || {
-        loaded: 0,
-        total: 0
-      };
+      loaded: 0,
+      total: 0
+    };
 
     this.message = this._config.message;
     this.status = this._config.status || 'waiting';
 
     this.stopFlag = this.status!='running';
-
     this.checkPoints = this._config.checkPoints;
-
     this.crc64Str = this._config.crc64Str;
 
     //console.log('created upload job');
@@ -273,8 +271,9 @@ UploadJob.prototype.uploadSingle = function () {
           }
         }
         else {
-          if(isDebug)
+          if(isDebug){
             console.info('checking crc64Str [single]:', filePath, self.crc64Str, data['HashCrc64ecma'], self.from.path);
+          }
 
           if(!self.crc64Str || self.crc64Str == data['HashCrc64ecma']){
             self._changeStatus('finished');
@@ -596,7 +595,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
         self.emit('error', err);
       }
       else{
-        console.info('checking crc64Str [multi]:', self.crc64Str, data['HashCrc64ecma'], self.from.path);
+        console.info('--checking crc64Str [multi]:', self.crc64Str, data['HashCrc64ecma'], self.from.path);
 
         if(!self.crc64Str || self.crc64Str == data['HashCrc64ecma']){
           checkPoints.done=true;

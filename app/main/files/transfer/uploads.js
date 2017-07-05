@@ -92,11 +92,7 @@ angular.module('web')
 
       var stopFlag = false;
       function stopAll() {
-
         $scope.stopAllBtnClicked=true;
-        $timeout(function(){
-          $scope.stopAllBtnClicked=false;
-        },1000);
 
         var arr = $scope.lists.uploadJobList;
         stopFlag = true;
@@ -110,6 +106,7 @@ angular.module('web')
 
         $timeout(function () {
           ossUploadManager.saveProg();
+          $scope.stopAllBtnClicked=false;
         }, 100);
 
 
@@ -117,9 +114,6 @@ angular.module('web')
 
       function startAll() {
         $scope.startAllBtnClicked=true;
-        $timeout(function(){
-          $scope.startAllBtnClicked=false;
-        },1000);
 
         var arr = $scope.lists.uploadJobList;
         stopFlag = false;
@@ -136,7 +130,7 @@ angular.module('web')
 
             fn();
           }, function(){
-            //ossUploadManager.checkStart();
+            $scope.startAllBtnClicked=false;
           });
         }
       }

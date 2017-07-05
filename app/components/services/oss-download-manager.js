@@ -29,6 +29,7 @@ angular.module('web')
 
       angular.forEach(arr, function (n) {
         var job = createJob(authInfo, n);
+        if(job.status=='waiting' || job.status=='running') job.stop();
         addEvents(job);
       });
     }
@@ -75,8 +76,8 @@ angular.module('web')
     //流控, 同时只能有 n 个上传任务.
     function checkStart() {
       var maxConcurrency = settingsSvs.maxDownloadJobCount.get();
+      //console.log(concurrency , maxConcurrency);
       concurrency = Math.max(0,concurrency);
-
       if (concurrency < maxConcurrency) {
         var arr = $scope.lists.downloadJobList;
         for (var i = 0; i < arr.length; i++) {
