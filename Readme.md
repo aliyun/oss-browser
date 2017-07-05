@@ -26,6 +26,11 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 * 子用户登录可以指定预设OSS路径，配合子用户授权使用。
 
+![临时授权码登录](preview/auth-token-login.png)
+
+* 临时授权码登录。
+
+
 ### (2) Bucket列表
 
 ![Bucket列表](preview/bucket-list.png)
