@@ -98,7 +98,7 @@ angular.module('web')
 
     var  stopFlag = false;
     function stopAll() {
-      $scope.stopAllBtnClicked=true;
+      $scope.allActionBtnDisabled=true;
 
       var arr = $scope.lists.downloadJobList;
       stopFlag = true;
@@ -112,14 +112,14 @@ angular.module('web')
 
       $timeout(function(){
         ossDownloadManager.saveProg();
-        $scope.stopAllBtnClicked=false;
+        $scope.allActionBtnDisabled=false;
       },100);
 
     }
 
 
     function startAll(){
-      $scope.startAllBtnClicked=true;
+      $scope.allActionBtnDisabled=true;
 
       var arr = $scope.lists.downloadJobList;
        stopFlag = false;
@@ -129,13 +129,13 @@ angular.module('web')
         DelayDone.seriesRun(arr, function eachItemFn(n, fn){
           if( stopFlag) return;
 
-          if (n.status == 'stopped' || n.status == 'failed'){
+          if (n && (n.status == 'stopped' || n.status == 'failed')){
             n.wait();
           }
           ossDownloadManager.checkStart();
           fn();
         }, function doneFy(){
-          $scope.startAllBtnClicked=false;
+          $scope.allActionBtnDisabled=false;
         });
       }
 

@@ -6,11 +6,11 @@
            class="form-control input-sm" style="width:160px;" ng-model="sch.downname">
         </div>
 
-        <button ng-disabled="startAllBtnClicked" type="button" class="btn btn-default btn-sm" ng-click="startAll()">
+        <button ng-disabled="allActionBtnDisabled" type="button" class="btn btn-default btn-sm" ng-click="startAll()">
             <span class=""><i class="glyphicon glyphicon-play"></i> 启动全部</span>
         </button>
 
-        <button ng-disabled="stopAllBtnClicked" type="button" class="btn btn-default btn-sm" ng-click="stopAll()">
+        <button ng-disabled="allActionBtnDisabled" type="button" class="btn btn-default btn-sm" ng-click="stopAll()">
             <span class=""><i class="glyphicon glyphicon-pause"></i> 暂停全部</span>
         </button>
         <button type="button" class="btn btn-default btn-sm" ng-click="clearAllCompleted()">

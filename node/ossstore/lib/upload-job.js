@@ -378,6 +378,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
         complete();
       }
       else {
+        console.log(concurrency , self.maxConcurrency)
         if(concurrency < self.maxConcurrency && uploadNumArr.length>0 && !self.stopFlag){
           doUploadPart(uploadNumArr.shift());
         }

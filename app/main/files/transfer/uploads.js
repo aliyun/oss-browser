@@ -92,7 +92,7 @@ angular.module('web')
 
       var stopFlag = false;
       function stopAll() {
-        $scope.stopAllBtnClicked=true;
+        $scope.allActionBtnDisabled=true;
 
         var arr = $scope.lists.uploadJobList;
         stopFlag = true;
@@ -106,31 +106,33 @@ angular.module('web')
 
         $timeout(function () {
           ossUploadManager.saveProg();
-          $scope.stopAllBtnClicked=false;
+          $scope.allActionBtnDisabled=false;
         }, 100);
 
 
       }
 
       function startAll() {
-        $scope.startAllBtnClicked=true;
+        $scope.allActionBtnDisabled=true;
 
         var arr = $scope.lists.uploadJobList;
         stopFlag = false;
         //串行
         if(arr && arr.length>0){
           DelayDone.seriesRun(arr, function(n, fn){
-            if(stopFlag)return;
+            if(stopFlag){
+              return;
+            }
 
-            if (n.status == 'stopped' || n.status == 'failed'){
+            if (n && (n.status == 'stopped' || n.status == 'failed')){
               n.wait();
             }
 
             ossUploadManager.checkStart();
 
             fn();
-          }, function(){
-            $scope.startAllBtnClicked=false;
+          }, function doneFn(){
+            $scope.allActionBtnDisabled=false;
           });
         }
       }
