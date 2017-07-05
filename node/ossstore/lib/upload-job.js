@@ -4,6 +4,7 @@ var Base = require('./base');
 var fs = require('fs');
 var path = require('path');
 var util = require('./upload-job-util');
+var isDebug = process.env.NODE_ENV=='development';
 
 class UploadJob extends Base {
 
@@ -71,7 +72,14 @@ UploadJob.prototype.start = function () {
   var self = this;
 
   if(this.status=='running')return;
-  //console.log('-----start')
+
+  if(this._lastStatusFailed){
+    //从头上传
+    this.checkPoints = {};
+    this.crc64Str = '';
+  }
+
+  if(isDebug) console.log('-----start', self.from.path);
 
   self.message='';
   this.startTime = new Date().getTime();
@@ -83,7 +91,7 @@ UploadJob.prototype.start = function () {
 
   //console.log('getFileCrc64',self.from.path)
   util.getFileCrc64(self, self.from.path, function(err, crc64Str){
-    //console.log('CRC64:', self.from.path, err, crc64Str);
+    if(isDebug) console.log('CRC64:', self.from.path, err, crc64Str);
 
     if(self.stopFlag){
       return;
@@ -113,11 +121,18 @@ UploadJob.prototype.stop = function () {
   this._changeStatus('stopped');
   this.speed = 0;
   this.predictLeftTime = 0;
+
+  if(isDebug) console.log('-----stop', this.from.path);
+
   return this;
 };
 UploadJob.prototype.wait = function () {
+  this._lastStatusFailed = this.status=='failed';
   this._changeStatus('waiting');
   this.stopFlag = true;
+
+  if(isDebug) console.log('-----wait', this.from.path);
+
   return this;
 };
 
@@ -126,7 +141,7 @@ UploadJob.prototype.deleteOssFile = function(){
    var self = this;
    self.oss.deleteObject({Bucket: self.to.bucket, Key: self.to.key}, function(err){
      if(err) console.error(err);
-     else console.log('oss file [oss://'+  self.to.bucket+'/'+self.to.key+'] is deleted');
+     else console.log('crc checking failed, oss file [oss://'+  self.to.bucket+'/'+self.to.key+'] is deleted');
    });
 };
 
@@ -156,7 +171,7 @@ UploadJob.prototype.startUpload = function () {
 
   var self = this;
 
-  //console.log('prepareChunks',self.from.path)
+  if(isDebug) console.log('prepareChunks',self.from.path)
   util.prepareChunks(self.from.path, self.checkPoints, function (err, checkPoints) {
 
     if (err) {
@@ -171,10 +186,10 @@ UploadJob.prototype.startUpload = function () {
 
     //console.log('chunks.length:',checkPoints.chunks.length)
     if (checkPoints.chunks.length == 1 && checkPoints.chunks[0].start==0) {
-      //console.log('uploadSingle')
+      if(isDebug) console.log('uploadSingle', self.from.path)
       self.uploadSingle();
     } else {
-      //console.log('uploadMultipart')
+      if(isDebug) console.log('uploadMultipart',self.from.path)
       self.uploadMultipart(checkPoints);
     }
   });
@@ -206,7 +221,7 @@ UploadJob.prototype.startSpeedCounter = function(){
     if(tick>5){
       tick=0;
       self.maxConcurrency = util.computeMaxConcurrency(self.speed);
-      console.info('max concurrency:', self.maxConcurrency);
+      if(isDebug) console.info('set max concurrency:', self.maxConcurrency, self.from.path);
     }
 
   },1000);
@@ -258,7 +273,8 @@ UploadJob.prototype.uploadSingle = function () {
           }
         }
         else {
-          console.info('checking crc64Str [single]:', filePath, self.crc64Str, data['HashCrc64ecma']);
+          if(isDebug)
+            console.info('checking crc64Str [single]:', filePath, self.crc64Str, data['HashCrc64ecma'], self.from.path);
 
           if(!self.crc64Str || self.crc64Str == data['HashCrc64ecma']){
             self._changeStatus('finished');
@@ -314,7 +330,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
   var concurrency = 0; //并发块数
 
   var uploadNumArr = util.genUploadNumArr(checkPoints);
-
+  if(isDebug) console.log('upload part nums:',uploadNumArr.join(','), self.from.path);
   //var totalParts = checkPoints.chunks.length;
 
   var params = {
@@ -343,7 +359,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
       return;
     }
 
-    //console.info("Got upload ID", err, uploadId, checkPoints.file.path);
+    if(isDebug) console.info("Got upload ID", err, uploadId, self.from.path);
 
     fs.open(checkPoints.file.path, 'r', function (err, fd) {
       //console.log('fs. open', err, fd)
@@ -372,10 +388,17 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
 
   // partNum: 0-n
   function doUploadPart(partNum) {
-    //console.log('doUploadPart:', partNum, self.stopFlag)
+
     if (partNum == null) return;
     //if(!keepFd) return;
 
+    //fix Part重复上传
+    if(checkPoints.Parts[partNum+1].ETag){
+      console.error('tmd', partNum+1)
+      return;
+    }
+
+    if(isDebug)console.log('doUploadPart:', partNum, ', stopFlag:',self.stopFlag, self.from.path)
 
     retries[partNum+1] = 0; //重试次数
 
@@ -450,7 +473,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
           return;
         }
 
-        console.warn('multiErr, upload part error:', multiErr.message||multiErr, partParams);
+        console.warn('multiErr, upload part error:', multiErr.message||multiErr, partParams, self.from.path);
 
         if (retries[partNumber] >= maxRetries
         || multiErr.message.indexOf('The specified upload does not exist')!=-1) {
@@ -573,7 +596,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
         self.emit('error', err);
       }
       else{
-        console.info('checking crc64Str [multi]:', self.crc64Str, data['HashCrc64ecma']);
+        console.info('checking crc64Str [multi]:', self.crc64Str, data['HashCrc64ecma'], self.from.path);
 
         if(!self.crc64Str || self.crc64Str == data['HashCrc64ecma']){
           checkPoints.done=true;

@@ -58,6 +58,13 @@ class DownloadJob extends Base {
 DownloadJob.prototype.start = function () {
   var self = this;
   if(this.status=='running')return;
+
+  if(this._lastStatusFailed){
+    //从头开始
+    this.checkPoints = {};
+    this.crc64Str = '';
+  }
+
   self.message='';
   self.startTime = new Date().getTime();
   self.endTime = null;
@@ -89,6 +96,7 @@ DownloadJob.prototype.stop = function () {
 
 DownloadJob.prototype.wait = function () {
   if(this.status=='waiting')return;
+  this._lastStatusFailed = this.status=='failed';
   var self = this;
   self.stopFlag = true;
   self._changeStatus('waiting');
@@ -104,7 +112,7 @@ DownloadJob.prototype._changeStatus = function (status) {
     self.endTime = new Date().getTime();
     util.closeFD(self.keepFd);
 
-    console.log('clear speed tid')
+    console.log('clear speed tid', self.status)
     clearInterval(self.speedTid);
     self.speed = 0;
     //推测耗时
@@ -208,6 +216,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
           //console.error(self.message);
           self._changeStatus('failed');
           self.emit('error', err);
+
         } else {
           self._changeStatus('finished');
           self.emit('progress', {
@@ -316,11 +325,18 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
   }
 
   function downloadPart(n) {
+    if (n == null) return;
+
+    var partNumber = n + 1;
+    if(checkPoints.Parts[partNumber].done){
+      console.error('tmd', n);
+      return;
+    }
 
     var start = chunkSize * n;
     var end = (n + 1 < chunkNum) ? start + chunkSize : self.prog.total;
 
-    var partNumber = n + 1;
+
 
     //checkPoints.Parts[partNumber] = {
     //  PartNumber: partNumber,
@@ -369,7 +385,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
           if (retryCount < maxRetries) {
             retryCount++;
-            console.log(`retry download part [${n}] error:${err}`);
+            console.log(`retry download part [${n}] error:${err}, ${self.to.path}`);
             checkPoints.Parts[partNumber].loaded = 0;
             setTimeout(function(){
               doDownload(n);
@@ -414,7 +430,7 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
 
           //var progCp = JSON.parse(JSON.stringify(self.prog));
 
-          console.log(`complete part [${n}]`);
+          console.log(`complete part [${n}] ${self.to.path}`);
           if (completedCount == chunkNum) {
             //下载完成
             //util.closeFD(keepFd);
@@ -430,8 +446,9 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
               //临时文件重命名为正式文件
               fs.rename(tmpName, self.to.path, function (err) {
                 if (err) {
-                  console.log(err);
+                  console.error(err, self.to.path);
                 } else {
+
                   self._changeStatus('finished');
                   //self.emit('progress', progCp);
                   self.emit('partcomplete', {
@@ -493,10 +510,10 @@ DownloadJob.prototype.startDownload = function startDownload(checkPoints) {
   }
 
   function checkFileHash(filePath, fileMd5, hashCrc64ecma, fn) {
-    console.time('check crc64');
+    console.time(`check crc64 ${filePath}`);
     if(hashCrc64ecma){
       util.getFileCrc64(filePath, function(err, crc64Str){
-        console.timeEnd('check crc64');
+        console.timeEnd(`check crc64 ${filePath}`);
         if (err) {
           fn(new Error('Checking file['+filePath+'] crc64 hash failed: ' + err.message));
         } else if (crc64Str!=null && crc64Str != hashCrc64ecma) {

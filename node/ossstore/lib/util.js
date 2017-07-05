@@ -23,7 +23,7 @@ function getFileCrc64(p, fn){
   }
   console.time('get crc64 hash for ['+p+']');
   var stream = fs.createReadStream(p);
-  new CRC64().check_stream(stream, function(err, data){
+  CRC64.check_stream(stream, function(err, data){
     stream.close();
     console.timeEnd('get crc64 hash for ['+p+']');
     fn(err, data);

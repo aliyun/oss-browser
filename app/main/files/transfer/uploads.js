@@ -70,6 +70,9 @@ angular.module('web')
       }
 
       function clearAll() {
+        if(!$scope.lists.uploadJobList || $scope.lists.uploadJobList.length==0){
+          return;
+        }
         Dialog.confirm('清空所有', '确定清空所有上传任务?', function (btn) {
           if (btn) {
 
@@ -89,6 +92,12 @@ angular.module('web')
 
       var stopFlag = false;
       function stopAll() {
+
+        $scope.stopAllBtnClicked=true;
+        $timeout(function(){
+          $scope.stopAllBtnClicked=false;
+        },1000);
+
         var arr = $scope.lists.uploadJobList;
         stopFlag = true;
 
@@ -107,10 +116,15 @@ angular.module('web')
       }
 
       function startAll() {
+        $scope.startAllBtnClicked=true;
+        $timeout(function(){
+          $scope.startAllBtnClicked=false;
+        },1000);
+
         var arr = $scope.lists.uploadJobList;
         stopFlag = false;
         //串行
-        if(arr){
+        if(arr && arr.length>0){
           DelayDone.seriesRun(arr, function(n, fn){
             if(stopFlag)return;
 

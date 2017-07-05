@@ -78,6 +78,9 @@ angular.module('web')
 
 
     function clearAll() {
+      if(!$scope.lists.downloadJobList || $scope.lists.downloadJobList.length==0){
+        return;
+      }
       Dialog.confirm('清空所有', '确定清空所有下载任务?', function (btn) {
         if (btn) {
           var arr = $scope.lists.downloadJobList;
@@ -95,6 +98,11 @@ angular.module('web')
 
     var  stopFlag = false;
     function stopAll() {
+
+      $scope.stopAllBtnClicked=true;
+      $timeout(function(){
+        $scope.stopAllBtnClicked=false;
+      },1000);
 
       var arr = $scope.lists.downloadJobList;
       stopFlag = true;
@@ -114,11 +122,17 @@ angular.module('web')
 
 
     function startAll(){
+
+      $scope.startAllBtnClicked=true;
+      $timeout(function(){
+        $scope.startAllBtnClicked=false;
+      },1000);
+
       var arr = $scope.lists.downloadJobList;
        stopFlag = false;
 
       //串行
-      if(arr){
+      if(arr && arr.length>0){
         DelayDone.seriesRun(arr, function eachItemFn(n, fn){
           if( stopFlag) return;
 

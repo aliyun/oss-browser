@@ -36,11 +36,17 @@ angular.module('web')
       function authTokenChange(){
         $timeout.cancel(tid);
         tid=$timeout(function(){
-          var authToken = $scope.item.authToken;
+          var authToken = $scope.item.authToken||'';
 
           localStorage.setItem(KEY_AUTHTOKEN, authToken);
-          var str = Buffer.from(authToken, 'base64').toString();
+
+          if(!authToken){
+            $scope.authTokenInfo = null;
+            return;
+          }
+
           try{
+            var str = Buffer.from(authToken, 'base64').toString();
             var info = JSON.parse(str);
 
             if(info.id && info.secret && info.stoken && info.privilege && info.expiration && info.osspath){
@@ -51,7 +57,7 @@ angular.module('web')
                  info.isExpired = d <= new Date().getTime();
                }catch(e){
 
-               } 
+               }
                $scope.authTokenInfo = info;
             }else if(new Date(info.expiration).getTime() < new Date().getTime()){
                $scope.authTokenInfo = null;

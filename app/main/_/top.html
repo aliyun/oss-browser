@@ -1,37 +1,50 @@
 <nav class="navbar navbar-default navbar-fixed-top navbar-inverse my-nav" ng-controller="topCtrl">
 
-    <div class="navbar-header">
+  <div class="navbar-header">
 
-        <a class="navbar-brand" ng-click="click10()">
-          <img src="{{app.logo}}" style="display:inline-block;" width="40"/>
-          {{app.name}}
+    <a class="navbar-brand" ng-click="click10()">
+      <img src="{{app.logo}}" style="display:inline-block;" width="40" /> {{app.name}}
+    </a>
+    <label class="app-version" ng-click="showReleaseNote()">v{{app.version}}</label>
+  </div>
+
+
+  <div class="collapse navbar-collapse" id="collapse-1" ng-if="!hideTopNav">
+    <ul class="nav navbar-nav">
+      <li ng-class="{active:showTab==1}"><a href="#/"><i class="glyphicon glyphicon-folder-close"></i> 文件</a></li>
+      </li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right" style="margin-right:10px;">
+
+      <li ng-if="authInfo.id.indexOf('STS.')!=0"><a href="" ng-click="showFavList()"><i class="fa fa-star"></i> 书签管理</a></li>
+      <li><a href="" ng-click="showSettings()"><i class="fa fa-cog"></i> 设置</a></li>
+      <li>
+        <a href="" ng-click="showAbout()">
+          <i class="fa fa-about"></i> 关于
+            <small style="color:#fff;background:red;border-radius:2px"
+            ng-if="!upgradeInfo.isLastVersion"> new </small>
         </a>
-        <label class="app-version" ng-click="showReleaseNote()">v{{app.version}}</label>
-    </div>
-
-
-    <div class="collapse navbar-collapse" id="collapse-1" ng-if="!hideTopNav">
-        <ul class="nav navbar-nav">
-            <li ng-class="{active:showTab==1}"><a href="#/"><i class="glyphicon glyphicon-folder-close"></i> 文件</a></li>
-            </li>
-        </ul>
-
-        <ul class="nav navbar-nav navbar-right" style="margin-right:10px;">
-
-            <li ng-if="authInfo.id.indexOf('STS.')!=0"><a href="" ng-click="showFavList()"><i class="fa fa-star"></i> 书签管理</a></li>
-            <li><a href="" ng-click="showSettings()"><i class="fa fa-cog"></i> 设置</a></li>
-            <li>
-                <a href="" ng-click="showAbout()"><i class="fa fa-about"></i> 关于
-                  <small style="color:#fff;background:red;border-radius:2px"
-                  ng-if="!upgradeInfo.isLastVersion"> new </small>
-               </a></li>
-            <li><a><i class="fa fa-user"></i>
-              <span ng-if="authInfo.desc">{{authInfo.desc}}({{authInfo.id.substring(0,3)+'..'}})</span>
-              <span ng-if="!authInfo.desc">{{authInfo.id}}</span>
-            </a></li>
-            <li><a href="" ng-click="logout()"><i class="fa fa-power-off"></i> 退出</a></li>
-        </ul>
-    </div>
+      </li>
+      <li>
+        <a ng-if="authInfo.id.indexOf('STS.')==0"
+           uib-tooltip="{{authInfo.expiration|timeFormat}} 失效"
+           tooltip-placement="bottom" tooltip-append-to-body="true">
+          <span ng-if="!authInfo.desc">临时凭证:
+            <span my-timer expiration="authInfo.expiration"></span>后失效
+          </span>
+        </a>
+        <a ng-if="authInfo.id.indexOf('STS.')!=0">
+          <i class="fa fa-user"></i>
+          <span ng-if="authInfo.desc">{{authInfo.desc}}({{authInfo.id.substring(0,3)+'..'}})</span>
+          <span ng-if="!authInfo.desc">{{authInfo.id}}</span>
+        </a>
+      </li>
+      <li>
+        <a href="" ng-click="logout()"><i class="fa fa-power-off"></i> 退出</a>
+      </li>
+    </ul>
+  </div>
 </nav>
 
 <div style="height:50px;" class="clearfix"></div>

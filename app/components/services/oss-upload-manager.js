@@ -86,7 +86,6 @@ angular.module('web')
             if (concurrency >= maxConcurrency) return;
 
             var n = arr[i];
-
             if (n.status == 'waiting') {
               n.start();
               concurrency++;
