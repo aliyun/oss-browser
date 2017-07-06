@@ -47,7 +47,7 @@ mac:mac_build
 	#mkdir -p build/$(NAME)-darwin-x64/.background
 	#cp dist/icons/background.tiff build/$(NAME)-darwin-x64/.background
 	rm -f releases/$(VERSION)/$(NAME).dmg
-	hdiutil create -size 230M -format UDZO -srcfolder build/$(NAME)-darwin-x64 releases/$(VERSION)/$(NAME).dmg
+	hdiutil create -size 240M -format UDZO -srcfolder build/$(NAME)-darwin-x64 releases/$(VERSION)/$(NAME).dmg
 
 all:win64 linux64 mac
 
