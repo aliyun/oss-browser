@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>player</title>
+  <style>
+  body{
+    margin:0px;
+    text-align:center;
+  }
+  .player{
+    height:auto;
+    max-height:100%;
+    max-width:100%;
+    width: auto;
+  }
+  </style>
+
+</head>
+
+<body>
+
+  <video id="myFlvPlayer" class="player" controls></video>
+
+  <script src="flv.js"></script>
+  <script src="jquery.min.js"></script>
+  <script>
+  var flvPlayer;
+  init();
+  function init(){
+    var sch = parseSearch();
+    var src = sch ? sch.src : '';
+    src = decodeURIComponent(src);
+    if(!src)return;
+
+    var playerEl = document.getElementById('myFlvPlayer');
+
+    myFlvPlayer.onresize =function(){
+      var pw = $('#myFlvPlayer').width();
+      var ph = $('#myFlvPlayer').height();
+      var w = $(document).width();
+      var h = $(document).height();
+  
+      if(w/h > pw/ph){
+        $('#myFlvPlayer').css({height:h,width:'auto'});
+      }else{
+        $('#myFlvPlayer').css({width:w,height:'auto'});
+      }
+    }
+
+
+    if (typeof flvPlayer !== "undefined") {
+        if (flvPlayer != null) {
+            flvPlayer.unload();
+            flvPlayer.detachMediaElement();
+            flvPlayer.destroy();
+            flvPlayer = null;
+        }
+    }
+    flvPlayer = flvjs.createPlayer({
+      type: 'flv',
+       url: src
+    });
+    flvPlayer.attachMediaElement(playerEl);
+
+    flvPlayer.load();
+    if(sch.autoplay=='autoplay') flvPlayer.play();
+  }
+
+  function parseSearch(){
+    var sch = window.location.search;
+    sch = sch.trim();
+    if(!sch)return '';
+
+    sch = sch.replace(/^\?/,'');
+    var kvs = sch.split('&');
+    var m = {};
+
+    for(var i=0;i<kvs.length; i++){
+      var ind = kvs[i].indexOf('=');
+      var k = kvs[i].substring(0,ind);
+      var v = ind!=-1 ? kvs[i].substring(ind+1) : '';
+      m[k]=v;
+    }
+    return m;
+  }
+  </script>
+</body>
+</html>

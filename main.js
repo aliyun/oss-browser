@@ -3,17 +3,33 @@ const electron = require('electron');
 const {
   app,
   Menu,
-  ipcMain
-} = electron;
-
-
-// Module to create native browser window.
-const {
+  ipcMain,
   BrowserWindow
 } = electron;
 
+
 const path = require('path');
 const nativeImage = require('electron').nativeImage;
+
+
+///*****************************************
+//静态服务
+const PORTS = [7123,7124,7125,7126];
+
+for(var port of PORTS){
+  try{
+    require('child_process').fork('./server.js',[port]);
+    break;
+  }catch(e){
+    console.log(e);
+  }
+}
+//监听web page里发出的message
+ipcMain.on('asynchronous-message', (event, arg) => {
+  //在main process里向web page发出message
+  event.sender.send('asynchronous-reply', port);
+});
+///*****************************************
 
 //let logo = nativeImage.createFromPath('icons/logo.ico');
 
@@ -109,6 +125,8 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

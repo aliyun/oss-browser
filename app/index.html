@@ -30,14 +30,15 @@
       if (window.module)  module = window.module;
     </script>
 
-    <!-- ali-oss -->
-    <script src="aliyun-oss-sdk.min.js"></script>
-
-
-
     <script src="templates.js"></script>
     <script>
       const {ipcRenderer,shell} = require('electron');
+
+      ipcRenderer.on('asynchronous-reply', (event, arg) => {
+        Global.staticServerPort = arg;
+        console.log(arg);
+      });
+      ipcRenderer.send('asynchronous-message', 'getStaticServerPort')
 
       function openExternal(url){
         // Open a URL in the default way

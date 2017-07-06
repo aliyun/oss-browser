@@ -59,6 +59,9 @@
     "showdown": "^1.4.2"
   },
   "dependencies": {
-    "aliyun-sdk": "^1.10.9"
+    "aliyun-sdk": "^1.10.9",
+    "koa": "^2.3.0",
+    "koa-convert": "^1.2.0",
+    "koa-static-server": "^1.2.1"
   }
 }

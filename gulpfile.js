@@ -134,10 +134,15 @@ gulp.task('copy-docs', function () {
   gulp.src(['./release-notes/**/*'])
     .pipe(gulp.dest(DIST+'/release-notes'));
 });
+gulp.task('copy-static', function () {
+  gulp.src(['./static/**/*'])
+    .pipe(gulp.dest(DIST+'/static'));
+});
 
 gulp.task('copy-index', function () {
   gulp.src(['./app/index.html',
   './main.js',
+  './server.js',
   './vendor/*.js',
   './release-notes.md'])
     .pipe(gulp.dest(DIST));
@@ -183,6 +188,8 @@ gulp.task('watch', function () {
   // gulp.watch('./app/**/*.css', ['css']);
   gulp.watch(['./app/index.html','./main.js'], ['copy-index']);
 
+  gulp.watch(['./static/**'], ['copy-static']);
+
   gulp.watch('./node/**', ['copy-node']);
 
 });
@@ -193,6 +200,6 @@ gulp.task('watch', function () {
 //   livereload: true
 // }));
 
-gulp.task('build', ['js', 'templates', 'css', 'copy-index', 'libJS', 'libCSS', 'copy-fonts','copy-node','copy-docs','copy-icons','gen-package']);
+gulp.task('build', ['js', 'templates', 'css', 'copy-index', 'libJS', 'libCSS', 'copy-fonts','copy-node','copy-docs','copy-icons','copy-static','gen-package']);
 
 gulp.task('default', [  'build', 'watch']);

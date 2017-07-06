@@ -22,8 +22,8 @@
       </audio>
 
       <flv-player ng-if="fileType.type=='video' && fileType.ext[0]=='flv'"
-         src="src" preload="none"
-         style="width:100%;min-width:480px;min-height:360px;">浏览器不支持播放flv</flv-player>
+         src="src"
+         style="width:100%;min-width:480px;min-height:360px;"></flv-player>
 
 
       <video id="video-player" ng-if="fileType.type=='video' && fileType.ext[0]!='flv'" preload="none"
