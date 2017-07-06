@@ -14,6 +14,8 @@ angular.module('web')
 
         getMeta: getFileInfo,
         getFileInfo: getFileInfo, //head object
+
+        checkFileExists: checkFileExists,
         checkFolderExists: checkFolderExists,
 
         listAllBuckets: listAllBuckets,
@@ -51,6 +53,26 @@ angular.module('web')
         parseRestoreInfo: parseRestoreInfo,
         signatureUrl: signatureUrl,
       };
+
+      function checkFileExists(region, bucket, key) {
+        return new Promise(function (a, b) {
+          var client = getClient({
+            region: region,
+            bucket: bucket
+          });
+          var opt = {
+            Bucket: bucket,
+            Key: key
+          };
+          client.headObject(opt, function (err, data) {
+            if (err) {
+              b(err);
+            } else {
+              a(data);
+            }
+          });
+        });
+      }
 
       function checkFolderExists(region, bucket, prefix){
         var df = $q.defer();
@@ -397,7 +419,7 @@ angular.module('web')
             var toKey = renameKey;
 
             if(!renameKey){
-              toKey = target.key.replace(/\/$/,''); 
+              toKey = target.key.replace(/\/$/,'');
               toKey = (toKey?toKey+'/': '')+(items[c].name);
             }
 
@@ -436,7 +458,7 @@ angular.module('web')
       }
 
       //移动文件，重命名文件
-      function moveFile(region, bucket, oldKey, newKey){
+      function moveFile(region, bucket, oldKey, newKey, isCopy){
         var df = $q.defer();
         var client = getClient({region:region, bucket:bucket});
         client.copyObject({
@@ -450,16 +472,21 @@ angular.module('web')
             handleError(err);
           }
           else{
-            client.deleteObject({Bucket: bucket, Key: oldKey}, function(err){
-              if(err){
-                df.reject(err);
-                handleError(err);
-              }else  df.resolve();
-            });
+            if(isCopy){
+              df.resolve();
+            }else{
+              client.deleteObject({Bucket: bucket, Key: oldKey}, function(err){
+                if(err){
+                  df.reject(err);
+                  handleError(err);
+                }else  df.resolve();
+              });
+            }
           }
         });
         return df.promise;
       }
+       
       /**************************************/
 
 

@@ -722,8 +722,14 @@ angular.module('web')
             item: function () {
               return angular.copy(item);
             },
+            moveTo: function () {
+              return angular.copy($scope.currentInfo);
+            },
             currentInfo: function () {
               return angular.copy($scope.currentInfo);
+            },
+            isCopy: function () {
+              return false;
             },
             callback: function () {
               return function () {
@@ -750,9 +756,40 @@ angular.module('web')
         }
         var keyword = $scope.keepMoveOptions.isCopy ? '<span class="text-primary">复制</span>' : '<span class="text-danger">移动</span>';
 
+        if($scope.keepMoveOptions.items.length==1){
+           //1个支持重命名
+           $modal.open({
+             templateUrl: 'main/files/modals/rename-modal.html',
+             controller: 'renameModalCtrl',
+             backdrop: 'static',
+             resolve: {
+               item: function () {
+                 return angular.copy($scope.keepMoveOptions.items[0]);
+               },
+               moveTo: function () {
+                 return angular.copy($scope.currentInfo);
+               },
+               currentInfo: function () {
+                 return angular.copy($scope.keepMoveOptions.currentInfo);
+               },
+               isCopy: function () {
+                 return $scope.keepMoveOptions.isCopy;
+               },
+               callback: function () {
+                 return function () {
+                   $scope.keepMoveOptions = null;
+                   $timeout(function(){
+                     listFiles();
+                   },100);
+                 };
+               }
+             }
+           });
+           return;
+
+        }
         var msg = '将 <span class="text-info">'+$scope.keepMoveOptions.items[0].name
-            + ($scope.keepMoveOptions.items.length>1?' 等':' ')
-            + '</span> ' + keyword+' 到这个目录下面?';
+            + '等</span> ' + keyword+' 到这个目录下面（如有相同的文件或目录则覆盖）？';
 
 
         Dialog.confirm(keyword, msg, function(b){
