@@ -11,20 +11,12 @@ angular.module('web')
       }
     };
 
-
     function linkFn(scope, ele, attr) {
-
-      if (!flvjs.isSupported()) {
-        return;
-      }
-
-      var flvPlayer;
-
       scope.$watch('src', init);
 
       function init(){
         if(!scope.src)return;
-        var src= 'http://localhost:'+Global.staticServerPort+'/flv-player.html?src='+encodeURIComponent(scope.src) 
+        var src= 'http://localhost:'+Global.staticServerPort+'/flv-player.html?src='+encodeURIComponent(scope.src)
         +'&autoplay='+(scope.autoplay||'');
         ele.html('<iframe scrolling="no" style="border:0;width:100%;height:460px" src="'+src+'"><iframe>');
       }

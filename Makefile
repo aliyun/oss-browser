@@ -24,6 +24,7 @@ build:
 	npm run build
 
 
+
 win64:
 	$(BUILD) --platform=win32 --arch=x64
 	rm -rf releases/$(VERSION)/$(NAME)-win32-x64.zip && mkdir -p releases/$(VERSION)

@@ -22,7 +22,6 @@
         module = undefined;
       }
     </script>
-
     <script src="lib.js"></script>
 
     <!-- Insert this line after script imports -->
@@ -38,7 +37,10 @@
         Global.staticServerPort = arg;
         console.log(arg);
       });
-      ipcRenderer.send('asynchronous-message', 'getStaticServerPort')
+      setTimeout(function(){
+        ipcRenderer.send('asynchronous-message', 'getStaticServerPort');
+      },1000);
+
 
       function openExternal(url){
         // Open a URL in the default way

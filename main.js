@@ -11,14 +11,15 @@ const {
 const path = require('path');
 const nativeImage = require('electron').nativeImage;
 
-
 ///*****************************************
 //静态服务
 const PORTS = [7123,7124,7125,7126];
 
 for(var port of PORTS){
   try{
-    require('child_process').fork('./server.js',[port]);
+    //var subp = require('child_process').fork('./server.js',[port]);
+    require('./server.js').listen(port);
+    console.log('listening on port ' + port);
     break;
   }catch(e){
     console.log(e);

@@ -67,7 +67,6 @@ gulp.task('libJS', function () {
 
   var arr=[
       './node_modules/jquery/dist/jquery.js',
-      './vendor/flv.js',
 
       './node_modules/moment/min/moment-with-locales.js',
       './node_modules/bootstrap/dist/js/bootstrap.js',
