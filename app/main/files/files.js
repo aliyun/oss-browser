@@ -771,6 +771,9 @@ angular.module('web')
                  isCopy: function () {
                    return $scope.keepMoveOptions.isCopy;
                  },
+                 renamePath: function(){
+                   return ''
+                 },
                  fromInfo: function () {
                    return angular.copy($scope.keepMoveOptions.currentInfo);
                  },

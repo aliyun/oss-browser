@@ -14,6 +14,7 @@ angular.module('web')
 
         getMeta: getFileInfo,
         getFileInfo: getFileInfo, //head object
+        checkFolderExists: checkFolderExists,
 
         listAllBuckets: listAllBuckets,
 
@@ -50,6 +51,25 @@ angular.module('web')
         parseRestoreInfo: parseRestoreInfo,
         signatureUrl: signatureUrl,
       };
+
+      function checkFolderExists(region, bucket, prefix){
+        var df = $q.defer();
+        var client = getClient({region:region, bucket:bucket});
+        client.listObjects({Bucket:bucket, Prefix:prefix, MaxKeys: 1}, function(err, data){
+          if(err){
+            handleError(err);
+            df.reject(err);
+          }
+          else{
+            if(data.Contents.length>0 && data.Contents[0].Key.indexOf(prefix)==0){
+              df.resolve(true);
+            }else{
+              df.resolve(false);
+            }
+          }
+        });
+        return df.promise;
+      }
 
 
       var stopDeleteFilesFlag=false;
@@ -175,8 +195,9 @@ angular.module('web')
       * @param target {object} {bucket,key} 目标目录路径
       * @param progFn {Function} 进度回调  {current:1, total: 11, errorCount: 0}
       * @param removeAfterCopy {boolean} 移动flag，复制后删除。 默认false
+      * @param renameKey {string} 重命名目录的 key。
       */
-      function copyFiles(region, items, target, progFn, removeAfterCopy){
+      function copyFiles(region, items, target, progFn, removeAfterCopy, renameKey){
 
         var progress = {
           total: 0,
@@ -187,7 +208,7 @@ angular.module('web')
 
         //入口
         var df = $q.defer();
-        digArr(items, target, function(terr){
+        digArr(items, target, renameKey, function(terr){
           df.resolve(terr);
         });
         return df.promise;
@@ -347,7 +368,7 @@ angular.module('web')
           });
         }
 
-        function digArr(items, target, fn){
+        function digArr(items, target, renameKey, fn){
           var len = items.length;
           var c=0;
           var terr=[];
@@ -373,8 +394,13 @@ angular.module('web')
             };
 
             var item = items[c];
-            var toKey = target.key.replace(/\/$/,'');
-            toKey = (toKey?toKey+'/': '')+ (items[c].name);
+            var toKey = renameKey;
+
+            if(!renameKey){
+              toKey = target.key.replace(/\/$/,''); 
+              toKey = (toKey?toKey+'/': '')+(items[c].name);
+            }
+
 
             var newTarget = {
               key: toKey, //target.key.replace(/\/$/,'')+'/'+items[c].name,
@@ -764,7 +790,7 @@ angular.module('web')
       function listFiles(region, bucket, key, marker) {
         return new Promise(function(a,b){
           _listFilesOrigion(region, bucket, key, marker).then(function(result){
-              var arr = result.data; 
+              var arr = result.data;
               if (arr && arr.length) {
                 $timeout( ()=> {
                   loadStorageStatus(region, bucket, arr);
