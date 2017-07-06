@@ -67,6 +67,7 @@ gulp.task('libJS', function () {
 
   var arr=[
       './node_modules/jquery/dist/jquery.js',
+      './node_modules/jquery.qrcode/jquery.qrcode.min.js',
 
       './node_modules/moment/min/moment-with-locales.js',
       './node_modules/bootstrap/dist/js/bootstrap.js',
