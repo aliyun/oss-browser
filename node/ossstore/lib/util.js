@@ -28,9 +28,9 @@ function getFileCrc64(p, fn){
   //至少获取 2 遍，如果有2个一样的，则返回
   function _dig(){
     console.time('get crc64 hash for ['+p+']');
-    var stream = fs.createReadStream(p);
+    var stream = fs.createReadStream(p,{autoClose: true});
     CRC64.check_stream(stream, function(err, data){
-      stream.close();
+      //stream.close();
       console.timeEnd('get crc64 hash for ['+p+']');
 
       if(err)fn(err);

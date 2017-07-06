@@ -92,33 +92,31 @@ angular.module('web')
 
       var stopFlag = false;
       function stopAll() {
-        $scope.allActionBtnDisabled=true;
-
         var arr = $scope.lists.uploadJobList;
-        stopFlag = true;
+        if(arr && arr.length>0){
+          stopFlag = true;
 
-        Toast.info('正在停止...');
+          Toast.info('正在停止...');
+          $scope.allActionBtnDisabled=true;
 
-        angular.forEach(arr, function (n) {
-          if (n.status == 'running' || n.status == 'waiting') n.stop();
-        });
-        Toast.success('停止成功');
+          angular.forEach(arr, function (n) {
+            if (n.status == 'running' || n.status == 'waiting') n.stop();
+          });
+          Toast.success('停止成功');
 
-        $timeout(function () {
-          ossUploadManager.saveProg();
-          $scope.allActionBtnDisabled=false;
-        }, 100);
-
-
+          $timeout(function () {
+            ossUploadManager.saveProg();
+            $scope.allActionBtnDisabled=false;
+          }, 100);
+        }
       }
 
       function startAll() {
-        $scope.allActionBtnDisabled=true;
-
         var arr = $scope.lists.uploadJobList;
         stopFlag = false;
         //串行
         if(arr && arr.length>0){
+          $scope.allActionBtnDisabled=true;
           DelayDone.seriesRun(arr, function(n, fn){
             if(stopFlag){
               return;
