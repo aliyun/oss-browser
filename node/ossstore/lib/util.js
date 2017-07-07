@@ -50,6 +50,7 @@ function getFileCrc64(p, fn){
                return;
              }
            }
+           _dig();
          }else{
            _dig();
          }
