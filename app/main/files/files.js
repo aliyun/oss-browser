@@ -750,10 +750,10 @@ angular.module('web')
         safeApply($scope);
       }
       function showPaste(){
-        if($scope.keepMoveOptions.originPath==getCurrentOssPath()){
-          $scope.keepMoveOptions = null;
-          return;
-        }
+        // if($scope.keepMoveOptions.originPath==getCurrentOssPath()){
+        //   $scope.keepMoveOptions = null;
+        //   return;
+        // }
         var keyword = $scope.keepMoveOptions.isCopy ? '<span class="text-primary">复制</span>' : '<span class="text-danger">移动</span>';
 
         if($scope.keepMoveOptions.items.length==1){
