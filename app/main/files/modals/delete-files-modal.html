@@ -73,7 +73,7 @@
       <i class="glyphicon glyphicon-trash"></i>
       确定删除</button>
 
-    <button ng-if="step==2" type="button" class="btn btn-warning btn-sm" ng-click="stop()">
+    <button ng-if="step==2" ng-disabled="isStop" type="button" class="btn btn-warning btn-sm" ng-click="stop()">
       <i class="glyphicon glyphicon-remove"></i>
       停止</button>
 
