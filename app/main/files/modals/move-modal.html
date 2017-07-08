@@ -1,8 +1,8 @@
 
   <div class="modal-header">
-    <button type="button" class="close" ng-click="cancel()">
+    <!-- <button type="button" class="close" ng-click="cancel()">
       <span aria-hidden="true">&times;</span>
-    </button>
+    </button> -->
     <h4 ng-if="isCopy" class="modal-title text-info">
       <i class="fa fa-copy"></i>
       复制</h4>
@@ -97,7 +97,7 @@
         <i class="glyphicon glyphicon-ok"></i>
         确定</button> -->
 
-      <button ng-if="step==2" type="button" class="btn btn-warning btn-sm" ng-click="stop()">
+      <button ng-if="step==2" ng-disabled="isStop" type="button" class="btn btn-warning btn-sm" ng-click="stop()">
         <i class="glyphicon glyphicon-remove"></i>
         停止</button>
 

@@ -1,7 +1,7 @@
 ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/
 ELECTRON_VERSION=1.6.11
 BUILD=ELECTRON_MIRROR=$(ELECTRON_MIRROR) electron-packager ./dist --overwrite --out=build --version $(ELECTRON_VERSION)
-VERSION=0.9.1
+VERSION=0.10.0
 NAME=oss-browser
 
 i:
@@ -22,6 +22,7 @@ watch:
 	npm run watch
 build:
 	npm run build
+
 
 
 win64:
@@ -47,7 +48,7 @@ mac:mac_build
 	#mkdir -p build/$(NAME)-darwin-x64/.background
 	#cp dist/icons/background.tiff build/$(NAME)-darwin-x64/.background
 	rm -f releases/$(VERSION)/$(NAME).dmg
-	hdiutil create -size 230M -format UDZO -srcfolder build/$(NAME)-darwin-x64 releases/$(VERSION)/$(NAME).dmg
+	hdiutil create -size 250M -format UDZO -srcfolder build/$(NAME)-darwin-x64 releases/$(VERSION)/$(NAME).dmg
 
 all:win64 linux64 mac
 

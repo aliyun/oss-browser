@@ -1,6 +1,6 @@
 {
   "name": "oss-browser",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "main": "dist/main.js",
   "upgrade_url": "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
   "scripts": {
@@ -46,6 +46,7 @@
     "gulp-jshint": "~1.5.0",
     "gulp-load-plugins": "~0.4.0",
     "jquery": "^2.2.3",
+    "jquery.qrcode": "^1.0.3",
     "karma": "^0.12.1",
     "karma-chrome-launcher": "^0.1.2",
     "karma-jasmine": "^0.1.5",
@@ -59,6 +60,9 @@
     "showdown": "^1.4.2"
   },
   "dependencies": {
-    "aliyun-sdk": "^1.10.9"
+    "aliyun-sdk": "^1.10.9",
+    "koa": "^2.3.0",
+    "koa-convert": "^1.2.0",
+    "koa-static-server": "^1.2.1"
   }
 }

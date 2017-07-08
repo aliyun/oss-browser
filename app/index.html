@@ -22,7 +22,6 @@
         module = undefined;
       }
     </script>
-
     <script src="lib.js"></script>
 
     <!-- Insert this line after script imports -->
@@ -30,14 +29,18 @@
       if (window.module)  module = window.module;
     </script>
 
-    <!-- ali-oss -->
-    <script src="aliyun-oss-sdk.min.js"></script>
-
-
-
     <script src="templates.js"></script>
     <script>
       const {ipcRenderer,shell} = require('electron');
+
+      ipcRenderer.on('asynchronous-reply', (event, arg) => {
+        Global.staticServerPort = arg;
+        console.log(arg);
+      });
+      setTimeout(function(){
+        ipcRenderer.send('asynchronous-message', 'getStaticServerPort');
+      },1000);
+
 
       function openExternal(url){
         // Open a URL in the default way

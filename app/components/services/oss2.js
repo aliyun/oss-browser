@@ -1,7 +1,7 @@
 angular.module('web')
   .factory('ossSvs2', ['$q', '$rootScope', '$timeout', '$state', 'Toast', 'Const', 'AuthInfo',
     function ($q, $rootScope, $timeout, $state, Toast, Const, AuthInfo) {
-
+      var NEXT_TICK = 1;
       var DEF_ADDR = 'oss://';
       //var ALY = require('aliyun-sdk');
       var path = require('path');
@@ -14,6 +14,9 @@ angular.module('web')
 
         getMeta: getFileInfo,
         getFileInfo: getFileInfo, //head object
+
+        checkFileExists: checkFileExists,
+        checkFolderExists: checkFolderExists,
 
         listAllBuckets: listAllBuckets,
 
@@ -50,6 +53,45 @@ angular.module('web')
         parseRestoreInfo: parseRestoreInfo,
         signatureUrl: signatureUrl,
       };
+
+      function checkFileExists(region, bucket, key) {
+        return new Promise(function (a, b) {
+          var client = getClient({
+            region: region,
+            bucket: bucket
+          });
+          var opt = {
+            Bucket: bucket,
+            Key: key
+          };
+          client.headObject(opt, function (err, data) {
+            if (err) {
+              b(err);
+            } else {
+              a(data);
+            }
+          });
+        });
+      }
+
+      function checkFolderExists(region, bucket, prefix){
+        var df = $q.defer();
+        var client = getClient({region:region, bucket:bucket});
+        client.listObjects({Bucket:bucket, Prefix:prefix, MaxKeys: 1}, function(err, data){
+          if(err){
+            handleError(err);
+            df.reject(err);
+          }
+          else{
+            if(data.Contents.length>0 && data.Contents[0].Key.indexOf(prefix)==0){
+              df.resolve(true);
+            }else{
+              df.resolve(false);
+            }
+          }
+        });
+        return df.promise;
+      }
 
 
       var stopDeleteFilesFlag=false;
@@ -138,12 +180,12 @@ angular.module('web')
                   terr.push({item:item, error:err});
                   progress.errorCount++;
                   c++;
-                  dig();
+                  $timeout(dig,NEXT_TICK);
                 }
                 else{
                   c++;
                   progress.current++;
-                  dig();
+                  $timeout(dig,NEXT_TICK);
                 }
               });
             }
@@ -175,8 +217,9 @@ angular.module('web')
       * @param target {object} {bucket,key} 目标目录路径
       * @param progFn {Function} 进度回调  {current:1, total: 11, errorCount: 0}
       * @param removeAfterCopy {boolean} 移动flag，复制后删除。 默认false
+      * @param renameKey {string} 重命名目录的 key。
       */
-      function copyFiles(region, items, target, progFn, removeAfterCopy){
+      function copyFiles(region, items, target, progFn, removeAfterCopy, renameKey){
 
         var progress = {
           total: 0,
@@ -187,7 +230,7 @@ angular.module('web')
 
         //入口
         var df = $q.defer();
-        digArr(items, target, function(terr){
+        digArr(items, target, renameKey, function(terr){
           df.resolve(terr);
         });
         return df.promise;
@@ -242,7 +285,7 @@ angular.module('web')
               for(var i=c;i<arr.length;i++){
                 t.push({item: arr[i], error: new Error('User cancelled')});
               }
-              if(progFn) progFn(progress);
+              if(progFn) try{ progFn(progress); }catch(e){}
               fn(t);
               return;
             };
@@ -255,13 +298,14 @@ angular.module('web')
             copyOssFile(client, {bucket:bucket,key: item.path},{bucket:bucket, key: toKey}, function(err){
               if(err){
                 progress.errorCount++;
-                if(progFn)progFn(progress);
+                if(progFn) try{ progFn(progress); }catch(e){}
                 t.push({item:item, error:err});
               }
               progress.current++;
-              if(progFn)progFn(progress);
+              if(progFn) try{ progFn(progress); }catch(e){}
               c++;
-              _dig();
+              //fix ubuntu
+              $timeout(_dig, NEXT_TICK);
             });
           }
           _dig();
@@ -347,13 +391,13 @@ angular.module('web')
           });
         }
 
-        function digArr(items, target, fn){
+        function digArr(items, target, renameKey, fn){
           var len = items.length;
           var c=0;
           var terr=[];
 
           progress.total+=len;
-          if(progFn)progFn(progress);
+          if(progFn)try{progFn(progress);}catch(e){}
 
           function _(){
 
@@ -367,14 +411,19 @@ angular.module('web')
               for(var i=c;i<items.length;i++){
                 terr.push({item: items[i], error: new Error('User cancelled')});
               }
-              if(progFn) progFn(progress);
+              if(progFn)try{progFn(progress);}catch(e){}
               fn(terr);
               return;
             };
 
             var item = items[c];
-            var toKey = target.key.replace(/\/$/,'');
-            toKey = (toKey?toKey+'/': '')+ (items[c].name);
+            var toKey = renameKey;
+
+            if(!renameKey){
+              toKey = target.key.replace(/\/$/,'');
+              toKey = (toKey?toKey+'/': '')+(items[c].name);
+            }
+
 
             var newTarget = {
               key: toKey, //target.key.replace(/\/$/,'')+'/'+items[c].name,
@@ -386,12 +435,12 @@ angular.module('web')
               doCopyFile(item, newTarget, function(err){
                 if(err){
                   progress.errorCount++;
-                  if(progFn)progFn(progress);
+                  if(progFn)try{progFn(progress);}catch(e){}
                   terr.push({item: items[c], error:err});
                 }
                 progress.current++;
-                if(progFn)progFn(progress);
-                _();
+                if(progFn)try{progFn(progress);}catch(e){}
+                $timeout(_,NEXT_TICK);
               });
             }
             else{
@@ -400,8 +449,8 @@ angular.module('web')
                   terr = terr.concat(errs);
                 }
                 progress.current++;
-                if(progFn)progFn(progress);
-                _();
+                if(progFn)try{progFn(progress);}catch(e){}
+                $timeout(_,NEXT_TICK);
               });
             }
           }
@@ -410,7 +459,7 @@ angular.module('web')
       }
 
       //移动文件，重命名文件
-      function moveFile(region, bucket, oldKey, newKey){
+      function moveFile(region, bucket, oldKey, newKey, isCopy){
         var df = $q.defer();
         var client = getClient({region:region, bucket:bucket});
         client.copyObject({
@@ -424,16 +473,21 @@ angular.module('web')
             handleError(err);
           }
           else{
-            client.deleteObject({Bucket: bucket, Key: oldKey}, function(err){
-              if(err){
-                df.reject(err);
-                handleError(err);
-              }else  df.resolve();
-            });
+            if(isCopy){
+              df.resolve();
+            }else{
+              client.deleteObject({Bucket: bucket, Key: oldKey}, function(err){
+                if(err){
+                  df.reject(err);
+                  handleError(err);
+                }else  df.resolve();
+              });
+            }
           }
         });
         return df.promise;
       }
+
       /**************************************/
 
 
@@ -460,7 +514,10 @@ angular.module('web')
             t = t.concat(result.Uploads);
 
             if(result.Uploads.length==maxUploads){
-              dig({'KeyMarker':result.NextKeyMarker, 'UploadIdMarker':result.NextUploadIdMarker});
+              $timeout(function(){
+                dig({'KeyMarker':result.NextKeyMarker, 'UploadIdMarker':result.NextUploadIdMarker});
+              },NEXT_TICK);
+
             }
             else{
               df.resolve(t);
@@ -488,7 +545,7 @@ angular.module('web')
             if(err) df.reject(err);
             else{
               c++;
-              dig();
+              $timeout(dig,NEXT_TICK);
             }
           });
         }
@@ -764,11 +821,11 @@ angular.module('web')
       function listFiles(region, bucket, key, marker) {
         return new Promise(function(a,b){
           _listFilesOrigion(region, bucket, key, marker).then(function(result){
-              var arr = result.data; 
+              var arr = result.data;
               if (arr && arr.length) {
                 $timeout( ()=> {
                   loadStorageStatus(region, bucket, arr);
-                });
+                },NEXT_TICK);
               }
               a(result);
           }, function(err){
@@ -792,7 +849,7 @@ angular.module('web')
                c++
 
                if (!item.isFile || item.storageClass != 'Archive'){
-                 _dig();
+                 $timeout(_dig, NEXT_TICK);
                  return;
                }
 
@@ -808,10 +865,10 @@ angular.module('web')
                   }else{
                     item.storageStatus = 1;
                   }
-                  $timeout(_dig, 10);
+                  $timeout(_dig, NEXT_TICK);
                }, function(err){
                  b(err);
-                 $timeout(_dig, 100);
+                 $timeout(_dig, NEXT_TICK);
                });
             }
          });
@@ -982,7 +1039,7 @@ angular.module('web')
 
             if (result.NextMarker) {
               opt.Marker = result.NextMarker;
-              $timeout(_dig, 10);
+              $timeout(_dig, NEXT_TICK);
             } else {
               if (stopFlag) return;
               succFn(t_pre.concat(t));
@@ -1032,7 +1089,7 @@ angular.module('web')
 
               if (result.NextMarker) {
                 opt.Marker = result.NextMarker;
-                _dig();
+                $timeout(_dig,NEXT_TICK);
               } else {
                 resolve(t);
               }

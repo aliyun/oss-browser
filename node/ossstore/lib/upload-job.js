@@ -386,6 +386,31 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     });
   });
 
+
+  function readBytes(keepFd, bf, offset, len, start, fn, secondTime){
+    fs.read(keepFd, bf, offset, len, start, function (err, bfRead, buf) {
+      if (err) {
+        if(err.message.indexOf('invalid seek')!=-1){
+          fs.open(checkPoints.file.path, 'r', function (err, fd) {
+            if(err && secondTime){
+              fn(err);
+            }
+            else{
+              self.keepFd = keepFd = fd;
+              readBytes(keepFd, bf, offset, len, start, fn, 1)
+            }
+          });
+        }
+        else{
+          fn(err);
+        }
+      }
+      else{
+        fn(null, bfRead, buf);
+      }
+    });
+  }
+
   // partNum: 0-n
   function doUploadPart(partNum) {
 
@@ -415,8 +440,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
 
     var bf = new Buffer(len);
 
-    fs.read(keepFd, bf, 0, len, start, function (err, bfRead, buf) {
-
+    readBytes(keepFd, bf, 0, len, start, function (err, bfRead, buf) {
       if (err) {
         self.message=err.message;
         self._changeStatus('failed');

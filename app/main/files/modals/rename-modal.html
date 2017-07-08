@@ -11,7 +11,7 @@
 
     <div class="form-group">
       <label class="col-sm-2 control-label">所在目录:</label>
-      <div class="col-sm-10 input-md pdt4">oss://{{currentInfo.bucket}}/{{currentInfo.key}}</div>
+      <div class="col-sm-10 input-md pdt4">oss://{{moveTo.bucket}}/{{moveTo.key}}</div>
     </div>
 
 
@@ -29,7 +29,8 @@
 
   </div>
   <div class="modal-footer">
-    <button ng-disabled="isLoading || keep.name==item.name" type="submit" class="btn btn-success btn-sm">
+
+    <button ng-disabled="isLoading || (keep.name==item.name && moveTo.key==currentInfo.key)" type="submit" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-ok"></i>
       确定</button>
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">

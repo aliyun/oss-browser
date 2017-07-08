@@ -516,17 +516,17 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     return chunks.length > 0;
   }
 
-  function checkFileHash(filePath, fileMd5, hashCrc64ecma, fn) {
-    console.time(`check crc64 ${filePath}`);
+  function checkFileHash(tmpName, fileMd5, hashCrc64ecma, fn) {
+    console.time(`check crc64 ${tmpName}`);
     if(hashCrc64ecma){
-      util.getFileCrc64(filePath, function(err, crc64Str){
-        console.timeEnd(`check crc64 ${filePath}`);
+      util.getFileCrc64(tmpName, function(err, crc64Str){
+        console.timeEnd(`check crc64 ${tmpName}`);
         if (err) {
-          fn(new Error('Checking file['+filePath+'] crc64 hash failed: ' + err.message));
+          fn(new Error('Checking file['+tmpName+'] crc64 hash failed: ' + err.message));
         } else if (crc64Str!=null && crc64Str != hashCrc64ecma) {
-          fn(new Error('HashCrc64ecma mismatch, file['+filePath+'] crc64 hash should be:'+hashCrc64ecma+', but we got:'+crc64Str));
+          fn(new Error('HashCrc64ecma mismatch, file['+tmpName+'] crc64 hash should be:'+hashCrc64ecma+', but we got:'+crc64Str));
         } else{
-          console.info('check crc success: file['+filePath+']')
+          console.info('check crc success: file['+tmpName+']')
           fn(null);
         }
       });
@@ -544,7 +544,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     }
     else{
       //没有MD5，不校验
-      console.log(filePath,',not found content md5, just pass');
+      console.log(tmpName,',not found content md5, just pass');
       fn(null);
       return;
     }

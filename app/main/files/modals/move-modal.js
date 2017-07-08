@@ -1,11 +1,12 @@
 angular.module('web')
-  .controller('moveModalCtrl', ['$scope','$uibModalInstance','$timeout','items','isCopy','fromInfo','moveTo', 'callback','ossSvs2','Toast','AuthInfo','safeApply',
-    function ($scope, $modalInstance, $timeout, items, isCopy, fromInfo, moveTo, callback, ossSvs2, Toast,AuthInfo, safeApply) {
+  .controller('moveModalCtrl', ['$scope','$uibModalInstance','$timeout','items','isCopy','renamePath','fromInfo','moveTo', 'callback','ossSvs2','Toast','AuthInfo','safeApply',
+    function ($scope, $modalInstance, $timeout, items, isCopy, renamePath, fromInfo, moveTo, callback, ossSvs2, Toast,AuthInfo, safeApply) {
 
       var authInfo = AuthInfo.get();
 
 
       angular.extend($scope, {
+        renamePath: renamePath,
         fromInfo: fromInfo,
         items: items,
         isCopy: isCopy,
@@ -60,12 +61,15 @@ angular.module('web')
           n.bucket = fromInfo.bucket;
         });
 
+        console.log(fromInfo.region, items, target, renamePath);
+        //return;
+
         //复制 or 移动
         ossSvs2.copyFiles(fromInfo.region, items, target, function progress(prog){
           //进度
           $scope.progress = angular.copy(prog);
           safeApply($scope);
-        }, !isCopy).then(function(terr){
+        }, !isCopy, renamePath).then(function(terr){
           //结果
           $scope.step = 3;
           $scope.terr = terr;

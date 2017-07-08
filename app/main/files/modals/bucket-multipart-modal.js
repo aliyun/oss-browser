@@ -7,6 +7,11 @@ angular.module('web')
         cancel: cancel,
         refresh: refresh,
         showDelete: showDelete,
+        sch: {
+          txt: '',
+          limitTo: 20
+        },
+        loadNext: loadNext,
 
         //全选相关
         sel: {
@@ -15,8 +20,13 @@ angular.module('web')
           x: {}       //{} {'i_'+$index, true|false}
         },
         selectAll: selectAll,
-        selectChanged: selectChanged
+        selectChanged: selectChanged, 
       });
+
+      function loadNext(){
+        $scope.sch.limitTo+= 20;
+      }
+
 
       refresh();
 
