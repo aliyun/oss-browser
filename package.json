@@ -7,7 +7,7 @@
     "dev": "npm-run-all --parallel build watch dev:run",
     "dev:run": "cross-env NODE_ENV=development electron .",
     "prod": "cross-env NODE_ENV=production cd dist && electron .",
-    "clean": "rm -rf dist node_modules build releases",
+    "clean": "rm -rf dist node_modules build releases node/crc64/node_modules node/ossstore/node_modules",
     "watch": "gulp watch",
     "postinstall": "npm run build",
     "build": "gulp build",
