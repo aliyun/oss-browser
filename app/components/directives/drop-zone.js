@@ -12,10 +12,18 @@ angular.module('web')
 
     function linkFn(scope, ele, attr) {
 
+      $(document).on('dragenter', stopPrev);
+      $(document).on('dragover', stopPrev);
+      $(document).on('dragleave', stopPrev);
+      $(document).on('drop', stopPrev);
+      function stopPrev(e){
+        e.originalEvent.stopPropagation();
+        e.originalEvent.preventDefault();
+      }
+
       var shadow;
       $(ele)
-        .on('dragover', function () {
-
+        .on('dragenter', function () {
           shadow = $('<div></div>').css({
             position: 'absolute',
             height: $(ele).height(),
@@ -27,7 +35,6 @@ angular.module('web')
             zIndex: 20,
             boxShadow: 'inset yellow 0 0 10px'
           }).appendTo('body');
-
 
           shadow.on('dragleave', function () {
               shadow.remove();
