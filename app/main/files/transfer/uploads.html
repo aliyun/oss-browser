@@ -3,23 +3,33 @@
 
         <div class="pull-left" style="position:relative">
           <input type="text"  cleanable-input placeholder="根据名称或状态搜索" class="form-control input-sm"
-           style="width:160px;" ng-model="sch.upname">
+           style="width:140px;" ng-model="sch.upname">
         </div>
 
-        <button ng-disabled="allActionBtnDisabled" type="button" class="btn btn-default btn-sm" ng-click="startAll()">
-            <span class=""><i class="glyphicon glyphicon-play"></i> 启动全部</span>
+        <div class="pull-left">
+          <a href="" ng-if="totalNum.upStopped>0" class="btn btn-link btn-sm" ng-click="sch.upname='stopped'"><i class="text-warning fa fa-info-circle"></i>{{totalNum.upStopped}}</a>
+          <a href="" ng-if="totalNum.upFailed>0" class="btn btn-link btn-sm" ng-click="sch.upname='failed'"><i class="text-danger fa fa-remove"></i>{{totalNum.upFailed}}</a>
+        </div>
+
+
+        <button ng-disabled="allActionBtnDisabled" type="button" class="btn btn-default btn-sm" ng-click="startAll()"
+         uib-tooltip="启动全部" tooltip-append-to-body="true">
+            <span class=""><i class="glyphicon glyphicon-play"></i> </span>
         </button>
 
-        <button ng-disabled="allActionBtnDisabled" type="button" class="btn btn-default btn-sm" ng-click="stopAll()">
-        <span class=""><i class="glyphicon glyphicon-pause"></i> 暂停全部</span>
+        <button ng-disabled="allActionBtnDisabled" type="button" class="btn btn-default btn-sm" ng-click="stopAll()"
+        uib-tooltip="暂停全部" tooltip-append-to-body="true">
+        <span class=""><i class="glyphicon glyphicon-pause"></i> </span>
         </button>
 
-        <button type="button" class="btn btn-default btn-sm" ng-click="clearAllCompleted()">
-            <span class=""><i class="glyphicon glyphicon-trash"></i> 清空已完成</span>
+        <button type="button" class="btn btn-default btn-sm" ng-click="clearAllCompleted()"
+        uib-tooltip="清空已完成" tooltip-append-to-body="true">
+            <span class=""><i class="glyphicon glyphicon-trash"></i></span>
         </button>
 
-        <button type="button" class="btn btn-default btn-sm" ng-click="clearAll()">
-            <span class=""><i class="glyphicon glyphicon-trash"></i> 清空所有</span>
+        <button type="button" class="btn btn-default btn-sm" ng-click="clearAll()"
+        uib-tooltip="清空所有" tooltip-append-to-body="true">
+            <span class=""><i class="text-danger glyphicon glyphicon-trash"></i></span>
         </button>
         <div class="clearfix"></div>
     </header>
