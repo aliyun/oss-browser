@@ -14,8 +14,7 @@ module.exports = {
 
   getPartProgress: getPartProgress,
   checkAllPartCompleted: checkAllPartCompleted,
-  closeFD: util.closeFD,
-
+  
   getUploadId: getUploadId,
   completeMultipartUpload: completeMultipartUpload,
 

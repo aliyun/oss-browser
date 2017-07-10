@@ -111,7 +111,7 @@ DownloadJob.prototype._changeStatus = function (status) {
 
   if (status == 'failed' || status == 'stopped' || status == 'finished') {
     self.endTime = new Date().getTime();
-    util.closeFD(self.keepFd);
+    //util.closeFD(self.keepFd);
 
     console.log('clear speed tid', self.status)
     clearInterval(self.speedTid);

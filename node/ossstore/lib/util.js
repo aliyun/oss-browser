@@ -10,7 +10,6 @@ try{
 module.exports = {
   parseLocalPath: parseLocalPath,
   parseOssPath: parseOssPath,
-  closeFD: closeFD,
   getFileCrc64: getFileCrc64
 };
 
@@ -28,8 +27,8 @@ function getFileCrc64(p, fn){
   //至少获取 2 遍，如果有2个一样的，则返回
   function _dig(){
     console.time('get crc64 hash for ['+p+']');
-    var stream = fs.createReadStream(p,{autoClose: true});
-    CRC64.check_stream(stream, function(err, data){
+    //var stream = fs.createReadStream(p,{autoClose: true});
+    CRC64.check_file_path(p, function(err, data){
       //stream.close();
       console.timeEnd('get crc64 hash for ['+p+']');
 
@@ -100,17 +99,4 @@ function parseOssPath(osspath) {
     bucket: bucket,
     key: key
   };
-}
-
-
-function closeFD(fd) {
-
-  try {
-    if(fd) {
-      fs.closeSync(fd);
-      fd=null;
-    }
-  } catch (e) {
-  }
-
 }

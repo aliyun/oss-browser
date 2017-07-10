@@ -1,6 +1,7 @@
 'use strict';
 const version_path = process.platform + '-' + process.arch;
 const path = require('path');
+const fs = require('fs');
 
 var _crc64 = process.env.NODE_ENV == 'test' ?
   require(path.join(__dirname, 'build/Release/crc64')) :
@@ -37,6 +38,22 @@ module.exports = {
   },
 
   check_stream: function(stream, callback) {
+    if (!(stream instanceof _stream.Stream))
+      throw new TypeError("Only (stream, callback) accepted!");
+    var init_crc = 0;
+    stream.on('data', (chunk) => {
+      init_crc = this.check(init_crc, chunk);
+    });
+    stream.on('end', () => {
+      callback(null, init_crc);
+    });
+    stream.on('error', (err) => {
+      callback(err, null);
+    });
+  },
+  check_file_path: function(p, callback) {
+    var stream = fs.createReadStream(p,{autoClose: true});
+
     if (!(stream instanceof _stream.Stream))
       throw new TypeError("Only (stream, callback) accepted!");
     var init_crc = 0;

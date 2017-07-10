@@ -7,8 +7,8 @@
         </div>
 
         <div class="pull-left">
-          <a href="" ng-if="totalNum.downStopped>0" class="btn btn-link btn-sm" ng-click="sch.upname='stopped'"><i class="text-warning fa fa-info-circle"></i>{{totalNum.downStopped}}</a>
-          <a href="" ng-if="totalNum.downFailed>0" class="btn btn-link btn-sm" ng-click="sch.upname='failed'"><i class="text-danger fa fa-remove"></i>{{totalNum.downFailed}}</a>
+          <a href="" ng-if="totalNum.downStopped>0" class="btn btn-link btn-sm" style="text-decoration:none" ng-click="sch.upname='stopped'"><span class="text-warning"><i class="fa fa-info-circle"></i> {{totalNum.downStopped}}</span></a>
+          <a href="" ng-if="totalNum.downFailed>0" class="btn btn-link btn-sm" style="text-decoration:none" ng-click="sch.upname='failed'"><span class="text-danger"><i class="fa fa-remove"></i> {{totalNum.downFailed}}</span></a>
         </div>
 
         <button ng-disabled="allActionBtnDisabled" type="button" class="btn btn-default btn-sm" ng-click="startAll()"
