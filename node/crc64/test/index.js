@@ -60,7 +60,7 @@ describe('crc64', function(){
 			});
 		});
 
-		it('loop check_stream', function(done){
+		it('check_stream 串行', function(done){
 
 			var len = 100;
 			var c =0;
@@ -78,6 +78,32 @@ describe('crc64', function(){
 	          c++;
 						if(c>=len) done();
 						else setTimeout(_dig,10);
+
+					}else{
+						console.log(err)
+					}
+				});
+			}
+		});
+
+		it('check_stream 并行', function(done){
+
+			var len = 100;
+			var c =0;
+
+			for(var i=0;i<len;i++) setTimeout(_dig,100); 
+			function _dig(){
+				var readStream = fs.createReadStream(path.join(__dirname,'apps.png'));
+
+				CRC64.check_stream(readStream, (err, result)=>{
+					if(!err){
+				    console.log(result)
+				    result.should.equal(result2)
+						readStream.close();
+
+	          c++;
+						if(c>=len) done();
+						//else setTimeout(_dig,10);
 
 					}else{
 						console.log(err)
