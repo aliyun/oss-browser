@@ -40,10 +40,10 @@ function($scope ,ossUploadManager,ossDownloadManager, Toast, safeApply){
     */
    function downloadFilesHandler(fromOssPath, toLocalPath) {
      Toast.info('正在添加到下载队列');
-     ossDownloadManager.createDownloadJobs(fromOssPath, toLocalPath, function(){
+     ossDownloadManager.createDownloadJobs(fromOssPath, toLocalPath, function(isCancelled){
+       Toast.info('已全部添加到下载队列');
        $scope.toggleTransVisible(true);
        $scope.transTab = 2;
-       Toast.info('已全部添加到下载队列');
      });
    }
    /**
@@ -53,8 +53,8 @@ function($scope ,ossUploadManager,ossDownloadManager, Toast, safeApply){
     */
    function uploadFilesHandler(filePaths, bucketInfo) {
       Toast.info('正在添加到上传队列');
-      ossUploadManager.createUploadJobs(filePaths, bucketInfo, function(){
-        Toast.info('已全部添加到下载队列');
+      ossUploadManager.createUploadJobs(filePaths, bucketInfo, function(isCancelled){
+        Toast.info('已全部添加到下载队列'); 
         $scope.toggleTransVisible(true);
         $scope.transTab = 1;
       });

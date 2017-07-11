@@ -7,11 +7,16 @@ angular.module('web')
     var path = require('path');
     var os = require('os');
 
+    var stopCreatingFlag = false;
     return {
       init: init,
       createDownloadJobs: createDownloadJobs,
       checkStart: checkStart,
       saveProg: saveProg,
+
+      stopCreatingJobs: function(){
+        stopCreatingFlag=true;
+      }
     };
 
     var concurrency = 0;
@@ -99,6 +104,7 @@ angular.module('web')
      * @param jobsAddedFn {Function} 加入列表完成回调方法， jobs列表已经稳定
      */
     function createDownloadJobs(fromOssInfos, toLocalPath, jobsAddedFn) {
+      stopCreatingFlag = false;
       //console.log('--------downloadFilesHandler', fromOssInfos, toLocalPath);
       var authInfo = AuthInfo.get();
       var dirPath = path.dirname(fromOssInfos[0].path);
@@ -136,6 +142,11 @@ angular.module('web')
             callFn(t);
           }
           else{
+
+            if(stopCreatingFlag){
+              return;
+            }
+
             $timeout(_kdig,10);
           }
         }
@@ -152,6 +163,10 @@ angular.module('web')
       }
 
       function dig(ossInfo, t, callFn, callFn2) {
+
+        if(stopCreatingFlag){
+          return;
+        }
 
         var fileName = path.basename(ossInfo.path);
         var filePath = path.join(toLocalPath, path.relative(dirPath, ossInfo.path));

@@ -7,11 +7,16 @@ angular.module('web')
       var path = require('path');
       var os = require('os');
 
+      var stopCreatingFlag = false;
       return {
         init: init,
         createUploadJobs: createUploadJobs,
         checkStart: checkStart,
         saveProg: saveProg,
+
+        stopCreatingJobs: function(){
+          stopCreatingFlag = true;
+        }
       };
 
       var concurrency = 0;
@@ -115,11 +120,14 @@ angular.module('web')
        * @param jobsAddedFn {Function} 加入列表完成回调方法， jobs列表已经稳定
        */
       function createUploadJobs(filePaths, bucketInfo, jobsAddingFn) {
+        stopCreatingFlag = false;
         //console.log('--------uploadFilesHandler:',  filePaths, bucketInfo);
 
         var authInfo = AuthInfo.get();
 
-        digArr(filePaths, jobsAddingFn);
+        digArr(filePaths, function(){
+          if(jobsAddingFn)jobsAddingFn();
+        });
         return;
 
         function digArr(filePaths, fn) {
@@ -131,11 +139,18 @@ angular.module('web')
             var n = filePaths[c];
             var dirPath = path.dirname(n);
 
+            if(stopCreatingFlag)return;
+
             dig(filePaths[c], dirPath, function (jobs) {
               t = t.concat(jobs);
               c++;
-              if (c >= len) fn(t);
-              else _dig();
+
+              if (c >= len){
+                fn(t);
+              }
+              else{
+                _dig();
+              }
             });
           }
           _dig();
@@ -155,12 +170,23 @@ angular.module('web')
               c++;
               //console.log(c,'/',len);
               if (c >= len) callFn(t);
-              else inDig();
+              else{
+
+                if(stopCreatingFlag){
+                  return;
+                }
+
+                inDig();
+              }
             });
           }
         }
 
         function dig(absPath, dirPath,  callFn) {
+
+          if(stopCreatingFlag){
+            return;
+          }
 
           var fileName = path.basename(absPath);
           var filePath = path.join(bucketInfo.key, path.relative(dirPath, absPath)).replace(/\\/g, '/');
@@ -181,6 +207,7 @@ angular.module('web')
             // });
 
             fs.readdir(absPath, function (err, arr) {
+
               if (err) {
                 console.log(err.stack);
               } else {

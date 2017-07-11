@@ -98,6 +98,8 @@ angular.module('web')
         if (arr && arr.length > 0) {
           stopFlag = true;
 
+          ossDownloadManager.stopCreatingJobs();
+
           Toast.info('正在暂停...');
           $scope.allActionBtnDisabled = true;
 
