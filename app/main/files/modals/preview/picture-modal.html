@@ -15,8 +15,9 @@
   <restore-checker bucket-info="bucketInfo" object-info='objectInfo' file-type="fileType"
   after-check-success="afterCheckSuccess()" after-restore-submit="afterRestoreSubmit()">
 
-    <div style="overflow:auto; " class="text-center">
-      <img ng-src="{{imgsrc}}" alt="无法显示图片" style="max-width:600px;max-height:400px;" />
+    <div style="overflow:auto;min-height:100px;" class="text-center">
+      <div ng-if="!imgsrc" is-loading></div>
+      <img ng-if="imgsrc" ng-src="{{imgsrc}}" alt="无法预览图片" style="max-width:600px;max-height:400px;" />
     </div>
   </restore-checker>
 

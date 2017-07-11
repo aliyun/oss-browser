@@ -101,7 +101,7 @@
                              </textarea>
                              <small class="text-danger" ng-if="!authTokenInfo">请输入有效的授权码</small>
                              <small class="text-danger" ng-if="authTokenInfo && authTokenInfo.isExpired">授权码已经过期</small>
-                             <small class="text-success" ng-if="authTokenInfo && !authTokenInfo.isExpired">({{authTokenInfo.osspath}}的{{authTokenInfo.privilege=='all'?'读写':'只读'}}权限，有效期至{{authTokenInfo.expiration|timeFormat}}, <my-timer class="text-warning" expiration="authTokenInfo.expiration"></my-timer>后失效)</small>
+                             <small class="text-success" ng-if="authTokenInfo && !authTokenInfo.isExpired">(有效期至{{authTokenInfo.expiration|timeFormat}}, <my-timer class="text-warning" expiration="authTokenInfo.expiration"></my-timer>后失效)</small>
                         </div>
                     </div>
 
