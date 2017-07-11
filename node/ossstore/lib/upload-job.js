@@ -152,7 +152,7 @@ UploadJob.prototype._changeStatus = function(status){
 
   if(status=='failed' || status=='stopped' || status=='finished'){
     self.endTime = new Date().getTime();
-    util.closeFD(self.keepFd);
+    //util.closeFD(self.keepFd);
 
     //console.log('clear speed tid')
     clearInterval(self.speedTid);
@@ -361,6 +361,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     if(isDebug) console.info("Got upload ID", err, uploadId, self.from.path);
 
     fs.open(checkPoints.file.path, 'r', function (err, fd) {
+      fs.closeSync(fd);
       //console.log('fs. open', err, fd)
       if(err){
         console.error('can not open file', checkPoints.file.path, err);
@@ -369,16 +370,16 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
         self.emit('error', err);
         return;
       }
-      self.keepFd = keepFd = fd;
+      //self.keepFd = keepFd = fd;
 
       self.emit('partcomplete', util.getPartProgress(checkPoints), JSON.parse(JSON.stringify(checkPoints)));
 
       if (util.checkAllPartCompleted(checkPoints)) {
-        util.closeFD(fd);
+        //util.closeFD(fd);
         complete();
       }
       else {
-        console.log(concurrency , self.maxConcurrency)
+        //console.log(concurrency , self.maxConcurrency);
         if(concurrency < self.maxConcurrency && uploadNumArr.length>0 && !self.stopFlag){
           doUploadPart(uploadNumArr.shift());
         }
@@ -387,27 +388,21 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
   });
 
 
-  function readBytes(keepFd, bf, offset, len, start, fn, secondTime){
-    fs.read(keepFd, bf, offset, len, start, function (err, bfRead, buf) {
-      if (err) {
-        if(err.message.indexOf('invalid seek')!=-1){
-          fs.open(checkPoints.file.path, 'r', function (err, fd) {
-            if(err && secondTime){
-              fn(err);
-            }
-            else{
-              self.keepFd = keepFd = fd;
-              readBytes(keepFd, bf, offset, len, start, fn, 1)
-            }
-          });
+  function readBytes(p, bf, offset, len, start, fn){
+    fs.open(p, 'r', function(err, fd){
+      if(err){
+        fn(err);
+        return;
+      }
+      fs.read(fd, bf, offset, len, start, function (err, bfRead, buf) {
+        fs.closeSync(fd);
+        if (err) {
+          fn(err)
         }
         else{
-          fn(err);
+          fn(null, bfRead, buf);
         }
-      }
-      else{
-        fn(null, bfRead, buf);
-      }
+      });
     });
   }
 
@@ -428,7 +423,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     retries[partNum+1] = 0; //重试次数
 
     if (self.stopFlag) {
-      util.closeFD(keepFd);
+      //util.closeFD(keepFd);
       return;
     }
 
@@ -440,7 +435,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
 
     var bf = new Buffer(len);
 
-    readBytes(keepFd, bf, 0, len, start, function (err, bfRead, buf) {
+    readBytes(self.from.path, bf, 0, len, start, function (err, bfRead, buf) {
       if (err) {
         self.message=err.message;
         self._changeStatus('failed');
@@ -473,7 +468,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
 
 
     if (self.stopFlag) {
-      util.closeFD(keepFd);
+      //util.closeFD(keepFd);
       return;
     }
 
@@ -486,7 +481,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     var req = self.oss.uploadPart(partParams, function (multiErr, mData) {
 
       if (self.stopFlag) {
-        util.closeFD(keepFd);
+        //util.closeFD(keepFd);
         return;
       }
 
@@ -535,7 +530,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
       self.emit('partcomplete', util.getPartProgress(checkPoints), JSON.parse(JSON.stringify(checkPoints)));
 
       if (util.checkAllPartCompleted(checkPoints)) {
-        util.closeFD(keepFd);
+        //util.closeFD(keepFd);
         complete();
       }
       else {

@@ -6,7 +6,7 @@ var util = require('./util');
 
 module.exports = {
   getSensibleChunkSize: getSensibleChunkSize,
-  closeFD: util.closeFD,
+   
   parseLocalPath: util.parseLocalPath,
   parseOssPath: util.parseOssPath,
   getBigFileMd5: getBigFileMd5,

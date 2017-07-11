@@ -1153,7 +1153,10 @@ angular.module('web')
           accessKeyId: authInfo.id || 'a',
           secretAccessKey: authInfo.secret || 'a',
           endpoint: endpoint,
-          apiVersion: '2013-10-15'
+          apiVersion: '2013-10-15',
+          httpOptions: {
+            timeout: 0
+          }
         };
 
         if(authInfo.id && authInfo.id.indexOf('STS.')==0){

@@ -96,6 +96,8 @@ angular.module('web')
         if(arr && arr.length>0){
           stopFlag = true;
 
+          ossUploadManager.stopCreatingJobs();
+
           Toast.info('正在停止...');
           $scope.allActionBtnDisabled=true;
 
