@@ -6,7 +6,7 @@ var util = require('./util');
 
 module.exports = {
   getSensibleChunkSize: getSensibleChunkSize,
-   
+
   parseLocalPath: util.parseLocalPath,
   parseOssPath: util.parseOssPath,
   getBigFileMd5: getBigFileMd5,
@@ -16,15 +16,6 @@ module.exports = {
   computeMaxConcurrency: computeMaxConcurrency
 };
 
-
-
-//根据网速调整下载并发量
-function computeMaxConcurrency(speed){
-  if(speed > 8*1024*1024) return 10;
-  else if(speed > 5*1024*1024) return 7;
-  else if(speed > 2*1024*1024) return 5;
-  else return 3;
-}
 
 
 function headObject(self, objOpt, fn){
@@ -83,4 +74,12 @@ function getSensibleChunkSize(size) {
   }
   var c = Math.ceil(size/5000);
   return Math.max(c, MaxChunkSize);
+}
+
+//根据网速调整下载并发量
+function computeMaxConcurrency(speed){
+  if(speed > 8*1024*1024) return 10;
+  else if(speed > 5*1024*1024) return 7;
+  else if(speed > 2*1024*1024) return 5;
+  else return 3;
 }

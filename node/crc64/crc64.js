@@ -50,21 +50,5 @@ module.exports = {
     stream.on('error', (err) => {
       callback(err, null);
     });
-  },
-  check_file_path: function(p, callback) {
-    var stream = fs.createReadStream(p,{autoClose: true});
-
-    if (!(stream instanceof _stream.Stream))
-      throw new TypeError("Only (stream, callback) accepted!");
-    var init_crc = 0;
-    stream.on('data', (chunk) => {
-      init_crc = this.check(init_crc, chunk);
-    });
-    stream.on('end', () => {
-      callback(null, init_crc);
-    });
-    stream.on('error', (err) => {
-      callback(err, null);
-    });
   }
 }
