@@ -117,16 +117,31 @@ angular.module('web')
         var client = getClient({region:region, bucket:bucket});
         var progress={current:0,total:0, errorCount:0};
 
+        progress.total += items.length;
+
+        delArr(items, function(terr){
+          if(terr && terr.length>0){
+            df.resolve(terr);
+          }else{
+            df.resolve();
+          }
+        });
+        return df.promise;
+
+
+
         function delArr(arr, fn){
           var c = 0;
           var len = arr.length;
           var terr = [];
-
+          dig();
           function dig(){
 
             if(c>=len){
               if(progCb) progCb(progress);
-              fn(terr);
+              $timeout(function(){
+                fn(terr);
+              },NEXT_TICK);
               return;
             }
 
@@ -193,19 +208,8 @@ angular.module('web')
               });
             }
           }
-          dig();
+          //end dig();
         }
-
-        progress.total += items.length;
-
-        delArr(items, function(terr){
-          if(terr && terr.length>0){
-            df.resolve(terr);
-          }else{
-            df.resolve();
-          }
-        });
-        return df.promise;
       }
 
 
@@ -278,7 +282,9 @@ angular.module('web')
 
           function _dig(){
             if(c>=len){
-              fn(t);
+              $timeout(function(){
+                fn(t);
+              },NEXT_TICK);
               return;
             }
 
@@ -325,7 +331,9 @@ angular.module('web')
 
               if(err){
                 t.push({item: source, error:err});
-                fn(t);
+                $timeout(function(){
+                  fn(t);
+                },NEXT_TICK);
                 return;
               }
               var newTarget = {
@@ -367,16 +375,24 @@ angular.module('web')
 
                 if(terr)t=t.concat(terr);
                 if(result.NextMarker){
-                  nextList(result.NextMarker);
+                  $timeout(function(){
+                    nextList(result.NextMarker);
+                  },NEXT_TICK);
                 }
                 else{
                   if(removeAfterCopy && terr.length==0){
                     //移动全部成功， 删除目录
                     client.deleteObject({Bucket: source.bucket, Key: source.path}, function(err){
-                      fn(t);
+                      $timeout(function(){
+                        fn(t);
+                      },NEXT_TICK);
                     });
                   }
-                  else fn(t);
+                  else {
+                    $timeout(function(){
+                      fn(t);
+                    },NEXT_TICK);
+                  }
                 }
               });
 
@@ -1157,7 +1173,8 @@ angular.module('web')
           apiVersion: '2013-10-15',
           httpOptions: {
             timeout: 0
-          }
+          },
+          maxRetries: 50
         };
 
         if(authInfo.id && authInfo.id.indexOf('STS.')==0){
