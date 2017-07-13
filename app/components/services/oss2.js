@@ -1,8 +1,8 @@
 angular.module('web')
   .factory('ossSvs2', ['$q', '$rootScope', '$timeout', '$state', 'Toast', 'Const', 'AuthInfo',
     function ($q, $rootScope, $timeout, $state, Toast, Const, AuthInfo) {
-      //ubuntu 需要间隔大点
-      var NEXT_TICK =  process.platform=='linux'? 100: 1;
+
+      var NEXT_TICK = 1; 
 
       var DEF_ADDR = 'oss://';
       //var ALY = require('aliyun-sdk');
