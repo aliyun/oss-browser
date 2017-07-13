@@ -1,10 +1,10 @@
 
 'use strict';
-var ALY = require('aliyun-sdk');
+var ALYD = require('aliyun-sdk');
 require('events').EventEmitter.prototype._maxListeners = 1000;
 var TIMEOUT = 10000; //10秒
 //fix
-ALY.util.isBrowser = function(){
+ALYD.util.isBrowser = function(){
   return false;
 };
 
@@ -45,7 +45,7 @@ function OssStore(config) {
 
 
   if (this._config.stsToken) {
-    this.oss = new ALY.OSS({
+    this.oss = new ALYD.OSS({
       accessKeyId: this._config.stsToken.Credentials.AccessKeyId,
       secretAccessKey: this._config.stsToken.Credentials.AccessKeySecret,
       securityToken: this._config.stsToken.Credentials.SecurityToken,
@@ -57,7 +57,7 @@ function OssStore(config) {
     });
   }
   else {
-    this.oss = new ALY.OSS({
+    this.oss = new ALYD.OSS({
       accessKeyId: this._config.aliyunCredential.accessKeyId,
       secretAccessKey: this._config.aliyunCredential.secretAccessKey,
       endpoint: this._config.endpoint,
@@ -82,7 +82,7 @@ function OssStore(config) {
 OssStore.prototype.setStsToken = function(stsToken){
   this._config.stsToken = stsToken;
 
-  this.oss = new ALY.OSS({
+  this.oss = new ALYD.OSS({
     accessKeyId: this._config.stsToken.Credentials.AccessKeyId,
     secretAccessKey: this._config.stsToken.Credentials.AccessKeySecret,
     securityToken: this._config.stsToken.Credentials.SecurityToken,
