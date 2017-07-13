@@ -1,17 +1,25 @@
 import test from 'ava';
 import {Application} from 'spectron';
 
+function getAppPath(){
+  var key = process.platform+'-'+process.arch;
+  switch(key){
+    case 'darwin-x64': return 'build/oss-browser-darwin-x64/oss-browser.app/Contents/MacOS/oss-browser';
+    case 'linux-x64': return 'build/oss-browser-linux-x64/oss-browser';
+    case 'win32-x64': return 'build/oss-browser-win32-x64/oss-browser.exe';
+  }
+}
 
 test.beforeEach(async t => {
   t.context.app = new Application({
-    path: 'build/oss-browser-'+process.platform+'-'+process.arch+'/oss-browser'
+    path:getAppPath()
   });
 
   await t.context.app.start();
 });
 
 test.afterEach.always(async t => {
-   //await t.context.app.stop();
+   await t.context.app.stop();
 });
 
 
@@ -36,6 +44,16 @@ test(async t => {
   t.true(text=='OSS浏览器')
 
 
-  await app.client.click('[ng-click="logout()"]')
+  //如果没退出，先退出
+  console.log('如果没退出，先退出 ');
+  var logoutBtnVisible = await app.client.isVisible('[ng-click="logout()"]');
+  if(logoutBtnVisible){
+    console.log('发现退出按钮，点击');
+    await app.client.click('[ng-click="logout()"]')
+    await app.client.click('button[ng-click="ok()"]')
+  }
+
+
+
 
 });
