@@ -127,7 +127,7 @@ angular.module('web')
       function init() {
         var authInfo = AuthInfo.get();
 
-        $scope.currentAuthInfo = authInfo;
+        $rootScope.currentAuthInfo = authInfo;
 
         if (authInfo.osspath) {
           $scope.ref.isBucketList = false;
