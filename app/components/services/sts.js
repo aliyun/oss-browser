@@ -2,7 +2,7 @@ angular.module('web')
   .factory('stsSvs', ['$q','$state','AuthInfo','Toast','Const',
   function ( $q, $state, AuthInfo, Toast,Const ) {
 
-    //var ALY = require('aliyun-sdk');
+    var ALYD = require('aliyun-sdk');
     return {
        assumeRole: assumeRole
     };
@@ -62,7 +62,7 @@ angular.module('web')
     function getClient(){
 
       var authInfo = AuthInfo.get();
-      var ram = new ALY.STS({
+      var ram = new ALYD.STS({
         accessKeyId: authInfo.id,
         secretAccessKey: authInfo.secret,
         endpoint: 'https://sts.aliyuncs.com',

@@ -1,7 +1,9 @@
 angular.module('web')
   .factory('ossSvs2', ['$q', '$rootScope', '$timeout', '$state', 'Toast', 'Const', 'AuthInfo',
     function ($q, $rootScope, $timeout, $state, Toast, Const, AuthInfo) {
-      var NEXT_TICK = 1;
+
+      var NEXT_TICK = 1; 
+
       var DEF_ADDR = 'oss://';
       //var ALY = require('aliyun-sdk');
       var path = require('path');
@@ -115,28 +117,38 @@ angular.module('web')
         var client = getClient({region:region, bucket:bucket});
         var progress={current:0,total:0, errorCount:0};
 
+        progress.total += items.length;
+
+        delArr(items, function(terr){
+          if(terr && terr.length>0){
+            df.resolve(terr);
+          }else{
+            df.resolve();
+          }
+        });
+        return df.promise;
+
+
+
         function delArr(arr, fn){
           var c = 0;
           var len = arr.length;
           var terr = [];
-
+          dig();
           function dig(){
 
             if(c>=len){
               if(progCb) progCb(progress);
-              fn(terr);
+              $timeout(function(){
+                fn(terr);
+              },NEXT_TICK);
               return;
             }
 
             if(stopDeleteFilesFlag){
-              //停止删除
-              for(var i=c;i<arr.length;i++){
-                terr.push({item: arr[i], error: new Error('User cancelled')});
-              }
-              if(progCb) progCb(progress);
-              fn(terr);
+              df.resolve([ {item:{}, error: new Error('User cancelled')} ]);
               return;
-            };
+            }
 
 
             if(progCb) progCb(progress);
@@ -149,6 +161,12 @@ angular.module('web')
                 progress.total += arr2.length;
                 //删除所有文件
                 delArr(arr2, function(terr2){
+
+                  if(stopDeleteFilesFlag){
+                    df.resolve([ {item:{}, error: new Error('User cancelled')} ]);
+                    return;
+                  }
+
                   if(terr2) terr = terr.concat(terr2);
                   //删除目录本身
                   delFile(item);
@@ -165,7 +183,7 @@ angular.module('web')
 
             function delFile(item){
               if(stopDeleteFilesFlag){
-                dig();
+                df.resolve([{item:{}, error: new Error('User cancelled')}]);
                 return;
               }
 
@@ -190,19 +208,8 @@ angular.module('web')
               });
             }
           }
-          dig();
+          //end dig();
         }
-
-        progress.total += items.length;
-
-        delArr(items, function(terr){
-          if(terr && terr.length>0){
-            df.resolve(terr);
-          }else{
-            df.resolve();
-          }
-        });
-        return df.promise;
       }
 
 
@@ -237,7 +244,6 @@ angular.module('web')
 
         //copy oss file
         function copyOssFile(client, from, to, fn){
-          if(stopCopyFilesFlag) return;
 
           var toKey = to.key;
           var fromKeyOrigin = '/'+from.bucket+'/'+(from.key);
@@ -245,6 +251,7 @@ angular.module('web')
           console.info(removeAfterCopy?'move':'copy', '::',fromKeyOrigin, '==>', toKey);
 
           client.copyObject({Bucket: to.bucket, Key:toKey, CopySource: fromKey},function(err){
+
             if(err){
               fn(err);
               return;
@@ -275,20 +282,17 @@ angular.module('web')
 
           function _dig(){
             if(c>=len){
-              fn(t);
+              $timeout(function(){
+                fn(t);
+              },NEXT_TICK);
               return;
             }
 
 
             if(stopCopyFilesFlag){
-              //停止
-              for(var i=c;i<arr.length;i++){
-                t.push({item: arr[i], error: new Error('User cancelled')});
-              }
-              if(progFn) try{ progFn(progress); }catch(e){}
-              fn(t);
+              df.resolve([ {item:{}, error: new Error('User cancelled')} ]);
               return;
-            };
+            }
 
 
             var item = arr[c];
@@ -304,6 +308,8 @@ angular.module('web')
               progress.current++;
               if(progFn) try{ progFn(progress); }catch(e){}
               c++;
+
+
               //fix ubuntu
               $timeout(_dig, NEXT_TICK);
             });
@@ -325,7 +331,9 @@ angular.module('web')
 
               if(err){
                 t.push({item: source, error:err});
-                fn(t);
+                $timeout(function(){
+                  fn(t);
+                },NEXT_TICK);
                 return;
               }
               var newTarget = {
@@ -359,18 +367,32 @@ angular.module('web')
 
               doCopyOssFiles(source.bucket, source.path, objs, newTarget, function(terr){
 
+
+                if(stopCopyFilesFlag){
+                  df.resolve([ {item:{}, error: new Error('User cancelled')} ]);
+                  return;
+                }
+
                 if(terr)t=t.concat(terr);
                 if(result.NextMarker){
-                  nextList(result.NextMarker);
+                  $timeout(function(){
+                    nextList(result.NextMarker);
+                  },NEXT_TICK);
                 }
                 else{
                   if(removeAfterCopy && terr.length==0){
                     //移动全部成功， 删除目录
                     client.deleteObject({Bucket: source.bucket, Key: source.path}, function(err){
-                      fn(t);
+                      $timeout(function(){
+                        fn(t);
+                      },NEXT_TICK);
                     });
                   }
-                  else fn(t);
+                  else {
+                    $timeout(function(){
+                      fn(t);
+                    },NEXT_TICK);
+                  }
                 }
               });
 
@@ -407,14 +429,9 @@ angular.module('web')
             }
 
             if(stopCopyFilesFlag){
-              //停止
-              for(var i=c;i<items.length;i++){
-                terr.push({item: items[i], error: new Error('User cancelled')});
-              }
-              if(progFn)try{progFn(progress);}catch(e){}
-              fn(terr);
+              df.resolve([ {item:{}, error: new Error('User cancelled')} ]);
               return;
-            };
+            }
 
             var item = items[c];
             var toKey = renameKey;
@@ -956,10 +973,10 @@ angular.module('web')
 
       function listAllFiles(region, bucket, key, folderOnly) {
 
-        if (keepListFilesJob) {
-          keepListFilesJob.abort();
-          keepListFilesJob = null;
-        }
+        // if (keepListFilesJob) {
+        //   keepListFilesJob.abort();
+        //   keepListFilesJob = null;
+        // }
 
         return new Promise(function (a, b) {
           keepListFilesJob = new DeepListJob(region, bucket, key, folderOnly, function (data) {
@@ -1156,7 +1173,8 @@ angular.module('web')
           apiVersion: '2013-10-15',
           httpOptions: {
             timeout: 0
-          }
+          },
+          maxRetries: 50
         };
 
         if(authInfo.id && authInfo.id.indexOf('STS.')==0){

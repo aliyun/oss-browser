@@ -27,7 +27,7 @@ angular.module('web')
               }
            },500);
         }
-
+        onScroll();
         $(window).resize(onScroll);
         $(ele).scroll(onScroll);
       }

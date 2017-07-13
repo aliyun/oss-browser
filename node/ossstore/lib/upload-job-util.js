@@ -14,7 +14,7 @@ module.exports = {
 
   getPartProgress: getPartProgress,
   checkAllPartCompleted: checkAllPartCompleted,
-  
+
   getUploadId: getUploadId,
   completeMultipartUpload: completeMultipartUpload,
 
@@ -28,13 +28,6 @@ module.exports = {
  //  以下是纯函数
  ************************************/
 
-//根据网速调整上传并发量
-function computeMaxConcurrency(speed){
-  if(speed > 8*1024*1024) return 10;
-  else if(speed > 5*1024*1024) return 7;
-  else if(speed > 2*1024*1024) return 5;
-  else return 3;
-}
 
 function getFileCrc64(self, p, fn){
   if(self.crc64Str){
@@ -247,4 +240,13 @@ function getSensibleChunkSize(total) {
   }
 
   return minChunkSize;
+}
+
+
+//根据网速调整上传并发量
+function computeMaxConcurrency(speed){
+  if(speed > 8*1024*1024) return 10;
+  else if(speed > 5*1024*1024) return 7;
+  else if(speed > 2*1024*1024) return 5;
+  else return 3;
 }
