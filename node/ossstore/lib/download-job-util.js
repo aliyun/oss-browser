@@ -81,5 +81,7 @@ function computeMaxConcurrency(speed){
   if(speed > 8*1024*1024) return 10;
   else if(speed > 5*1024*1024) return 7;
   else if(speed > 2*1024*1024) return 5;
-  else return 3;
+  else if(speed > 1024*1024) return 3;
+  else if(speed > 100*1024) return 2;
+  else return 1;
 }
