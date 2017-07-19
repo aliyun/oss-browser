@@ -2,7 +2,7 @@ angular.module('web')
   .factory('ossSvs2', ['$q', '$rootScope', '$timeout', '$state', 'Toast', 'Const', 'AuthInfo',
     function ($q, $rootScope, $timeout, $state, Toast, Const, AuthInfo) {
 
-      var NEXT_TICK = 1; 
+      var NEXT_TICK = 1;
 
       var DEF_ADDR = 'oss://';
       //var ALY = require('aliyun-sdk');
@@ -246,9 +246,8 @@ angular.module('web')
         function copyOssFile(client, from, to, fn){
 
           var toKey = to.key;
-          var fromKeyOrigin = '/'+from.bucket+'/'+(from.key);
           var fromKey = '/'+from.bucket+'/'+encodeURIComponent(from.key);
-          console.info(removeAfterCopy?'move':'copy', '::',fromKeyOrigin, '==>', toKey);
+          console.info(removeAfterCopy?'move':'copy', '::', from.bucket+'/'+(from.key), '==>',to.bucket+'/'+toKey);
 
           client.copyObject({Bucket: to.bucket, Key:toKey, CopySource: fromKey},function(err){
 
@@ -299,7 +298,7 @@ angular.module('web')
             var toKey = target.key.replace(/\/$/,'');
             toKey = (toKey?toKey+'/': '')+ (item.path.substring(pkey.length));
 
-            copyOssFile(client, {bucket:bucket,key: item.path},{bucket:bucket, key: toKey}, function(err){
+            copyOssFile(client, {bucket:bucket,key: item.path},{bucket: target.bucket, key: toKey}, function(err){
               if(err){
                 progress.errorCount++;
                 if(progFn) try{ progFn(progress); }catch(e){}

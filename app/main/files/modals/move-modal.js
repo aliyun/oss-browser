@@ -61,8 +61,7 @@ angular.module('web')
           n.bucket = fromInfo.bucket;
         });
 
-        console.log(fromInfo.region, items, target, renamePath);
-        //return;
+        //console.log(fromInfo.region, items, target, renamePath);
 
         //复制 or 移动
         ossSvs2.copyFiles(fromInfo.region, items, target, function progress(prog){
