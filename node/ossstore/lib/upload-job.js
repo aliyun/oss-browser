@@ -5,6 +5,7 @@ var fs = require('fs');
 var path = require('path');
 var util = require('./upload-job-util');
 var isDebug = process.env.NODE_ENV=='development';
+var mime = require('mime');
 
 class UploadJob extends Base {
 
@@ -242,8 +243,10 @@ UploadJob.prototype.uploadSingle = function () {
     var params = {
       Bucket: self.to.bucket,
       Key: self.to.key,
-      Body: data
+      Body: data,
+      ContentType: mime.lookup(self.from.path)
     };
+    console.log(params)
 
 
     self.prog = {
@@ -334,8 +337,10 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
 
   var params = {
     Bucket: self.to.bucket,
-    Key: self.to.key
+    Key: self.to.key,
+    ContentType: mime.lookup(self.from.path)
   };
+  console.log(params)
   self.prog.total = checkPoints.file.size;
 
   var keepFd;

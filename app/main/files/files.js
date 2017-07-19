@@ -756,7 +756,7 @@ angular.module('web')
         // }
         var keyword = $scope.keepMoveOptions.isCopy ? '<span class="text-primary">复制</span>' : '<span class="text-danger">移动</span>';
 
-        if($scope.keepMoveOptions.items.length==1){
+        if($scope.keepMoveOptions.items.length==1 && $scope.currentInfo.bucket==$scope.keepMoveOptions.currentInfo.bucket){
            //1个支持重命名
            $modal.open({
              templateUrl: 'main/files/modals/rename-modal.html',
@@ -790,8 +790,7 @@ angular.module('web')
         }
         var msg = '将 <span class="text-info">'+$scope.keepMoveOptions.items[0].name
             + '等</span> ' + keyword+' 到这个目录下面（如有相同的文件或目录则覆盖）？';
-
-
+ 
         Dialog.confirm(keyword, msg, function(b){
           if(b){
              $modal.open({
