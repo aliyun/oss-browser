@@ -13,7 +13,7 @@ angular.module('web')
       */
       getFileType: function(item){
          var ext = (item.name.indexOf('.')!=-1)
-             ? item.name.substring(item.name.lastIndexOf('.')+1)
+             ? item.name.toLowerCase().substring(item.name.lastIndexOf('.')+1)
              : '';
 
          switch(ext){
