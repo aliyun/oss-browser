@@ -3,6 +3,7 @@ angular.module('web')
    .controller('mainCtrl',['$scope','$rootScope', '$state', '$q','Const','AuthInfo',
     function($scope, $rootScope, $state, $q, Const, AuthInfo){
       var isInit = false;
+
       $scope.$on('$stateChangeSuccess', function(){
         var name = $state.current.name;
         if(name!='login' && !isInit){

@@ -1,6 +1,6 @@
 {
   "name": "oss-browser",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "main": "dist/main.js",
   "upgrade_url": "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
   "scripts": {
@@ -26,6 +26,7 @@
   "devDependencies": {
     "angular": "1.5.8",
     "angular-sanitize": "1.5.8",
+    "angular-translate": "^2.15.2",
     "angular-ui-bootstrap": "^2.3.1",
     "angular-ui-codemirror": "0.3.0",
     "angular-ui-router": "0.2.18",

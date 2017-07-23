@@ -44,7 +44,19 @@
         <a href="" ng-click="logout()"><i class="fa fa-power-off"></i> 退出</a>
       </li>
     </ul>
+
   </div>
+
+  <form class="navbar-form navbar-right" ng-if="hideTopNav">
+    <div class="form-inline form-group">
+       <label class="control-label">{{'language'|translate}}:</label>
+       <select class="form-control input-sm" ng-model="langSettings.lang"
+       ng-change="langSettings.changeLanguage(langSettings.lang)"
+       ng-options="a.lang as a.label for a in langSettings.langList"></select>
+       &nbsp;
+     </div>
+  </form>
+
 </nav>
 
 <div style="height:50px;" class="clearfix"></div>

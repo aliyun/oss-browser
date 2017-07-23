@@ -11,15 +11,21 @@
 
     <div class="form-group">
       <label class="col-sm-4 control-label">最大上传任务数:</label>
-      <div class="col-sm-7"> 
-        <input type="number" ng-model="set.maxUploadJobCount" max="10" min="1" required class=" form-control" />
+      <div class="col-sm-7">
+        <input type="number" name="maxUploadJobCount"
+         ng-model="set.maxUploadJobCount"
+         ng-change="setChange('maxUploadJobCount')"
+          max="10" min="1" required class=" form-control" />
       </div>
     </div>
 
     <div class="form-group">
       <label class="col-sm-4 control-label">最大下载任务数:</label>
       <div class="col-sm-7">
-        <input type="number" ng-model="set.maxDownloadJobCount" max="10" min="1" required class=" form-control" />
+        <input type="number" name="maxDownloadJobCount"
+        ng-model="set.maxDownloadJobCount"
+        ng-change="setChange('maxDownloadJobCount')"
+        max="10" min="1" required class=" form-control" />
       </div>
     </div>
 
@@ -36,7 +42,10 @@
       <div class="col-sm-7">
         <div class="checkbox">
         <label>
-          <input type="checkbox" ng-model="set.showImageSnapshot" ng-true-value="1" ng-false-value="0" />
+          <input type="checkbox" name="showImageSnapshot"
+          ng-model="set.showImageSnapshot"
+          ng-change="setChange('showImageSnapshot')"
+          ng-true-value="1" ng-false-value="0" />
           (在文件列表中显示图片缩略, 会消耗一定的流量)
         </label>
         </div>
@@ -44,14 +53,26 @@
     </div>
 
 
+
+    <div class="form-group">
+       <label class="col-sm-4 control-label">{{'language'|translate}}:</label>
+       <div class="col-sm-7">
+         <select class="form-control input-sm" ng-model="langSettings.lang"
+         ng-change="langSettings.changeLanguage(langSettings.lang)"
+         ng-options="a.lang as a.label for a in langSettings.langList"></select>
+       </div>
+     </div>
+
+
+
   </div>
   <div class="modal-footer">
-    <button type="submit" class="btn btn-success btn-sm">
+    <!-- <button type="submit" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-ok"></i>
-      保存</button>
+      保存</button> -->
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
-      取消</button>
+      关闭</button>
   </div>
   </div>
 </form>

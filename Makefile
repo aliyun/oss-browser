@@ -1,7 +1,7 @@
 ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/
 ELECTRON_VERSION=1.6.11
 BUILD=ELECTRON_MIRROR=$(ELECTRON_MIRROR) electron-packager ./dist --overwrite --out=build --version $(ELECTRON_VERSION)
-VERSION=1.0.3
+VERSION=1.1.0
 NAME=oss-browser
 
 i:
