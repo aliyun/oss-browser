@@ -1,8 +1,8 @@
 
 
 angular.module('web')
-  .controller('topCtrl', ['$scope', '$rootScope','$uibModal', '$location', '$timeout','Dialog','Auth', 'AuthInfo','upgradeSvs','safeApply',
-    function ($scope, $rootScope, $modal, $location, $timeout,Dialog,Auth, AuthInfo, upgradeSvs, safeApply) {
+  .controller('topCtrl', ['$scope', '$rootScope','$uibModal', '$location', '$timeout','Dialog','Auth','Const', 'AuthInfo','upgradeSvs','safeApply',
+    function ($scope, $rootScope, $modal, $location, $timeout,Dialog,Auth,Const, AuthInfo, upgradeSvs, safeApply) {
 
       var fs = require('fs');
       var path = require('path');
@@ -32,13 +32,16 @@ angular.module('web')
         },600);
       }
 
-      $rootScope.app = {};
+      $rootScope.app = {
+        name: Const.APPNAME
+      };
 
       angular.extend($rootScope.app, Global.app);
 
+
       //$scope.aid = AuthInfo.get().id;
       $scope.authInfo = AuthInfo.get();
-      
+
       $timeout(init, 2000);
 
       function init(){

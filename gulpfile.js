@@ -17,7 +17,8 @@ var taskFns = {
       //.pipe(plugins.jshint())
       //.pipe(plugins.jshint.reporter('default'))
       .pipe(plugins.babel({
-        presets: ['es2015']
+        presets: ['es2015','stage-2'],
+        plugins: ["transform-runtime"]
       }))
       .pipe(plugins.concat('app.js'))
       .pipe(gulp.dest(DIST))
@@ -86,7 +87,7 @@ gulp.task('libJS', function () {
       './node_modules/codemirror/addon/merge/merge.js',
       './node_modules/codemirror/mode/meta.js',
 
-      './node_modules/angular-translate/dist/angular-translate.min.js',
+      //'./node_modules/angular-translate/dist/angular-translate.min.js',
 
     ];
 

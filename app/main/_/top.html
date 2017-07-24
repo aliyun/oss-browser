@@ -11,17 +11,28 @@
 
   <div class="collapse navbar-collapse" id="collapse-1" ng-if="!hideTopNav">
     <ul class="nav navbar-nav">
-      <li ng-class="{active:showTab==1}"><a href="#/"><i class="glyphicon glyphicon-folder-close"></i> 文件</a></li>
+      <li ng-class="{active:showTab==1}"><a href="#/"><i class="glyphicon glyphicon-folder-close"></i>
+        {{'files'|translate}}
+        <!-- 文件 -->
+      </a></li>
       </li>
     </ul>
 
     <ul class="nav navbar-nav navbar-right" style="margin-right:10px;">
 
-      <li ng-if="authInfo.id.indexOf('STS.')!=0"><a href="" ng-click="showFavList()"><i class="fa fa-star"></i> 书签管理</a></li>
-      <li><a href="" ng-click="showSettings()"><i class="fa fa-cog"></i> 设置</a></li>
+      <li ng-if="authInfo.id.indexOf('STS.')!=0"><a href="" ng-click="showFavList()"><i class="fa fa-star"></i>
+        {{'bookmarks'|translate}}
+        <!-- 书签管理 -->
+      </a></li>
+      <li><a href="" ng-click="showSettings()"><i class="fa fa-cog"></i>
+         {{'settings'|translate}}
+        <!-- 设置 -->
+      </a></li>
       <li>
         <a href="" ng-click="showAbout()">
-          <i class="fa fa-about"></i> 关于
+          <i class="fa fa-about"></i>
+          {{'about'|translate}}
+          <!-- 关于 -->
             <small style="color:#fff;background:red;border-radius:2px"
             ng-if="!upgradeInfo.isLastVersion"> new </small>
         </a>

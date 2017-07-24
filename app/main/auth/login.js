@@ -1,7 +1,7 @@
 
 angular.module('web')
-  .controller('loginCtrl', ['$scope', '$rootScope','Auth','AuthInfo','$timeout','$location','Const','Dialog','Toast','Cipher',
-    function ($scope, $rootScope, Auth, AuthInfo,$timeout, $location, Const,Dialog, Toast, Cipher) {
+  .controller('loginCtrl', ['$scope', '$rootScope', 'I18n','Auth','AuthInfo','$timeout','$location','Const','Dialog','Toast','Cipher',
+    function ($scope, $rootScope, I18n, Auth, AuthInfo,$timeout, $location, Const,Dialog, Toast, Cipher) {
 
       var KEY_REMEMBER = Const.KEY_REMEMBER;
       var SHOW_HIS = Const.SHOW_HIS;
@@ -98,8 +98,11 @@ angular.module('web')
         // $scope.item.secret = h.secret;
         // $scope.item.desc = h.desc;
       }
+
       function showRemoveHis(h){
-        Dialog.confirm('删除AK','ID：'+h.id+', 确定删除?',function(b){
+        var title = I18n.translate('auth.removeAK.title'); //删除AK
+        var message = I18n.translate('auth.removeAK.message',{id: '<code>'+h.id+'</code>'}); //'ID：'+h.id+', 确定删除?'
+        Dialog.confirm(title,message,function(b){
           if(b){
             AuthInfo.removeFromHistories(h.id);
             listHistories();
@@ -112,11 +115,14 @@ angular.module('web')
       }
 
       function showCleanHistories(){
-        Dialog.confirm('清空AK历史','确定?',function(b){
+        var title = I18n.translate('auth.clearAKHistories.title'); //清空AK历史
+        var message = I18n.translate('auth.clearAKHistories.message'); //确定?
+        var successMessage = I18n.translate('auth.clearAKHistories.successMessage'); //已清空AK历史
+        Dialog.confirm(title, message,function(b){
           if(b){
             AuthInfo.cleanHistories();
             listHistories();
-            Toast.success('已清空AK历史');
+            Toast.success(successMessage);
           }
         },1);
       }

@@ -12,6 +12,12 @@
   <div class="clearfix"></div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn-sm btn btn-{{opt.cls}}" ng-click="ok()">确定</button>
-  <button ng-if="!isAlert" type="button" class="btn btn-sm btn-default" ng-click="cancel()">取消</button>
+  <button type="button" class="btn-sm btn btn-{{opt.cls}}" ng-click="ok()">
+    {{'ok'|translate}}
+    <!-- 确定 -->
+  </button>
+  <button ng-if="!isAlert" type="button" class="btn btn-sm btn-default" ng-click="cancel()">
+    {{'cancel'|translate}}
+    <!-- 取消 -->
+  </button>
 </div>

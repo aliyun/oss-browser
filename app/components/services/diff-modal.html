@@ -14,9 +14,13 @@
 </div>
 <div class="modal-footer">
   <button ng-if="editable" type="button" ng-click="ok()"
-          class="btn btn-sm btn-primary">确定
+          class="btn btn-sm btn-primary">
+          {{'ok'|translate}}
+          <!-- 确定 -->
   </button>
   <button type="button" ng-click="cancel()"
-          class="btn btn-sm btn-default">取消
+          class="btn btn-sm btn-default">
+          {{'cancel'|translate}}
+          <!-- 取消 -->
   </button>
 </div>
