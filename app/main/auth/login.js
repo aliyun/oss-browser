@@ -63,6 +63,9 @@ angular.module('web')
 
                }
                $scope.authTokenInfo = info;
+
+               $scope.authTokenInfo.expirationStr = moment(new Date(info.expiration)).format('YYYY-MM-DD HH:mm:ss');
+
             }else if(new Date(info.expiration).getTime() < new Date().getTime()){
                $scope.authTokenInfo = null;
             }

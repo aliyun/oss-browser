@@ -21,7 +21,10 @@ angular.module('web')
           region: regions[0].id,
           storageClass: 'Standard'
         },
-        onRegionChanged: onRegionChanged
+        onRegionChanged: onRegionChanged,
+        openURL: function(v){
+          openExternal(v)
+        }
       });
 
       i18nStorageClassesType();

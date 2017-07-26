@@ -252,7 +252,7 @@ module.exports = {
   'generate': '生成',
   'qrcode.download': '扫码下载',
 
-  'restore.checker.message1': '归档文件，需要恢复才能预览或下载',
+  'restore.checker.message1': '归档文件，需要恢复才能预览或下载。',
   'restore.immediately': '立即恢复',
   'restore.checker.message2': '归档文件已恢复，可读截止时间',
   'restore.onprogress': '归档文件正在恢复中，请耐心等待...',
@@ -297,4 +297,11 @@ module.exports = {
   'remove.from.list.title': '从列表中移除',
   'remove.from.list.message': '确定移除该任务?',
 
+  'status.running.uploading': '正在上传',
+  'status.running.downloading': '正在下载',
+  'status.running': '运行中',
+  'status.stopped': '已停止',
+  'status.failed': '失败',
+  'status.finished': '完成',
+  'status.waiting': '等待',
 }

@@ -39,7 +39,7 @@
   {{'download'|translate}}</button>
 
 
-<button type="button" class="btn btn-default btn-sm" ng-click="showFn.address();">
+<button ng-if="currentAuthInfo.id.indexOf('STS.')!=0" type="button" class="btn btn-default btn-sm" ng-click="showFn.address();">
   <i class="fa fa-download"></i>
   <!-- 获取地址 -->
     {{'getAddress'|translate}}

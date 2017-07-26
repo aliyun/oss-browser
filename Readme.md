@@ -132,13 +132,15 @@ npm run win64  # 打包win64程序， 可选: mac, linux64 等
 
 ```
 oss-browser/
- |-- app/                 # 前端代码, 采用angular框架
+ |-- app/                 # 前端代码, 采用angular1.x + bootstrap3.x
  |-- node/                # 前端调用的 node 模块
+     |-- crc64/           # crc校验模块，用来校验文件完整性
      |-- ossstore/        # 上传下载job类
+     |-- i18n/            # 国际化
  |-- vendor/              # 前端 aliyun-sdk 依赖
  |-- node_modules         # node端依赖的模块
  |-- dist                 # 前端临时build出的代码
- |-- build                # electron build出的应用
+ |-- build                # electron build 出的应用
  |-- gulpfile.js          # 项目管理文件
  |-- package.json         # 项目描述文件
 ```

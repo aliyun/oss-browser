@@ -133,9 +133,9 @@
                                <!-- 授权码已经过期 -->
                              </small>
                              <small class="text-success" ng-if="authTokenInfo && !authTokenInfo.isExpired">
-                              ({{"auth.authToken.info.validUntil"|translate:'{expiration:authTokenInfo.expiration|timeFormat}'}},
+                              ({{"auth.authToken.info.validUntil"|translate:{expiration:authTokenInfo.expirationStr} }},
                                <!-- (有效期至{{authTokenInfo.expiration|timeFormat}},  -->
-                               {{'auth.authToken.info.leftTime'}}: <my-timer class="text-warning" expiration="authTokenInfo.expiration"></my-timer>)
+                               {{'auth.authToken.info.leftTime'|translate}}: <my-timer class="text-warning" expiration="authTokenInfo.expiration"></my-timer>)
                              </small>
                         </div>
                     </div>

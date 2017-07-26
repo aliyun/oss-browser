@@ -24,7 +24,7 @@
 
     <div class="form-group">
       <label class="col-sm-2 control-label" for="region">
-        {{'region'|translate}}
+        {{'region'|translate}}:
         <!-- 区域: -->
       </label>
       <div class="col-sm-8">
@@ -35,7 +35,7 @@
 
     <div class="form-group">
       <label class="col-sm-2 control-label" for="acl">
-        {{'acl'|translate}}
+        {{'acl'|translate}}:
         <!-- 权限: -->
       </label>
       <div class="col-sm-8">
@@ -47,6 +47,9 @@
     <div class="form-group">
       <label class="col-sm-2 control-label" for="acl">
         {{'type'|translate}}
+        <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}" tooltip-append-to-body="true"
+          ng-click="openURL('https://help.aliyun.com/document_detail/51374.html')">
+          <i class="fa fa-question-circle"></i></a> :
         <!-- 类型: -->
       </label>
       <div class="col-sm-8">

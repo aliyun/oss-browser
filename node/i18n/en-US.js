@@ -33,17 +33,17 @@ module.exports = {
   'auth.description.placeholder': 'Optional, Up to 30 words',
   'auth.remember': 'Remember',
   'auth.login': 'Login',
-  'auth.akHistories': 'AK histories',
+  'auth.akHistories': 'AK Histories',
 
   'auth.authToken': 'Auth-Token',
-  'auth.authToken.tooltip': 'Open the help file',
+  'auth.authToken.tooltip': 'View document',
   'auth.authToken.placeholder': 'Please enter the authorization token',
-  'auth.authToken.error.invalid': 'Please enter a valid authorization code',
-  'auth.authToken.error.expired': 'The authorization code has expired',
+  'auth.authToken.error.invalid': 'Please enter a valid authorization token',
+  'auth.authToken.error.expired': 'The authorization token has expired',
   'auth.authToken.info.validUntil': 'Valid until {{expiration}}',
   'auth.authToken.info.leftTime': 'Left Time',
 
-  'auth.clearHistories': 'Clear histories',
+  'auth.clearHistories': 'Clear Histories',
 
   'actions': 'Actions',
   'use': 'Use',
@@ -73,8 +73,8 @@ module.exports = {
   'about': 'About',
   'bookmarks': 'Bookmarks',
   'logout': 'Logout',
-  'logout.message': 'Are you sure you wan\'t to logout?',
-  'main.upgration': 'Upgration',
+  'logout.message': 'Are you sure you want to logout?',
+  'main.upgration': 'Release Notes',
   'tempCert': 'Temp Cert',
   'setup.success': 'Set up successfully',
 
@@ -116,7 +116,7 @@ module.exports = {
   'nodata': 'No data',
 
   'delete.multiparts.title': 'Delete multiparts',
-  'delete.multiparts.message': 'Are you sure you wan\'t to delete {{num}} multiparts？',
+  'delete.multiparts.message': 'Are you sure you want to delete {{num}} multiparts？',
   'delete.multiparts.on': 'Deleting...',
   'delete.multiparts.success': 'Deleted multiparts successfully',
 
@@ -126,7 +126,7 @@ module.exports = {
   'bucket.add.success': 'Created successfully',
 
   'bucket.delete.title': 'Delete Bucket',
-  'bucket.delete.message': 'Bucket Name:<code>{{name}}</code>, Region:<code>{{region}}</code>, Are you sure you wan\'t to delete this bucket?',
+  'bucket.delete.message': 'Bucket Name:<code>{{name}}</code>, Region:<code>{{region}}</code>, Are you sure you want to delete this bucket?',
   'bucket.delete.success': 'Deleted Bucket Successfully',
 
   'simplePolicy.title': 'Simplify policy authorization',
@@ -252,7 +252,7 @@ module.exports = {
   'generate': 'Generate',
   'qrcode.download': 'Sweep code to download',
 
-  'restore.checker.message1': 'Archive need to be restored in order to preview or download',
+  'restore.checker.message1': 'Archive need to be restored in order to preview or download.',
   'restore.immediately': 'Restore immediately',
   'restore.checker.message2': 'The archive has been restored, the expiration time',
   'restore.onprogress': 'Archive file is recovering, please be patient ...',
@@ -298,4 +298,11 @@ module.exports = {
   'remove.from.list.title': 'Remove',
   'remove.from.list.message': 'Are you sure you want to remove this task?',
 
+  'status.running.uploading': 'Uploading',
+  'status.running.downloading': 'Downloading',
+  'status.running': 'Running',
+  'status.stopped': 'Stopped',
+  'status.failed': 'Failed',
+  'status.finished': 'Finished',
+  'status.waiting': 'Waiting',
 }

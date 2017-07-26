@@ -35,10 +35,11 @@ angular.module('web')
 
       $rootScope.app = {};
       angular.extend($rootScope.app, Global.app);
-      
+
 
       //$scope.aid = AuthInfo.get().id;
       $scope.authInfo = AuthInfo.get();
+      $scope.authInfo.expirationStr = moment(new Date($scope.authInfo.expiration)).format('YYYY-MM-DD HH:mm:ss');
 
       $timeout(init, 2000);
 
