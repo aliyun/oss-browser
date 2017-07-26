@@ -64,8 +64,7 @@ function createWindow() {
   win.loadURL(`file://${__dirname}/index.html`);
 
   win.setMenuBarVisibility(false);
-  // Open the DevTools.
-  //win.webContents.openDevTools();
+
 
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -79,6 +78,9 @@ function createWindow() {
   // drawin 就是 MacOS
   if(process.env.NODE_ENV=='development'){
     console.log('开发模式');
+    // Open the DevTools.
+    win.webContents.openDevTools();
+    
   }else if (process.platform === 'darwin') {
     // Create the Application's main menu
     let template = getMenuTemplate();
