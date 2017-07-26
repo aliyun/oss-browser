@@ -386,8 +386,8 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             console.warn('用户取消');
             return;
           }
-
-          if (retryCount < maxRetries) {
+ 
+          if (retryCount < maxRetries && err.code!='InvalidObjectState' ) {
             retryCount++;
             console.log(`retry download part [${n}] error:${err}, ${self.to.path}`);
             checkPoints.Parts[partNumber].loaded = 0;

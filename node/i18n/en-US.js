@@ -270,7 +270,7 @@ module.exports = {
 
   'save': 'Save',
   'filesize': 'File size',
-  'codepreview.notsupport': 'This file does not support direct opening, please download to the local and then open.',
+  'codepreview.notsupport': 'This file can not be opening directly, please download to the local and then open.',
   'download.file': 'Download File',
 
   'lastModifyTime': 'Last Modified',

@@ -27,6 +27,8 @@
   <hr/>
 
 
+  <div ng-if="isLoading" class="pd2">{{'loading'|translate}}</div>
+
   <div ng-if="!isLoading" class="pd2">
     <div ng-if="!info.isLastVersion">
       <span class="text-info">
