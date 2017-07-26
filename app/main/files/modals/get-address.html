@@ -5,12 +5,14 @@
     </button>
     <h4 class="modal-title">
       <i class="fa fa-download"></i>
-      获取地址</h4>
+      <!-- 获取地址 -->
+      {{'getAddress.title'|translate}}
+    </h4>
   </div>
   <div class="modal-body">
 
     <div class="form-group">
-      <label class="col-sm-2 control-label" for="name">名称:</label>
+      <label class="col-sm-2 control-label" for="name">{{'name'|translate}}:</label>
       <div class="col-sm-8">
         <input type="text" ng-model="item.name" id="name"  readonly
         placeholder="bucket名称" class="input-md form-control"/>
@@ -18,22 +20,32 @@
     </div>
 
     <div class="form-group" ng-if="step==1">
-      <label class="col-sm-2 control-label" for="acl">地址:</label>
+      <label class="col-sm-2 control-label" for="acl">
+        {{'address'|translate}}
+        <!-- 地址: -->
+      </label>
       <div class="col-sm-8">
         <textarea ng-model="item.url" rows="6"  class="input-md form-control"></textarea>
       </div>
     </div>
 
     <div class="form-group" ng-if="step==2">
-      <label class="col-sm-2 control-label" for="acl">地址:</label>
+      <label class="col-sm-2 control-label" for="acl">
+        {{'address'|translate}}:
+        <!-- 地址: -->
+      </label>
       <div ng-if="!info.url"  class="col-sm-8">
-        请输入链接有效期:
+        <!-- 请输入链接有效期: -->
+        {{'getAddress.message'|translate}}:
         <input type="number" ng-model="info.sec" id="sec" required
-        placeholder="" class="input-md form-control" style="display:inline-block;width:80px"/>秒
+        placeholder="" class="input-md form-control" style="display:inline-block;width:80px"/>
+        {{'unit.second'|translate}}
         &nbsp;&nbsp;
         <button type="submit" class="btn btn-success btn-sm">
           <i class="glyphicon glyphicon-ok"></i>
-          生成</button>
+          <!-- 生成 -->
+          {{'generate'|translate}}
+        </button>
       </div>
 
       <div ng-if="info.url" class="col-sm-8">
@@ -47,7 +59,10 @@
     </div>
 
     <div class="text-center">
-      <qrcode ng-if="info.url" text="info.url" width="200" height="200">扫码下载</qrcode>
+      <qrcode ng-if="info.url" text="info.url" width="300" height="300">
+        <!-- 扫码下载 -->
+        {{'qrcode.download'|translate}}
+      </qrcode>
     </div>
 
 
@@ -57,6 +72,6 @@
 
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
-      关闭</button>
+      {{'close'|translate}}</button>
   </div>
 </form>

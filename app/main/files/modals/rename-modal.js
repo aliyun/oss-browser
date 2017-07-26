@@ -1,8 +1,8 @@
 angular.module('web')
-  .controller('renameModalCtrl', ['$scope','$uibModalInstance','$uibModal','item', 'isCopy','currentInfo','moveTo', 'callback','ossSvs2','Dialog','Toast',
-    function ($scope, $modalInstance, $modal, item, isCopy, currentInfo, moveTo, callback, ossSvs2, Dialog, Toast) {
-
-      console.log(item)
+  .controller('renameModalCtrl', ['$scope','$uibModalInstance', '$translate','$uibModal','item', 'isCopy','currentInfo','moveTo', 'callback','ossSvs2','Dialog','Toast',
+    function ($scope, $modalInstance, $translate, $modal, item, isCopy, currentInfo, moveTo, callback, ossSvs2, Dialog, Toast) {
+      var T = $translate.instant;
+      //console.log(item)
       angular.extend($scope, {
         currentInfo: currentInfo,
         moveTo: moveTo,
@@ -32,10 +32,14 @@ angular.module('web')
           //console.log(item.path, newPath)
           if(item.path==newPath)return;
 
+          var title = T('whetherCover.title'); //是否覆盖
+          var msg1 = T('whetherCover.message1'); //已经有同名目录，是否覆盖?
+          var msg2 = T('whetherCover.message2'); //已经有同名文件，是否覆盖?
+
           $scope.isLoading=true;
           ossSvs2.checkFolderExists(moveTo.region,moveTo.bucket, newPath).then(function(has){
             if(has){
-              Dialog.confirm('是否覆盖','已经有同名目录，是否覆盖?', function(b){
+              Dialog.confirm(title, msg1, function(b){
                 if(b){
                   showMoveFolder(newPath);
                 }else{
@@ -56,7 +60,7 @@ angular.module('web')
           $scope.isLoading=true;
 
           ossSvs2.checkFileExists(moveTo.region, moveTo.bucket,newPath).then(function(data){
-            Dialog.confirm('是否覆盖','已经有同名文件，是否覆盖?', function(b){
+            Dialog.confirm(title,msg2, function(b){
               if(b){
                 renameFile(newPath);
               }else{
@@ -70,9 +74,12 @@ angular.module('web')
 
       }
       function renameFile(newPath){
-        Toast.info('正在重命名...');
+        var onMsg = T('rename.on');  //正在重命名...
+        var successMsg = T('rename.success'); //重命名成功
+
+        Toast.info(onMsg);
         ossSvs2.moveFile(currentInfo.region, currentInfo.bucket, item.path, newPath, isCopy).then(function(){
-          Toast.success('重命名成功');
+          Toast.success(successMsg);
           $scope.isLoading=false;
           callback();
           cancel();
@@ -82,6 +89,7 @@ angular.module('web')
       }
 
       function showMoveFolder(newPath){
+        var successMsg = T('rename.success'); //重命名成功
         $modal.open({
           templateUrl: 'main/files/modals/move-modal.html',
           controller: 'moveModalCtrl',
@@ -104,7 +112,7 @@ angular.module('web')
             },
             callback: function () {
               return function () {
-                Toast.success('重命名成功');
+                Toast.success(successMsg);
                 $scope.isLoading=false;
                 callback();
                 cancel();

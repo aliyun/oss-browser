@@ -1,12 +1,16 @@
 
 angular.module('web')
-  .controller('loginCtrl', ['$scope', '$rootScope','Auth','AuthInfo','$timeout','$location','Const','Dialog','Toast','Cipher',
-    function ($scope, $rootScope, Auth, AuthInfo,$timeout, $location, Const,Dialog, Toast, Cipher) {
+  .controller('loginCtrl', ['$scope', '$rootScope', '$translate','Auth','AuthInfo','$timeout','$location','Const','Dialog','Toast','Cipher',
+    function ($scope, $rootScope, $translate, Auth, AuthInfo,$timeout, $location, Const, Dialog, Toast, Cipher) {
+
+
 
       var KEY_REMEMBER = Const.KEY_REMEMBER;
       var SHOW_HIS = Const.SHOW_HIS;
       var KEY_AUTHTOKEN = 'key-authtoken';
       var regions = angular.copy(Const.regions);
+
+      var T = $translate.instant;
 
       angular.extend($scope, {
         gtab: 1,
@@ -59,6 +63,9 @@ angular.module('web')
 
                }
                $scope.authTokenInfo = info;
+
+               $scope.authTokenInfo.expirationStr = moment(new Date(info.expiration)).format('YYYY-MM-DD HH:mm:ss');
+
             }else if(new Date(info.expiration).getTime() < new Date().getTime()){
                $scope.authTokenInfo = null;
             }
@@ -98,8 +105,11 @@ angular.module('web')
         // $scope.item.secret = h.secret;
         // $scope.item.desc = h.desc;
       }
+
       function showRemoveHis(h){
-        Dialog.confirm('删除AK','ID：'+h.id+', 确定删除?',function(b){
+        var title = T('auth.removeAK.title'); //删除AK
+        var message = T('auth.removeAK.message',{id: '<code>'+h.id+'</code>'}); //'ID：'+h.id+', 确定删除?'
+        Dialog.confirm(title,message,function(b){
           if(b){
             AuthInfo.removeFromHistories(h.id);
             listHistories();
@@ -112,11 +122,14 @@ angular.module('web')
       }
 
       function showCleanHistories(){
-        Dialog.confirm('清空AK历史','确定?',function(b){
+        var title = T('auth.clearAKHistories.title'); //清空AK历史
+        var message = T('auth.clearAKHistories.message'); //确定?
+        var successMessage = T('auth.clearAKHistories.successMessage'); //已清空AK历史
+        Dialog.confirm(title, message,function(b){
           if(b){
             AuthInfo.cleanHistories();
             listHistories();
-            Toast.success('已清空AK历史');
+            Toast.success(successMessage);
           }
         },1);
       }

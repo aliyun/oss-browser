@@ -1,7 +1,7 @@
 angular.module('web')
-  .factory('jobUtil', ['$q', '$state', '$timeout',
-   function ($q, $state, $timeout) {
-
+  .factory('jobUtil', ['$q', '$state', '$timeout','$translate',
+   function ($q, $state, $timeout, $translate) {
+      var T = $translate.instant;
       return {
         getStatusLabel: getStatusLabel,
         getStatusCls: getStatusCls
@@ -20,11 +20,11 @@ angular.module('web')
       function getStatusLabel(s, isUp){
         if(!s)return s;
         switch(s.toLowerCase()){
-          case 'running': return isUp? '正在上传':'正在下载';
-          case 'failed': return '失败';
-          case 'finished': return '完成';
-          case 'stopped': return '暂停';
-          default : return '等待';
+          case 'running': return isUp? T('status.running.uploading'):T('status.running.downloading');//'正在上传':'正在下载';
+          case 'failed': return T('status.failed');//'失败';
+          case 'finished': return T('status.finished');// '完成';
+          case 'stopped': return T('status.stopped');//'暂停';
+          default : return T('status.waiting');//'等待';
         }
       }
    }

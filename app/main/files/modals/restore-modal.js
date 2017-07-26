@@ -1,7 +1,7 @@
 angular.module('web')
-  .controller('restoreModalCtrl', ['$scope','$uibModalInstance','ossSvs2','item','currentInfo', 'callback','Toast','safeApply',
-    function ($scope, $modalInstance, ossSvs2, item, currentInfo, callback, Toast, safeApply) {
-
+  .controller('restoreModalCtrl', ['$scope','$uibModalInstance', '$translate','ossSvs2','item','currentInfo', 'callback','Toast','safeApply',
+    function ($scope, $modalInstance, $translate, ossSvs2,  item, currentInfo, callback, Toast, safeApply) {
+      var T = $translate.instant;
       angular.extend($scope, {
         currentInfo: currentInfo,
         item: item,
@@ -57,10 +57,10 @@ angular.module('web')
         if(!form1.$valid)return;
 
         var days = $scope.info.days;
-        
-        Toast.info('提交中...');
+
+        Toast.info(T('restore.on'));//'提交中...'
         ossSvs2.restoreFile(currentInfo.region, currentInfo.bucket, item.path, days).then(function(){
-          Toast.success('恢复请求已经提交');
+          Toast.success(T('restore.success')); //'恢复请求已经提交'
           callback();
           cancel();
         });

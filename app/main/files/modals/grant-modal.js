@@ -1,7 +1,7 @@
 angular.module('web')
-  .controller('grantModalCtrl', ['$scope', '$q', '$uibModalInstance', 'items', 'currentInfo','ramSvs','Toast', 'safeApply',
-    function ($scope, $q, $modalInstance, items, currentInfo,ramSvs, Toast, safeApply) {
-
+  .controller('grantModalCtrl', ['$scope', '$q', '$uibModalInstance','$translate', 'items', 'currentInfo','ramSvs','Toast', 'safeApply',
+    function ($scope, $q, $modalInstance, $translate, items, currentInfo,ramSvs, Toast, safeApply) {
+      var T = $translate.instant;
       angular.extend($scope, {
         cancel: cancel,
         policyChange: policyChange,
@@ -27,7 +27,7 @@ angular.module('web')
         }, function(err){
           $scope.users = [];
           if(err.message.indexOf('You are not authorized to do this action')!=-1){
-            Toast.error('没有权限获取用户列表');
+            Toast.error(T('simplePolicy.noauth.message1')); //'没有权限获取用户列表'
           }
         });
         ramSvs.listGroups(ignoreError).then(function(result){
@@ -35,7 +35,7 @@ angular.module('web')
         },function(err){
           $scope.groups = [];
           if(err.message.indexOf('You are not authorized to do this action')!=-1){
-            Toast.error('没有权限获取用户组列表');
+            Toast.error(T('simplePolicy.noauth.message2')); //'没有权限获取用户组列表'
           }
         });
         ramSvs.listRoles(ignoreError).then(function(result){
@@ -44,7 +44,7 @@ angular.module('web')
           $scope.roles = [];
 
           if(err.message.indexOf('You are not authorized to do this action')!=-1){
-            Toast.error('没有权限获取角色列表');
+            Toast.error(T('simplePolicy.noauth.message3')); //'没有权限获取角色列表'
           }
         });
       }
@@ -137,23 +137,25 @@ angular.module('web')
         if (!form1.$valid) return false;
         var policyName= $scope.grant.policyName;
 
-        ramSvs.createPolicy(policyName,$scope.grant.policy,'简化policy授权').then(function(){
+        var title = T('simplePolicy.title');//简化policy授权
+        var successMsg = T('simplePolicy.success');//'应用policy成功'
+        ramSvs.createPolicy(policyName,$scope.grant.policy, title).then(function(){
           switch($scope.grant.toType){
             case 'user':
               ramSvs.attachPolicyToUser(policyName, $scope.grant.userName).then(function(){
-                Toast.success('应用policy成功');
+                Toast.success(successMsg);
                 cancel();
               });
               break;
             case 'group':
               ramSvs.attachPolicyToGroup(policyName, $scope.grant.groupName).then(function(){
-                Toast.success('应用policy成功');
+                Toast.success(successMsg);
                 cancel();
               });
               break;
             case 'role':
               ramSvs.attachPolicyToRole(policyName, $scope.grant.roleName).then(function(){
-                Toast.success('应用policy成功');
+                Toast.success(successMsg);
                 cancel();
               });
               break;

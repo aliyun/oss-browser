@@ -5,20 +5,28 @@
     </button>
     <h4 class="modal-title text-info">
       <i class="fa fa-edit"></i>
-      重命名</h4>
+      <!-- 重命名 -->
+      {{'rename'|translate}}
+    </h4>
   </div>
   <div class="modal-body">
 
     <div class="form-group">
-      <label class="col-sm-2 control-label">所在目录:</label>
-      <div class="col-sm-10 input-md pdt4">oss://{{moveTo.bucket}}/{{moveTo.key}}</div>
+      <label class="col-sm-3 control-label">
+        <!-- 所在目录: -->
+        {{'folder.in'|translate}}:
+      </label>
+      <div class="col-sm-8 input-md pdt4">oss://{{moveTo.bucket}}/{{moveTo.key}}</div>
     </div>
 
 
     <div class="form-group" ng-class="{'has-error': form1.name.$dirty && !form1.name.$valid,
   'has-success': form1.name.$dirty && form1.name.$valid}">
 
-      <label class="col-sm-2 control-label" for="name">重命名:</label>
+      <label class="col-sm-3 control-label" for="name">
+        <!-- 重命名: -->
+        {{'rename.to'|translate}}:
+      </label>
       <div class="col-sm-8">
         <input type="text" ng-model="item.name" id="name1" autocomplete="off" autofocus
          name="name" required="required" class="input-md form-control"/>
@@ -32,9 +40,13 @@
 
     <button ng-disabled="isLoading || (keep.name==item.name && moveTo.key==currentInfo.key)" type="submit" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-ok"></i>
-      确定</button>
+      <!-- 确定 -->
+      {{'ok'|translate}}
+    </button>
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
-      取消</button>
+      <!-- 取消 -->
+      {{'cancel'|translate}}
+    </button>
   </div>
 </form>

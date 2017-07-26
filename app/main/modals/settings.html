@@ -4,22 +4,36 @@
       <span aria-hidden="true">&times;</span>
     </button>
     <h4 class="modal-title">
-      <i class="fa fa-cog text-warning"></i> 设置
+      <i class="fa fa-cog text-warning"></i>
+      {{'settings'|translate}}
+      <!-- 设置 -->
     </h4>
   </div>
   <div class="modal-body">
 
     <div class="form-group">
-      <label class="col-sm-4 control-label">最大上传任务数:</label>
-      <div class="col-sm-7"> 
-        <input type="number" ng-model="set.maxUploadJobCount" max="10" min="1" required class=" form-control" />
+      <label class="col-sm-4 control-label">
+        <!-- 最大上传任务数: -->
+        {{'settings.maxUploadNum'|translate}}:
+      </label>
+      <div class="col-sm-7">
+        <input type="number" name="maxUploadJobCount"
+         ng-model="set.maxUploadJobCount"
+         ng-change="setChange('maxUploadJobCount')"
+          max="10" min="1" required class=" form-control" />
       </div>
     </div>
 
     <div class="form-group">
-      <label class="col-sm-4 control-label">最大下载任务数:</label>
+      <label class="col-sm-4 control-label">
+        <!-- 最大下载任务数: -->
+        {{'settings.maxDownloadNum'|translate}}:
+      </label>
       <div class="col-sm-7">
-        <input type="number" ng-model="set.maxDownloadJobCount" max="10" min="1" required class=" form-control" />
+        <input type="number" name="maxDownloadJobCount"
+        ng-model="set.maxDownloadJobCount"
+        ng-change="setChange('maxDownloadJobCount')"
+        max="10" min="1" required class=" form-control" />
       </div>
     </div>
 
@@ -32,26 +46,47 @@
       </div> -->
 
     <div class="form-group">
-      <label class="col-sm-4 control-label">是否显示图片缩略:</label>
+      <label class="col-sm-4 control-label">
+        <!-- 是否显示图片缩略: -->
+        {{'settings.WhetherShowThumbnail'|translate}}:
+      </label>
       <div class="col-sm-7">
         <div class="checkbox">
         <label>
-          <input type="checkbox" ng-model="set.showImageSnapshot" ng-true-value="1" ng-false-value="0" />
-          (在文件列表中显示图片缩略, 会消耗一定的流量)
+          <input type="checkbox" name="showImageSnapshot"
+          ng-model="set.showImageSnapshot"
+          ng-change="setChange('showImageSnapshot')"
+          ng-true-value="1" ng-false-value="0" />
+          <!-- (在文件列表中显示图片缩略, 会消耗一定的流量) -->
+          ({{'settings.WhetherShowThumbnail.msg'|translate}})
         </label>
         </div>
       </div>
     </div>
 
 
+
+    <div class="form-group">
+       <label class="col-sm-4 control-label">{{'language'|translate}}:</label>
+       <div class="col-sm-7">
+         <select class="form-control input-sm" ng-model="langSettings.lang"
+         ng-change="langSettings.changeLanguage(langSettings.lang)"
+         ng-options="a.lang as a.label for a in langSettings.langList"></select>
+       </div>
+     </div>
+
+
+
   </div>
   <div class="modal-footer">
-    <button type="submit" class="btn btn-success btn-sm">
+    <!-- <button type="submit" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-ok"></i>
-      保存</button>
+      保存</button> -->
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
-      取消</button>
+      <!-- 关闭 -->
+      {{'close'|translate}}
+    </button>
   </div>
   </div>
 </form>

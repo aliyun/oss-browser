@@ -36,12 +36,13 @@
 
 <button type="button" class="btn btn-default btn-sm" ng-click="showFn.download();cancel()">
   <i class="glyphicon glyphicon-cloud-download text-info"></i>
-  下载</button>
+  {{'download'|translate}}</button>
 
 
-<button type="button" class="btn btn-default btn-sm" ng-click="showFn.address();">
+<button ng-if="currentAuthInfo.id.indexOf('STS.')!=0" type="button" class="btn btn-default btn-sm" ng-click="showFn.address();">
   <i class="fa fa-download"></i>
-  获取地址
+  <!-- 获取地址 -->
+    {{'getAddress'|translate}}
 </button>
 
 <!-- <button type="button" class="btn btn-default btn-sm" ng-click="showFn.grant();cancel();">
@@ -51,7 +52,9 @@
 
   <button type="button" class="btn btn-default btn-sm" ng-click="showFn.acl();">
     <i class="fa fa-shield text-success"></i>
-    ACL权限</button>
+    <!-- ACL权限 -->
+    {{'acl'|translate}}
+  </button>
 
   <!-- <button type="button" class="btn btn-default btn-sm" ng-click="showFn.crc();">
     <i class="fa fa-shield text-success"></i>

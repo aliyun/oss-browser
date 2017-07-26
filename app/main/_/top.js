@@ -1,11 +1,12 @@
 
 
 angular.module('web')
-  .controller('topCtrl', ['$scope', '$rootScope','$uibModal', '$location', '$timeout','Dialog','Auth', 'AuthInfo','upgradeSvs','safeApply',
-    function ($scope, $rootScope, $modal, $location, $timeout,Dialog,Auth, AuthInfo, upgradeSvs, safeApply) {
+  .controller('topCtrl', ['$scope', '$rootScope','$uibModal', '$location', '$translate', '$timeout','Dialog','Auth','Const', 'AuthInfo','upgradeSvs','safeApply',
+    function ($scope, $rootScope, $modal, $location, $translate, $timeout,Dialog,Auth, Const, AuthInfo, upgradeSvs, safeApply) {
 
       var fs = require('fs');
       var path = require('path');
+      var T = $translate.instant;
 
       angular.extend($scope, {
         logout: logout,
@@ -33,12 +34,13 @@ angular.module('web')
       }
 
       $rootScope.app = {};
-
       angular.extend($rootScope.app, Global.app);
+
 
       //$scope.aid = AuthInfo.get().id;
       $scope.authInfo = AuthInfo.get();
-      
+      $scope.authInfo.expirationStr = moment(new Date($scope.authInfo.expiration)).format('YYYY-MM-DD HH:mm:ss');
+
       $timeout(init, 2000);
 
       function init(){
@@ -63,7 +65,9 @@ angular.module('web')
 
 
       function logout() {
-        Dialog.confirm('退出','确定要退出?', function(b){
+        var title = T('logout');
+        var message = T('logout.message');
+        Dialog.confirm(title, message, function(b){
           if(b){
             Auth.logout().then(function () {
               $location.url('/login');
@@ -81,7 +85,8 @@ angular.module('web')
             }
             text = text + '';
             var html = converter.makeHtml(text);
-            Dialog.alert('主要更新', html, function(){}, {size:'lg'});
+            var message = T('main.upgration');//'主要更新'
+            Dialog.alert(message, html, function(){}, {size:'lg'});
         });
       }
 

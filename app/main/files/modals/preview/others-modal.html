@@ -2,8 +2,10 @@
   <button type="button" class="close" ng-click="cancel()">
       <span aria-hidden="true">&times;</span>
     </button>
-  <h4 class="modal-title"> 
-      预览 <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span></h4>
+  <h4 class="modal-title">
+      <!-- 预览  -->
+      {{'preview'|translate}}
+      <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span></h4>
 </div>
 <div class="modal-body pd0">
 
@@ -12,11 +14,17 @@
   <restore-checker bucket-info="bucketInfo" object-info='objectInfo' file-type="fileType"
   after-check-success="afterCheckSuccess()" after-restore-submit="afterRestoreSubmit()">
 
-    <div class="text-center alert alert-warning">该文件类型无法预览。</div>
+    <div class="text-center alert alert-warning">
+      {{'cannot.preview.this.file'|translate}}
+      <!-- 该文件类型无法预览。 -->
+    </div>
 
     <div class="text-center">
       <div class="btn-group">
-        <button ng-if="showAsCodeBtn" type="button" class="btn btn-default" ng-click="showAs('code');cancel()"><i class="fa fa-file-code-o"></i> 尝试作为文本文件打开</button>
+        <button ng-if="showAsCodeBtn" type="button" class="btn btn-default" ng-click="showAs('code');cancel()"><i class="fa fa-file-code-o"></i>
+          <!-- 尝试作为文本文件打开 -->
+          {{'tryto.open.as.textfile'|translate}}
+        </button>
         <!-- <button type="button" class="btn btn-default" ng-click="showFn.download();cancel()"><i class="fa fa-download text-success"></i> 直接下载</button> -->
       </div>
 
@@ -31,5 +39,5 @@
 
   <button type="button" class="pull-right btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
-      关闭</button>
+      {{'close'|translate}}</button>
 </div>

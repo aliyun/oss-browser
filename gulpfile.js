@@ -86,6 +86,8 @@ gulp.task('libJS', function () {
       './node_modules/codemirror/addon/merge/merge.js',
       './node_modules/codemirror/mode/meta.js',
 
+      './node_modules/angular-translate/dist/angular-translate.min.js',
+
     ];
 
     // code mirror modes

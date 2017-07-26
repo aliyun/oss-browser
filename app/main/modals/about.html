@@ -3,17 +3,21 @@
       <span aria-hidden="true">&times;</span>
     </button>
   <h4 class="modal-title">
-    关于</h4>
+    {{'about'|translate}}
+    <!-- 关于 -->
+  </h4>
 </div>
 <div class="modal-body">
 
   <h4 class="text-center">
       <img ng-src="{{app_logo}}" style="display:inline-block;" width="40"/>
-       &nbsp;&nbsp;OSS 浏览器  <small class="text-orange">v {{info.currentVersion}}</small>
+       &nbsp;&nbsp;{{'app.name'|translate}}  <small class="text-orange">v {{info.currentVersion}}</small>
 
        <div class="pd4">
 
-       <small class="text-muted">开源地址：
+       <small class="text-muted">
+         {{'opensource.address'|translate}}:
+         <!-- 开源地址： -->
            <a href="" ng-click="open('https://github.com/aliyun/oss-browser')">https://github.com/aliyun/oss-browser</a>
        </small>
      </div>
@@ -23,20 +27,34 @@
   <hr/>
 
 
+  <div ng-if="isLoading" class="pd2">{{'loading'|translate}}</div>
+
   <div ng-if="!isLoading" class="pd2">
     <div ng-if="!info.isLastVersion">
-      <span class="text-info">发现新版本：v {{info.lastVersion}}
+      <span class="text-info">
+        {{'foundNewVersion'|translate}}
+        <!-- 发现新版本： -->
+        v {{info.lastVersion}}
            &nbsp;&nbsp;&nbsp;&nbsp;
            <a href="" ng-click="open(info.link)" class="btn btn-sm btn-success">
-               <i class="fa fa-download"></i> 点此下载</a>
+               <i class="fa fa-download"></i>
+               {{'clickToDownload'|translate}}
+               <!-- 点此下载 -->
+             </a>
       </span>
-      <h5 class="clearfix">主要更新：</h5>
+      <h5 class="clearfix">
+        <!-- 主要更新： -->
+        {{'main.upgration'|translate}}:
+      </h5>
       <section class="pd4 bg-success" ng-bind-html="info.lastReleaseNote">
       </section>
     </div>
 
     <div ng-if="info.isLastVersion">
-      <span class="text-muted">当前是最新版本!</span>
+      <span class="text-muted">
+        {{'currentIsLastest'|translate}}
+        <!-- 当前是最新版本! -->
+      </span>
     </div>
 
   </div>

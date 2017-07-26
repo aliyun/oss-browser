@@ -3,11 +3,16 @@
     <button type="button" class="close" ng-click="cancel()">
       <span aria-hidden="true">&times;</span>
     </button>
-    <h4 class="modal-title text-danger">生成授权码</h4>
+    <h4 class="modal-title text-danger">
+      <!-- 生成授权码 -->
+      {{'genAuthToken.title'|translate}}
+    </h4>
   </div>
   <div class="modal-body">
     <div class="clearfix">
-      <label class="col-sm-12 control-label">授权{{isBucket?"Bucket":'目录'}}:</label>
+      <label class="col-sm-12 control-label">
+        {{(isBucket?'genAuthToken.message1.1':'genAuthToken.message1.2')|translate}}:
+      </label>
     </div>
     <div class="clearfix">
       <ul>
@@ -16,24 +21,34 @@
     </div>
 
     <div class="clearfix form-group">
-      <label class="col-sm-12 control-label">的权限:
+      <label class="col-sm-12 control-label">
+        <!-- 的权限: -->
+        {{'genAuthToken.message2'|translate}}
       </label>
       <div class="col-sm-12">
         <label class="radio-inline">
           <input type="radio" name="ptype" ng-click="policyChange()" ng-model="grant.privType" id="inlineRadio1" value="readOnly">
-          只读权限
+            {{'privilege.readonly'|translate}}
+          <!-- 只读权限 -->
         </label>
         <label class="radio-inline">
           <input type="radio" name="ptype" ng-click="policyChange()" ng-model="grant.privType" id="inlineRadio2" value="all">
-          读写权限
+          <!-- 读写权限 -->
+          {{'privilege.readwrite'|translate}}
         </label>
       </div>
     </div>
 
     <div class="clearfix form-group">
       <div class="col-sm-12">
-        <a href="" ng-show='show_policy!=1' ng-click="show_policy=1" class="">[查看Policy]</a>
-        <a href="" ng-show='show_policy==1' ng-click="show_policy=0" class="">[隐藏Policy]</a>
+        <a href="" ng-show='show_policy!=1' ng-click="show_policy=1" class="">
+          <!-- [查看Policy] -->
+          [{{'simplePolicy.lb3.1'|translate}}]
+        </a>
+        <a href="" ng-show='show_policy==1' ng-click="show_policy=0" class="">
+          <!-- [隐藏Policy] -->
+          [{{'simplePolicy.lb3.2'|translate}}]
+        </a>
       </div>
       <div ng-show='show_policy==1' class="col-sm-12">
         <textarea ng-model="grant.policy" class="form-control input-sm" rows='10' readonly></textarea>
@@ -51,10 +66,13 @@
 
 
     <div class="clearfix form-group" ng-class="{'has-error':  !form1.durSeconds.$valid }">
-      <label class="col-sm-12 control-label">有效时长(秒):</label>
+      <label class="col-sm-12 control-label">
+        <!-- 有效时长(秒): -->
+        {{'effective.duration'|translate}}({{'unit.second'|translate}})
+      </label>
       <div class="col-sm-12">
 
-          <input type="number" min="60" max="3600" name="durSeconds" class="input-sm form-control"
+          <input type="number" min="60" max="3600" name="durSeconds" class="form-control"
           ng-model="grant.durSeconds" required />
 
       </div>
@@ -64,12 +82,20 @@
 
 
     <div class="clearfix form-group" ng-class="{'has-error':  !form1.roleArn.$valid }">
-      <label class="col-sm-12 control-label">还需要指定一个角色: <small class="text-muted">(这个角色需要至少有这个{{isBucket?"Bucket":'目录'}}的{{grant.privType=='all'?'可写':'只读'}}权限)</small></label>
+      <label class="col-sm-12 control-label">
+        <!-- 还需要指定一个角色:  -->
+        {{'genAuthToken.message3.1'|translate}}:
+          <!-- (这个角色需要至少有这个{{isBucket?"Bucket":'目录'}}的{{grant.privType=='all'?'可写':'只读'}}权限) -->
+        (<small class="text-muted">
+          {{'genAuthToken.message3.2'|translate:message5}}
+        </small>)
+      </label>
       <div class="col-sm-12">
-          <select name="roleArn" class="input-sm form-control"
+          <select name="roleArn" class="form-control"
+          ng-disabled="!roles || roles.length==0"
           ng-model="grant.roleArn" required
           ng-options="role.Arn as role.RoleName for role in roles">
-            <option value=''>请选择</option>
+            <option value=''>{{!roles||roles.length==0?('nodata'|translate):('chooseone'|translate)}}</option>
           </select>
       </div>
 
@@ -78,13 +104,17 @@
 
 
     <div ng-if="token" class="clearfix form-group">
-      <label class="col-sm-12 control-label">生成的授权码:</label>
+      <label class="col-sm-12 control-label text-success">
+        <!-- 生成的授权码: -->
+        {{'genAuthToken.message4'|translate}}:
+      </label>
       <div class="col-sm-12">
-          <textarea class="form-control input-sm" rows="6" ng-model="token"></textarea>
+          <textarea class="form-control input-sm" style="border:1px solid #def" rows="6" ng-model="token"></textarea>
           <small>
-            (使用上面生成的授权码登录OSS浏览器，
+            <!-- (使用上面生成的授权码登录OSS浏览器，
             可以达到只拥有[{{item.name}}]这个{{isBucket?"Bucket":'目录'}}的{{grant.privType=='all'?'读写':'只读'}}权限的效果,
-            有效期至{{origin_token.Credentials.Expiration|timeFormat}}秒。)
+            有效期至{{origin_token.Credentials.Expiration|timeFormat}}秒。) -->
+            ({{'genAuthToken.message5'|translate:message5}})
           </small>
       </div>
 
@@ -99,12 +129,14 @@
   <div class="modal-footer">
     <button type="submit" ng-disabled="!form1.$valid" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-ok"></i>
-      {{token?'重新':'确定'}}生成
+      <!-- {{token?'重新':'确定'}}生成 -->
+      <span>{{(token?'genAuthToken.message6.2':'genAuthToken.message6.1')|translate}}</span>
     </button>
 
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
-      关闭
+      <!-- 关闭 -->
+      {{'close'|translate}}
     </button>
   </div>
 </form>

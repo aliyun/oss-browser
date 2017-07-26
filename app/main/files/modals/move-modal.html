@@ -5,10 +5,14 @@
     </button> -->
     <h4 ng-if="isCopy" class="modal-title text-info">
       <i class="fa fa-copy"></i>
-      复制</h4>
+      <!-- 复制 -->
+      {{'copy'|translate}}
+    </h4>
       <h4 ng-if="!isCopy" class="modal-title text-info">
         <i class="fa fa-cut"></i>
-        移动</h4>
+        <!-- 移动 -->
+        {{'move'|translate}}
+      </h4>
   </div>
 
 
@@ -40,7 +44,7 @@
  -->
 
 <div ng-if="step==2">
- <div class="text-info">正在{{isCopy?"复制":"移动"}}...</div>
+ <div class="text-info">{{isCopy? ('copy.on'|translate): ('move.on'|translate)}}...</div>
 </div>
 
 <div ng-if="step==2 || step==3">
@@ -60,9 +64,13 @@
 <div ng-if="step==3">
     <div ng-if='terr && terr.length>0'>
       <div ng-if="isStop" class="text-danger">
-         用户取消
+         <!-- 用户取消 -->
+         {{'use.cancelled'|translate}}
       </div>
-      <div class="text-warning">部分目录或文件无法{{isCopy?"复制":"移动"}}：</div>
+      <div class="text-warning">
+        {{isCopy? ('copy.error1'|translate): ('move.error1'|translate)}}
+        <!-- 部分目录或文件无法{{isCopy?"复制":"移动"}}： -->
+      </div>
       <ul>
         <li ng-repeat="terrItem in terr" ng-if="$index<10">
 
@@ -82,7 +90,8 @@
 
     <div ng-if='!terr || terr.length==0' class="text-success">
      <i class="fa fa-check text-success"></i>
-      {{isCopy?"复制":"移动"}}成功
+      <!-- {{isCopy?"复制":"移动"}}成功 -->
+      {{isCopy? ('copy.success'|translate) : ('move.success'|translate)}}
     </div>
  </div>
 
@@ -99,9 +108,13 @@
 
       <button ng-if="step==2" ng-disabled="isStop" type="button" class="btn btn-warning btn-sm" ng-click="stop()">
         <i class="glyphicon glyphicon-remove"></i>
-        停止</button>
+        <!-- 停止 -->
+        {{'stop'|translate}}
+      </button>
 
       <button ng-if="step==3||step==1" type="button" class="btn btn-default btn-sm" ng-click="cancel()">
         <i class="glyphicon glyphicon-remove"></i>
-        关闭</button>
+        <!-- 关闭 -->
+        {{'close'|translate}}
+      </button>
   </div>

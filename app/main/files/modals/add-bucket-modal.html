@@ -5,20 +5,28 @@
     </button>
     <h4 class="modal-title">
       <i class="fa fa-database text-warning"></i>
-      新建Bucket</h4>
+      {{'bucket.add'|translate}}
+      <!-- 新建Bucket -->
+    </h4>
   </div>
   <div class="modal-body">
 
     <div class="form-group">
-      <label class="col-sm-2 control-label" for="name">名称:</label>
+      <label class="col-sm-2 control-label" for="name">
+        {{'name'|translate}}:
+        <!-- 名称: -->
+      </label>
       <div class="col-sm-8">
         <input type="text" ng-model="item.name" id="name" autocomplete="off" autofocus name="name" required="required"
-        placeholder="bucket名称" class="input-md form-control"/>
+        placeholder="{{'bucket.name'|translate}}" class="input-md form-control"/>
       </div>
     </div>
 
     <div class="form-group">
-      <label class="col-sm-2 control-label" for="region">区域:</label>
+      <label class="col-sm-2 control-label" for="region">
+        {{'region'|translate}}:
+        <!-- 区域: -->
+      </label>
       <div class="col-sm-8">
         <select ng-model="item.region" ng-options="region.id as region.label for region in regions" name="region" required="required"
         class="input-md form-control" ng-change="onRegionChanged()"></select>
@@ -26,7 +34,10 @@
     </div>
 
     <div class="form-group">
-      <label class="col-sm-2 control-label" for="acl">权限:</label>
+      <label class="col-sm-2 control-label" for="acl">
+        {{'acl'|translate}}:
+        <!-- 权限: -->
+      </label>
       <div class="col-sm-8">
         <select ng-model="item.acl" ng-options="acl.acl as acl.label for acl in bucketACL" name="acl" required="required"
           class="input-md form-control"></select>
@@ -34,7 +45,13 @@
     </div>
 
     <div class="form-group">
-      <label class="col-sm-2 control-label" for="acl">类型:</label>
+      <label class="col-sm-2 control-label" for="acl">
+        {{'type'|translate}}
+        <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}" tooltip-append-to-body="true"
+          ng-click="openURL('https://help.aliyun.com/document_detail/51374.html')">
+          <i class="fa fa-question-circle"></i></a> :
+        <!-- 类型: -->
+      </label>
       <div class="col-sm-8">
         <select ng-model="item.storageClass" ng-options="sc.value as sc.name for sc in storageClasses" name="storageClass" required="required"
           class="input-md form-control"></select>
@@ -48,9 +65,13 @@
   <div class="modal-footer">
     <button type="submit" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-ok"></i>
-      确定</button>
+      {{'ok'|translate}}
+      <!-- 确定 -->
+    </button>
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
-      取消</button>
+      {{'cancel'|translate}}
+      <!-- 取消 -->
+    </button>
   </div>
 </form>

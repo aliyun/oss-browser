@@ -1,16 +1,19 @@
 
 angular.module('web')
-.factory('Const', function(){
-
+.factory('Const', [function(){
 
   function getStorageClasses(f){
-    var storageClasses = [{value:'Standard',name:'标准类型'},{value:'IA',name:'低频访问类型'}];
+    var storageClasses = [
+      {value:'Standard',name: '标准类型'}, //标准类型
+      {value:'IA',name: '低频访问类型'} //低频访问类型
+    ];
     switch(f){
-      case 3: return storageClasses.concat([{value:'Archive',name:'归档类型'}]);
+      case 3: return storageClasses.concat([{value:'Archive',name: '归档类型'}]); //归档类型
       case 2: return storageClasses;
-      default: return [{value:'Standard',name:'标准类型'}];
+      default: return [{value:'Standard',name: '标准类型'}]; //标准类型
     }
   }
+
 
   return {
     AUTH_INFO_KEY: 'auth-info',
@@ -20,9 +23,9 @@ angular.module('web')
     SHOW_HIS: 'show-his',
 
     bucketACL: [
-      {acl:'public-read',label:'公共读'},
-      {acl:'public-read-write',label:'公共读写'},
-      {acl:'private',label:'私有'}
+      {acl:'public-read',label: '公共读'}, //公共读
+      {acl:'public-read-write',label: '公共读写'}, //公共读写
+      {acl:'private',label: '私有'} //私有
     ],
 
     //https://help.aliyun.com/document_detail/31837.html
@@ -44,6 +47,6 @@ angular.module('web')
       {id: 'oss-eu-central-1', label: '欧洲中部1(法兰克福)',storageClasses: getStorageClasses(2)},
       {id: 'oss-me-east-1', label: '中东东部1(迪拜)',storageClasses: getStorageClasses(0)},
     ]
-  };
-})
+  }
+}])
 ;

@@ -3,11 +3,17 @@
     <button type="button" class="close" ng-click="cancel()">
       <span aria-hidden="true">&times;</span>
     </button>
-    <h4 class="modal-title text-danger">简化Policy授权</h4>
+    <h4 class="modal-title text-danger">
+      <!-- 简化Policy授权 -->
+      {{'simplePolicy.title'|translate}}
+    </h4>
   </div>
   <div class="modal-body">
     <div class="clearfix">
-      <label class="col-sm-12 control-label">将下列资源</label>
+      <label class="col-sm-12 control-label">
+        <!-- 将下列资源 -->
+        {{'simplePolicy.lb1.1'|translate}}:
+      </label>
     </div>
     <div class="clearfix">
       <ol>
@@ -16,24 +22,34 @@
     </div>
 
     <div class="clearfix form-group">
-      <label class="col-sm-12 control-label">的权限:
+      <label class="col-sm-12 control-label">
+        <!-- 的权限: -->
+        {{'simplePolicy.lb1.2'|translate}}:
       </label>
       <div class="col-sm-12">
         <label class="radio-inline">
           <input type="radio" name="ptype" ng-click="policyChange()" ng-model="grant.privType" id="inlineRadio1" value="readOnly">
-          只读权限
+          <!-- 只读权限 -->
+          {{'privilege.readonly'|translate}}
         </label>
         <label class="radio-inline">
           <input type="radio" name="ptype" ng-click="policyChange()" ng-model="grant.privType" id="inlineRadio2" value="all">
-          读写权限
+          <!-- 读写权限 -->
+          {{'privilege.readwrite'|translate}}
         </label>
       </div>
     </div>
 
     <div class="clearfix form-group">
       <div class="col-sm-12">
-        <a href="" ng-show='show_policy!=1' ng-click="show_policy=1" class="">[查看Policy]</a>
-        <a href="" ng-show='show_policy==1' ng-click="show_policy=0" class="">[隐藏Policy]</a>
+        <a href="" ng-show='show_policy!=1' ng-click="show_policy=1" class="">
+          <!-- [查看Policy] -->
+          [{{'simplePolicy.lb3.1'|translate}}]
+        </a>
+        <a href="" ng-show='show_policy==1' ng-click="show_policy=0" class="">
+          <!-- [隐藏Policy] -->
+          [{{'simplePolicy.lb3.2'|translate}}]
+        </a>
       </div>
       <div ng-show='show_policy==1' class="col-sm-12">
         <textarea ng-model="grant.policy" class="form-control input-sm" rows='10' readonly></textarea>
@@ -41,10 +57,13 @@
     </div>
 
     <div class="clearfix form-group" ng-class="{'has-error':!form1.policyName.$valid}">
-      <label class="col-sm-12 control-label">创建为policy，命名为：</label>
+      <label class="col-sm-12 control-label">
+        {{'simplePolicy.lb4'|translate}}:
+        <!-- 创建为policy，命名为： -->
+      </label>
       <div class="col-sm-12">
         <input type="text" required maxlength='128' ng-pattern="policyNameReg"
-       ng-model="grant.policyName" class="form-control input-sm" name="policyName"/>
+       ng-model="grant.policyName" class="form-control" name="policyName"/>
       </div>
     </div>
 
@@ -52,20 +71,29 @@
 
 
     <div class="clearfix form-group" ng-class="{'has-error': grant.toType=='role' && !form1.roleName.$valid || grant.toType=='user' && !form1.userName.$valid || grant.toType=='group' && !form1.groupName.$valid}">
-      <label class="col-sm-12 control-label">并授权给:</label>
+      <label class="col-sm-12 control-label">
+        {{'simplePolicy.lb5'|translate}}:
+        <!-- 并授权给: -->
+      </label>
       <div class="col-sm-12">
-        <div class="input-group input-group-sm">
+        <div class="input-group">
           <span class="input-group-btn">
-            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
               <span ng-if="grant.toType=='user'">
                 <i class="fa fa-user"></i>
-                子用户</span>
+                <!-- 子用户 -->
+                {{'subusers'|translate}}
+              </span>
               <span ng-if="grant.toType=='group'">
                 <i class="fa fa-users"></i>
-                用户组</span>
+                <!-- 用户组 -->
+                {{'usergroups'|translate}}
+              </span>
               <span ng-if="grant.toType=='role'">
                 <i class="fa fa-user-secret"></i>
-                角色</span>
+                <!-- 角色 -->
+                {{'roles'|translate}}
+              </span>
 
               <span class="caret"></span>
               <span class="sr-only">Toggle Dropdown</span>
@@ -74,39 +102,43 @@
               <li>
                 <a href="" ng-click="grant.toType='user'">
                   <i class="fa fa-user"></i>
-                  子用户
+                  <!-- 子用户 -->
+                  {{'subusers'|translate}}
                 </a>
               </li>
               <li>
                 <a href="" ng-click="grant.toType='group'">
                   <i class="fa fa-users"></i>
-                  用户组
+                  {{'usergroups'|translate}}
+                  <!-- 用户组 -->
                 </a>
               </li>
               <li>
                 <a href="" ng-click="grant.toType='role'">
                   <i class="fa fa-user-secret"></i>
-                  角色
+                  <!-- 角色 -->
+                  {{'roles'|translate}}
                 </a>
               </li>
             </ul>
           </span>
 
-          <select ng-if="grant.toType=='user'" name="userName" class="input-sm form-control"
+          <select ng-if="grant.toType=='user'"  ng-disabled="!users || users.length==0" name="userName" class="form-control"
           ng-model="grant.userName" ng-required="grant.toType=='user'"
           ng-options="user.UserName as user.UserName for user in users">
-            <option value=''>请选择</option>
+            <option value=''>{{!users||users.length==0?('nodata'|translate):('chooseone'|translate)}}</option>
+
           </select>
-          <select ng-if="grant.toType=='group'" name="groupName" class="input-sm form-control"
+          <select ng-if="grant.toType=='group'"  ng-disabled="!groups || groups.length==0" name="groupName" class="form-control"
           ng-model="grant.groupName" ng-required="grant.toType=='group'"
           ng-options="group.GroupName as group.GroupName for group in groups">
-            <option value=''>请选择</option>
+            <option value=''>{{!groups||groups.length==0?('nodata'|translate):('chooseone'|translate)}}</option>
           </select>
 
-          <select ng-if="grant.toType=='role'" name="roleName" class="input-sm form-control"
+          <select ng-if="grant.toType=='role'" ng-disabled="!roles || roles.length==0" name="roleName" class="form-control"
           ng-model="grant.roleName" ng-required="grant.toType=='role'"
           ng-options="role.RoleName as role.RoleName for role in roles">
-            <option value=''>请选择</option>
+            <option value=''>{{!roles||roles.length==0?('nodata'|translate):('chooseone'|translate)}}</option>
           </select>
 
         </div>
@@ -117,14 +149,16 @@
   </div>
 
   <div class="modal-footer">
-    <button type="submit" class="btn btn-success btn-sm">
+    <button type="submit" ng-disabled="!form1.$valid" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-ok"></i>
-      确定授权
+      {{'simplePolicy.ok'|translate}}
+      <!-- 确定授权 -->
     </button>
 
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
-      关闭
+      <!-- 关闭 -->
+      {{'close'|translate}}
     </button>
   </div>
 </form>

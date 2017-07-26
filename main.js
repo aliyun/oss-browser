@@ -48,7 +48,7 @@ function createWindow() {
     height: 700,
     minWidth: 1020,
     minHeight: 660,
-    title: "OSS浏览器",
+    title: "",
     icon: path.join(__dirname, 'icons', 'icon.ico')
   };
 
@@ -58,14 +58,13 @@ function createWindow() {
   // Create the browser window.   http://electron.atom.io/docs/api/browser-window/
   win = new BrowserWindow(opt);
 
-  win.setTitle("OSS浏览器");
+  win.setTitle("");
 
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/index.html`);
 
   win.setMenuBarVisibility(false);
-  // Open the DevTools.
-  //win.webContents.openDevTools();
+
 
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -79,6 +78,9 @@ function createWindow() {
   // drawin 就是 MacOS
   if(process.env.NODE_ENV=='development'){
     console.log('开发模式');
+    // Open the DevTools.
+    win.webContents.openDevTools();
+    
   }else if (process.platform === 'darwin') {
     // Create the Application's main menu
     let template = getMenuTemplate();
