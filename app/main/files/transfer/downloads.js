@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('web')
-  .controller('transferDownloadsCtrl', ['$scope', '$timeout', '$interval', 'jobUtil', 'ossDownloadManager', 'DelayDone', 'Toast', 'Dialog', 'safeApply',
-    function ($scope, $timeout, $interval, jobUtil, ossDownloadManager, DelayDone, Toast, Dialog, safeApply) {
-
+  .controller('transferDownloadsCtrl', ['$scope', '$timeout','$translate', '$interval', 'jobUtil', 'ossDownloadManager', 'DelayDone', 'Toast', 'Dialog', 'safeApply',
+    function ($scope, $timeout, $translate, $interval, jobUtil, ossDownloadManager, DelayDone, Toast, Dialog, safeApply) {
+      var T = $translate.instant;
       angular.extend($scope, {
         showRemoveItem: showRemoveItem,
         clearAllCompleted: clearAllCompleted,
@@ -39,7 +39,9 @@ angular.module('web')
         if (item.status == 'finished') {
           doRemove(item);
         } else {
-          Dialog.confirm('从列表中移除', '确定移除该下载任务?', function (btn) {
+          var title = T('remove.from.list.title'); //'从列表中移除'
+          var message = T('remove.from.list.message'); //'确定移除该下载任务?'
+          Dialog.confirm(title, message, function (btn) {
             if (btn) {
               doRemove(item);
             }
@@ -76,7 +78,9 @@ angular.module('web')
         if (!$scope.lists.downloadJobList || $scope.lists.downloadJobList.length == 0) {
           return;
         }
-        Dialog.confirm('清空所有', '确定清空所有下载任务?', function (btn) {
+        var title = T('clear.all.title');//清空所有
+        var message = T('clear.all.download.message');//确定清空所有下载任务?
+        Dialog.confirm(title, message, function (btn) {
           if (btn) {
             var arr = $scope.lists.downloadJobList;
             for (var i = 0; i < arr.length; i++) {
@@ -100,13 +104,13 @@ angular.module('web')
 
           ossDownloadManager.stopCreatingJobs();
 
-          Toast.info('正在暂停...');
+          Toast.info(T('pause.on')); //'正在暂停...'
           $scope.allActionBtnDisabled = true;
 
           angular.forEach(arr, function (n) {
             if (n.status == 'running' || n.status == 'waiting') n.stop();
           });
-          Toast.success('暂停成功');
+          Toast.success(T('pause.success')); //'暂停成功'
 
           $timeout(function () {
             ossDownloadManager.saveProg();

@@ -1,6 +1,7 @@
 angular.module('web')
-  .controller('bucketMultipartModalCtrl', ['$scope','$q','$uibModalInstance','Dialog','bucketInfo','Toast','ossSvs2','safeApply',
-    function ($scope, $q, $modalInstance, Dialog, bucketInfo,Toast, ossSvs2,safeApply) {
+  .controller('bucketMultipartModalCtrl', ['$scope','$q','$uibModalInstance','$translate','Dialog','bucketInfo','Toast','ossSvs2','safeApply',
+    function ($scope, $q, $modalInstance, $translate, Dialog, bucketInfo,Toast, ossSvs2,safeApply) {
+      var T = $translate.instant;
 
       angular.extend($scope, {
         bucketInfo: bucketInfo,
@@ -20,7 +21,7 @@ angular.module('web')
           x: {}       //{} {'i_'+$index, true|false}
         },
         selectAll: selectAll,
-        selectChanged: selectChanged, 
+        selectChanged: selectChanged,
       });
 
       function loadNext(){
@@ -50,12 +51,14 @@ angular.module('web')
 
 
       function showDelete(items){
-        Dialog.confirm('删除碎片', '删除'+items.length+'个碎片, 确定删除吗？', function(b){
+        var title = T('delete.multiparts.title'); //删除碎片
+        var message = T('delete.multiparts.message', {num: items.length}); //删除碎片
+        Dialog.confirm( title, message, function(b){
           if(b){
-            Toast.success('正在删除碎片...');
+            Toast.success(T('delete.multiparts.on')); //'正在删除碎片...'
             ossSvs2.abortAllUploads(bucketInfo.region, bucketInfo.name, items)
             .then(function(){
-              Toast.success('删除碎片成功');
+              Toast.success(T('delete.multiparts.success')); //'删除碎片成功'
               refresh();
             });
           }

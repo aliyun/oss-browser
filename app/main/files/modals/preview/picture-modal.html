@@ -4,7 +4,8 @@
   </button>
   <h4 class="modal-title">
     <i class="fa fa-image"></i>
-    预览
+    <!-- 预览 -->
+    {{'preview'|translate}}
     <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span>
   </h4>
 </div>
@@ -17,7 +18,7 @@
 
     <div style="overflow:auto;min-height:100px;" class="text-center">
       <div ng-if="!imgsrc" is-loading></div>
-      <img ng-if="imgsrc" ng-src="{{imgsrc}}" alt="无法预览图片" style="max-width:600px;max-height:400px;" />
+      <img ng-if="imgsrc" ng-src="{{imgsrc}}" alt="{{'cannot.preview'|translate}}" style="max-width:600px;max-height:400px;" />
     </div>
   </restore-checker>
 
@@ -28,5 +29,5 @@
 
   <button type="button" class="pull-right btn btn-default btn-sm" ng-click="cancel()">
     <i class="glyphicon glyphicon-remove"></i>
-    关闭</button>
+    {{'close'|translate}}</button>
 </div>

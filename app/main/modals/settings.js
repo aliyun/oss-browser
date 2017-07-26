@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('web')
-  .controller('settingsCtrl', ['$scope','$state','$uibModalInstance','settingsSvs','Toast',
-  function($scope,$state,$modalInstance,settingsSvs,Toast){
-
+  .controller('settingsCtrl', ['$scope','$state','$uibModalInstance','$translate','settingsSvs','Toast',
+  function($scope,$state,$modalInstance,$translate,settingsSvs,Toast){
+    var T = $translate.instant;
     angular.extend($scope, {
       showTab: 3,
       set: {
@@ -18,9 +18,9 @@ angular.module('web')
     });
 
     function setChange(key){
-      //if(!form1[key].$valid)return; 
+      //if(!form1[key].$valid)return;
       settingsSvs[key].set( $scope.set[key] );
-      Toast.success('已经保存设置');
+      Toast.success(T('settings.success')); //已经保存设置
     }
 
     // function onSubmit(form1){

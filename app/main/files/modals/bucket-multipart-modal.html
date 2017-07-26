@@ -5,17 +5,21 @@
     </button>
     <h4 class="modal-title">
       <i style="color:orange" class="fa fa-folder"></i>
-      Multipart管理
-      <span style="font-size:70%" class="text-muted">[Bucket:{{bucketInfo.name}}, 所在区域:{{bucketInfo.region}}]</span>
+      {{'multipart.management'|translate}}
+      <!-- Multipart管理 -->
+      <span style="font-size:70%" class="text-muted">[Bucket:{{bucketInfo.name}}, {{'region'|translate}}:{{bucketInfo.region}}]</span>
     </h4>
   </div>
   <div class="modal-body pd0" style="min-height:140px;">
     <div ng-if="isLoading" is-loading></div>
 
     <header ng-if="!isLoading" class="pd4">
-       <div class="bg-warning pd4">管理通过Mutipart（分块）方式上传过程中产生的事件与碎片。<i class="fa fa-question-circle"
+       <div class="bg-warning pd4">
+         {{'multipart.description'|translate}}
+         <!-- 管理通过Mutipart（分块）方式上传过程中产生的事件与碎片。 -->
+         <i class="fa fa-question-circle"
         tooltip-placement="bottom" tooltip-append-to-body="true"
-        uib-tooltip="即已经被初始化的Multipart Upload但是未被Complete或者Abort的Multipart Upload事件"></i> </div>
+        uib-tooltip="{{'multipart.description.tooltip'|translate}}"></i> </div>
     </header>
     <div ng-if="!isLoading && (!items || items.length==0)" no-data></div>
 
@@ -24,18 +28,24 @@
       <header class="pd4">
         <div class="col-xs-5">
            <button type="button" class="btn btn-sm btn-default" ng-click="sel.all=!sel.all;selectAll()">
-            <i class="fa" ng-class="{'fa-check-square-o':sel.all,'fa-square-o':!sel.all}"></i> 全选
+            <i class="fa" ng-class="{'fa-check-square-o':sel.all,'fa-square-o':!sel.all}"></i>
+            {{'select.all'|translate}}
+            <!-- 全选 -->
           </button>
 
           <button type="button" class="btn btn-sm btn-default" ng-class="{'btn-danger':sel.has}"
           ng-disabled="!sel.has"
           ng-click="showDelete(sel.has)">
-            <i class="fa fa-close"></i> 删除所选
+            <i class="fa fa-close"></i>
+            {{'delete.selected'|translate}}
+            <!-- 删除所选 -->
          </button>
 
          <button type="button" class="btn btn-sm btn-danger"
          ng-click="showDelete(items)">
-           <i class="fa fa-close"></i> 删除所有
+           <i class="fa fa-close"></i>
+           {{'delete.all'|translate}}
+           <!-- 删除所有 -->
         </button>
 
         </div>
@@ -50,7 +60,10 @@
         </div>
         <div class="col-xs-2 text-right">
            <button type="button" ng-click="refresh()" class="btn btn-sm btn-default">
-             <i class="fa fa-refresh"></i> 刷新</button>
+             <i class="fa fa-refresh"></i>
+             {{'refresh'|translate}}
+             <!-- 刷新 -->
+           </button>
         </div>
 
         <div class="clearfix"></div>
@@ -68,17 +81,25 @@
                {{$index+1}}.
                {{item.name}}
                <a href="" ng-click="showDelete([item]);$event.stopPropagation()"
-               class="pull-right text-danger">删除</a>
+               class="pull-right text-danger">
+               {{'delete'|translate}}
+               <!-- 删除 -->
+             </a>
              </div>
 
            <div class="list-group-item-text">
 
              UploadID：<span class="text-warning">{{item.uploadId}}</span>
-             最初创建时间：<span class="text-muted">{{item.initiated|timeFormat}}</span>
+             <!-- 最初创建时间： -->
+             {{'initiatedTime'|translate}}
+             <span class="text-muted">{{item.initiated|timeFormat}}</span>
           </div>
 
          </li>
-         <li ng-if="sch.limitTo < (items|filter:sch.txt).length" class="text-center list-group-item">正在载入...</div>
+         <li ng-if="sch.limitTo < (items|filter:sch.txt).length" class="text-center list-group-item">
+           {{'loading'|translate}} 
+           <!-- 正在载入... -->
+         </div>
       </ul>
 
     </section>
@@ -93,5 +114,7 @@
 
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
-      关闭</button>
+      {{'close'|translate}}
+      <!-- 关闭 -->
+    </button>
   </div>

@@ -1,7 +1,7 @@
 angular.module('web')
-  .controller('filesCtrl', ['$scope', '$rootScope', '$uibModal', '$timeout', 'AuthInfo', 'ossSvs2', 'settingsSvs', 'fileSvs', 'safeApply', 'Toast', 'Dialog',
-    function ($scope, $rootScope, $modal, $timeout, AuthInfo, ossSvs2, settingsSvs, fileSvs, safeApply, Toast, Dialog) {
-
+  .controller('filesCtrl', ['$scope', '$rootScope', '$uibModal', '$timeout','$translate', 'AuthInfo', 'ossSvs2', 'settingsSvs', 'fileSvs', 'safeApply', 'Toast', 'Dialog',
+    function ($scope, $rootScope, $modal, $timeout, $translate, AuthInfo, ossSvs2, settingsSvs, fileSvs, safeApply, Toast, Dialog) {
+      var T = $translate.instant;
       angular.extend($scope, {
         showTab: 1,
         ref: {
@@ -317,10 +317,12 @@ angular.module('web')
       }
 
       function showDeleteBucket(item) {
-        Dialog.confirm('删除Bucket', 'Bucket名称:<code>' + item.name + '</code>, 所在区域:<code>' + item.region + '</code>, 确定删除？', function (b) {
+        var title = T('bucket.delete.title');
+        var message = T('bucket.delete.message',{name: item.name, region: item.region});
+        Dialog.confirm(title, message, function (b) {
           if (b) {
             ossSvs2.deleteBucket(item.region, item.name).then(function () {
-              Toast.success('删除Bucket成功');
+              Toast.success(T('bucket.delete.success')); //删除Bucket成功
               //删除Bucket不是实时的，等待1秒后刷新
               $timeout(function () {
                 listBuckets();
@@ -367,7 +369,7 @@ angular.module('web')
             },
             callback: function () {
               return function () {
-                Toast.success('创建Bucket成功');
+                Toast.success(T('bucket.add.success')); //'创建Bucket成功'
                 //创建Bucket不是实时的，等待1秒后刷新
                 $timeout(function () {
                   listBuckets();
@@ -388,7 +390,7 @@ angular.module('web')
             },
             callback: function () {
               return function () {
-                Toast.success('创建目录成功');
+                Toast.success(T('folder.create.success'));//'创建目录成功'
                 $timeout(function () {
                   listFiles();
                 },300);
@@ -408,7 +410,7 @@ angular.module('web')
             },
             callback: function () {
               return function () {
-                Toast.success('修改Bucket权限成功');
+                Toast.success(T('bucketACL.update.success'));//'修改Bucket权限成功'
                 $timeout(function () {
                   listBuckets();
                 },300);
@@ -754,7 +756,7 @@ angular.module('web')
         //   $scope.keepMoveOptions = null;
         //   return;
         // }
-        var keyword = $scope.keepMoveOptions.isCopy ? '<span class="text-primary">复制</span>' : '<span class="text-danger">移动</span>';
+        var keyword = $scope.keepMoveOptions.isCopy ? '<span class="text-primary">'+T('copy')+'</span>' : '<span class="text-danger">'+T('move')+'</span>';
 
         if($scope.keepMoveOptions.items.length==1 && $scope.currentInfo.bucket==$scope.keepMoveOptions.currentInfo.bucket){
            //1个支持重命名
@@ -788,9 +790,12 @@ angular.module('web')
            return;
 
         }
-        var msg = '将 <span class="text-info">'+$scope.keepMoveOptions.items[0].name
-            + '等</span> ' + keyword+' 到这个目录下面（如有相同的文件或目录则覆盖）？';
- 
+
+        var msg = T('paste.message1', {name: $scope.keepMoveOptions.items[0].name, action: keyword});
+
+        //  '将 <span class="text-info">'+
+        //     + '等</span> ' + keyword+' 到这个目录下面（如有相同的文件或目录则覆盖）？';
+
         Dialog.confirm(keyword, msg, function(b){
           if(b){
              $modal.open({

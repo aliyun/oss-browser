@@ -1,12 +1,12 @@
 angular.module('web', ['ui.router',
     'ui.bootstrap',
     'ui.codemirror',
-    //'pascalprecht.translate',
+    'pascalprecht.translate',
     'ngSanitize',
     'templates'
   ])
-  .config(['$stateProvider', '$urlRouterProvider',
-    function ($stateProvider, $urlRouterProvider) {
+  .config(['$stateProvider', '$urlRouterProvider', '$translateProvider',
+    function ($stateProvider, $urlRouterProvider, $translateProvider) {
 
       moment.locale('zh-CN');
 
@@ -16,13 +16,6 @@ angular.module('web', ['ui.router',
           templateUrl: 'main/files/files.html',
           controller: 'filesCtrl'
         })
-
-        // .state('settings', {
-        //   url: '/settings',
-        //   templateUrl: 'main/settings/settings.html',
-        //   controller: 'settingsCtrl'
-        // })
-
         .state('login', {
           url: '/login',
           templateUrl: 'main/auth/login.html',
@@ -32,43 +25,39 @@ angular.module('web', ['ui.router',
       $urlRouterProvider.otherwise('/');
 
       //i18n
-      // for(var k in Global.i18n){
-      //   $translateProvider.translations(k, Global.i18n[k].content);
-      // }
-      // $translateProvider.preferredLanguage('zh-CN');
+      for (var k in Global.i18n) {
+        $translateProvider.translations(k, Global.i18n[k].content);
+      }
+      $translateProvider.preferredLanguage('zh-CN');
     }
   ])
-  .run(['$rootScope',  'I18n', 'Toast', function ($rootScope, I18n, Toast) {
-    //i18n
-    for(var k in Global.i18n){
-       I18n.init(k, Global.i18n[k].content);
-    }
+  .run(['$rootScope', '$translate', 'Toast', function ($rootScope, $translate, Toast) {
 
     // //i18n
     var langMap = {};
     var langList = [];
-    angular.forEach(Global.i18n, function (v,k) {
+    angular.forEach(Global.i18n, function (v, k) {
       langMap[k] = v;
-      langList.push({lang: k, label:v.label});
+      langList.push({
+        lang: k,
+        label: v.label
+      });
     });
     var lang = localStorage.getItem('lang') || langList[0].lang;
 
-    $rootScope.langSettings={
+    $rootScope.langSettings = {
       langList: langList,
       lang: lang,
-      changeLanguage : function (key) {
-        console.log('changeLanguage:',key)
-        key = langMap[key]?key: langList[0].lang;
-        //$translate.use(key);
-        I18n.use(key);
-        localStorage.setItem('lang',key);
+      changeLanguage: function (key) {
+        console.log('changeLanguage:', key)
+        key = langMap[key] ? key : langList[0].lang;
+        $translate.use(key);
+        localStorage.setItem('lang', key);
         $rootScope.langSettings.lang = key;
-        Toast.success('已经设置成功');
-        window.location.reload();
+        Toast.success($translate.instant('setup.success')); //'已经设置成功'
       }
     };
-    I18n.use(lang);
-    //$translate.use(lang);
+    $translate.use(lang);
 
     console.log('ready');
   }]);

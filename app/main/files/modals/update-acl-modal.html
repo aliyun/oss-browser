@@ -5,28 +5,41 @@
     </button>
     <h4 class="modal-title text-warning">
       <i class="fa fa-sheild"></i>
-      设置ACL权限</h4>
+      <!-- 设置ACL权限 -->
+      {{'acl.update.title'|translate}}
+    </h4>
   </div>
   <div class="modal-body">
 
     <div class="form-group">
-      <label class="col-sm-2 control-label">读写权限:</label>
+      <label class="col-sm-2 control-label">
+        <!-- 权限: -->
+        {{'privilege'|translate}}:
+      </label>
       <div class="col-sm-9">
           <select ng-model="info.acl" class="form-control input-sm">
-              <option value="default">继承Bucket</option>
-              <option value="private">私有</option>
-              <option value="public-read">公共读</option>
-              <option value="public-read-write">公共读写</option>
+              <option value="default">
+                {{'aclType.default'|translate}}
+                <!-- 继承Bucket -->
+              </option>
+              <option value="private">{{'aclType.private'|translate}}</option>
+              <option value="public-read">{{'aclType.public-read'|translate}}</option>
+              <option value="public-read-write">{{'aclType.public-read-write'|translate}}</option>
           </select>
 
 
       </div>
     </div>
 
-    <div class="f8 text-muted">
+    <!-- <div class="f8 text-muted">
       <li>私有：对object的所有访问操作需要进行身份验证
       <li>公共读：对object写操作需要进行身份验证；可以对object进行匿名读
       <li>公共读写：所有人都可以对object进行读写操作
+    </div> -->
+    <div class="f9 text-muted">
+      <li>{{'aclType.private.message'|translate}}
+      <li>{{'aclType.public-read.message'|translate}}
+      <li>{{'aclType.public-read-write.message'|translate}}
     </div>
 
     <div class="clearfix"></div>
@@ -35,9 +48,13 @@
   <div class="modal-footer">
     <button type="submit" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-ok"></i>
-      确定</button>
+      {{'ok'|translate}}
+      <!-- 确定 -->
+    </button>
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
-      取消</button>
+      {{'cancel'|translate}}
+      <!-- 取消 -->
+    </button>
   </div>
 </form>

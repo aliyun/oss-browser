@@ -1,6 +1,6 @@
 <header class="pd4 file-toolbar">
 
-  <div class="col-sm-6 pd0">
+  <div class="col-sm-7 pd0">
     <!-- <button type="button" class="btn btn-default btn-sm"
             ng-click="sel.all=!sel.all;selectAll()">
         <i class="glyphicon {{sel.all?'glyphicon-check':'glyphicon-unchecked'}}"></i> 全选
@@ -10,11 +10,14 @@
     <div class="btn-group" role="group" ng-if="!copy.pwd">
 
       <button ng-disabled="currentAuthInfo.privilege=='readOnly'" type="button" class="btn btn-default btn-sm" ng-click="showUploadDialog()">
-        <i class="glyphicon glyphicon-cloud-upload text-info"></i>上传
+        <i class="glyphicon glyphicon-cloud-upload text-info"></i>
+        {{'upload'|translate}}
+        <!-- 上传 -->
       </button>
       <button ng-disabled="currentAuthInfo.privilege=='readOnly'" type="button" class="btn btn-default btn-sm" ng-click="showAddFolder()">
         <i class="glyphicon glyphicon-plus text-success"></i>
-        新建目录
+        <!-- 新建目录 -->
+        {{'folder.create'|translate}}
       </button>
       <!-- mock -->
       <div style="position:absolute;width:2px;height:1px;opacity:0.01;overflow:hidden;">
@@ -28,18 +31,21 @@
 
       <button type="button" class="btn btn-default btn-sm" ng-click="sel.all=!sel.all;selectAll()">
         <i class="fa" ng-class="{'fa-check-square-o': sel.all ,'fa-square-o': !sel.all}"></i>
-        全选
+        <!-- 全选 -->
+        {{'select.all'|translate}}
       </button>
 
       <button type="button" class="btn btn-default btn-sm" ng-disabled="!sel.has" ng-click="showDownloadDialog()">
         <i class="glyphicon glyphicon-cloud-download text-primary"></i>
-        下载
+        <!-- 下载 -->
+        {{'download'|translate}}
       </button>
 
       <button type="button" class="btn btn-default btn-sm"
       ng-disabled="!sel.has || currentAuthInfo.privilege=='readOnly'" ng-click="showMove(sel.has, true)">
       <i class="fa fa-clone text-primary"></i>
-        复制
+        <!-- 复制 -->
+        {{'copy'|translate}}
       </button>
 
 
@@ -47,7 +53,8 @@
 
     <div class="btn-group" role="group">
       <button type="button" class="btn btn-default btn-sm dropdown-toggle" ng-disabled="!sel.has" data-toggle="dropdown">
-        更多
+        <!-- 更多 -->
+        {{'more'|translate}}
         <span class="caret"></span>
         <span class="sr-only">Toggle Dropdown</span>
       </button>
@@ -55,14 +62,16 @@
         <li>
           <a href="" class="" ng-if="sel.has && currentAuthInfo.privilege!='readOnly'" ng-click="showMove(sel.has)">
             <i class="fa fa-cut text-primary"></i>
-            移动
+            <!-- 移动 -->
+            {{'move'|translate}}
           </a>
         </li>
         <li>
           <a href="" ng-if="(sel.has.length==1) && currentAuthInfo.privilege!='readOnly' && sel.has[0].storageClass!='Archive'"
           ng-click="showRename(sel.has[0])">
             <i class="fa fa-edit text-info"></i>
-            重命名
+            <!-- 重命名 -->
+            {{'rename'|translate}}
           </a>
         </li>
 
@@ -71,7 +80,8 @@
           <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.privilege!='readOnly'"
             ng-click="showACL(sel.has[0])">
             <i class="fa fa-shield text-success"></i>
-            ACL权限
+            {{'acl'|translate}}
+            <!-- ACL权限 -->
           </a>
         </li>
 
@@ -80,7 +90,8 @@
             ng-class="{'text-success':sel.has}"
             ng-click="showGrant(sel.has)">
             <i class="fa fa-shield text-warning"></i>
-            简化Policy授权
+            {{'simplePolicy'|translate}}
+            <!-- 简化Policy授权 -->
           </a>
         </li>
         <li>
@@ -88,21 +99,24 @@
             ng-class="{'text-success':sel.has}"
             ng-click="showGrantToken(sel.has[0])">
             <i class="fa fa-shield text-success"></i>
-            生成授权码
+            <!-- 生成授权码 -->
+            {{'genAuthToken'|translate}}
           </a>
         </li>
 
         <li>
           <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.id.indexOf('STS.')!=0" ng-click="showAddress(sel.has[0])">
             <i class="fa fa-download"></i>
-            获取地址
+            <!-- 获取地址 -->
+            {{'getAddress'|translate}}
           </a>
         </li>
 
         <li>
           <a href="" class="" ng-if="sel.has && currentAuthInfo.privilege!='readOnly'" ng-click="showDeleteFilesSelected()">
             <i class="fa fa-remove text-danger"></i>
-            删除
+            {{'delete'|translate}}
+            <!-- 删除 -->
           </a>
         </li>
       </ul>
@@ -111,14 +125,16 @@
 
     <div class="btn-group" role="toolbar" ng-if="keepMoveOptions">
       <button class="btn btn-default btn-sm" type="button"
-      uib-tooltip-html="'<div class=\'break\'>将{{keepMoveOptions.items[0].name|sub:50}}等粘贴到本目录</div>'"
+      uib-tooltip="{{'paste.resources'|translate}}"
       tooltip-placement="bottom" tooltip-append-to-body="true"
       ng-click="showPaste()">
-      <span class="text-primary"><i class="fa fa-paste"></i> 粘贴
+      <span class="text-primary"><i class="fa fa-paste"></i>
+        {{'paste'|translate}}({{keepMoveOptions.items.length}})
+        <!-- 粘贴 -->
       </button>
 
       <button class="btn btn-default btn-sm" style="padding-left:3px;padding-right:3px;" type="button"
-      uib-tooltip="取消{{keepMoveOptions.isCopy?'复制':'粘贴'}}"
+      uib-tooltip="{{(keepMoveOptions.isCopy?'copy.cancel':'move.cancel')|translate }}"
       tooltip-placement="bottom" tooltip-append-to-body="true"
         ng-click="cancelPaste()">
         <span class="text-danger"><i class="fa fa-close"></i></span>
@@ -127,11 +143,11 @@
 
   </div>
 
-  <div class="col-sm-3 pd0">
+  <div class="col-sm-2 pd0">
 
     <div class="input-group input-group-sm">
       <input type="text" ng-model="sch.objectName" ng-change="searchObjectName()" class="form-control"
-       cleanable-input placeholder="按名称前缀过滤">
+       cleanable-input placeholder="{{'search.files.placeholder'|translate}}">
       <span class="input-group-addon">
         <i class="fa fa-search"></i> {{objects.length}}
         <span ng-if="nextObjectsMarker">+</span>
@@ -141,7 +157,9 @@
   </div>
   <div class="col-sm-3 pd0">
     <span ng-include="'main/files/_/list-view-options.html'"></span>
-    <span ng-if="currentAuthInfo.id.indexOf('STS.')!=0" class="f8 text-muted pull-right" style="line-height:30px;">区域:
+    <span ng-if="currentAuthInfo.id.indexOf('STS.')!=0" class="f8 text-muted pull-right" style="line-height:30px;">
+      <!-- 区域: -->
+      {{'region'|translate}}:
       {{currentInfo.region}}
       &nbsp;</span>
   </div>

@@ -4,7 +4,9 @@
     </button>
   <h4 class="modal-title">
       <i class="fa fa-code"></i>
-      预览 <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span></h4>
+      <!-- 预览  -->
+      {{'preview'|translate}}
+      <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span></h4>
 </div>
 <div class="modal-body pd0">
 
@@ -17,11 +19,17 @@
   <restore-checker  bucket-info="bucketInfo" object-info='objectInfo' file-type="fileType" after-check-success="afterCheckSuccess()" after-restore-submit="afterRestoreSubmit()">
 
     <div ng-if="objectInfo.size > MAX_SIZE" style="margin:40px auto 0" class="text-center">
-
-      文件大小: <code>{{objectInfo.size|sizeFormat}} > {{MAX_SIZE|sizeFormat}}</code>, 不支持直接打开，请下载到本地后打开。
+      {{'filesize'|translate}}
+      <!-- 文件大小:  -->
+      <code>{{objectInfo.size|sizeFormat}} > {{MAX_SIZE|sizeFormat}}</code>,
+      {{'codepreview.notsupport'|translate}}
+      <!-- 不支持直接打开，请下载到本地后打开。 -->
       <div class="clearfix">&nbsp;</div>
       <div class="pd4 text-center">
-        <button class="btn btn-default" type="button" ng-click="showFn.download();cancel()"><i class="fa fa-download text-success"></i> 下载文件</button>
+        <button class="btn btn-default" type="button" ng-click="showFn.download();cancel()"><i class="fa fa-download text-success"></i>
+          <!-- 下载文件 -->
+          {{'download.file'|translate}}
+        </button>
       </div>
 
       <div class="clearfix">&nbsp;</div>
@@ -38,9 +46,13 @@
 
   <button type="button" class="pull-right btn btn-default btn-sm mgl4" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
-      关闭</button>
+      <!-- 关闭 -->
+      {{'close'|translate}}
+    </button>
 
   <button ng-if="previewBarVisible && currentAuthInfo.privilege!='readOnly'" type="button" class="pull-right btn btn-primary btn-sm" ng-click="saveContent()">
         <i class="fa fa-save"></i>
-        保存</button>
+        <!-- 保存 -->
+        {{'save'|translate}}
+      </button>
 </div>

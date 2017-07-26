@@ -36,7 +36,7 @@ angular.module('web')
   };
 }])
 
-.filter('translate', ['I18n',function(I18n){
+.filter('translate2', ['I18n',function(I18n){
   return function(key, options){
     return I18n.translate(key, options);
   }

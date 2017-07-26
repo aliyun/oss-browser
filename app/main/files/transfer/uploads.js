@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('web')
-  .controller('transferUploadsCtrl', ['$scope', '$timeout', '$interval','jobUtil', 'DelayDone', 'ossUploadManager', 'Toast','Dialog',
-    function ($scope, $timeout, $interval, jobUtil, DelayDone, ossUploadManager, Toast, Dialog) {
-
+  .controller('transferUploadsCtrl', ['$scope', '$timeout','$translate', '$interval','jobUtil', 'DelayDone', 'ossUploadManager', 'Toast','Dialog',
+    function ($scope, $timeout, $translate, $interval, jobUtil, DelayDone, ossUploadManager, Toast, Dialog) {
+       var T = $translate.instant;
       angular.extend($scope, {
         showRemoveItem: showRemoveItem,
         clearAllCompleted: clearAllCompleted,
@@ -38,7 +38,9 @@ angular.module('web')
         if (item.status == 'finished') {
           doRemove(item);
         } else {
-          Dialog.confirm('从列表中移除', '确定移除该上传任务?', function (btn) {
+          var title = T('remove.from.list.title'); //'从列表中移除'
+          var message = T('remove.from.list.message'); //'确定移除该上传任务?'
+          Dialog.confirm(title, message, function (btn) {
             if (btn) {
               doRemove(item);
             }
@@ -73,7 +75,9 @@ angular.module('web')
         if(!$scope.lists.uploadJobList || $scope.lists.uploadJobList.length==0){
           return;
         }
-        Dialog.confirm('清空所有', '确定清空所有上传任务?', function (btn) {
+        var title = T('clear.all.title');//清空所有
+        var message = T('clear.all.upload.message');//确定清空所有上传任务?
+        Dialog.confirm(title, message, function (btn) {
           if (btn) {
 
             var arr = $scope.lists.uploadJobList;
@@ -98,13 +102,13 @@ angular.module('web')
 
           ossUploadManager.stopCreatingJobs();
 
-          Toast.info('正在停止...');
+          Toast.info(T('pause.on')); //'正在暂停...'
           $scope.allActionBtnDisabled=true;
 
           angular.forEach(arr, function (n) {
             if (n.status == 'running' || n.status == 'waiting') n.stop();
           });
-          Toast.success('停止成功');
+          Toast.info(T('pause.success'));  
 
           $timeout(function () {
             ossUploadManager.saveProg();

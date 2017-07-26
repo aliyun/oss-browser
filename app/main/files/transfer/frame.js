@@ -1,8 +1,8 @@
 
 angular.module('web')
-.controller('transferFrameCtrl', ['$scope' ,'ossUploadManager','ossDownloadManager','Toast','safeApply',
-function($scope ,ossUploadManager,ossDownloadManager, Toast, safeApply){
-
+.controller('transferFrameCtrl', ['$scope', '$translate','ossUploadManager','ossDownloadManager','Toast','safeApply',
+function($scope ,$translate,ossUploadManager,ossDownloadManager, Toast, safeApply){
+   var T = $translate.instant;
    angular.extend($scope, {
      lists: {
        uploadJobList: [],
@@ -39,9 +39,9 @@ function($scope ,ossUploadManager,ossDownloadManager, Toast, safeApply){
     * @param toLocalPath {string}
     */
    function downloadFilesHandler(fromOssPath, toLocalPath) {
-     Toast.info('正在添加到下载队列');
+     Toast.info(T('download.addtolist.on')); //'正在添加到下载队列'
      ossDownloadManager.createDownloadJobs(fromOssPath, toLocalPath, function(isCancelled){
-       Toast.info('已全部添加到下载队列');
+       Toast.info(T('download.addtolist.success')); //'已全部添加到下载队列'
        $scope.toggleTransVisible(true);
        $scope.transTab = 2;
      });
@@ -52,9 +52,9 @@ function($scope ,ossUploadManager,ossDownloadManager, Toast, safeApply){
     * @param bucketInfo {object} {bucket, region, key}
     */
    function uploadFilesHandler(filePaths, bucketInfo) {
-      Toast.info('正在添加到上传队列');
+      Toast.info(T('upload.addtolist.on')); //'正在添加到上传队列'
       ossUploadManager.createUploadJobs(filePaths, bucketInfo, function(isCancelled){
-        Toast.info('已全部添加到下载队列'); 
+        Toast.info(T('upload.addtolist.success')); //'已全部添加到上传队列'
         $scope.toggleTransVisible(true);
         $scope.transTab = 1;
       });

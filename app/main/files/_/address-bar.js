@@ -1,8 +1,9 @@
 angular.module('web')
-  .controller('addressBarCtrl', ['$scope','Fav', 'AuthInfo','Toast','settingsSvs',
-  function ($scope,Fav, AuthInfo,Toast,settingsSvs) {
+  .controller('addressBarCtrl', ['$scope', '$translate','Fav', 'AuthInfo','Toast','settingsSvs',
+  function ($scope, $translate, Fav, AuthInfo,Toast,settingsSvs) {
 
     var DEF_ADDR =  'oss://';
+    var T = $translate.instant;
 
     angular.extend($scope, {
       address: AuthInfo.get().osspath || DEF_ADDR,
@@ -26,15 +27,16 @@ angular.module('web')
     function isFav(addr){
       return Fav.has(addr);
     }
+ 
     function toggleFav(addr){
       if(isFav(addr)){
         Fav.remove(addr);
-        Toast.warn('已删除书签');
+        Toast.warn(T('bookmark.remove.success')); //'已删除书签'
       }
       else{
         var f = Fav.add(addr);
-        if(f) Toast.success('添加书签成功');
-        else Toast.warn('添加书签失败: 超过最大限制');
+        if(f) Toast.success(T('bookmark.add.success'));//'添加书签成功'
+        else Toast.warn(T('bookmark.add.error1'));//'添加书签失败: 超过最大限制'
       }
     }
 
@@ -135,7 +137,7 @@ angular.module('web')
     //保存默认地址
     function saveDefaultAddress(){
       AuthInfo.saveToAuthInfo({address:$scope.address });
-      Toast.success('设置默认地址成功',1000);
+      Toast.success(T('saveAsHome.success'),1000); //'设置默认地址成功'
     }
     function getDefaultAddress(){
       var info = AuthInfo.get();

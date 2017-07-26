@@ -6,28 +6,27 @@
       <span class="input-group-btn">
 
         <button class="btn btn-default" ng-disabled="!canGoBack" ng-click="goBack()" type="button"
-        uib-tooltip="后退" tooltip-placement="bottom"  tooltip-append-to-body="true">
+        uib-tooltip="{{'backward'|translate}}" tooltip-placement="bottom"  tooltip-append-to-body="true">
          <i class="fa fa-arrow-left text-info"></i>
         </button>
         <button class="btn btn-default" ng-disabled="!canGoAhead" ng-click="goAhead()" type="button"
-        uib-tooltip="前进" tooltip-placement="bottom"  tooltip-append-to-body="true">
+        uib-tooltip="{{'forward'|translate}}" tooltip-placement="bottom"  tooltip-append-to-body="true">
          <i class="fa fa-arrow-right text-info"></i>
         </button>
 
 
-
          <button class="btn btn-default" ng-click="goUp()" type="button"
-         uib-tooltip="上一级" tooltip-placement="bottom" tooltip-append-to-body="true">
+         uib-tooltip="{{'goUp'|translate}}" tooltip-placement="bottom" tooltip-append-to-body="true">
           <i class="fa fa-arrow-up text-info"></i>
          </button>
 
          <button class="btn btn-default" ng-click="go(true)" type="button"
-         uib-tooltip="刷新" tooltip-placement="bottom"  tooltip-append-to-body="true">
+         uib-tooltip="{{'refresh'|translate}}" tooltip-placement="bottom"  tooltip-append-to-body="true">
            <i class="fa fa-refresh text-success"></i>
           </button>
 
           <button class="btn btn-default" ng-click="goHome()" type="button"
-          uib-tooltip="首页" tooltip-placement="bottom"  tooltip-append-to-body="true">
+          uib-tooltip="{{'home'|translate}}" tooltip-placement="bottom"  tooltip-append-to-body="true">
             <i class="fa fa-home text-info"></i>
           </button>
       </span>
@@ -38,14 +37,14 @@
 
         <button class="btn btn-default" ng-disabled="address == getDefaultAddress()" ng-click="saveDefaultAddress()"
         type="button"
-        uib-tooltip="保存为首页" tooltip-placement="bottom"  tooltip-append-to-body="true">
+        uib-tooltip="{{'saveAsHome'|translate}}" tooltip-placement="bottom"  tooltip-append-to-body="true">
           <i class="fa fa-home"></i>
         </button>
 
 
         <button class="btn btn-default" ng-click="toggleFav(address)"
         type="button"
-        uib-tooltip="保存到书签" tooltip-placement="left"  tooltip-append-to-body="true">
+        uib-tooltip="{{'saveToFav'|translate}}" tooltip-placement="left"  tooltip-append-to-body="true">
           <i ng-if="isFav(address)" class="fa fa-star text-orange"></i>
           <i ng-if="!isFav(address)" class="fa fa-star-o"></i>
         </button>

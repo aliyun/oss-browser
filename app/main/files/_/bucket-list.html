@@ -4,10 +4,22 @@
   <table class="table table-condensed table-hover table-striped" ng-if="ref.isListView">
     <tr>
       <th>-</th>
-      <th>Bucket名称</th>
-      <th>区域</th>
-      <th>创建时间</th>
-      <th>操作</th>
+      <th>
+        {{'bucket.name'|translate}}
+        <!-- Bucket名称 -->
+      </th>
+      <th>
+        {{'region'|translate}}
+        <!-- 区域 -->
+      </th>
+      <th>
+        {{'creationTime'|translate}}
+        <!-- 创建时间 -->
+      </th>
+      <th>
+        {{'actions'|translate}}
+        <!-- 操作 -->
+      </th>
     </tr>
 
     <tr ng-repeat="item in buckets|filter:sch.bucketName"
@@ -26,7 +38,10 @@
       <td>{{item.region}}</td>
       <td>{{item.creationDate|timeFormat}}</td>
       <td>
-        <a href="" ng-click="showDeleteBucket(item)" class="text-danger">删除</a>
+        <a href="" ng-click="showDeleteBucket(item)" class="text-danger">
+          {{'delete'|translate}}
+          <!-- 删除 -->
+        </a>
 
       </td>
     </tr>

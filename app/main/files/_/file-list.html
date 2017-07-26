@@ -7,10 +7,22 @@
         <th width="40" class="text-center">
           <input type="checkbox" ng-model="sel.all" name="x-all" ng-click="selectAll()" />
         </th>
-        <th>名称</th>
-        <th>大小</th>
-        <th>最后修改时间</th>
-        <th class="text-right">操作&nbsp;</th>
+        <th>
+          <!-- 名称 -->
+          {{'name'|translate}}
+        </th>
+        <th>
+          <!-- 大小 -->
+          {{'size'|translate}}
+        </th>
+        <th>
+          <!-- 最后修改时间 -->
+          {{'lastModifyTime'|translate}}
+        </th>
+        <th class="text-right">
+          <!-- 操作 -->
+          {{'actions'|translate}}
+          &nbsp;</th>
       </tr>
       <!--|filter:{name:sch.objectName}-->
       <tr ng-repeat="item in objects" ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);" ng-class="{'info': sel.x['i_'+$index]}">
@@ -44,7 +56,10 @@
           </div>
         </td>
         <td>
-          <span ng-if="item.isFolder==true" class="text-muted">目录</span>
+          <span ng-if="item.isFolder==true" class="text-muted">
+            <!-- 目录 -->
+            {{'folder'|translate}}
+          </span>
           <span ng-if="item.isFolder!=true">{{item.size|sizeFormat}}</span>
         </td>
         <td>{{item.lastModified|timeFormat}}</td>
@@ -53,26 +68,39 @@
           <!-- <a href="" ng-if="item.isFolder==true" ng-click="goIn(currentBucket,item.path);$event.stopPropagation()">进入</a>
         | -->
           <span ng-if="!item.isFolder && (item.storageClass!='Archive' || item.storageStatus==3)">
-            <a href="" ng-click="showAddress(item);$event.stopPropagation()" class="text-info">获取地址</a> |
+            <a href="" ng-click="showAddress(item);$event.stopPropagation()" class="text-info">
+              <!-- 获取地址 -->
+              {{'getAddress'|translate}}
+            </a> |
           </span>
 
           <span ng-if="item.storageClass!='Archive' || item.storageStatus==3">
-            <a href="" ng-click="showDownload(item);$event.stopPropagation()">下载</a> |
+            <a href="" ng-click="showDownload(item);$event.stopPropagation()">
+              <!-- 下载 -->
+              {{'donwload'|translate}}
+            </a> |
           </span>
 
           <span ng-if="!item.isFolder && (item.storageClass=='Archive' && item.storageStatus!=3)">
-             <a href="" ng-click="showRestore(item);$event.stopPropagation()">恢复</a> |
+             <a href="" ng-click="showRestore(item);$event.stopPropagation()">
+               <!-- 恢复 -->
+               {{'restore'|translate}}
+             </a> |
           </span>
 
 
-          <a href="" ng-click="showDeleteFiles([item])" class="text-danger">删除</a>
+          <a href="" ng-click="showDeleteFiles([item])" class="text-danger">
+            <!-- 删除 -->
+            {{'delete'|translate}}
+          </a>
           <!-- <a href="" ng-click="showGrant([item]);$event.stopPropagation()" class="text-success">授权</a> -->
           &nbsp;
         </td>
       </tr>
     </table>
     <div class="text-center clearfix pd2" ng-if="nextObjectsMarker">
-      正在加载更多..
+      <!-- 正在加载更多.. -->
+      {{'loading.more'|translate}}
     </div>
 
   </section>
@@ -95,14 +123,15 @@
 
       <div class="item-block-name" uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'"
       tooltip-append-to-body="true" tooltip-popup-delay="500">{{item.name}}</div>
-      <div class="item-block-desc" ng-if="item.isFolder==true">目录</div>
+      <div class="item-block-desc" ng-if="item.isFolder==true">{{'folder'|translate}}</div>
       <div class="item-block-desc" ng-if="item.isFolder!=true">{{item.size|sizeFormat}}</div>
     </div>
 
     <div class="clearfix"></div>
 
     <div class="text-center clearfix pd2" ng-if="nextObjectsMarker">
-      正在加载更多..
+      <!-- 正在加载更多.. -->
+      {{'loading.more'|translate}}
     </div>
 
     <div class="clearfix">&nbsp;</div>

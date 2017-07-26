@@ -3,7 +3,7 @@
   <div class="navbar-header">
 
     <a class="navbar-brand" ng-click="click10()">
-      <img src="{{app.logo}}" style="display:inline-block;" width="40" /> {{app.name}}
+      <img src="{{app.logo}}" style="display:inline-block;" width="40" /> {{'app.name'|translate}}
     </a>
     <label class="app-version" ng-click="showReleaseNote()">v{{app.version}}</label>
   </div>
@@ -39,10 +39,14 @@
       </li>
       <li>
         <a ng-if="authInfo.id.indexOf('STS.')==0"
-           uib-tooltip="{{authInfo.expiration|timeFormat}} 失效"
+           uib-tooltip="{{'auth.authToken.info.validUntil'|translate:'{expiration:authInfo.expiration|timeFormat}' }}"
            tooltip-placement="bottom" tooltip-append-to-body="true">
-          <span ng-if="!authInfo.desc">临时凭证:
-            <span my-timer expiration="authInfo.expiration"></span>后失效
+          <span ng-if="!authInfo.desc">
+            {{'tempCert'|translate}}:
+            <!-- 临时凭证: -->
+            {{'auth.authToken.info.leftTime'|translate}}:
+            <!-- 有效时间: -->
+            <span my-timer expiration="authInfo.expiration"></span>
           </span>
         </a>
         <a ng-if="authInfo.id.indexOf('STS.')!=0">
@@ -52,7 +56,10 @@
         </a>
       </li>
       <li>
-        <a href="" ng-click="logout()"><i class="fa fa-power-off"></i> 退出</a>
+        <a href="" ng-click="logout()"><i class="fa fa-power-off"></i>
+          {{'logout'|translate}}
+          <!-- 退出 -->
+        </a>
       </li>
     </ul>
 

@@ -1,7 +1,7 @@
 angular.module('web')
-  .controller('grantTokenModalCtrl', ['$scope', '$q', '$uibModalInstance', 'item', 'currentInfo','ramSvs','stsSvs','Toast', 'safeApply',
-    function ($scope, $q, $modalInstance, item, currentInfo,ramSvs, stsSvs, Toast, safeApply) {
-
+  .controller('grantTokenModalCtrl', ['$scope', '$q', '$uibModalInstance','$translate', 'item', 'currentInfo','ramSvs','stsSvs','Toast', 'safeApply',
+    function ($scope, $q, $modalInstance, $translate, item, currentInfo,ramSvs, stsSvs, Toast, safeApply) {
+      var T = $translate.instant;
       angular.extend($scope, {
         cancel: cancel,
         policyChange: policyChange,
@@ -12,7 +12,17 @@ angular.module('web')
           durSeconds: 3600,
           privType: 'readOnly',
         },
-        policyNameReg: /^[a-z0-9A-Z\-]{1,128}$/
+        policyNameReg: /^[a-z0-9A-Z\-]{1,128}$/,
+        message5: {
+          object: item.name,
+          type: item.isBucket?"Bucket":T('folder'),
+          privilege: T('privilege.readonly'),
+          expiration: '',
+        }
+      });
+
+      $scope.$watch('grant.privType', function(v){
+        $scope.message5.privilege = T('privilege.'+v.toLowerCase());
       });
 
       init();
@@ -27,7 +37,7 @@ angular.module('web')
            $scope.roles = [];
 
           if(err.message.indexOf('You are not authorized to do this action')!=-1){
-            Toast.error('没有权限获取角色列表');
+            Toast.error(T('simplePolicy.noauth.message3')); //'没有权限获取角色列表'
           }
         });
       }
@@ -146,6 +156,7 @@ angular.module('web')
 
           $scope.token = Buffer.from(JSON.stringify(tokenInfo)).toString('base64');
 
+          $scope.message5.expiration = moment(new Date(result.Credentials.Expiration)).format('YYYY-MM-DD HH:mm:ss');
         },function(err){
           console.log(err)
         });

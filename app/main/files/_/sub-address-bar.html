@@ -6,23 +6,23 @@
       <span class="input-group-btn">
 
         <button class="btn btn-default" ng-disabled="!canGoBack" ng-click="goBack()" type="button"
-        uib-tooltip="后退" tooltip-placement="bottom"  tooltip-append-to-body="true">
+        uib-tooltip="{{'backward'|translate}}" tooltip-placement="bottom"  tooltip-append-to-body="true">
          <i class="fa fa-arrow-left text-info"></i>
         </button>
         <button class="btn btn-default" ng-disabled="!canGoAhead" ng-click="goAhead()" type="button"
-        uib-tooltip="前进" tooltip-placement="bottom"  tooltip-append-to-body="true">
+        uib-tooltip="{{'forward'|translate}}" tooltip-placement="bottom"  tooltip-append-to-body="true">
          <i class="fa fa-arrow-right text-info"></i>
         </button>
 
 
 
          <button class="btn btn-default" ng-click="goUp()" type="button"
-         uib-tooltip="上一级" tooltip-placement="bottom" tooltip-append-to-body="true">
+         uib-tooltip="{{'goUp'|translate}}" tooltip-placement="bottom" tooltip-append-to-body="true">
           <i class="fa fa-arrow-up text-info"></i>
          </button>
 
          <button class="btn btn-default" ng-click="go(true)" type="button"
-         uib-tooltip="刷新" tooltip-placement="bottom"  tooltip-append-to-body="true">
+         uib-tooltip="{{'refresh'|translate}}" tooltip-placement="bottom"  tooltip-append-to-body="true">
            <i class="fa fa-refresh text-success"></i>
           </button>
 
@@ -35,8 +35,14 @@
       <input type="text" ng-model="subAddress" class="form-control address-url" placeholder="/">
 
       <span class="input-group-addon">
-       <span class="text-danger" ng-if="currentAuthInfo.privilege=='readOnly'">只读</span>
-       <span class="text-success" ng-if="currentAuthInfo.privilege=='all'">可写</span>
+       <span class="text-danger" ng-if="currentAuthInfo.privilege=='readOnly'">
+         <!-- 只读 -->
+         {{'readonly'|translate}}
+       </span>
+       <span class="text-success" ng-if="currentAuthInfo.privilege=='all'">
+         <!-- 可写 -->
+         {{'readwrite'|translate}}
+       </span>
       </span>
       <!-- <span class="input-group-btn">
 

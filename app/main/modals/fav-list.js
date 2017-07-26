@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('web')
-  .controller('favListCtrl', ['$scope','$rootScope','$state','$uibModalInstance','Fav','Toast',
-  function($scope,$rootScope, $state,$modalInstance,Fav,Toast){
-
+  .controller('favListCtrl', ['$scope','$rootScope', '$translate','$state','$uibModalInstance','Fav','Toast',
+  function($scope,$rootScope, $translate, $state,$modalInstance,Fav,Toast){
+    var T = $translate.instant;
     angular.extend($scope, {
 
       cancel: cancel,
@@ -30,7 +30,7 @@ angular.module('web')
 
     function removeFav(item){
       Fav.remove(item.url);
-      Toast.warning('删除书签成功');
+      Toast.warning(T('bookmarks.delete.success')); //删除书签成功
       refresh();
     }
 

@@ -4,7 +4,8 @@
     <div class="btn-group" role="group">
       <button ng-disabled="currentAuthInfo.id.indexOf('STS.')==0" type="button" class="btn btn-default btn-sm" ng-click="showAddBucket()">
         <i class="glyphicon glyphicon-plus text-success"></i>
-        新建 Bucket
+        <!-- 新建 Bucket -->
+        {{'bucket.add'|translate}}
       </button>
     </div>
 
@@ -18,18 +19,24 @@
 
         <button type="button" class="btn btn-default btn-sm" ng-disabled="!bucket_sel.item"
         ng-click="showBucketMultipart(bucket_sel.item)">
-            <i class="fa fa-copy"></i> 碎片
+            <i class="fa fa-copy"></i>
+            {{'bucket.multipart'|translate}}
+            <!-- 碎片 -->
         </button>
 
         <button type="button" class="btn btn-default btn-sm" ng-disabled="!bucket_sel.item"
                 ng-click="showUpdateBucket(bucket_sel.item)">
-            <i class="fa fa-shield text-success"></i> ACL权限
+            <i class="fa fa-shield text-success"></i>
+            {{'acl'|translate}}
+            <!-- ACL权限 -->
         </button>
 
         <button type="button" class="btn btn-default btn-sm" ng-disabled="!bucket_sel.item"
 
           ng-click="showGrant([bucket_sel.item])">
-            <i class="fa fa-shield text-warning"></i> 简化Policy授权
+            <i class="fa fa-shield text-warning"></i>
+            {{'simplePolicy'|translate}}
+            <!-- 简化Policy授权 -->
         </button>
 
 
@@ -37,9 +44,9 @@
 
     <div class="btn-group" role="group">
       <button type="button" class="btn btn-default btn-sm dropdown-toggle" ng-disabled="!bucket_sel.item" data-toggle="dropdown">
-        更多
+        <!-- 更多 -->
+        {{'more'|translate}}
         <span class="caret"></span>
-        <span class="sr-only">Toggle Dropdown</span>
       </button>
       <ul class="dropdown-menu" role="menu">
         <!-- <li>
@@ -53,7 +60,9 @@
           <a href=""
              ng-disabled="!bucket_sel.item"
           ng-click="showDeleteBucket(bucket_sel.item)">
-              <i class="fa fa-remove text-danger"></i> 删除
+              <i class="fa fa-remove text-danger"></i>
+              {{'delete'|translate}}
+              <!-- 删除 -->
           </a>
         </li>
       </ul>
@@ -63,7 +72,7 @@
   <div class="col-sm-4">
 
     <div class="input-group input-group-sm mgb0">
-      <input type="text" ng-model="sch.bucketName" class="form-control" cleanable-input placeholder="Bucket名称">
+      <input type="text" ng-model="sch.bucketName" class="form-control" cleanable-input placeholder="{{'bucket.name'|translate}}">
       <span class="input-group-addon">
         <i class="fa fa-search"></i>
         {{(buckets|filter:sch.bucketName).length}}

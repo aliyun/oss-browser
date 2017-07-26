@@ -48,7 +48,7 @@ function createWindow() {
     height: 700,
     minWidth: 1020,
     minHeight: 660,
-    title: "OSS浏览器",
+    title: "",
     icon: path.join(__dirname, 'icons', 'icon.ico')
   };
 
@@ -58,7 +58,7 @@ function createWindow() {
   // Create the browser window.   http://electron.atom.io/docs/api/browser-window/
   win = new BrowserWindow(opt);
 
-  win.setTitle("OSS浏览器");
+  win.setTitle("");
 
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/index.html`);

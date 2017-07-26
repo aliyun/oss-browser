@@ -24,7 +24,7 @@ angular.module('web')
         $scope.step=2;
         var ignoreError = true;
 
-        console.log(item, currentInfo)
+        //console.log(item, currentInfo)
 
         $.ajax({url: item.url,
           headers: {'Range':'bytes=0-1','x-random':Math.random(),'Cache-Control':"no-cache"},
