@@ -1,6 +1,6 @@
 {
   "name": "oss-browser",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "dist/main.js",
   "upgrade_url": "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
   "scripts": {
@@ -64,7 +64,7 @@
     "spectron": "^3.7.2"
   },
   "dependencies": {
-    "aliyun-sdk": "^1.10.9", 
+    "aliyun-sdk": "^1.10.9",
     "koa": "^2.3.0",
     "koa-convert": "^1.2.0",
     "koa-static-server": "^1.2.1",

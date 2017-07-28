@@ -29,7 +29,7 @@
     &nbsp;
     <div class="btn-group" role="group" ng-if="!copy.pwd">
 
-      <button type="button" class="btn btn-default btn-sm" ng-click="sel.all=!sel.all;selectAll()">
+      <button ng-disabled="!objects||objects==0" type="button" class="btn btn-default btn-sm" ng-click="sel.all=!sel.all;selectAll()">
         <i class="fa" ng-class="{'fa-check-square-o': sel.all ,'fa-square-o': !sel.all}"></i>
         <!-- 全选 -->
         {{'select.all'|translate}}

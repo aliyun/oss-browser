@@ -1,6 +1,6 @@
 <header class="pd4 bucket-toolbar">
 
-  <div class="col-sm-6">
+  <div class="col-sm-6 pd0">
     <div class="btn-group" role="group">
       <button ng-disabled="currentAuthInfo.id.indexOf('STS.')==0" type="button" class="btn btn-default btn-sm" ng-click="showAddBucket()">
         <i class="glyphicon glyphicon-plus text-success"></i>
@@ -69,7 +69,7 @@
     </div>
 
   </div>
-  <div class="col-sm-4">
+  <div class="col-sm-4 pd0">
 
     <div class="input-group input-group-sm mgb0">
       <input type="text" ng-model="sch.bucketName" class="form-control" cleanable-input placeholder="{{'bucket.name'|translate}}">
@@ -80,7 +80,7 @@
     </div>
 
   </div>
-  <div class="col-sm-2">
+  <div class="col-sm-2 pd0">
     <div ng-include="'main/files/_/list-view-options.html'"></div>
   </div>
 
