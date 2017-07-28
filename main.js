@@ -48,7 +48,7 @@ function createWindow() {
     height: 700,
     minWidth: 1020,
     minHeight: 660,
-    title: "",
+    title: "OSS Browser",
     icon: path.join(__dirname, 'icons', 'icon.ico')
   };
 
@@ -58,7 +58,7 @@ function createWindow() {
   // Create the browser window.   http://electron.atom.io/docs/api/browser-window/
   win = new BrowserWindow(opt);
 
-  win.setTitle("");
+  win.setTitle("OSS Browser");
 
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/index.html`);
@@ -80,7 +80,7 @@ function createWindow() {
     console.log('开发模式');
     // Open the DevTools.
     win.webContents.openDevTools();
-    
+
   }else if (process.platform === 'darwin') {
     // Create the Application's main menu
     let template = getMenuTemplate();
