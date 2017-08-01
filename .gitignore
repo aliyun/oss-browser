@@ -2,6 +2,7 @@ node_modules
 .idea
 cache
 dist
+dist.asar
 npm-debug.log*
 bower_components
 build
