@@ -118,7 +118,7 @@
                           {{'auth.authToken'|translate}}:
                           <!-- 授权码: -->
                           <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}" tooltip-append-to-body="true"
-                            ng-click="open('https://github.com/aliyun/oss-browser/blob/master/authToken.md')">
+                            ng-click="openURL('https://github.com/aliyun/oss-browser/blob/master/authToken.md')">
                             <i class="fa fa-question-circle"></i></a></label>
                         <div class="col-sm-9">
                             <textarea required ng-model="item.authToken"  rows="10" ng-change="authTokenChange()"
@@ -129,7 +129,7 @@
                                <!-- 请输入有效的授权码 -->
                              </small>
                              <small class="text-danger" ng-if="authTokenInfo && authTokenInfo.isExpired">
-                              {{''auth.authToken.error.expired''|translate}}
+                              {{'auth.authToken.error.expired'|translate}}
                                <!-- 授权码已经过期 -->
                              </small>
                              <small class="text-success" ng-if="authTokenInfo && !authTokenInfo.isExpired">

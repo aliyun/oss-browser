@@ -11,31 +11,29 @@
   </div>
   <div class="modal-body">
 
-    <div class="form-group">
-      <label class="col-sm-4 control-label">
+    <fieldset>
+      <legend>{{'settings.subtitle.updown'|translate}}</legend>
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
         <!-- 最大上传任务数: -->
         {{'settings.maxUploadNum'|translate}}:
       </label>
-      <div class="col-sm-7">
-        <input type="number" name="maxUploadJobCount"
-         ng-model="set.maxUploadJobCount"
-         ng-change="setChange('maxUploadJobCount')"
-          max="10" min="1" required class=" form-control" />
+        <div class="col-sm-7">
+          <input type="number" name="maxUploadJobCount" ng-model="set.maxUploadJobCount" ng-change="setChange(form1,'maxUploadJobCount')" max="10" min="1" required class=" form-control" />
+        </div>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label class="col-sm-4 control-label">
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
         <!-- 最大下载任务数: -->
         {{'settings.maxDownloadNum'|translate}}:
       </label>
-      <div class="col-sm-7">
-        <input type="number" name="maxDownloadJobCount"
-        ng-model="set.maxDownloadJobCount"
-        ng-change="setChange('maxDownloadJobCount')"
-        max="10" min="1" required class=" form-control" />
+        <div class="col-sm-7">
+          <input type="number" name="maxDownloadJobCount" ng-model="set.maxDownloadJobCount" ng-change="setChange(form1,'maxDownloadJobCount')" max="10" min="1" required class=" form-control" />
+        </div>
       </div>
-    </div>
+
+    </fieldset>
 
     <!-- <div class="form-group">
           <label class="col-sm-4 control-label">保存历史记录长度:</label>
@@ -45,36 +43,101 @@
           </div>
       </div> -->
 
-    <div class="form-group">
-      <label class="col-sm-4 control-label">
+    <fieldset>
+      <legend>{{'settings.subtitle.sys'|translate}}</legend>
+
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
         <!-- 是否显示图片缩略: -->
         {{'settings.WhetherShowThumbnail'|translate}}:
       </label>
-      <div class="col-sm-7">
-        <div class="checkbox">
-        <label>
+        <div class="col-sm-7">
+          <div class="checkbox">
+            <label>
           <input type="checkbox" name="showImageSnapshot"
           ng-model="set.showImageSnapshot"
-          ng-change="setChange('showImageSnapshot')"
+          ng-change="setChange(form1,'showImageSnapshot')"
           ng-true-value="1" ng-false-value="0" />
           <!-- (在文件列表中显示图片缩略, 会消耗一定的流量) -->
           ({{'settings.WhetherShowThumbnail.msg'|translate}})
         </label>
+          </div>
         </div>
       </div>
-    </div>
 
 
+      <div class="form-group">
+        <label class="col-sm-4 control-label">{{'language'|translate}}:</label>
+        <div class="col-sm-7">
+          <select class="form-control input-sm" ng-model="langSettings.lang" ng-change="langSettings.changeLanguage(langSettings.lang)" ng-options="a.lang as a.label for a in langSettings.langList"></select>
+        </div>
+      </div>
 
-    <div class="form-group">
-       <label class="col-sm-4 control-label">{{'language'|translate}}:</label>
-       <div class="col-sm-7">
-         <select class="form-control input-sm" ng-model="langSettings.lang"
-         ng-change="langSettings.changeLanguage(langSettings.lang)"
-         ng-options="a.lang as a.label for a in langSettings.langList"></select>
-       </div>
-     </div>
+    </fieldset>
 
+    <fieldset>
+      <legend>
+        {{'settings.subtitle.email'|translate}}
+        <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}" tooltip-append-to-body="true"
+        ng-click="openURL('https://github.com/aliyun/oss-browser/blob/master/smtpSetting.md')">
+        <i class="fa fa-question-circle"></i></a>
+      </legend>
+
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+        <!-- STMP地址: -->
+        {{'settings.mailSmtp.addr'|translate}}:
+      </label>
+        <div class="col-sm-5" style="padding-right:2px">
+          <input type="text" name="host" ng-pattern="reg.host" ng-model="set.mailSmtp.host" placeholder="Host" ng-required="false" ng-change="setChange(form1,'mailSmtp', 1000)" class="form-control" />
+        </div>
+
+        <div class="col-sm-2" style="padding-left:0">
+          <input type="number" name="port" ng-pattern="reg.port" ng-model="set.mailSmtp.port" placeholder="Port" ng-required="false" ng-change="setChange(form1,'mailSmtp', 1000)" class="form-control" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+        <!-- 使用SSL: -->
+        {{'settings.mailSmtp.ssl'|translate}}:
+      </label>
+        <div class="col-sm-7">
+          <input type="checkbox" name="secure" ng-model="set.mailSmtp.secure" ng-change="setChange(form1,'mailSmtp', 1000)" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+        <!-- 发送邮件的邮箱: -->
+        {{'settings.mailSmtp.from'|translate}}:
+      </label>
+        <div class="col-sm-7">
+          <input type="text" name="email" ng-pattern="reg.from" ng-model="set.mailSmtp.from" placeholder="Email" ng-required="false" ng-change="setChange(form1,'mailSmtp', 1000)" class="form-control" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+        {{'user'|translate}}/{{'pass'|translate}}
+        <!-- 用户名/密码: -->
+      </label>
+        <div class="col-sm-4" style="padding-right:2px">
+          <input type="text" name="text" ng-model="set.mailSmtp.auth.user" placeholder="UserName" ng-required="false" ng-change="setChange(form1,'mailSmtp', 1000)" class="form-control" />
+        </div>
+
+        <div class="col-sm-3" style="padding-left:0">
+          <input type="password" name="password" ng-model="set.mailSmtp.auth.pass" class="form-control" ng-change="setChange(form1,'mailSmtp', 1000)" ng-required="false" placeholder="password" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+        </label>
+        <div class="col-sm-7">
+           <a href="" ng-disabled="!set.mailSmtp.from" class="btn btn-sm btn-default" ng-click="testMail()">{{'test'|translate}}</a>
+        </div>
+      </div>
+  </fieldset>
 
 
   </div>

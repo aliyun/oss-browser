@@ -32,6 +32,9 @@ angular.module('web', ['ui.router',
     }
   ])
   .run(['$rootScope', '$translate', 'Toast', function ($rootScope, $translate, Toast) {
+    $rootScope.openURL = function(url){
+      openExternal(url);
+    }
 
     // //i18n
     var langMap = {};

@@ -56,10 +56,15 @@ angular.module('web')
       }
 
 
-      $rootScope.showSettings = function(){
+      $rootScope.showSettings = function(fn){
         $modal.open({
           templateUrl: 'main/modals/settings.html',
-          controller: 'settingsCtrl'
+          controller: 'settingsCtrl',
+          resolve: {
+            callback: function(){
+              return fn;
+            }
+          }
         });
       };
 

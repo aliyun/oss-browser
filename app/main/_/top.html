@@ -11,15 +11,19 @@
 
   <div class="collapse navbar-collapse" id="collapse-1" ng-if="!hideTopNav">
     <ul class="nav navbar-nav">
-      <li ng-class="{active:showTab==1}"><a href="#/"><i class="glyphicon glyphicon-folder-close"></i>
+      <li ng-class="{active:showTab==1}">
+        <a href="#/"><i class="glyphicon glyphicon-folder-close"></i>
         {{'files'|translate}}
         <!-- 文件 -->
-      </a></li>
+      </a>
       </li>
     </ul>
 
     <ul class="nav navbar-nav navbar-right" style="margin-right:10px;">
-
+      <li><a href="" ng-click="showUserList()"><i class="fa fa-users"></i>
+        {{'users'|translate}}
+        <!-- 书签管理 -->
+      </a></li>
       <li ng-if="authInfo.id.indexOf('STS.')!=0"><a href="" ng-click="showFavList()"><i class="fa fa-star"></i>
         {{'bookmarks'|translate}}
         <!-- 书签管理 -->
@@ -30,17 +34,13 @@
       </a></li>
       <li>
         <a href="" ng-click="showAbout()">
-          <i class="fa fa-about"></i>
-          {{'about'|translate}}
+          <i class="fa fa-about"></i> {{'about'|translate}}
           <!-- 关于 -->
-            <small style="color:#fff;background:red;border-radius:2px"
-            ng-if="!upgradeInfo.isLastVersion"> new </small>
+          <small style="color:#fff;background:red;border-radius:2px" ng-if="!upgradeInfo.isLastVersion"> new </small>
         </a>
       </li>
       <li>
-        <a ng-if="authInfo.id.indexOf('STS.')==0"
-           uib-tooltip="{{'auth.authToken.info.validUntil'|translate:{expiration:authInfo.expirationStr} }}"
-           tooltip-placement="bottom" tooltip-append-to-body="true">
+        <a ng-if="authInfo.id.indexOf('STS.')==0" uib-tooltip="{{'auth.authToken.info.validUntil'|translate:{expiration:authInfo.expirationStr} }}" tooltip-placement="bottom" tooltip-append-to-body="true">
           <span ng-if="!authInfo.desc">
             {{'tempCert'|translate}}:
             <!-- 临时凭证: -->
@@ -67,12 +67,9 @@
 
   <form class="navbar-form navbar-right" ng-if="hideTopNav">
     <div class="form-inline form-group">
-       <label class="control-label">{{'language'|translate}}:</label>
-       <select class="form-control input-sm" ng-model="langSettings.lang"
-       ng-change="langSettings.changeLanguage(langSettings.lang)"
-       ng-options="a.lang as a.label for a in langSettings.langList"></select>
-       &nbsp;
-     </div>
+      <label class="control-label">{{'language'|translate}}:</label>
+      <select class="form-control input-sm" ng-model="langSettings.lang" ng-change="langSettings.changeLanguage(langSettings.lang)" ng-options="a.lang as a.label for a in langSettings.langList"></select> &nbsp;
+    </div>
   </form>
 
 </nav>
