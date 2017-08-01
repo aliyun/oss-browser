@@ -60,6 +60,8 @@ function createWindow() {
 
   win.setTitle("OSS Browser");
 
+  // and load the index.html of the app.
+  win.loadURL(`file://${__dirname}/index.html`);
 
 
   win.setMenuBarVisibility(false);
@@ -78,16 +80,11 @@ function createWindow() {
   if(process.env.NODE_ENV=='development'){
     console.log('开发模式');
 
-    // and load the index.html of the app.
-    win.loadURL(`file://${__dirname}/index.html`);
-
     // Open the DevTools.
     win.webContents.openDevTools();
 
   }else {
-    // and load the index.html of the app.
-    win.loadURL(`file://${__dirname}/dist.asar/index.html`);
-    
+
     if (process.platform === 'darwin') {
       // Create the Application's main menu
       let template = getMenuTemplate();
