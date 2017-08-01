@@ -36,6 +36,14 @@ angular.module('web')
       set: function(v){
         return localStorage.setItem('historiesLength',v);
       }
+    },
+    mailSmtp: {
+      get: function(){
+        return JSON.parse(localStorage.getItem('mailSender')||'{"port":465}');
+      },
+      set: function(v){
+        return localStorage.setItem('mailSender',JSON.stringify(v));
+      }
     }
   };
 }]);

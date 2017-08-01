@@ -358,6 +358,7 @@ angular.module('web')
                   n.size = n.Size;
                   n.storageClass = n.StorageClass;
                   n.type = n.Type;
+                  n.lastModified = n.LastModified;
                   n.url = getOssUrl(region, opt.Bucket, n.Key);
 
                   objs.push(n);
@@ -948,6 +949,7 @@ angular.module('web')
                   n.size = n.Size;
                   n.storageClass = n.StorageClass;
                   n.type = n.Type;
+                  n.lastModified = n.LastModified;
                   n.url =  getOssUrl(region, opt.Bucket, n.Key);
 
                   t.push(n);
@@ -1046,6 +1048,7 @@ angular.module('web')
                   n.size = n.Size;
                   n.storageClass = n.StorageClass;
                   n.type = n.Type;
+                  n.lastModified = n.LastModified;
                   n.url = getOssUrl(region, opt.Bucket, n.Key);
 
                   t.push(n);
@@ -1096,6 +1099,7 @@ angular.module('web')
                   n.extranetEndpoint = n.ExtranetEndpoint;
                   n.intranetEndpoint = n.IntranetEndpoint;
                   n.storageClass = n.StorageClass;
+                  n.lastModified = n.LastModified;
 
                   n.isBucket = true;
                   n.itemType = 'bucket';

@@ -124,11 +124,11 @@
           </span>
 
           <select ng-if="grant.toType=='user'"  ng-disabled="!users || users.length==0" name="userName" class="form-control"
-          ng-model="grant.userName" ng-required="grant.toType=='user'"
+          ng-model="grant.userName"
           ng-options="user.UserName as user.UserName for user in users">
-            <option value=''>{{!users||users.length==0?('nodata'|translate):('chooseone'|translate)}}</option>
-
+            <option value=''>{{'new.user'|translate}}</option>
           </select>
+
           <select ng-if="grant.toType=='group'"  ng-disabled="!groups || groups.length==0" name="groupName" class="form-control"
           ng-model="grant.groupName" ng-required="grant.toType=='group'"
           ng-options="group.GroupName as group.GroupName for group in groups">
@@ -142,6 +142,45 @@
           </select>
 
         </div>
+
+
+        <fieldset class="form-horizontal" ng-if="!grant.userName">
+          <legend></legend>
+           <div class="form-group">
+             <label class="col-sm-3 control-label">
+               {{'new.user.name'|translate}}:
+               <!-- 新用户名: -->
+             </label>
+             <div class="col-sm-9">
+               <div class="input-group input-group-sm">
+              <input required type="text" class="form-control" ng-model="create.UserName" placeholder="Sub User Name">
+               <span class="input-group-btn">
+                   <a href="" ng-click="genUserName()" class="btn btn-success">
+                     <!-- 随机生成 -->
+                     {{'new.user.random.gen'|translate}}
+                   </a>
+               </span>
+             </div>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{'has-error':form1.email.$dirty && !form1.email.$valid}">
+            <label class="col-sm-3 control-label">
+              {{'new.user.email.send'|translate}}:
+              <!-- AK发送到邮件:  -->
+            </label>
+            <div class="col-sm-9">
+              <input ng-disabled="!mailSmtp.from" name="email" type="email"  placeholder="Email"
+              ng-pattern="reg.email" required class="form-control" ng-model="create.Email"/>
+              <div class="text-danger" ng-if="!mailSmtp.from">
+                <!-- 还没设置邮件发送配置，需要先设置：  -->
+                {{'new.user.email.noset'|translate}}
+                <a href="" ng-click="showEmailSettings()">
+                  <!-- 打开设置 -->
+                  {{'new.user.email.noset.open'|translate}}
+                </a></div>
+            </div>
+          </div>
+        </fieldset>
       </div>
 
       <div class="clearfix"></div>

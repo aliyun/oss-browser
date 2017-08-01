@@ -290,7 +290,8 @@ module.exports = {
   'clear.all': '清空全部',
 
   'clear.all.title': '清空全部',
-  'clear.all.message': '确定清空所有下载任务?',
+  'clear.all.download.message': '确定清空所有下载任务?',
+  'clear.all.upload.message': '确定清空所有上传任务?',
 
   'pause.on': '正在暂停...',
   'pause.success': '暂停成功',
@@ -304,4 +305,67 @@ module.exports = {
   'status.failed': '失败',
   'status.finished': '完成',
   'status.waiting': '等待',
+
+  'users': '子用户',
+  'users.title': '子用户管理',
+  'user.id': '用户ID',
+  'displayName': '显示名',
+  'comments': '描述',
+  'update': '修改',
+  'username': '用户名',
+  'details': '详情',
+  'add': '添加',
+  'mobilePhone': '手机号',
+  'ak': 'AccessKey',
+  'aks': 'AccessKeys',
+  'email': '邮箱',
+
+  'user.delete.title': '删除用户',
+  'user.delete.message': '确定要删除[{{name}}]这个用户？',
+  'user.delete.on': '正在删除...',
+  'user.delete.success': '删除用户成功',
+
+  'status': '状态',
+  'accessKeySecret': 'AccessKeySecret',
+  'createTime': '创建时间',
+
+  'ak.status.update.title.Active': '禁用AccessKey',
+  'ak.status.update.title.Inactive': '启用AccessKey',
+  'ak.status.update.message.Active': '确定要禁用该AccessKey？',
+  'ak.status.update.message.Inactive': '确定要启用该AccessKey？',
+  'ak.delete.title': '删除AccessKey',
+  'ak.delete.message': '确定要删除该AccessKey？',
+
+  'user.update.message.tip': '请自行确保当前操作登录用户需要有 AliyunRAMFullAccess 权限。',
+  'user.list.message.tip': '这里只提供必要的用户管理功能，更进一步的增强功能，请到RAM控制台操作:',
+
+  'status.Active': '已启用',
+  'status.Inactive': '已禁用',
+  'enable': '启用',
+  'disable': '禁用',
+  'show': '显示',
+  'can.not.get.accessKeySecret': '无法获取 AccessKeySecret',
+
+  'settings.subtitle.updown': '上传下载设置',
+  'settings.subtitle.sys': '系统设置',
+  'settings.subtitle.email': '邮件发送设置',
+  'settings.mailSmtp.addr': 'STMP地址',
+  'settings.mailSmtp.ssl': '使用SSL',
+  'settings.mailSmtp.from': '发送邮件的邮箱',
+
+  'user': '用户名',
+  'pass': '密码',
+  'test': '测试一下',
+
+  'mail.test.title': '测试邮件',
+  'mail.test.message': '将发送测试邮件到: {{from}}',
+  'mail.test.success': '邮件发送成功',
+
+  'new.user': '[ 新建一个 ]',
+  'new.user.name': '新用户名',
+  'new.user.random.gen': '随机生成',
+  'new.user.email.send': 'AK发送到邮件',
+  'new.user.email.noset': '还没设置邮件发送配置，需要先设置',
+  'new.user.email.noset.open': '打开设置',
+
 }

@@ -9,10 +9,183 @@ angular.module('web')
        listRoles: listRoles,
 
        createPolicy: createPolicy,
+       getPolicy: getPolicy,
        attachPolicyToRole: attachPolicyToRole,
        attachPolicyToGroup: attachPolicyToGroup,
        attachPolicyToUser: attachPolicyToUser,
+       detachPolicyFromUser: detachPolicyFromUser,
+       listPoliciesForUser: listPoliciesForUser,
+
+       getUser: getUser,
+       createUser: createUser,
+       updateUser: updateUser,
+       deleteUser: deleteUser,
+
+       createAccessKey: createAccessKey,
+       updateAccessKey: updateAccessKey,
+       deleteAccessKey: deleteAccessKey,
+       listAccessKeys: listAccessKeys
     };
+
+    function listPoliciesForUser(username){
+      var ram = getClient();
+      var df = $q.defer();
+      ram.listPoliciesForUser({
+         UserName: username
+      }, function(err, result){
+        if(err){
+          df.reject(err);
+          handleError(err);
+        }
+        else{
+          df.resolve(result);
+        }
+      });
+      return df.promise;
+    }
+
+
+    function deleteUser(username){
+      var ram = getClient();
+      var df = $q.defer();
+      ram.deleteUser({
+         UserName: username
+      }, function(err, result){
+        if(err){
+          df.reject(err);
+          handleError(err);
+        }
+        else{
+          df.resolve(result);
+        }
+      });
+      return df.promise;
+    }
+
+    function getUser(username){
+      var ram = getClient();
+      var df = $q.defer();
+      ram.getUser({
+         UserName: username
+      }, function(err, result){
+        if(err){
+          df.reject(err);
+          handleError(err);
+        }
+        else{
+          df.resolve(result);
+        }
+      });
+      return df.promise;
+    }
+
+    function updateUser(item){
+      var ram = getClient();
+      var df = $q.defer();
+      ram.updateUser(item, function(err, result){
+        if(err){
+          df.reject(err);
+          handleError(err);
+        }
+        else{
+          df.resolve(result);
+        }
+      });
+      return df.promise;
+    }
+
+    function createUser(opt){
+      if(typeof(opt)=='string'){
+        opt={
+          UserName: opt
+        }
+      }
+
+      var ram = getClient();
+      var df = $q.defer();
+
+      console.log('createUser:',opt)
+      ram.createUser(opt, function(err, result){
+        if(err){
+          df.reject(err);
+          handleError(err);
+        }
+        else{
+          df.resolve(result);
+        }
+      });
+      return df.promise;
+    }
+
+    function listAccessKeys(username){
+      var ram = getClient();
+      var df = $q.defer();
+      ram.listAccessKeys({
+         UserName: username
+      }, function(err, result){
+        if(err){
+          df.reject(err);
+          handleError(err);
+        }
+        else{
+          df.resolve(result);
+        }
+      });
+      return df.promise;
+    }
+
+    function createAccessKey(username){
+      var ram = getClient();
+      var df = $q.defer();
+      ram.createAccessKey({
+         UserName: username
+      }, function(err, result){
+        if(err){
+          df.reject(err);
+          handleError(err);
+        }
+        else{
+          df.resolve(result);
+        }
+      });
+      return df.promise;
+    }
+    function updateAccessKey(username, userAccessKeyId, status){
+      var ram = getClient();
+      var df = $q.defer();
+      ram.updateAccessKey({
+         UserName: username,
+         UserAccessKeyId: userAccessKeyId,
+         Status: status
+      }, function(err, result){
+        if(err){
+          df.reject(err);
+          handleError(err);
+        }
+        else{
+          df.resolve(result);
+        }
+      });
+      return df.promise;
+    }
+    function deleteAccessKey(username, userAccessKeyId){
+      var ram = getClient();
+      var df = $q.defer();
+      ram.deleteAccessKey({
+         UserName: username,
+         UserAccessKeyId: userAccessKeyId,
+      }, function(err, result){
+        if(err){
+          df.reject(err);
+          handleError(err);
+        }
+        else{
+          df.resolve(result);
+        }
+      });
+      return df.promise;
+    }
+
 
     function createPolicy(name, doc, desc){
       var ram = getClient();
@@ -32,6 +205,25 @@ angular.module('web')
       });
       return df.promise;
     }
+
+    function getPolicy(name, type, ignoreError){
+      var ram = getClient();
+      var df = $q.defer();
+      ram.getPolicy({
+        PolicyName: name,
+        PolicyType: type
+      }, function(err, result){
+        if(err){
+          df.reject(err);
+          if(!ignoreError) handleError(err);
+        }
+        else{
+          df.resolve(result);
+        }
+      });
+      return df.promise;
+    }
+
     function attachPolicyToUser(policyName, userName){
       return attachPolicy('attachPolicyToUser',{
         PolicyName: policyName,
@@ -53,6 +245,14 @@ angular.module('web')
         PolicyType: 'Custom'
       });
     }
+    function detachPolicyFromUser(policyName, userName){
+      return attachPolicy('detachPolicyFromUser',{
+        UserName: userName,
+        PolicyName: policyName,
+        PolicyType: 'Custom'
+      });
+    }
+
     function attachPolicy(callFn, opt){
       var ram = getClient();
       var df = $q.defer();
@@ -107,6 +307,7 @@ angular.module('web')
     }
 
     function handleError(err) {
+      console.error(err);
       if(err.code=='InvalidAccessKeyId'){
         $state.go('login');
       }

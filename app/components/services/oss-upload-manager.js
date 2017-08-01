@@ -189,7 +189,13 @@ angular.module('web')
           }
 
           var fileName = path.basename(absPath);
-          var filePath = path.join(bucketInfo.key, path.relative(dirPath, absPath)).replace(/\\/g, '/');
+
+          var filePath = path.relative(dirPath, absPath);
+          if(path.sep!='/'){
+            //修复window下 \ 问题
+            filePath = filePath.replace(/\\/g, '/')
+          }
+          filePath = path.join(bucketInfo.key, filePath);
 
           if (fs.statSync(absPath).isDirectory()) {
             //创建目录
@@ -279,7 +285,6 @@ angular.module('web')
             endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket)
           });
         }
-
         return store.createUploadJob(opt);
         // {
         //   region: opt.region,

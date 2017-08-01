@@ -71,6 +71,7 @@ angular.module('web')
         //授权
         showGrant: showGrant,
         showGrantToken: showGrantToken,
+        showUserList: showUserList,
         //地址
         showAddress: showAddress,
         showACL: showACL,
@@ -895,6 +896,15 @@ angular.module('web')
               };
             }
           }
+        });
+      }
+
+      function showUserList(){
+        $modal.open({
+          templateUrl: 'main/modals/users.html',
+          controller: 'usersCtrl',
+          size: 'lg',
+          backdrop: 'static'
         });
       }
 

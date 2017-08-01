@@ -305,4 +305,67 @@ module.exports = {
   'status.failed': 'Failed',
   'status.finished': 'Finished',
   'status.waiting': 'Waiting',
+
+  'users': 'Sub Users',
+  'users.title': 'Sub Users',
+  'user.id': 'UserId',
+  'displayName': 'Dislpay Name',
+  'comments': 'Comments',
+  'update': 'Update',
+  'username': 'User Name',
+  'details': 'Details',
+  'add': 'Add',
+  'mobilePhone': 'Mobile Phone',
+  'ak': 'AccessKey',
+  'aks': 'AccessKeys',
+  'email': 'Email',
+
+  'user.delete.title': 'Delete User',
+  'user.delete.message': 'Are you sure you want to delete this user: {{name}}?',
+  'user.delete.on': 'Deleting...',
+  'user.delete.success': 'Delete user successfully',
+
+  'status': 'Status',
+  'accessKeySecret': 'AccessKeySecret',
+  'createTime': 'Create Time',
+
+  'ak.status.update.title.Active': 'Disable AccessKey',
+  'ak.status.update.title.Inactive': 'Enable AccessKey',
+  'ak.status.update.message.Active': 'Are you sure you want to <code>Disable</code> this AccessKey？',
+  'ak.status.update.message.Inactive': 'Are you sure you want to <code class="text-success">Enable</code> this AccessKey？',
+  'ak.delete.title': 'Delete AccessKey',
+  'ak.delete.message': 'Are you sure you want to <code>Delete</code> this AccessKey',
+
+  'user.update.message.tip': 'Please make sure you have got AliyunRAMFullAccess permissions',
+  'user.list.message.tip': 'Here we only provide the necessary user management functions, for further enhancements, please go to the RAM Console to operate:',
+
+  'status.Active': 'Active',
+  'status.Inactive': 'Inactive',
+  'enable': 'Enable',
+  'disable': 'Disable',
+  'show': 'Show',
+  'can.not.get.accessKeySecret': 'Can not get AccessKeySecret',
+
+  'settings.subtitle.updown': 'Transfer Settings',
+  'settings.subtitle.sys': 'System Settings',
+  'settings.subtitle.email': 'Email Sending Settings',
+  'settings.mailSmtp.addr': 'STMP Address',
+  'settings.mailSmtp.ssl': 'Use SSL',
+  'settings.mailSmtp.from': 'Email(From)',
+
+  'user': 'UserName',
+  'pass': 'Password',
+  'test': 'Test',
+
+  'mail.test.title': 'Test mail',
+  'mail.test.message': 'It will send the test message to: <span class="text-primary">{{from}}</span>',
+  'mail.test.success': 'Sending successfully',
+
+  'new.user': '[ Create One ]',
+  'new.user.name': 'New User Name',
+  'new.user.random.gen': 'Generate',
+  'new.user.email.send': 'Email (to)',
+  'new.user.email.noset': 'You need to set up mail sending configuration first',
+  'new.user.email.noset.open': 'Open Settings Dialog',
+
 }

@@ -48,7 +48,7 @@ function createWindow() {
     height: 700,
     minWidth: 1020,
     minHeight: 660,
-    title: "",
+    title: "OSS Browser",
     icon: path.join(__dirname, 'icons', 'icon.ico')
   };
 
@@ -58,10 +58,11 @@ function createWindow() {
   // Create the browser window.   http://electron.atom.io/docs/api/browser-window/
   win = new BrowserWindow(opt);
 
-  win.setTitle("");
+  win.setTitle("OSS Browser");
 
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/index.html`);
+
 
   win.setMenuBarVisibility(false);
 
@@ -78,14 +79,18 @@ function createWindow() {
   // drawin 就是 MacOS
   if(process.env.NODE_ENV=='development'){
     console.log('开发模式');
+
     // Open the DevTools.
     win.webContents.openDevTools();
-    
-  }else if (process.platform === 'darwin') {
-    // Create the Application's main menu
-    let template = getMenuTemplate();
-    //注册菜单, 打包后可以复制, 但是不能打开 devTools
-    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+
+  }else {
+
+    if (process.platform === 'darwin') {
+      // Create the Application's main menu
+      let template = getMenuTemplate();
+      //注册菜单, 打包后可以复制, 但是不能打开 devTools
+      Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+    }
   }
 
 }
