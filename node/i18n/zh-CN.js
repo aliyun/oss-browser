@@ -306,8 +306,8 @@ module.exports = {
   'status.finished': '完成',
   'status.waiting': '等待',
 
-  'users': '用户',
-  'users.title': '用户管理',
+  'users': '子用户',
+  'users.title': '子用户管理',
   'user.id': '用户ID',
   'displayName': '显示名',
   'comments': '描述',
@@ -356,12 +356,12 @@ module.exports = {
   'user': '用户名',
   'pass': '密码',
   'test': '测试一下',
-   
+
   'mail.test.title': '测试邮件',
   'mail.test.message': '将发送测试邮件到: {{from}}',
   'mail.test.success': '邮件发送成功',
 
-  'new.user': '[新用户]',
+  'new.user': '[ 新建一个 ]',
   'new.user.name': '新用户名',
   'new.user.random.gen': '随机生成',
   'new.user.email.send': 'AK发送到邮件',

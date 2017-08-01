@@ -12,7 +12,7 @@
   <div class="modal-body">
 
     <fieldset>
-      <legend>{{'settings.subtitle.updown'|translate}}</legend>
+      <legend><h5 class="text-primary">{{'settings.subtitle.updown'|translate}}</h5></legend>
       <div class="form-group">
         <label class="col-sm-4 control-label">
         <!-- 最大上传任务数: -->
@@ -44,7 +44,7 @@
       </div> -->
 
     <fieldset>
-      <legend>{{'settings.subtitle.sys'|translate}}</legend>
+      <legend><h5 class="text-primary">{{'settings.subtitle.sys'|translate}}</h5></legend>
 
       <div class="form-group">
         <label class="col-sm-4 control-label">
@@ -77,10 +77,11 @@
 
     <fieldset>
       <legend>
-        {{'settings.subtitle.email'|translate}}
+        <h5 class="text-primary">{{'settings.subtitle.email'|translate}}
         <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}" tooltip-append-to-body="true"
         ng-click="openURL('https://github.com/aliyun/oss-browser/blob/master/smtpSetting.md')">
         <i class="fa fa-question-circle"></i></a>
+        </h5>
       </legend>
 
       <div class="form-group">
@@ -134,7 +135,7 @@
         <label class="col-sm-4 control-label">
         </label>
         <div class="col-sm-7">
-           <a href="" ng-disabled="!set.mailSmtp.from" class="btn btn-sm btn-default" ng-click="testMail()">{{'test'|translate}}</a>
+           <button type="button" ng-disabled="!set.mailSmtp.from" class="btn btn-sm btn-default" ng-click="testMail()">{{'test'|translate}}</button>
         </div>
       </div>
   </fieldset>

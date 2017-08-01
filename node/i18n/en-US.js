@@ -306,8 +306,8 @@ module.exports = {
   'status.finished': 'Finished',
   'status.waiting': 'Waiting',
 
-  'users': 'Users',
-  'users.title': 'Users',
+  'users': 'Sub Users',
+  'users.title': 'Sub Users',
   'user.id': 'UserId',
   'displayName': 'Dislpay Name',
   'comments': 'Comments',
@@ -324,7 +324,7 @@ module.exports = {
   'user.delete.message': 'Are you sure you want to delete this user: {{name}}?',
   'user.delete.on': 'Deleting...',
   'user.delete.success': 'Delete user successfully',
-  
+
   'status': 'Status',
   'accessKeySecret': 'AccessKeySecret',
   'createTime': 'Create Time',
@@ -361,7 +361,7 @@ module.exports = {
   'mail.test.message': 'It will send the test message to: <span class="text-primary">{{from}}</span>',
   'mail.test.success': 'Sending successfully',
 
-  'new.user': '[Create A User]',
+  'new.user': '[ Create One ]',
   'new.user.name': 'New User Name',
   'new.user.random.gen': 'Generate',
   'new.user.email.send': 'Email (to)',

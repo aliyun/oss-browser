@@ -153,7 +153,7 @@
              </label>
              <div class="col-sm-9">
                <div class="input-group input-group-sm">
-              <input required type="text" class="form-control" ng-model="create.UserName">
+              <input required type="text" class="form-control" ng-model="create.UserName" placeholder="Sub User Name">
                <span class="input-group-btn">
                    <a href="" ng-click="genUserName()" class="btn btn-success">
                      <!-- 随机生成 -->
@@ -169,7 +169,8 @@
               <!-- AK发送到邮件:  -->
             </label>
             <div class="col-sm-9">
-              <input ng-disabled="!mailSmtp.from" name="email" type="email" ng-pattern="reg.email" required class="form-control" ng-model="create.Email"/>
+              <input ng-disabled="!mailSmtp.from" name="email" type="email"  placeholder="Email"
+              ng-pattern="reg.email" required class="form-control" ng-model="create.Email"/>
               <div class="text-danger" ng-if="!mailSmtp.from">
                 <!-- 还没设置邮件发送配置，需要先设置：  -->
                 {{'new.user.email.noset'|translate}}
