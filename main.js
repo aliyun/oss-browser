@@ -60,8 +60,7 @@ function createWindow() {
 
   win.setTitle("OSS Browser");
 
-  // and load the index.html of the app.
-  win.loadURL(`file://${__dirname}/dist.asar/index.html`);
+
 
   win.setMenuBarVisibility(false);
 
@@ -78,14 +77,23 @@ function createWindow() {
   // drawin 就是 MacOS
   if(process.env.NODE_ENV=='development'){
     console.log('开发模式');
+
+    // and load the index.html of the app.
+    win.loadURL(`file://${__dirname}/index.html`);
+
     // Open the DevTools.
     win.webContents.openDevTools();
 
-  }else if (process.platform === 'darwin') {
-    // Create the Application's main menu
-    let template = getMenuTemplate();
-    //注册菜单, 打包后可以复制, 但是不能打开 devTools
-    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  }else {
+    // and load the index.html of the app.
+    win.loadURL(`file://${__dirname}/dist.asar/index.html`);
+    
+    if (process.platform === 'darwin') {
+      // Create the Application's main menu
+      let template = getMenuTemplate();
+      //注册菜单, 打包后可以复制, 但是不能打开 devTools
+      Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+    }
   }
 
 }

@@ -23,8 +23,6 @@ watch:
 build:
 	npm run build
 
-asar:
-	asar pack dist dist.asar
 
 win64:
 	$(BUILD) --platform=win32 --arch=x64
