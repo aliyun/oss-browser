@@ -195,7 +195,8 @@ angular.module('web')
             //修复window下 \ 问题
             filePath = filePath.replace(/\\/g, '/')
           }
-          filePath = path.join(bucketInfo.key, filePath);
+          //修复window下 \ 问题
+          filePath = bucketInfo.key.replace(/(\/*$)/g, '') +'/'+ filePath; 
 
           if (fs.statSync(absPath).isDirectory()) {
             //创建目录
