@@ -1,7 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-var t=[`||Windows x64| Mac |Linux x64|
+var t=[`All Releases for [ OSS Browser ]
+
+  ||Windows x64| Mac |Linux x64|
   |-----|-----|---------|--------|`];
 
 var vs = [];
@@ -19,12 +21,12 @@ vs.forEach(version=>{
  t.push(str);
 });
 
-fs.writeFileSync('./old-releases.md', t.join('\n'));
+fs.writeFileSync('./all-releases.md', t.join('\n'));
 
 function compareVersion(a,b){
   var v1 = a.split('.');
   var v2 = b.split('.');
-  for(var i=0;i<v1.length;i++){ 
+  for(var i=0;i<v1.length;i++){
      if(parseInt(v1[i]) < parseInt(v2[i])) return 1;
      else if(parseInt(v1[i]) > parseInt(v2[i])) return -1;
   }

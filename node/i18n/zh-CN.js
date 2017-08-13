@@ -371,4 +371,14 @@ module.exports = {
 
   'click.copy': '点击复制',
 
+  'http.headers': 'HTTP头',
+  'key': '参数',
+  'value': '值',
+  'userMetaData': '用户自定义元数据',
+
+  'setting.on': '正在设置..',
+  'setting.success': '设置成功',
+
+
+
 }

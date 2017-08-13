@@ -371,4 +371,12 @@ module.exports = {
 
   'click.copy': 'Copy',
 
+  'http.headers': 'Http Headers',
+  'key': 'Key',
+  'value': 'Value',
+  'userMetaData': 'User-defined Metadata',
+
+  'setting.on': 'Setting..',
+  'setting.success': 'Setting successfully',
+
 }
