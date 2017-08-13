@@ -108,15 +108,28 @@
         <!-- 生成的授权码: -->
         {{'genAuthToken.message4'|translate}}:
       </label>
-      <div class="col-sm-12">
-          <textarea class="form-control input-sm" style="border:1px solid #def" rows="6" ng-model="token"></textarea>
-          <small>
-            <!-- (使用上面生成的授权码登录OSS浏览器，
-            可以达到只拥有[{{item.name}}]这个{{isBucket?"Bucket":'目录'}}的{{grant.privType=='all'?'读写':'只读'}}权限的效果,
-            有效期至{{origin_token.Credentials.Expiration|timeFormat}}秒。) -->
-            ({{'genAuthToken.message5'|translate:message5}})
-          </small>
+
+
+      <div ng-if="token" class="col-sm-12">
+        <div class="input-group">
+          <input type="text" id="genTokenTa" ng-model="token"  class="input-md form-control"/>
+          <span class="input-group-btn">
+            <a href="" class="btn btn-info" clipboard-button target="'#genTokenTa'">
+              <!-- 点击复制 -->
+              {{'click.copy'|translate}}
+            </a>
+          </span>
+        </div>
+
+        <small>
+          <!-- (使用上面生成的授权码登录OSS浏览器，
+          可以达到只拥有[{{item.name}}]这个{{isBucket?"Bucket":'目录'}}的{{grant.privType=='all'?'读写':'只读'}}权限的效果,
+          有效期至{{origin_token.Credentials.Expiration|timeFormat}}秒。) -->
+          ({{'genAuthToken.message5'|translate:message5}})
+        </small>
       </div>
+
+
 
 
 

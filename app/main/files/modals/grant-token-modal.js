@@ -18,7 +18,7 @@ angular.module('web')
           type: item.isBucket?"Bucket":T('folder'),
           privilege: T('privilege.readonly'),
           expiration: '',
-        }
+        } 
       });
 
       $scope.$watch('grant.privType', function(v){

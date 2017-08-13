@@ -269,6 +269,7 @@ module.exports = {
   'tryto.open.as.textfile': '尝试作为文本文件打开',
 
   'save': '保存',
+  'size': '大小',
   'filesize': '文件大小',
   'codepreview.notsupport': '不支持直接打开，请下载到本地后打开。',
   'download.file': '下载文件',
@@ -367,5 +368,7 @@ module.exports = {
   'new.user.email.send': 'AK发送到邮件',
   'new.user.email.noset': '还没设置邮件发送配置，需要先设置',
   'new.user.email.noset.open': '打开设置',
+
+  'click.copy': '点击复制',
 
 }

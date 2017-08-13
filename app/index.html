@@ -33,6 +33,7 @@
     <script src="templates.js"></script>
     <script>
       const {ipcRenderer,shell} = require('electron');
+      const path= require('path');
 
       ipcRenderer.on('asynchronous-reply', (event, arg) => {
         Global.staticServerPort = arg;

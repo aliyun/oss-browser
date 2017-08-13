@@ -23,18 +23,29 @@
       <label class="col-sm-2 control-label" for="acl">
         {{'address'|translate}}
         <!-- 地址: -->
+
       </label>
       <div class="col-sm-8">
-        <textarea ng-model="item.url" rows="6"  class="input-md form-control"></textarea>
+        <div class="input-group">
+          <input type="text" id="genAddress" ng-model="item.url" rows="4"  class="input-md form-control"/>
+          <span class="input-group-btn">
+            <a href="" class="btn btn-default"  clipboard-button target="'#genAddress'">
+              <!-- 点击复制 -->
+              {{'click.copy'|translate}}
+            </a>
+          </span>
+        </div>
       </div>
+
     </div>
 
     <div class="form-group" ng-if="step==2">
       <label class="col-sm-2 control-label" for="acl">
         {{'address'|translate}}:
         <!-- 地址: -->
+
       </label>
-      <div ng-if="!info.url"  class="col-sm-8">
+      <div ng-if="!info.url"  class="col-sm-10">
         <!-- 请输入链接有效期: -->
         {{'getAddress.message'|translate}}:
         <input type="number" ng-model="info.sec" id="sec" required
@@ -49,8 +60,17 @@
       </div>
 
       <div ng-if="info.url" class="col-sm-8">
-        <textarea ng-model="info.url" rows="6"  class="input-md form-control"></textarea>
+        <div class="input-group">
+          <input type="text" id="genAddress2" ng-model="info.url" rows="4"  class="input-md form-control"/>
+          <span class="input-group-btn">
+            <a href="" class="btn btn-info" clipboard-button target="'#genAddress2'">
+              <!-- 点击复制 -->
+              {{'click.copy'|translate}}
+            </a>
+          </span>
+        </div>
       </div>
+
     </div>
 
 

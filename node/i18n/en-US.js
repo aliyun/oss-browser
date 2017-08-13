@@ -269,6 +269,7 @@ module.exports = {
   'tryto.open.as.textfile': 'Try to open as a text file',
 
   'save': 'Save',
+  'size': 'Size',
   'filesize': 'File size',
   'codepreview.notsupport': 'This file can not be opening directly, please download to the local and then open.',
   'download.file': 'Download File',
@@ -367,5 +368,7 @@ module.exports = {
   'new.user.email.send': 'Email (to)',
   'new.user.email.noset': 'You need to set up mail sending configuration first',
   'new.user.email.noset.open': 'Open Settings Dialog',
+
+  'click.copy': 'Copy',
 
 }

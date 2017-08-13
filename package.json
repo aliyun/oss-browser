@@ -1,12 +1,13 @@
 {
   "name": "oss-browser",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "main": "dist/main.js",
   "upgrade_url": "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
   "scripts": {
     "test": "ava test",
     "dev": "npm-run-all --parallel build watch dev:run",
     "dev:run": "cross-env NODE_ENV=development electron .",
+    "postdev:run": "node gen",
     "prod": "cross-env NODE_ENV=production cd dist && electron .",
     "clean": "rm -rf dist node_modules build releases node/crc64/node_modules node/ossstore/node_modules node/crc64/build",
     "watch": "gulp watch",
@@ -65,6 +66,7 @@
   },
   "dependencies": {
     "aliyun-sdk": "^1.10.9",
+    "clipboard": "^1.7.1",
     "koa": "^2.3.0",
     "koa-convert": "^1.2.0",
     "koa-static-server": "^1.2.1",

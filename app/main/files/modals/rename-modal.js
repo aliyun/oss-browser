@@ -57,6 +57,13 @@ angular.module('web')
           var newPath = moveTo.key=='' ? item.name : (moveTo.key.replace(/(\/$)/,'') +'/' + item.name);
           if(item.path==newPath)return;
 
+          //suffix
+          // if(path.extname(item.path)!=path.extname(newPath)){
+          //   if(!confirm('确定要修改后缀名吗?')){
+          //     return;
+          //   }
+          // }
+
           $scope.isLoading=true;
 
           ossSvs2.checkFileExists(moveTo.region, moveTo.bucket,newPath).then(function(data){
