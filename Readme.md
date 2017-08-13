@@ -10,15 +10,38 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 ## 1. 客户端下载：
 
-最新版本`1.2.1`，下载地址如下，解压即可使用。
+最新版本`1.2.2`，下载地址如下，解压即可使用。
 
-> [<h4>Window x64版下载</h4>](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.1/oss-browser-win32-x64.zip)
+> [<h4>Window x64版下载</h4>](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.2/oss-browser-win32-x64.zip)
 
-> [<h4>Mac 版下载</h4>](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.1/oss-browser.dmg)
+> [<h4>Mac 版下载</h4>](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.2/oss-browser.dmg)
 
-> [<h4>Ubuntu x64版</h4>](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.1/oss-browser-linux-x64.zip)
+> [<h4>Ubuntu x64版</h4>](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.2/oss-browser-linux-x64.zip)
 
 其他版本暂不提供，可以自行build。
+
+
+> [旧版本下载](all-releases.md)
+
+
+## 2. 功能介绍:
+
+```
+功能Map
+  |-- 登录：只需配置AK。
+  |-- Bucket管理，新建bucket，删除bucket，bucket权限修改，碎片管理。
+       |-- 文件管理：目录（包括bucket）和文件的增删改查， 复制, 文件预览等。
+             |-- 文件传输任务管理： 上传下载，断点续传。
+  |-- 地址栏功能（支持oss://协议URL，浏览历史前进后退，保存书签）
+  |-- 授权功能： 简化RAM授权。
+```
+
+特色功能：
+
+1. 地址栏功能：支持oss://协议URL，浏览历史前进后退，保存书签。
+
+2. 预览和编辑功能：图片可以预览，文本直接可以编辑。
+
 
 ### (1) AK登录
 
@@ -55,7 +78,7 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 * 归档bucket下所有文件均为Archive存储类型, 需要恢复才能访问。
 
 
-## 2. 开发环境搭建
+## 3. 开发环境搭建
 
 > 如果你要在此基础上开发，请按照以下步骤进行。
 
@@ -109,23 +132,6 @@ npm run win64  # 打包win64程序， 可选: mac, linux64 等
 ```
 
 
-## 3. 功能介绍
-
-```
-功能Map
-  |-- 登录：只需配置AK。
-  |-- Bucket管理，新建bucket，删除bucket，bucket权限修改，碎片管理。
-       |-- 文件管理：目录（包括bucket）和文件的增删改查， 复制, 文件预览等。
-             |-- 文件传输任务管理： 上传下载，断点续传。
-  |-- 地址栏功能（支持oss://协议URL，浏览历史前进后退，保存书签）
-  |-- 授权功能： 简化RAM授权。
-```
-
-特色功能：
-
-1. 地址栏功能：支持oss://协议URL，浏览历史前进后退，保存书签。
-
-2. 预览和编辑功能：图片可以预览，文本直接可以编辑。
 
 ## 4. 代码结构
 

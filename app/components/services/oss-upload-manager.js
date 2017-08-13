@@ -191,12 +191,15 @@ angular.module('web')
           var fileName = path.basename(absPath);
 
           var filePath = path.relative(dirPath, absPath);
+
           if(path.sep!='/'){
             //修复window下 \ 问题
             filePath = filePath.replace(/\\/g, '/')
           }
+
           //修复window下 \ 问题
-          filePath = bucketInfo.key.replace(/(\/*$)/g, '') +'/'+ filePath; 
+          filePath = bucketInfo.key ? (bucketInfo.key.replace(/(\/*$)/g, '') +'/'+ filePath ) : filePath;
+
 
           if (fs.statSync(absPath).isDirectory()) {
             //创建目录
@@ -242,6 +245,7 @@ angular.module('web')
                 key: filePath
               }
             });
+            
             addEvents(job);
 
             $timeout(function(){

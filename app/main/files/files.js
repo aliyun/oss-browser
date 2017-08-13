@@ -76,6 +76,8 @@ angular.module('web')
         showAddress: showAddress,
         showACL: showACL,
 
+        showHttpHeaders: showHttpHeaders,
+
         showRestore: showRestore,
 
         loadNext: loadNext,
@@ -516,6 +518,9 @@ angular.module('web')
                 acl: function () {
                   showACL(item);
                 },
+                httpHeaders: function(){
+                  showHttpHeaders(item);
+                },
                 crc: function () {
                   showCRC(item);
                 }
@@ -865,6 +870,21 @@ angular.module('web')
         $modal.open({
           templateUrl: 'main/files/modals/update-acl-modal.html',
           controller: 'updateACLModalCtrl',
+          resolve: {
+            item: function () {
+              return angular.copy(item);
+            },
+            currentInfo: function () {
+              return angular.copy($scope.currentInfo);
+            }
+          }
+        });
+      }
+
+      function showHttpHeaders(item) {
+        $modal.open({
+          templateUrl: 'main/files/modals/update-http-headers-modal.html',
+          controller: 'updateHttpHeadersModalCtrl',
           resolve: {
             item: function () {
               return angular.copy(item);

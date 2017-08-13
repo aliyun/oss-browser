@@ -14,8 +14,9 @@ angular.module('web')
         restoreFile: restoreFile,
         loadStorageStatus: loadStorageStatus,
 
-        getMeta: getFileInfo,
-        getFileInfo: getFileInfo, //head object
+        getMeta: getMeta,
+        getFileInfo: getMeta, //head object
+        setMeta: setMeta,
 
         checkFileExists: checkFileExists,
         checkFolderExists: checkFolderExists,
@@ -787,7 +788,7 @@ angular.module('web')
         });
       }
 
-      function getFileInfo(region, bucket, key) {
+      function getMeta(region, bucket, key) {
         return new Promise(function (a, b) {
           var client = getClient({
             region: region,
@@ -798,6 +799,38 @@ angular.module('web')
             Key: key
           };
           client.headObject(opt, function (err, data) {
+
+            if (err) {
+              handleError(err);
+              b(err);
+            } else {
+              a(data);
+            }
+          });
+        });
+      }
+      function setMeta(region, bucket, key, headers, metas) {
+        return new Promise(function (a, b) {
+          var client = getClient({
+            region: region,
+            bucket: bucket
+          });
+          var opt = {
+            Bucket: bucket,
+            Key: key,
+            CopySource: '/'+bucket+'/'+encodeURIComponent(key),
+            MetadataDirective: 'REPLACE', //覆盖meta
+
+            Metadata: metas || {},
+
+            ContentType: headers['ContentType'],
+            CacheControl: headers['CacheControl'],
+            ContentDisposition: headers['ContentDisposition'],
+            ContentEncoding: headers['ContentEncoding'],
+            ContentLanguage:headers['ContentLanguage'],
+            Expires: headers['Expires'],
+          };
+          client.copyObject(opt, function (err, data) {
 
             if (err) {
               handleError(err);
@@ -870,7 +903,7 @@ angular.module('web')
                  return;
                }
 
-               getFileInfo(region, bucket, item.path).then(function(data){
+               getMeta(region, bucket, item.path).then(function(data){
                   if (data.Restore) {
                     var info = parseRestoreInfo(data.Restore);
                     if (info['ongoing-request'] == 'true') {

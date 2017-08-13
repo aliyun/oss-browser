@@ -76,6 +76,7 @@ gulp.task('libJS', function () {
       './node_modules/angular-ui-router/release/angular-ui-router.js',
       './node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
       './node_modules/showdown/dist/showdown.js',
+      './node_modules/clipboard/dist/clipboard.min.js',
 
       //code mirror
       './vendor/diff_match_patch.js',
