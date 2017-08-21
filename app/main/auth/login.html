@@ -27,7 +27,19 @@
             <div class="panel-body">
 
                 <form ng-if="gtab==1" class="form-horizontal" name="form1" ng-submit="onSubmit(form1)">
-
+                  <div class="form-group">
+                      <label for="input1" class="col-sm-4 control-label"><span class="red">*</span> {{'auth.eptpl'|translate}}:</label>
+                      <div class="col-sm-8">
+                        <div class="input-group">
+                          <input type="text" required ng-model="item.eptpl"
+                           class="form-control" id="input1" placeholder="{{'auth.eptpl.placeholder'|translate}}">
+                          <span class="input-group-btn">
+                            <a href="" ng-if="item.eptpl!='http://{region}.aliyuncs.com'" ng-click="item.eptpl='http://{region}.aliyuncs.com'" class="btn btn-default">http</a>
+                            <a href="" ng-if="item.eptpl=='http://{region}.aliyuncs.com'" ng-click="item.eptpl='https://{region}.aliyuncs.com:443'" class="btn btn-default">https</a>
+                          </span>
+                        </div>
+                      </div>
+                  </div>
                     <div class="form-group">
                         <label for="input1" class="col-sm-4 control-label"><span class="red">*</span> AccessKeyId:</label>
                         <div class="col-sm-8">

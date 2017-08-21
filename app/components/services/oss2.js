@@ -1201,7 +1201,7 @@ angular.module('web')
           }
         }
 
-        var endpoint = getOssEndpoint(authInfo.region || 'oss-cn-beijing', bucket);
+        var endpoint = getOssEndpoint(authInfo.region || 'oss-cn-beijing', bucket, authInfo.eptpl);
         var options = {
           accessKeyId: authInfo.id || 'a',
           secretAccessKey: authInfo.secret || 'a',
@@ -1239,6 +1239,8 @@ angular.module('web')
 
 
       function getOssUrl(region, bucket, key){
+        //eptpl = eptpl || AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com';
+
         var isHttps = Global.ossEndpointProtocol == 'https:';
 
 
@@ -1266,7 +1268,15 @@ angular.module('web')
 
       }
 
-      function getOssEndpoint(region, bucket) {
+      function getOssEndpoint(region, bucket, eptpl) {
+        eptpl = eptpl || AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com';
+
+        eptpl = eptpl.replace('{region}',region);
+        console.log('-->',eptpl)
+        return eptpl;
+
+        //-------------------------
+
         var isHttps = Global.ossEndpointProtocol == 'https:';
         //通过bucket获取endpoint
         if (bucket && $rootScope.bucketMap && $rootScope.bucketMap[bucket]) {

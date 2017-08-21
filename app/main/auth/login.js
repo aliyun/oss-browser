@@ -3,7 +3,7 @@ angular.module('web')
   .controller('loginCtrl', ['$scope', '$rootScope', '$translate','Auth','AuthInfo','$timeout','$location','Const','Dialog','Toast','Cipher',
     function ($scope, $rootScope, $translate, Auth, AuthInfo,$timeout, $location, Const, Dialog, Toast, Cipher) {
 
-
+      var DEF_EP_TPL = 'http://{region}.aliyuncs.com';
 
       var KEY_REMEMBER = Const.KEY_REMEMBER;
       var SHOW_HIS = Const.SHOW_HIS;
@@ -17,6 +17,9 @@ angular.module('web')
         flags: {
           remember: 'NO',
           showHis: 'NO'
+        },
+        item: {
+          eptpl: DEF_EP_TPL,
         },
         hideTopNav: 1,
         reg_osspath: /^oss\:\/\//,
@@ -79,7 +82,7 @@ angular.module('web')
       function init(){
         $scope.flags.remember = localStorage.getItem(KEY_REMEMBER) || 'NO';
         $scope.flags.showHis = localStorage.getItem(SHOW_HIS) || 'NO';
-        $scope.item = AuthInfo.getRemember();
+        angular.extend($scope.item , AuthInfo.getRemember());
 
         //临时token
         $scope.item.authToken = localStorage.getItem(KEY_AUTHTOKEN) || '';
