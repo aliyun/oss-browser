@@ -44,6 +44,7 @@ angular.module('web')
       var message = T('mail.test.message', {from: $scope.set.mailSmtp.from}); //将发送测试邮件到
       Dialog.confirm(title, message, function(b){
         if(!b)return;
+        Toast.info(T('mail.send.on'))
         Mailer.send({
           subject: 'OSS Browser Test',
           to: $scope.set.mailSmtp.from,

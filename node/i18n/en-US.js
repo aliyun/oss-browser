@@ -364,6 +364,7 @@ module.exports = {
   'mail.test.title': 'Test mail',
   'mail.test.message': 'It will send the test message to: <span class="text-primary">{{from}}</span>',
   'mail.test.success': 'Sending successfully',
+  'mail.send.on': 'Sending...',
 
   'new.user': '[ Create One ]',
   'new.user.name': 'New User Name',
@@ -381,5 +382,9 @@ module.exports = {
 
   'setting.on': 'Setting..',
   'setting.success': 'Setting successfully',
+
+  'send.to': 'Mail to',
+  'send.email': 'Mail it',
+  'send.now': 'Send',
 
 }

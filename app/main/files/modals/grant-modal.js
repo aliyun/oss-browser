@@ -255,14 +255,14 @@ angular.module('web')
                  subject: 'OSS Browser 授权',
                  to: $scope.create.Email,
                  html:
-                           '子用户名: '+userName+ '<br/>'
+                           '子用户名(Sub User): '+userName+ '<br/>'
                          + 'AccessKeyId: '+result.AccessKey.AccessKeyId+ '<br/>'
                          + 'AccessKeySecret: '+ result.AccessKey.AccessKeySecret+ '<br/>'
-                         + '区域: '+ currentInfo.region  + '<br/>'
-                         + '授予权限: '+$scope.grant.privType + '<br/>'
-                         + '授权路径: ' + comments.join(',<br/>')
+                         + '区域(Region): '+ currentInfo.region  + '<br/>'
+                         + '授予权限(permission): '+$scope.grant.privType + '<br/>'
+                         + '授权路径(osspath): ' + comments.join(',<br/>')
                          + '<hr/>'
-                         + '您可以使用 OSS Browser 浏览或管理这些文件。'
+                         + '您可以使用 <a href="https://github.com/aliyun/oss-browser" target="_blank">OSS Browser</a> 浏览或管理这些文件。'
                };
 
               fn(userName, sendInfo);

@@ -364,6 +364,7 @@ module.exports = {
   'mail.test.title': '测试邮件',
   'mail.test.message': '将发送测试邮件到: {{from}}',
   'mail.test.success': '邮件发送成功',
+  'mail.send.on': '正在发送...',
 
   'new.user': '[ 新建一个 ]',
   'new.user.name': '新用户名',
@@ -381,6 +382,10 @@ module.exports = {
 
   'setting.on': '正在设置..',
   'setting.success': '设置成功',
+
+  'send.to': '发送到',
+  'send.email': '发送邮件',
+  'send.now': '立即发送',
 
 
 
