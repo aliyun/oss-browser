@@ -350,7 +350,7 @@ module.exports = {
   'settings.subtitle.updown': 'Transfer Settings',
   'settings.subtitle.sys': 'System Settings',
   'settings.subtitle.email': 'Email Sending Settings',
-  'settings.mailSmtp.addr': 'STMP Address',
+  'settings.mailSmtp.addr': 'SMTP Address',
   'settings.mailSmtp.ssl': 'Use SSL',
   'settings.mailSmtp.from': 'Email(From)',
 

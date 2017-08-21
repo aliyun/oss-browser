@@ -350,7 +350,7 @@ module.exports = {
   'settings.subtitle.updown': '上传下载设置',
   'settings.subtitle.sys': '系统设置',
   'settings.subtitle.email': '邮件发送设置',
-  'settings.mailSmtp.addr': 'STMP地址',
+  'settings.mailSmtp.addr': 'SMTP地址',
   'settings.mailSmtp.ssl': '使用SSL',
   'settings.mailSmtp.from': '发送邮件的邮箱',
 
