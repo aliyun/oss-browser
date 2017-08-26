@@ -740,18 +740,44 @@ angular.module('web')
             region: region,
             bucket: bucket
           });
-          client.putObject({
+
+
+          client.headObject({
             Bucket: bucket,
-            Key: key,
-            Body: content
-          }, function (err) {
+            Key: key
+          }, function (err, result) {
+
             if (err) {
               handleError(err);
               b(err);
             } else {
-              a();
+
+              client.putObject({
+                Bucket: bucket,
+                Key: key,
+                Body: content,
+
+                //保留http头
+                'ContentLanguage': result.ContentLanguage,
+                'ContentType': result.ContentType,
+                'CacheControl': result.CacheControl,
+                'ContentDisposition': result.ContentDisposition,
+                'ContentEncoding': result.ContentEncoding,
+                'Expires': result.Expires,
+                'Metadata': result.Metadata
+
+              }, function (err) {
+                if (err) {
+                  handleError(err);
+                  b(err);
+                } else {
+                  a();
+                }
+              });
+
             }
           });
+
         });
       }
 
