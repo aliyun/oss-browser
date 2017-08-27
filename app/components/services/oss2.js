@@ -740,18 +740,45 @@ angular.module('web')
             region: region,
             bucket: bucket
           });
-          client.putObject({
+
+
+          client.headObject({
             Bucket: bucket,
-            Key: key,
-            Body: content
-          }, function (err) {
+            Key: key
+          }, function (err, result) {
+
             if (err) {
               handleError(err);
               b(err);
             } else {
-              a();
+
+
+              client.putObject({
+                Bucket: bucket,
+                Key: key,
+                Body: content,
+
+                //保留http头
+                'ContentLanguage': result.ContentLanguage,
+                'ContentType': result.ContentType,
+                'CacheControl': result.CacheControl,
+                'ContentDisposition': result.ContentDisposition,
+                'ContentEncoding': '',
+                'Expires': result.Expires,
+                'Metadata': result.Metadata
+
+              }, function (err) {
+                if (err) {
+                  handleError(err);
+                  b(err);
+                } else {
+                  a();
+                }
+              });
+
             }
           });
+
         });
       }
 
@@ -826,7 +853,7 @@ angular.module('web')
             ContentType: headers['ContentType'],
             CacheControl: headers['CacheControl'],
             ContentDisposition: headers['ContentDisposition'],
-            ContentEncoding: headers['ContentEncoding'],
+            ContentEncoding: '',//headers['ContentEncoding'],
             ContentLanguage:headers['ContentLanguage'],
             Expires: headers['Expires'],
           };
@@ -1201,7 +1228,7 @@ angular.module('web')
           }
         }
 
-        var endpoint = getOssEndpoint(authInfo.region || 'oss-cn-beijing', bucket);
+        var endpoint = getOssEndpoint(authInfo.region || 'oss-cn-beijing', bucket, authInfo.eptpl);
         var options = {
           accessKeyId: authInfo.id || 'a',
           secretAccessKey: authInfo.secret || 'a',
@@ -1239,6 +1266,8 @@ angular.module('web')
 
 
       function getOssUrl(region, bucket, key){
+        //eptpl = eptpl || AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com';
+
         var isHttps = Global.ossEndpointProtocol == 'https:';
 
 
@@ -1266,7 +1295,15 @@ angular.module('web')
 
       }
 
-      function getOssEndpoint(region, bucket) {
+      function getOssEndpoint(region, bucket, eptpl) {
+        eptpl = eptpl || AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com';
+
+        eptpl = eptpl.replace('{region}',region);
+        console.log('-->',eptpl)
+        return eptpl;
+
+        //-------------------------
+
         var isHttps = Global.ossEndpointProtocol == 'https:';
         //通过bucket获取endpoint
         if (bucket && $rootScope.bucketMap && $rootScope.bucketMap[bucket]) {

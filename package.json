@@ -1,6 +1,6 @@
 {
   "name": "oss-browser",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "main": "dist/main.js",
   "upgrade_url": "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
   "scripts": {
@@ -14,15 +14,15 @@
     "postinstall": "npm run build",
     "build": "gulp build",
     "mirror": "set ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ || export ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/",
-    "win64": "npm run mirror && electron-packager ./dist --asar --overwrite --out=build --version=1.6.11 --platform=win32 --arch=x64",
-    "win32": "npm run mirror && electron-packager ./dist --asar --overwrite --out=build --version=1.6.11 --platform=win32 --arch=ia32",
-    "mac": "npm run mirror && electron-packager ./dist --asar --overwrite --out=build --version=1.6.11 --platform=darwin --arch=x64 --icon=./app/icons/icon.icns",
-    "linux32": "npm run mirror && electron-packager ./dist --asar --overwrite --out=build --version=1.6.11 --platform=linux --arch=ia32",
-    "linux64": "npm run mirror && electron-packager ./dist --asar --overwrite --out=build --version=1.6.11 --platform=linux --arch=x64",
-    "all": "npm run mirror && electron-packager ./dist --asar --overwrite --out=build --version=1.6.11 --all --icon=./app/icons/"
+    "win64": "npm run mirror && electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=win32 --arch=x64",
+    "win32": "npm run mirror && electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=win32 --arch=ia32",
+    "mac": "npm run mirror && electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=darwin --arch=x64 --icon=./app/icons/icon.icns",
+    "linux32": "npm run mirror && electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=linux --arch=ia32",
+    "linux64": "npm run mirror && electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=linux --arch=x64",
+    "all": "npm run mirror && electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --all --icon=./app/icons/"
   },
   "engines": {
-    "node": "7.4.0"
+    "node": "7.9.0"
   },
   "devDependencies": {
     "angular": "1.5.8",
@@ -39,7 +39,7 @@
     "codemirror": "^5.19.0",
     "commander": "~2.9.0",
     "cross-env": "^3.1.4",
-    "electron": "^1.6.11",
+    "electron": "^1.7.5",
     "electron-packager": "~7.1.0",
     "font-awesome": "^4.7.0",
     "gulp": "~3.5.5",

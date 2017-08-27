@@ -1,17 +1,22 @@
 angular.module('web')
-  .controller('getAddressModalCtrl', ['$scope', '$q', '$uibModalInstance', 'item', 'currentInfo', 'ossSvs2','safeApply',
-    function ($scope, $q, $modalInstance, item, currentInfo, ossSvs2 ,safeApply) {
-
+  .controller('getAddressModalCtrl', ['$scope', '$q','$translate', '$uibModalInstance', 'item', 'currentInfo', 'ossSvs2','safeApply','Const','Mailer','Toast',
+    function ($scope, $q, $translate, $modalInstance, item, currentInfo, ossSvs2 ,safeApply, Const,Mailer,Toast) {
+      var T = $translate.instant;
 
       angular.extend($scope, {
         item: item,
+        reg: {
+          email: Const.REG.EMAIL,
+        },
         currentInfo: currentInfo,
         info: {
           sec: 3600,
-          url: null
+          url: null,
+          mailTo: ''
         },
         cancel: cancel,
-        onSubmit: onSubmit
+        onSubmit: onSubmit,
+        sendTo: sendTo
       });
 
       function cancel() {
@@ -52,6 +57,41 @@ angular.module('web')
         var v = $scope.info.sec;
         var url = ossSvs2.signatureUrl(currentInfo.region, currentInfo.bucket, item.path, v);
         $scope.info.url = url;
+      }
+
+      function sendTo(form1){
+        var url = $scope.info.url;
+
+        if(!form1.email.$valid || !url)return;
+
+        var t=[ ];
+        var name = $scope.item.name;
+
+        t.push('点此下载: <a href="'+url+'" target="_blank">'+name+'</a>');
+
+        t.push('扫码下载:')
+
+        var src = $('#addr-qrcode-wrap canvas')[0].toDataURL("image/jpeg");
+        t.push('<img src="'+src+'" style="width:300px;height:300px"/>');
+
+
+        var sendInfo = {
+          subject: '文件下载地址:['+ name+']',
+          to: $scope.info.mailTo,
+          html: t.join('<br/>')
+        };
+        //console.log(sendInfo)
+
+        //发邮件
+        Toast.info(T('mail.send.on'));
+        Mailer.send(sendInfo).then(function(result){
+          console.log(result)
+          Toast.success(T('mail.test.success'));
+        },function(err){
+          console.error(err);
+          Toast.error(err);
+        });
+
       }
 
     }

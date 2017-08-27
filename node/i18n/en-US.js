@@ -27,6 +27,9 @@ module.exports = {
   'auth.presetOssPath.placeholder': 'Optional, format: oss://bucket/key/',
   'auth.id.placeholder': 'AccessKeyId',
   'auth.secret.placeholder': 'AccessKeySecret',
+  'auth.eptpl': 'Endpoint Template',
+  'auth.eptpl.placeholder': 'Default: http://{region}.aliyuncs.com',
+
   'region': 'Region',
   'auth.region.placeholder': 'Optional',
   'auth.description': 'Description',
@@ -350,7 +353,7 @@ module.exports = {
   'settings.subtitle.updown': 'Transfer Settings',
   'settings.subtitle.sys': 'System Settings',
   'settings.subtitle.email': 'Email Sending Settings',
-  'settings.mailSmtp.addr': 'STMP Address',
+  'settings.mailSmtp.addr': 'SMTP Address',
   'settings.mailSmtp.ssl': 'Use SSL',
   'settings.mailSmtp.from': 'Email(From)',
 
@@ -361,6 +364,7 @@ module.exports = {
   'mail.test.title': 'Test mail',
   'mail.test.message': 'It will send the test message to: <span class="text-primary">{{from}}</span>',
   'mail.test.success': 'Sending successfully',
+  'mail.send.on': 'Sending...',
 
   'new.user': '[ Create One ]',
   'new.user.name': 'New User Name',
@@ -378,5 +382,9 @@ module.exports = {
 
   'setting.on': 'Setting..',
   'setting.success': 'Setting successfully',
+
+  'send.to': 'Mail to',
+  'send.email': 'Mail it',
+  'send.now': 'Send',
 
 }

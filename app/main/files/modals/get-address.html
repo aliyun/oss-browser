@@ -61,12 +61,17 @@
 
       <div ng-if="info.url" class="col-sm-8">
         <div class="input-group">
-          <input type="text" id="genAddress2" ng-model="info.url" rows="4"  class="input-md form-control"/>
+          <input type="text" id="genAddress2" ng-model="info.url" class="input-md form-control"/>
           <span class="input-group-btn">
             <a href="" class="btn btn-info" clipboard-button target="'#genAddress2'">
               <!-- 点击复制 -->
               {{'click.copy'|translate}}
             </a>
+          </span>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="info.showSendTo=!info.showSendTo">
+              {{'send.email'|translate}}
+            </button>
           </span>
         </div>
       </div>
@@ -78,11 +83,30 @@
       <code>{{err}}</code>
     </div>
 
-    <div class="text-center">
-      <qrcode ng-if="info.url" text="info.url" width="300" height="300">
+    <div ng-if="info.url" class="text-center" id="addr-qrcode-wrap">
+      <qrcode  text="info.url" width="300" height="300">
         <!-- 扫码下载 -->
         {{'qrcode.download'|translate}}
       </qrcode>
+    </div>
+
+
+    <div class="form-group" ng-if="info.showSendTo">
+      <label class="col-sm-2 control-label" for="name">{{'send.to'|translate}}:</label>
+      <div class="col-sm-8">
+        <div class="input-group">
+
+          <input type="email" name="email" required ng-pattern="reg.email"
+           ng-keyup="$event.keyCode==13?sendTo(form1):void(0)"
+           ng-model="info.mailTo" placeholder="Email" class="input-md form-control"/>
+          <span class="input-group-btn">
+            <button type="button" ng-disabled="!form1.email.$valid" class="btn btn-primary" ng-click="sendTo(form1)">
+              {{'send.now'|translate}}
+            </button>
+          </span>
+        </div>
+
+      </div>
     </div>
 
 

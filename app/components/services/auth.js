@@ -9,6 +9,7 @@ angular.module('web')
 
       function login(data) {
         var df = $q.defer();
+        data.httpOptions={timeout:3000};
 
         if (data.osspath) {
 
@@ -26,9 +27,9 @@ angular.module('web')
             }
           });
 
-        } else {
+        } else { 
           ossSvs2.getClient(data).listBuckets( function(err, result) {
-            
+
             if(err){
               if (err.code == 'AccessDeniedError') {
                 //登录成功

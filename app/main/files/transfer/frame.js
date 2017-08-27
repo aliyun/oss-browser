@@ -25,12 +25,14 @@ function($scope ,$translate,ossUploadManager,ossDownloadManager, Toast, safeAppl
 
    $scope.handlers.downloadFilesHandler = downloadFilesHandler;
 
-
-   $scope.netInit().then(function(){
-     //确认是否可以使用内部网络，再初始化
-     ossUploadManager.init($scope);
-     ossDownloadManager.init($scope);
-   });
+   ossUploadManager.init($scope);
+   ossDownloadManager.init($scope);
+   
+  //  $scope.netInit().then(function(){
+  //    //确认是否可以使用内部网络，再初始化
+  //    ossUploadManager.init($scope);
+  //    ossDownloadManager.init($scope);
+  //  });
 
 
    /**

@@ -85,6 +85,9 @@ angular.module('web')
       return defv||{};
     }
     function save(key, obj, defv){
+      
+      delete obj['httpOptions'];
+
       var str = JSON.stringify(obj||defv||{});
       try{
         str = Cipher.cipher(str);

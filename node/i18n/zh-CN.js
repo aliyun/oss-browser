@@ -27,6 +27,9 @@ module.exports = {
   'auth.presetOssPath.placeholder': '可选,格式如: oss://bucket/key/',
   'auth.id.placeholder': '请输入AccessKeyId',
   'auth.secret.placeholder': '请输入AccessKeySecret',
+  'auth.eptpl': 'Endpoint模板',
+  'auth.eptpl.placeholder': '默认: http://{region}.aliyuncs.com',
+
   'region': '区域',
   'auth.region.placeholder': '可选',
   'auth.description': '备注',
@@ -350,7 +353,7 @@ module.exports = {
   'settings.subtitle.updown': '上传下载设置',
   'settings.subtitle.sys': '系统设置',
   'settings.subtitle.email': '邮件发送设置',
-  'settings.mailSmtp.addr': 'STMP地址',
+  'settings.mailSmtp.addr': 'SMTP地址',
   'settings.mailSmtp.ssl': '使用SSL',
   'settings.mailSmtp.from': '发送邮件的邮箱',
 
@@ -361,6 +364,7 @@ module.exports = {
   'mail.test.title': '测试邮件',
   'mail.test.message': '将发送测试邮件到: {{from}}',
   'mail.test.success': '邮件发送成功',
+  'mail.send.on': '正在发送...',
 
   'new.user': '[ 新建一个 ]',
   'new.user.name': '新用户名',
@@ -378,6 +382,10 @@ module.exports = {
 
   'setting.on': '正在设置..',
   'setting.success': '设置成功',
+
+  'send.to': '发送到',
+  'send.email': '发送邮件',
+  'send.now': '立即发送',
 
 
 
