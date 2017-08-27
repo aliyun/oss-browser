@@ -752,6 +752,7 @@ angular.module('web')
               b(err);
             } else {
 
+
               client.putObject({
                 Bucket: bucket,
                 Key: key,
@@ -762,7 +763,7 @@ angular.module('web')
                 'ContentType': result.ContentType,
                 'CacheControl': result.CacheControl,
                 'ContentDisposition': result.ContentDisposition,
-                'ContentEncoding': result.ContentEncoding,
+                'ContentEncoding': '',
                 'Expires': result.Expires,
                 'Metadata': result.Metadata
 
@@ -852,7 +853,7 @@ angular.module('web')
             ContentType: headers['ContentType'],
             CacheControl: headers['CacheControl'],
             ContentDisposition: headers['ContentDisposition'],
-            ContentEncoding: headers['ContentEncoding'],
+            ContentEncoding: '',//headers['ContentEncoding'],
             ContentLanguage:headers['ContentLanguage'],
             Expires: headers['Expires'],
           };
