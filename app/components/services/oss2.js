@@ -1235,7 +1235,7 @@ angular.module('web')
           endpoint: endpoint,
           apiVersion: '2013-10-15',
           httpOptions: {
-            timeout: 0
+            timeout: authInfo.httpOptions ? authInfo.httpOptions.timeout : 0
           },
           maxRetries: 50
         };
@@ -1243,6 +1243,7 @@ angular.module('web')
         if(authInfo.id && authInfo.id.indexOf('STS.')==0){
             options.securityToken= authInfo.stoken || null;
         }
+        console.log(options)
         var client = new ALY.OSS(options);
         return client;
       }
