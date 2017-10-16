@@ -8,6 +8,9 @@ angular.module('web')
     var os = require('os');
 
     var stopCreatingFlag = false;
+
+    var concurrency = 0;
+    var $scope;
     return {
       init: init,
       createDownloadJobs: createDownloadJobs,
@@ -19,8 +22,6 @@ angular.module('web')
       }
     };
 
-    var concurrency = 0;
-    var $scope;
 
     function init(scope) {
       $scope = scope;
@@ -205,6 +206,13 @@ angular.module('web')
 
         } else {
           //文件
+          if (process.platform=='win32'){
+            //修复window下，文件名含非法字符需要转义
+            if(/[\/\\\:\<\>\?\*\"\|]/.test(fileName)){
+              fileName = encodeURIComponent(fileName);
+              filePath = path.join(path.dirname(filePath), encodeURIComponent(path.basename(filePath)));
+            }
+          }
           var job = createJob(authInfo, {
             region: ossInfo.region,
             from: {
