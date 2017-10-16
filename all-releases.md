@@ -2,6 +2,7 @@ All Releases for [ OSS Browser ]
 
   ||Windows x64| Mac |Linux x64|
   |-----|-----|---------|--------|
+|1.2.4|[下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.4/oss-browser-win32-x64.zip) | [下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.4/oss-browser.dmg) | [下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.4/oss-browser-linux-x64.zip) |
 |1.2.3|[下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.3/oss-browser-win32-x64.zip) | [下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.3/oss-browser.dmg) | [下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.3/oss-browser-linux-x64.zip) |
 |1.2.2|[下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.2/oss-browser-win32-x64.zip) | [下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.2/oss-browser.dmg) | [下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.2/oss-browser-linux-x64.zip) |
 |1.2.1|[下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.1/oss-browser-win32-x64.zip) | [下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.1/oss-browser.dmg) | [下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.1/oss-browser-linux-x64.zip) |

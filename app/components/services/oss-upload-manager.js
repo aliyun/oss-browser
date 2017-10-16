@@ -8,6 +8,11 @@ angular.module('web')
       var os = require('os');
 
       var stopCreatingFlag = false;
+
+      var concurrency = 0;
+
+      var $scope;
+
       return {
         init: init,
         createUploadJobs: createUploadJobs,
@@ -18,10 +23,6 @@ angular.module('web')
           stopCreatingFlag = true;
         }
       };
-
-      var concurrency = 0;
-
-      var $scope;
 
       function init(scope) {
         $scope = scope;

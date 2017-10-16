@@ -17,17 +17,21 @@ angular.module('web')
           data.bucket = info.bucket;
 
           ossSvs2.getClient(data).listObjects({Bucket: info.bucket, Prefix: info.key, Marker:'',MaxKeys:1}, function(err, result){
+
             if(err){
               df.reject(err);
             }
-            else{
+            else if(result.RequestId && result.CommonPrefixes){
               //登录成功
               AuthInfo.save(data);
               df.resolve();
             }
+            else{
+              df.reject({code:'Error',message:'请确定Endpoint是否正确'});
+            }
           });
 
-        } else { 
+        } else {
           ossSvs2.getClient(data).listBuckets( function(err, result) {
 
             if(err){
@@ -39,15 +43,16 @@ angular.module('web')
                 //失败
                 df.reject(err);
               }
-            }else{
+            }
+            else if(result.RequestId && result.Buckets){
               //登录成功
               AuthInfo.save(data);
               df.resolve();
+            }else{
+              df.reject({code:'Error',message:'请确定Endpoint是否正确'});
             }
           });
         }
-
-
         return df.promise;
       }
 
