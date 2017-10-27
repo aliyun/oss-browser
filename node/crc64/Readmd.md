@@ -3,12 +3,17 @@
 ## 1. 仅支持以下版本:
 
 ```
-darwin-x64
-linux-x64
-win32-x64
+darwin-x64 (mac x64)
+linux-x64 (linux x64)
+win32-x64 (windows x64)
 ```
 
-* 其他版本可以自行build, 直接运行 cnpm i 即可。
+* 其他版本可以自行build:
+
+```
+cnpm i
+npm run build
+```
 
 ## 2. 测试
 

@@ -6,7 +6,7 @@
     <h4 class="modal-title">
       <i class="fa fa-users text-orange"></i>
       {{'users.title'|translate}}
-      <!-- 书签管理 -->
+      <!-- 子用户管理 -->
     </h4>
   </div>
   <div class="modal-body form-horizontal">
@@ -39,7 +39,7 @@
      </div>
     </header>
 
-
+    <div ng-if="err" class="alert alert-danger">{{err.message}}</div>
 
     <div is-loading ng-if="isLoading"> </div>
 
@@ -59,7 +59,7 @@
          <td>{{item.UpdateDate|timeFormat}}</td>
          <td>
            <a href="" class="text-primary" ng-click="showUpdate(item)">{{'update'|translate}}</a> |
-            <a href="" class="text-primary" ng-click="showAK(item)">{{'aks'|translate}}</a> | 
+            <a href="" class="text-primary" ng-click="showAK(item)">{{'aks'|translate}}</a> |
             <a href="" class="text-danger" ng-click="showRemove(item)">{{'delete'|translate}}</a>
          </td>
        </tr>

@@ -7,6 +7,7 @@ angular.module('web')
     angular.extend($scope, {
       items: [],
       isLoading: false,
+      err: null,
       sch: {
         txt: ''
       },
@@ -23,6 +24,7 @@ angular.module('web')
     refresh();
     function refresh(){
        $scope.isLoading=true;
+       $scope.err = null;
        ramSvs.listUsers().then(function(arr){
          $scope.isLoading=false;
          arr.sort(function(a,b){
@@ -31,6 +33,7 @@ angular.module('web')
          $scope.items = arr;
          //UserId, UserName, DisplayName, CreateDate, UpdateDate, Comments;
        }, function(err){
+         $scope.err = err;
          $scope.isLoading=false;
        });
     }

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node-gyp rebuild && NODE_ENV=test mocha test",
     "testwin": "node-gyp rebuild&&set NODE_ENV=test&&mocha test",
-    "postinstall": "node build.js"
+    "build": "node build.js"
   },
   "author": "",
   "license": "ISC",

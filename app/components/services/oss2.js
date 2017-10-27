@@ -1243,7 +1243,7 @@ angular.module('web')
         if(authInfo.id && authInfo.id.indexOf('STS.')==0){
             options.securityToken= authInfo.stoken || null;
         }
-        console.log(options)
+        //console.log(options)
         var client = new ALY.OSS(options);
         return client;
       }
@@ -1300,7 +1300,7 @@ angular.module('web')
         eptpl = eptpl || AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com';
 
         eptpl = eptpl.replace('{region}',region);
-        console.log('-->',eptpl)
+        //console.log('-->',eptpl)
         return eptpl;
 
         //-------------------------

@@ -1,6 +1,6 @@
 {
   "name": "oss-browser",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "main": "dist/main.js",
   "upgrade_url": "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
   "scripts": {
@@ -39,8 +39,8 @@
     "codemirror": "^5.19.0",
     "commander": "~2.9.0",
     "cross-env": "^3.1.4",
-    "electron": "^1.7.5",
-    "electron-packager": "~7.1.0",
+    "electron": "1.7.5",
+    "electron-packager": "7.1.0",
     "font-awesome": "^4.7.0",
     "gulp": "~3.5.5",
     "gulp-angular-templatecache": "^1.1.0",
