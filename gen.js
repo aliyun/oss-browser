@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 var ia32_start_version= '1.2.5';
-const PRE  = 'http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/';
+const PRE  = 'https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/';
 
 var t=[`All Releases for [ OSS Browser ]
 
