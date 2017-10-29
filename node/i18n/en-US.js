@@ -21,6 +21,8 @@ module.exports = {
   'region.oss-eu-central-1': 'Central Europe 1(Frankfurt)',
   'region.oss-me-east-1': 'Middle East East 1(Dubai)',
 
+  'optional': 'Optional',
+  'default': 'Default',
   'auth.akLogin': 'AK Login',
   'auth.tokenLogin': 'Token Login',
   'auth.presetOssPath': 'Preset OSS Path',
@@ -29,6 +31,9 @@ module.exports = {
   'auth.secret.placeholder': 'AccessKeySecret',
   'auth.eptpl': 'Endpoint Template',
   'auth.eptpl.placeholder': 'Default: http://{region}.aliyuncs.com',
+
+  'auth.eptpl.popup.msg1': 'For Public Cloud, you can directly use the default settings',
+  'auth.eptpl.popup.msg2': 'For Private Cloud, Please enter a custom Endpoint, such as:',
 
   'region': 'Region',
   'auth.region.placeholder': 'Optional',

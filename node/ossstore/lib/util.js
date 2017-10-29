@@ -1,11 +1,8 @@
 var path = require('path');
 var fs = require('fs');
 
-try{
-  var CRC64 = require('../../crc64');
-}catch(e){
-  console.error('Can not load crc64 module:',e);
-}
+
+var CRC64 = require('../../crc64');
 
 module.exports = {
   parseLocalPath: parseLocalPath,
@@ -14,15 +11,8 @@ module.exports = {
 };
 
 function getFileCrc64(p, fn){
-  if(!CRC64){
-    console.warn('not found crc64 module');
-    fn(null, null);
-    return;
-  }
   console.time('get crc64 hash for ['+p+']');
-  var stream = fs.createReadStream(p, {autoClose: true});
-  CRC64.check_stream(stream, function(err, data){
-    //stream.close();
+  CRC64.crc64File(p, function(err, data){
     console.timeEnd('get crc64 hash for ['+p+']');
     fn(err, data);
   });

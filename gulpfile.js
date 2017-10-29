@@ -156,7 +156,9 @@ gulp.task('gen-package', function () {
   .on('end', function(){
     var info = require('./package');
     delete info.devDependencies;
-    delete info.scripts;
+    info.scripts = {
+      'start': 'electron .'
+    };
     info.main="main.js";
     try{ fs.statSync(DIST); }catch(e){ fs.mkdirSync(DIST); }
     fs.writeFileSync(DIST+'/package.json', JSON.stringify(info,' ',2));

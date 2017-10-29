@@ -1,5 +1,13 @@
 <div ng-include="'main/_/top.html'"></div>
 
+<script type="text/ng-template" id="auth-endpoint-popup.html">
+  <div>
+   <ol style="padding-left:10px;">
+     <li>{{'auth.eptpl.popup.msg1'|translate}}</li>
+     <li>{{'auth.eptpl.popup.msg2'|translate}}<code>http://oss-cn-hangzhou-zmf.aliyuncs.com</code></li>
+   </ol>
+ </div>
+</script>
 
 <div style="overflow:auto;height:100%">
 
@@ -27,33 +35,39 @@
             <div class="panel-body">
 
                 <form ng-if="gtab==1" class="form-horizontal" name="form1" ng-submit="onSubmit(form1)">
-                  <div class="form-group">
-                      <label for="input1" class="col-sm-4 control-label"><span class="red">*</span> {{'auth.eptpl'|translate}}:</label>
+                   <div class="form-group has-feedback" ng-class="{'has-error':!form1.endpoint.$valid}">
+                      <label for="endpoint" class="col-sm-4 control-label"><span class="red">*</span> {{'auth.eptpl'|translate}}:
+                        <span uib-popover-template="'auth-endpoint-popup.html'"
+                        popover-trigger="'mouseenter'" popover-append-to-body="true">
+                          <i class="fa fa-question-circle"></i>
+                        </span>
+                      </label>
                       <div class="col-sm-8">
                         <div class="input-group">
-                          <input type="text" required ng-model="item.eptpl"
-                           class="form-control" id="input1" placeholder="{{'auth.eptpl.placeholder'|translate}}">
+                          <input type="text" ng-model="item.eptpl" ng-pattern="/^http(s)?\:\/\//"
+                           class="form-control" id="endpoint" name="endpoint" placeholder="{{'auth.eptpl.placeholder'|translate}}">
                           <span class="input-group-btn">
-                            <a href="" ng-if="item.eptpl!='http://{region}.aliyuncs.com'" ng-click="item.eptpl='http://{region}.aliyuncs.com'" class="btn btn-default">http</a>
-                            <a href="" ng-if="item.eptpl=='http://{region}.aliyuncs.com'" ng-click="item.eptpl='https://{region}.aliyuncs.com:443'" class="btn btn-default">https</a>
+                            <!-- <a href="" ng-if="item.eptpl!='http://{region}.aliyuncs.com'" ng-click="item.eptpl='http://{region}.aliyuncs.com'" class="btn btn-default">http</a> -->
+                            <a href="" ng-click="item.eptpl='https://{region}.aliyuncs.com'" class="btn btn-default">{{'default'|translate}}</a>
                           </span>
                         </div>
                       </div>
-                  </div>
-                    <div class="form-group">
-                        <label for="input1" class="col-sm-4 control-label"><span class="red">*</span> AccessKeyId:</label>
+                   </div>
+                    <div class="form-group has-feedback" ng-class="{'has-error': !form1.aid.$valid }">
+                        <label for="aid" class="col-sm-4 control-label"><span class="red">*</span> AccessKeyId:</label>
                         <div class="col-sm-8">
                             <input type="text" required ng-model="item.id"
-                             class="form-control" id="input1" placeholder="{{'auth.id.placeholder'|translate}}">
+                             class="form-control" id="aid" name="aid" placeholder="{{'auth.id.placeholder'|translate}}">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="input2" class="col-sm-4 control-label"><span class="red">*</span> AccessKeySecret:</label>
+                    <div class="form-group has-feedback" ng-class="{'has-error': !form1.akey.$valid }">
+                        <label for="akey" class="col-sm-4 control-label"><span class="red">*</span> AccessKeySecret:</label>
                         <div class="col-sm-8">
                             <input type="password" required ng-model="item.secret"
-                             class="form-control" id="input2" placeholder="{{'auth.secret.placeholder'|translate}}">
+                             class="form-control" id="akey" name="akey" placeholder="{{'auth.secret.placeholder'|translate}}">
                         </div>
                     </div>
+
 
                     <div class="form-group" ng-class="{'has-error': !form1.osspath.$valid }">
                         <label for="input3" class="col-sm-4 control-label">
@@ -67,15 +81,16 @@
                     </div>
 
 
-                    <div class="form-group" ng-if="item.osspath">
-                        <label for="input4" class="col-sm-4 control-label"><span class="red">*</span>
-                          {{'region'|translate}}
+                    <div class="form-group" ng-if="item.osspath && item.eptpl.indexOf('{region}')!=-1">
+                        <label for="input4" class="col-sm-4 control-label">
+                          <!-- <span class="red">*</span> -->
+                          {{'region'|translate}}:
                           <!-- 区域: -->
                         </label>
                         <div class="col-sm-8">
                             <select required ng-model="item.region"
                              class="form-control" id="input4" placeholder="{{'auth.region.placeholder'|translate}}"
-                             ng-options="rg.id as rg.label for rg in regions">
+                             ng-options="rg.id as ('region.'+rg.id|translate) for rg in regions">
                              </select>
                         </div>
                     </div>
@@ -130,7 +145,7 @@
                           {{'auth.authToken'|translate}}:
                           <!-- 授权码: -->
                           <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}" tooltip-append-to-body="true"
-                            ng-click="openURL('https://github.com/aliyun/oss-browser/blob/master/authToken.md')">
+                            ng-click="openURL('https://github.com/aliyun/oss-browser/blob/master/docs/authToken.md')">
                             <i class="fa fa-question-circle"></i></a></label>
                         <div class="col-sm-9">
                             <textarea required ng-model="item.authToken"  rows="10" ng-change="authTokenChange()"
