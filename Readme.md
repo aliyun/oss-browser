@@ -10,13 +10,16 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 ## 1. 客户端下载：
 
-最新版本`1.2.4`，下载地址如下，解压即可使用。
+最新版本`1.2.5`，下载地址如下，解压即可使用。
 
-> [<h4>Window x64版下载</h4>](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.4/oss-browser-win32-x64.zip)
+> [<h4>Window x32版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.5/oss-browser-win32-ia32.zip)
 
-> [<h4>Mac 版下载</h4>](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.4/oss-browser.dmg)
 
-> [<h4>Ubuntu x64版</h4>](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.4/oss-browser-linux-x64.zip)
+> [<h4>Window x64版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.5/oss-browser-win32-x64.zip)
+
+> [<h4>Mac 版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.5/oss-browser.dmg)
+
+> [<h4>Ubuntu x64版</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.5/oss-browser-linux-x64.zip)
 
 其他版本暂不提供，可以自行build。
 
@@ -28,30 +31,21 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 ```
 功能Map
-  |-- 登录：只需配置AK。
+  |-- 登录：支持AK登录和授权码登录。
   |-- Bucket管理，新建bucket，删除bucket，bucket权限修改，碎片管理。
        |-- 文件管理：目录（包括bucket）和文件的增删改查， 复制, 文件预览等。
              |-- 文件传输任务管理： 上传下载，断点续传。
   |-- 地址栏功能（支持oss://协议URL，浏览历史前进后退，保存书签）
-  |-- 授权功能： 简化RAM授权。
+  |-- 授权功能： 简化RAM Policy授权。
+  |-- 生成授权码： STS临时授权。
 ```
 
-特色功能：
 
-1. 地址栏功能：支持oss://协议URL，浏览历史前进后退，保存书签。
-
-2. 预览和编辑功能：图片可以预览，文本直接可以编辑。
-
-
-### (1) AK登录
+### (1) [AK登录](docs/aklogin.md)
 
 ![AK登录](preview/login.png)
 
 * 子用户登录可以指定预设OSS路径，配合子用户授权使用。
-
-![临时授权码登录](preview/auth-token-login.png)
-
-* 临时授权码登录。
 
 
 ### (2) Bucket列表
@@ -63,13 +57,21 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 ![文件列表](preview/file-list.png)
 
-### (4) 授权给子用户 & 子用户登录
+### (4) [授权给子用户 & 子用户登录](docs/aklogin.md)
 
 ![授权给子用户](preview/subuser-grant.png)
 
 ![子用户登录](preview/subuser.png)
 
-### (5) 归档bucket支持
+### (5) [临时授权 & 授权码登录](docs/autoToken.md)
+
+![临时授权](preview/genToken2.png)
+
+![临时授权2](preview/genToken3.png)
+
+![授权码登录](preview/token-login.png)
+
+### (6) 归档bucket支持
 
 ![新建归档bucket](preview/create-archive-bucket.png)
 
@@ -99,7 +101,7 @@ cnpm 是 npm（node 包管理工具）的中国镜像，可以提高下载依赖
 cnpm i -g windows-build-tools
 ```
 
-### (3) 下载代码
+### (4) 下载代码
 
 ```
 git clone git@github.com:aliyun/oss-browser.git
@@ -112,7 +114,7 @@ cnpm i
 ```
 
 
-### (4) 运行
+### (5) 运行
 
 ```
 npm run dev  # 开发模式运行, command+option+i 可用打开调试界面, win或linux按 F12.
@@ -121,7 +123,7 @@ npm run dev  # 开发模式运行, command+option+i 可用打开调试界面, wi
 开发模式下，会自动监听源码,如有修改,会自动build 前端代码到dist目录。
 
 
-### (5) 打包
+### (6) 打包
 
 ```
 npm run build  # build前端代码到dist目录
@@ -149,6 +151,7 @@ oss-browser/
  |-- build                # electron build 出的应用
  |-- gulpfile.js          # 项目管理文件
  |-- package.json         # 项目描述文件
+ |-- main.js              # 程序入口
 ```
 
 

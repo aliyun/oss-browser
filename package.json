@@ -1,6 +1,6 @@
 {
   "name": "oss-browser",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "main": "dist/main.js",
   "upgrade_url": "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
   "scripts": {
@@ -9,7 +9,7 @@
     "dev:run": "cross-env NODE_ENV=development electron .",
     "postbuild": "node gen",
     "prod": "cross-env NODE_ENV=production cd dist && electron .",
-    "clean": "rm -rf dist node_modules build releases node/crc64/node_modules node/ossstore/node_modules node/crc64/build",
+    "clean": "rm -rf dist node_modules build releases node/ossstore/node_modules",
     "watch": "gulp watch",
     "postinstall": "npm run build",
     "build": "gulp build",
@@ -39,8 +39,8 @@
     "codemirror": "^5.19.0",
     "commander": "~2.9.0",
     "cross-env": "^3.1.4",
-    "electron": "^1.7.5",
-    "electron-packager": "~7.1.0",
+    "electron": "1.7.5",
+    "electron-packager": "7.1.0",
     "font-awesome": "^4.7.0",
     "gulp": "~3.5.5",
     "gulp-angular-templatecache": "^1.1.0",

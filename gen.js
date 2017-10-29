@@ -1,10 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
+var ia32_start_version= '1.2.5';
+const PRE  = 'https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/';
+
 var t=[`All Releases for [ OSS Browser ]
 
-  ||Windows x64| Mac |Linux x64|
-  |-----|-----|---------|--------|`];
+  ||Windows ia32|Windows x64| Mac |Linux x64|
+  |-----|-----|-----|---------|--------|`];
 
 var vs = [];
 var arr = fs.readdirSync('./release-notes');
@@ -17,7 +20,12 @@ arr.forEach(n=>{
 vs.sort(compareVersion);
 
 vs.forEach(version=>{
-  var str = `|${version}|[下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/${version}/oss-browser-win32-x64.zip) | [下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/${version}/oss-browser.dmg) | [下载](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/${version}/oss-browser-linux-x64.zip) |`;
+  if(compareVersion(version, ia32_start_version)<0){
+    var str = `|${version}|[Download](${PRE}${version}/oss-browser-win32-ia32.zip) |[Download](${PRE}${version}/oss-browser-win32-x64.zip) | [Download](${PRE}${version}/oss-browser.dmg) | [Download](${PRE}${version}/oss-browser-linux-x64.zip) |`;
+  }
+  else{
+    var str = `|${version}||[Download](${PRE}${version}/oss-browser-win32-x64.zip) | [Download](${PRE}${version}/oss-browser.dmg) | [Download](${PRE}${version}/oss-browser-linux-x64.zip) |`;
+  }
  t.push(str);
 });
 

@@ -1,7 +1,7 @@
 ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/
 ELECTRON_VERSION=1.7.5
 BUILD=ELECTRON_MIRROR=$(ELECTRON_MIRROR) electron-packager ./dist --asar --overwrite --out=build --version $(ELECTRON_VERSION)
-VERSION=1.2.4
+VERSION=1.2.5
 NAME=oss-browser
 
 i:
@@ -48,7 +48,7 @@ mac:mac_build
 	rm -f releases/$(VERSION)/$(NAME).dmg
 	hdiutil create -size 250M -format UDZO -srcfolder build/$(NAME)-darwin-x64 releases/$(VERSION)/$(NAME).dmg
 
-all:win64 linux64 mac
+all:win32 win64 linux64 mac
 
 
 .PHONY:build

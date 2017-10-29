@@ -21,14 +21,19 @@ module.exports = {
   'region.oss-eu-central-1': '欧洲中部1(法兰克福)',
   'region.oss-me-east-1': '中东东部1(迪拜)',
 
+  'optional': '可选',
+  'default': '默认',
   'auth.akLogin': 'AK登录',
   'auth.tokenLogin': '授权码登录',
-  'auth.presetOssPath': '预设OSS路径(可选)',
+  'auth.presetOssPath': '预设OSS路径',
   'auth.presetOssPath.placeholder': '可选,格式如: oss://bucket/key/',
   'auth.id.placeholder': '请输入AccessKeyId',
   'auth.secret.placeholder': '请输入AccessKeySecret',
   'auth.eptpl': 'Endpoint模板',
   'auth.eptpl.placeholder': '默认: http://{region}.aliyuncs.com',
+
+  'auth.eptpl.popup.msg1': '公有云直接使用默认即可',
+  'auth.eptpl.popup.msg2': '专有云请输入自定义Endpoint,如:',
 
   'region': '区域',
   'auth.region.placeholder': '可选',
