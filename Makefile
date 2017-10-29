@@ -48,7 +48,7 @@ mac:mac_build
 	rm -f releases/$(VERSION)/$(NAME).dmg
 	hdiutil create -size 250M -format UDZO -srcfolder build/$(NAME)-darwin-x64 releases/$(VERSION)/$(NAME).dmg
 
-all:win64 linux64 mac
+all:win32 win64 linux64 mac
 
 
 .PHONY:build

@@ -9,7 +9,7 @@
     "dev:run": "cross-env NODE_ENV=development electron .",
     "postbuild": "node gen",
     "prod": "cross-env NODE_ENV=production cd dist && electron .",
-    "clean": "rm -rf dist node_modules build releases node/crc64/node_modules node/ossstore/node_modules node/crc64/build",
+    "clean": "rm -rf dist node_modules build releases node/ossstore/node_modules",
     "watch": "gulp watch",
     "postinstall": "npm run build",
     "build": "gulp build",
@@ -65,6 +65,7 @@
     "spectron": "^3.7.2"
   },
   "dependencies": {
+    "crc64-ecma182.js": "^1.0.0",
     "aliyun-sdk": "^1.10.9",
     "clipboard": "^1.7.1",
     "koa": "^2.3.0",

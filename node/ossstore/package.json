@@ -9,5 +9,8 @@
   "devDependencies": {
     "mocha": "^3.4.2",
     "should": "^11.2.1"
+  },
+  "dependencies": {
+    "crc64-ecma182.js": "^1.0.0"
   }
 }
