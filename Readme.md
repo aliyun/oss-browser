@@ -101,7 +101,7 @@ cnpm 是 npm（node 包管理工具）的中国镜像，可以提高下载依赖
 cnpm i -g windows-build-tools
 ```
 
-### (3) 下载代码
+### (4) 下载代码
 
 ```
 git clone git@github.com:aliyun/oss-browser.git
@@ -114,7 +114,7 @@ cnpm i
 ```
 
 
-### (4) 运行
+### (5) 运行
 
 ```
 npm run dev  # 开发模式运行, command+option+i 可用打开调试界面, win或linux按 F12.
@@ -123,7 +123,7 @@ npm run dev  # 开发模式运行, command+option+i 可用打开调试界面, wi
 开发模式下，会自动监听源码,如有修改,会自动build 前端代码到dist目录。
 
 
-### (5) 打包
+### (6) 打包
 
 ```
 npm run build  # build前端代码到dist目录
