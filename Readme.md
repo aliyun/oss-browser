@@ -61,7 +61,7 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 ![授权给子用户](preview/subuser-grant.png)
 
-![子用户登录](preview/subuser.png)
+![子用户登录](preview/login-subak1.png)
 
 ### (5) [临时授权 & 授权码登录](docs/autoToken.md)
 
