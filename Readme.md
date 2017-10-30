@@ -156,7 +156,7 @@ oss-browser/
 
 ## 5. 自定义build
 
-请看这里: [自定义build](_custom/)
+请看这里: [自定义build](custom/)
 
 ## 6. 关于贡献
 
