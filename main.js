@@ -36,7 +36,9 @@ ipcMain.on('asynchronous-message', (event, arg) => {
 var custom={};
 try{
   custom = require('./custom')
-}catch(e){}
+}catch(e){
+  console.log('没有自定义模块')
+}
 //let logo = nativeImage.createFromPath('icons/logo.ico');
 
 // Keep a global reference of the window object, if you don't, the window will

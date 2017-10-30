@@ -9,7 +9,7 @@ angular.module('web')
       open: open,
       app_logo: Global.app.logo,
       info: {
-        currentVersion: Global.version
+        currentVersion: Global.app.version
       },
       custom_about_html: Global.about_html
     });

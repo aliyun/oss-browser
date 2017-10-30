@@ -36,7 +36,7 @@ linux64:
 	rm -rf releases/$(VERSION)/$(NAME)-linux-x64.zip && mkdir -p releases/$(VERSION)
 	cd build && zip ../releases/$(VERSION)/$(NAME)-linux-x64.zip -r $(NAME)-linux-x64
 mac_build:
-	$(BUILD) --platform=darwin --arch=x64 --icon=./app/icons/icon.icns
+	$(BUILD) --platform=darwin --arch=x64 --icon=./custom/logo.icns
 	rm -rf releases/$(VERSION)/$(NAME)-darwin-x64.zip && mkdir -p releases/$(VERSION)
 	#cd build && zip ../releases/$(VERSION)/$(NAME)-darwin-x64.zip -r $(NAME)-darwin-x64
 mac:mac_build

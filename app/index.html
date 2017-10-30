@@ -6,10 +6,14 @@
     <title>OSS Browser</title>
     <script>
     var custom= {};
-    try{ custom = require('./custom') }catch(e){};
+    try{
+      custom = require('./custom')
+    }catch(e){
+      console.log('没有自定义模块')
+    };
     document.title = custom.title || 'OSS Browser';
     </script>
-    <link href="icons/icon.ico" rel="shortcut icon"/>
+    <!-- <link href="icons/icon.ico" rel="shortcut icon"/> -->
     <link href="css/lib.css" rel="stylesheet">
     <link href="app.css" rel="stylesheet">
   </head>
@@ -85,10 +89,10 @@
       };
       (function(){
         if(custom.appName)
-        for(var k in custom.appName){
-          if(Global.i18n[k])
-             Global.i18n[k].content['app.name']=custom.appName[k];
-        }
+          for(var k in custom.appName){
+            if(Global.i18n[k])
+               Global.i18n[k].content['app.name']=custom.appName[k];
+          }
       })();
 
 
