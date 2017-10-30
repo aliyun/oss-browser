@@ -3,6 +3,8 @@ module.exports = {
   'language': 'Language',
   'name': 'Name',
   'type': 'Type',
+  'customize': 'Customize',
+  'use.default': 'Use Default',
 
   'region.oss-cn-hangzhou': 'East China 1(Hangzhou)',
   'region.oss-cn-shanghai': 'East China 2(Shanghai)',

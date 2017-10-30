@@ -10,7 +10,8 @@ angular.module('web')
       app_logo: Global.app.logo,
       info: {
         currentVersion: pkg.version
-      }
+      },
+      custom_about_html: Global.about_html
     });
 
     init();

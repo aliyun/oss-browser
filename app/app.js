@@ -34,7 +34,7 @@ angular.module('web', ['ui.router',
   .run(['$rootScope', '$translate', 'Toast', function ($rootScope, $translate, Toast) {
     $rootScope.openURL = function(url){
       openExternal(url);
-    }
+    };
 
     // //i18n
     var langMap = {};
@@ -52,7 +52,7 @@ angular.module('web', ['ui.router',
       langList: langList,
       lang: lang,
       changeLanguage: function (key) {
-        console.log('changeLanguage:', key)
+        console.log('changeLanguage:', key);
         key = langMap[key] ? key : langList[0].lang;
         $translate.use(key);
         localStorage.setItem('lang', key);
