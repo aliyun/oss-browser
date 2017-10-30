@@ -63,7 +63,7 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 ![子用户登录](preview/login-subak1.png)
 
-### (5) [临时授权 & 授权码登录](docs/autoToken.md)
+### (5) [临时授权 & 授权码登录](docs/authToken.md)
 
 ![临时授权](preview/genToken2.png)
 
