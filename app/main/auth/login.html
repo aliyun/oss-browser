@@ -35,33 +35,28 @@
             <div class="panel-body">
 
                 <form ng-if="gtab==1" class="form-horizontal" name="form1" ng-submit="onSubmit(form1)">
-                   <div class="form-group has-feedback" ng-class="{'has-error':!form1.endpoint.$valid}">
+                   <div class="form-group">
                       <label for="endpoint" class="col-sm-4 control-label"><span class="red">*</span> Endpoint:
                         <span uib-popover-template="'auth-endpoint-popup.html'"
                         popover-trigger="'mouseenter'" popover-append-to-body="true">
                           <i class="fa fa-question-circle"></i>
                         </span>
                       </label>
-                      <div class="col-sm-8">
-                        
+                      <div class="col-sm-8" style="padding:0">
 
-                        <div class="input-group">
-                          <div class="input-group-btn">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" 
-                            aria-haspopup="true" aria-expanded="false"  
-                            >{{eptplType|translate}} <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
-                              <li><a href="" ng-click="eptplChange('default')">{{'default'|translate}}</a></li>
-                              <li><a href="" ng-click="eptplChange('customize')">{{'customize'|translate}}</a></li> 
-                            </ul>
-                          </div><!-- /btn-group -->
-                            
-                          <input type="text" required ng-disabled="eptplType=='default'" ng-model="item.eptpl" ng-pattern="/^http(s)?\:\/\//"
-                           class="form-control" id="endpoint" name="endpoint" placeholder="http://">
-                          <!-- <span class="input-group-btn"> 
-                            <a href="" ng-click="item.eptpl='https://{region}.aliyuncs.com'" class="btn btn-default">{{'default'|translate}}</a>
-                          </span> -->
+                        <div ng-class="{'col-sm-12':eptplType=='default','col-sm-4':eptplType=='customize'}">
+                          <select class="form-control" ng-model="eptplType" ng-change="eptplChange(eptplType)">
+                            <option value="default">{{'default'|translate}} ({{'public.cloud'|translate}})</option>
+                            <option value="customize">{{'customize'|translate}}</option>
+                          </select>
                         </div>
+                        <div class="col-sm-8" style="padding-left:0" ng-if="eptplType=='customize'"
+                        ng-class="{'has-error':!form1.endpoint.$valid}">
+                            <input type="text" required ng-model="item.eptpl" ng-pattern="/^http(s)?\:\/\//"
+                            class="form-control" id="endpoint" name="endpoint" placeholder="http://">
+                        </div>
+
+        
                       </div>
                    </div>
                     <div class="form-group has-feedback" ng-class="{'has-error': !form1.aid.$valid }">
