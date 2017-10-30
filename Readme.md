@@ -10,16 +10,16 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 ## 1. 客户端下载：
 
-最新版本`1.2.5`，下载地址如下，解压即可使用。
+最新版本`1.3.0`，下载地址如下，解压即可使用。
 
-> [<h4>Window x32版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.5/oss-browser-win32-ia32.zip)
+> [<h4>Window x32版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.3.0/oss-browser-win32-ia32.zip)
 
 
-> [<h4>Window x64版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.5/oss-browser-win32-x64.zip)
+> [<h4>Window x64版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.3.0/oss-browser-win32-x64.zip)
 
-> [<h4>Mac 版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.5/oss-browser.dmg)
+> [<h4>Mac 版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.3.0/oss-browser.dmg)
 
-> [<h4>Ubuntu x64版</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.2.5/oss-browser-linux-x64.zip)
+> [<h4>Ubuntu x64版</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.3.0/oss-browser-linux-x64.zip)
 
 其他版本暂不提供，可以自行build。
 
@@ -154,11 +154,14 @@ oss-browser/
  |-- main.js              # 程序入口
 ```
 
+## 5. 自定义build
 
-## 5. 关于贡献
+请看这里: [自定义build](_custom/)
+
+## 6. 关于贡献
 
 * 暂不接受代码贡献，如有建议或发现bug，请直接开issue。
 
-## 6. 开源 LICENSE
+## 7. 开源 LICENSE
 
 [Apache License 2.0](LICENSE)
