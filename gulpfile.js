@@ -141,6 +141,10 @@ gulp.task('copy-static', function () {
   gulp.src(['./static/**/*'])
     .pipe(gulp.dest(DIST+'/static'));
 });
+gulp.task('copy-custom', function () {
+  gulp.src(['./custom/**/*'])
+    .pipe(gulp.dest(DIST+'/custom'));
+});
 
 gulp.task('copy-index', function () {
   gulp.src(['./app/index.html',
@@ -194,6 +198,10 @@ gulp.task('watch', function () {
   gulp.watch(['./app/index.html','./main.js'], ['copy-index']);
 
   gulp.watch(['./static/**'], ['copy-static']);
+  
+  gulp.watch(['./custom/**'], ['copy-custom']);
+
+
 
   gulp.watch('./node/**', ['copy-node']);
 
@@ -205,6 +213,6 @@ gulp.task('watch', function () {
 //   livereload: true
 // }));
 
-gulp.task('build', ['js', 'templates', 'css', 'copy-index', 'libJS', 'libCSS', 'copy-fonts','copy-node','copy-docs','copy-icons','copy-static','gen-package']);
+gulp.task('build', ['js', 'templates', 'css', 'copy-index', 'libJS', 'libCSS', 'copy-fonts','copy-node','copy-docs','copy-icons','copy-custom','copy-static','gen-package']);
 
 gulp.task('default', [  'build', 'watch']);
