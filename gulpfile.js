@@ -198,10 +198,8 @@ gulp.task('watch', function () {
   gulp.watch(['./app/index.html','./main.js'], ['copy-index']);
 
   gulp.watch(['./static/**'], ['copy-static']);
-  
+
   gulp.watch(['./custom/**'], ['copy-custom']);
-
-
 
   gulp.watch('./node/**', ['copy-node']);
 

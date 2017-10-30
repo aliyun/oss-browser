@@ -1,12 +1,12 @@
 # 定制 OSS Browser
 
-将此目录中重命名为custom(或copy一份)，通过修改此目录下的配置，目前可以较容易的自定义logo，app名称，版本号，更新地址等。
+通过修改此目录下的配置，目前可以较容易的自定义logo，app名称，版本号，更新地址等。
 
 如果需要修改更多内容，请直接修改oss browser代码。
 
 下面介绍如何修改配置，如何重新build，如何发布。
 
-* 注意：build oss browser 请使用 Mac，或者 ubuntu，不要用 windows（可能会有一些兼容性的问题要解决）。 
+* 注意：build oss browser 请使用 Mac，或者 ubuntu，不要用 windows（可能会有一些兼容性的问题要解决）。
 
 ## 1. 安装环境
 
@@ -51,16 +51,18 @@ make run  # 开发模式启动
 
 ```
 oss-browser/
-  |-- custom  # 将 _custom 目录复制一份改名为custom
+  |-- custom
 ```
 
-然后修改 custom 中的 index.js 配置 和 图标即可。
+修改 custom 中的 index.js 配置 和 图标即可。
 
 ## 4. build
 
 ```
 make all # 将会在 releases 目录，生成几个压缩包。这几个压缩包即安装文件。
 ```
+
+* 注意： Makefile中的mac_build命令，--icon=需要指定自定义的图标
 
 ## 5. 发布
 
@@ -74,7 +76,7 @@ upgrade.json 样例:
 
 ```json
 {
-  "version": "1.3.0", 
+  "version": "1.3.0",
   "package_url": "http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/"
 }
 ```

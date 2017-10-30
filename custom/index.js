@@ -15,9 +15,9 @@ module.exports= {
   },
 
   //自定义版本号，如果不设置，使用package.json中的version
-  version: '1.0.0',//pkg.version,
+  version: pkg.version,
 
-  
+
   //logo png 格式, 主要用于mac和linux系统
   logo_png: path.join(__dirname, './logo.png'),
 
@@ -32,7 +32,7 @@ module.exports= {
   release_notes_url: 'https://raw.githubusercontent.com/aliyun/oss-browser/master/release-notes/',
 
   //升级检测链接
-  upgrade_url: "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json", 
+  upgrade_url: "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
 
   //“关于”弹窗的主要内容
   //about_html: '<div>开源地址:</div>',
