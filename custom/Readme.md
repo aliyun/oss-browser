@@ -26,7 +26,7 @@ sudo npm install -g cnpm --registry=https://registry.npm.taobao.org
 
 ### (2) 获取 oss-browser 源码
 
-先到 https://github.com/aliyun/oss-browser， Fork 一份到你自己的仓库，然后clone：
+先到 https://github.com/aliyun/oss-browser ，Fork 一份到你自己的仓库，然后clone：
 
 ```
 git clone {git地址}
