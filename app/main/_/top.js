@@ -83,7 +83,7 @@ angular.module('web')
 
       function showReleaseNote(){
         var converter = new showdown.Converter();
-        fs.readFile(path.join(__dirname, 'release-notes', pkg.version+'.md'), function(err, text){
+        fs.readFile(path.join(__dirname, 'release-notes', Global.version+'.md'), function(err, text){
             if(err){
               console.error(err);
               return;
