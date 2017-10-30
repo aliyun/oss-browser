@@ -3,6 +3,8 @@ module.exports = {
   'language': '语言',
   'name': "名称",
   'type': '类型',
+  'customize': '自定义',
+  'use.default': '使用默认',
 
   'region.oss-cn-hangzhou': '华东1(杭州)',
   'region.oss-cn-shanghai': '华东2(上海)',

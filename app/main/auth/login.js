@@ -21,6 +21,8 @@ angular.module('web')
         item: {
           eptpl: DEF_EP_TPL,
         },
+        eptplType: 'default',
+
         hideTopNav: 1,
         reg_osspath: /^oss\:\/\//,
         regions: regions,
@@ -32,8 +34,25 @@ angular.module('web')
         open: open,
 
         onSubmit2: onSubmit2,
-        authTokenChange:authTokenChange
+        authTokenChange:authTokenChange,
+
+        eptplChange: eptplChange
       });
+
+      $scope.$watch('item.eptpl', function(v){
+        $scope.eptplType = (v==DEF_EP_TPL)?'default':'customize';
+      });
+
+      
+      function eptplChange(t){
+        $scope.eptplType=t;
+        console.log(t);
+        if(t=='default'){ 
+           $scope.item.eptpl = DEF_EP_TPL;
+        }else{
+          $scope.item.eptpl ='';
+        }
+      }
 
       function open(a){
         openExternal(a);
@@ -75,7 +94,7 @@ angular.module('web')
           }catch(e){
              $scope.authTokenInfo = null;
           }
-        },600)
+        },600);
       }
 
       init();
@@ -84,6 +103,7 @@ angular.module('web')
         $scope.flags.showHis = localStorage.getItem(SHOW_HIS) || 'NO';
         angular.extend($scope.item , AuthInfo.getRemember());
 
+        
         //临时token
         $scope.item.authToken = localStorage.getItem(KEY_AUTHTOKEN) || '';
         authTokenChange();

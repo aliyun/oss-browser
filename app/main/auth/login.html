@@ -36,20 +36,31 @@
 
                 <form ng-if="gtab==1" class="form-horizontal" name="form1" ng-submit="onSubmit(form1)">
                    <div class="form-group has-feedback" ng-class="{'has-error':!form1.endpoint.$valid}">
-                      <label for="endpoint" class="col-sm-4 control-label"><span class="red">*</span> {{'auth.eptpl'|translate}}:
+                      <label for="endpoint" class="col-sm-4 control-label"><span class="red">*</span> Endpoint:
                         <span uib-popover-template="'auth-endpoint-popup.html'"
                         popover-trigger="'mouseenter'" popover-append-to-body="true">
                           <i class="fa fa-question-circle"></i>
                         </span>
                       </label>
                       <div class="col-sm-8">
+                        
+
                         <div class="input-group">
-                          <input type="text" ng-model="item.eptpl" ng-pattern="/^http(s)?\:\/\//"
-                           class="form-control" id="endpoint" name="endpoint" placeholder="{{'auth.eptpl.placeholder'|translate}}">
-                          <span class="input-group-btn">
-                            <!-- <a href="" ng-if="item.eptpl!='http://{region}.aliyuncs.com'" ng-click="item.eptpl='http://{region}.aliyuncs.com'" class="btn btn-default">http</a> -->
+                          <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" 
+                            aria-haspopup="true" aria-expanded="false"  
+                            >{{eptplType|translate}} <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                              <li><a href="" ng-click="eptplChange('default')">{{'default'|translate}}</a></li>
+                              <li><a href="" ng-click="eptplChange('customize')">{{'customize'|translate}}</a></li> 
+                            </ul>
+                          </div><!-- /btn-group -->
+                            
+                          <input type="text" required ng-disabled="eptplType=='default'" ng-model="item.eptpl" ng-pattern="/^http(s)?\:\/\//"
+                           class="form-control" id="endpoint" name="endpoint" placeholder="http://">
+                          <!-- <span class="input-group-btn"> 
                             <a href="" ng-click="item.eptpl='https://{region}.aliyuncs.com'" class="btn btn-default">{{'default'|translate}}</a>
-                          </span>
+                          </span> -->
                         </div>
                       </div>
                    </div>

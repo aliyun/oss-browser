@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html ng-app="web" ng-controller="mainCtrl">
   <head>
+    
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title>OSS Browser</title>
-    <link href="icons/icon.ico" rel="shortcut icon"/>
+    <title></title>
+    <script>
+      var custom = {};
+      try{
+        custom = require('./custom');
+      }catch(e){
+
+      }
+      document.title=custom.title||'OSS Browser';
+    </script>
+    <!-- <link href="icons/icon.ico" rel="shortcut icon"/> -->
     <link href="css/lib.css" rel="stylesheet">
     <link href="app.css" rel="stylesheet">
   </head>
@@ -60,15 +70,34 @@
       //   return false;
       // };
 
+
       var Global = {
         //ossEndpointProtocol:'https:',
         app: {
-          logo: 'icons/icon.png', //logo
-          //name: 'OSS Browser', //标题显示
-          version: pkg.version //自定义版本号
+          id: custom.appId || pkg.name,
+          logo: custom.logo_png || 'icons/icon.png', //logo
+          //name: custom.appName || 'OSS Browser', //标题显示
+          version: custom.version || pkg.version //自定义版本号
         },
-        i18n: require('./node/i18n')
+        i18n: require('./node/i18n'),
+        release_notes_url: custom.release_notes_url || "https://raw.githubusercontent.com/aliyun/oss-browser/master/release-notes/", 
+        upgrade_url: custom.upgrade_url || "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",//升级描述路径
+        about_html: custom.about_html
       };
+ 
+      (function(){
+     
+        if(custom.appName){
+          for(var k in custom.appName){
+            if(Global.i18n[k])
+               Global.i18n[k].content['app.name']=custom.appName[k];
+          }
+        }
+        
+      })();
+      //fix
+      if(localStorage.getItem('lang')=='zn-CN')localStorage.setItem('lang', 'zh-CN');
+
       $(function(){
         $(document).on('dragover', function(ev){
           ev.preventDefault();
