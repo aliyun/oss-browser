@@ -24,7 +24,7 @@ Node.js 从官网下载最新版本安装即可。
 sudo npm install -g cnpm --registry=https://registry.npm.taobao.org
 ```
 
-### (2) 获取 oss-browser 源码
+### (3) 获取 oss-browser 源码
 
 先到 https://github.com/aliyun/oss-browser ，Fork 一份到你自己的仓库，然后clone：
 
@@ -83,7 +83,7 @@ upgrade.json 样例:
 
 * version 表示最新版本。
 
-* package_url：安装包下载地址前缀.
+* package_url：安装包下载地址前缀。可以修改根据实际情况修改。
 
 oss-browser-publish 目录结构:
 ```
