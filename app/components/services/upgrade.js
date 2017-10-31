@@ -1,7 +1,11 @@
 angular.module('web')
   .factory('upgradeSvs', [function () {
 
-    var NAME = 'oss-browser';
+    var NAME = Global.app.id || 'oss-browser';
+
+    var release_notes_url = Global.release_notes_url;
+    var upgrade_url = Global.upgrade_url;
+    var gVersion = Global.app.version;
 
     return {
       load: load,
@@ -17,31 +21,34 @@ angular.module('web')
 
     //获取最新releaseNote
     function getLastestReleaseNote(version, fn){
-      var ind = pkg.upgrade_url.lastIndexOf('aliyun/oss-browser');
-      if(ind>0){
-        var pre = pkg.upgrade_url.substring(0, 'aliyun/oss-browser'.length+ind);
-        $.get(pre + '/master/release-notes/'+version+'.md', fn);
-      }
+      // var ind = upgrade_url.lastIndexOf('aliyun/oss-browser');
+      // if(ind>0){
+      //   var pre = upgrade_url.substring(0, 'aliyun/oss-browser'.length+ind);
+      //   $.get(pre + '/master/release-notes/'+version+'.md', fn);
+      // }
+      $.get(release_notes_url + version + '.md', fn);
 
     }
 
     function load(fn) {
 
-      $.getJSON(pkg.upgrade_url, function (data) {
+      $.getJSON(upgrade_url, function (data) {
 
-        var isLastVersion = compareVersion(pkg.version, data.version) >= 0;
+        var isLastVersion = compareVersion(gVersion, data.version) >= 0;
         var lastVersion = data.version;
         var fileName = getUpgradeFileName();
         var link = data['package_url'].replace(/(\/*$)/g, '') +
           '/' + data['version'] + '/' + fileName;
 
+        console.log("download url:",link);
+
         fn({
-          currentVersion: pkg.version,
+          currentVersion: gVersion,
           isLastVersion: isLastVersion,
           lastVersion: lastVersion,
           fileName: fileName,
           link: link
-        })
+        });
       });
     }
 
@@ -66,14 +73,20 @@ angular.module('web')
 
 
     function getUpgradeFileName() {
-      if ((navigator.platform == "Win32") || (navigator.platform == "Windows")) {
-        return NAME + '-win32-x64.zip';
-      } else if ((navigator.platform == "Mac68K") || (navigator.platform == "MacPPC") || (navigator.platform == "Macintosh") || (navigator.platform == "MacIntel")) {
+      if(process.platform=='darwin'){
         return NAME + '.dmg';
-        //return NAME + '-darwin-x64.zip';
-      } else {
-        return NAME + '-linux-x64.zip';
+      }else{
+        return NAME + '-'+process.platform+'-'+process.arch+'.zip';
       }
+      
+      // if ((navigator.platform == "Win32") || (navigator.platform == "Windows")) {
+      //   return NAME + '-'+process.platform+'-'+process.arch+'.zip';
+      // } else if ((navigator.platform == "Mac68K") || (navigator.platform == "MacPPC") || (navigator.platform == "Macintosh") || (navigator.platform == "MacIntel")) {
+      //   return NAME + '.dmg';
+      //   //return NAME + '-darwin-x64.zip';
+      // } else {
+      //   return NAME + '-linux-x64.zip';
+      // }
     }
 
 
