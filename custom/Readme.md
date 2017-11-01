@@ -33,21 +33,16 @@ git clone {git地址}
 cd oss-browser
 ```
 
-### (4) windows 需要安装 make.exe
-
-[下载make.exe](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/make.exe)，放到 `C:\\Windows\` 目录下，或者自行配置 PATH.
-
-
 
 ## 2. 开始尝试启动
 
 ```
-make i   # 安装 node 模块依赖
+cnpm i   # 安装 node 模块依赖
 ```
 
 启动界面：
 ```
-make run  # 开发模式启动
+npm run dev # 开发模式启动
 ```
 
 这时，你可以看到界面了（开发模式，可以按 command+r 刷新)。
@@ -64,11 +59,23 @@ oss-browser/
 
 ## 4. build
 
-```
-make all # 将会在 releases 目录，生成几个压缩包。这几个压缩包即安装文件。
-```
 
-* 注意： Makefile中的mac_build命令，--icon=需要指定自定义的图标
+```
+npm run all
+```
+会在 build 下生成几个文件夹。即是安装文件。你可以手动zip一下，再发布。
+
+
+* 如果是在 mac 下，请运行： 
+
+```
+make all 
+```
+除了会在 build 下生成几个目录，
+
+还会在 releases 目录下，生成几个压缩包。这几个压缩包即安装文件。
+
+
 
 ## 5. 发布
 
@@ -99,7 +106,7 @@ oss-browser-publish 目录结构:
             |-- oss-browser-linux-x64.zip    # linux 64位
             |-- oss-browser-win32-ia32.zip   # windows 32位
             |-- oss-browser-win32-x64.zip    # windows 64位
-            |-- oss-browser.dmg              # mac 64位
+            |-- oss-browser-darwin-x64.zip   # mac 64位
       |-- 1.2.5
       |-- ...
 ```
