@@ -24,19 +24,23 @@ build:
 	npm run build
 
 win64:
-	$(BUILD) --platform=win32 --arch=x64
+	npm run win64
 	rm -rf releases/$(VERSION)/$(NAME)-win32-x64.zip && mkdir -p releases/$(VERSION)
 	cd build && zip ../releases/$(VERSION)/$(NAME)-win32-x64.zip -r $(NAME)-win32-x64
 win32:
-	$(BUILD) --platform=win32 --arch=ia32
+	npm run win32
 	rm -rf releases/$(VERSION)/$(NAME)-win32-ia32.zip && mkdir -p releases/$(VERSION)
 	cd build && zip ../releases/$(VERSION)/$(NAME)-win32-ia32.zip -r $(NAME)-win32-ia32
 linux64:
-	$(BUILD) --platform=linux --arch=x64
+	npm run linux64
 	rm -rf releases/$(VERSION)/$(NAME)-linux-x64.zip && mkdir -p releases/$(VERSION)
 	cd build && zip ../releases/$(VERSION)/$(NAME)-linux-x64.zip -r $(NAME)-linux-x64
+linux32:
+	npm run linux32
+	rm -rf releases/$(VERSION)/$(NAME)-linux-ia32.zip && mkdir -p releases/$(VERSION)
+	cd build && zip ../releases/$(VERSION)/$(NAME)-linux-ia32.zip -r $(NAME)-linux-ia32
 mac_build:
-	$(BUILD) --platform=darwin --arch=x64 --icon=./custom/logo.icns
+	npm run mac
 	rm -rf releases/$(VERSION)/$(NAME)-darwin-x64.zip && mkdir -p releases/$(VERSION)
 	#cd build && zip ../releases/$(VERSION)/$(NAME)-darwin-x64.zip -r $(NAME)-darwin-x64
 mac:mac_build
