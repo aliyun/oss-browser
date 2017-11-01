@@ -15,12 +15,12 @@ angular.module('web')
       getLastestReleaseNote: getLastestReleaseNote
     };
 
-    function getReleaseNote(version, fn){
-      $.get('release-notes/'+version+'.md', fn);
+    function getReleaseNote(version, fn) {
+      $.get('release-notes/' + version + '.md', fn);
     }
 
     //获取最新releaseNote
-    function getLastestReleaseNote(version, fn){
+    function getLastestReleaseNote(version, fn) {
       // var ind = upgrade_url.lastIndexOf('aliyun/oss-browser');
       // if(ind>0){
       //   var pre = upgrade_url.substring(0, 'aliyun/oss-browser'.length+ind);
@@ -36,19 +36,57 @@ angular.module('web')
 
         var isLastVersion = compareVersion(gVersion, data.version) >= 0;
         var lastVersion = data.version;
-        var fileName = getUpgradeFileName();
-        var link = data['package_url'].replace(/(\/*$)/g, '') +
-          '/' + data['version'] + '/' + fileName;
 
-        console.log("download url:",link);
+        if (process.platform == 'darwin') {
 
-        fn({
-          currentVersion: gVersion,
-          isLastVersion: isLastVersion,
-          lastVersion: lastVersion,
-          fileName: fileName,
-          link: link
-        });
+          fileName = NAME + '.dmg'
+          var link = data['package_url'].replace(/(\/*$)/g, '') +
+            '/' + data['version'] + '/' + fileName;
+
+          $.ajax({
+            method: 'head',
+            url: link
+          }).then(function () {
+
+            console.log("download url:", link);
+
+            fn({
+              currentVersion: gVersion,
+              isLastVersion: isLastVersion,
+              lastVersion: lastVersion,
+              fileName: fileName,
+              link: link
+            });
+          }, function () {
+            var fileName = NAME + '-' + process.platform + '-' + process.arch + '.zip';
+            var link = data['package_url'].replace(/(\/*$)/g, '') +
+              '/' + data['version'] + '/' + fileName;
+
+            console.log("download url:", link);
+
+            fn({
+              currentVersion: gVersion,
+              isLastVersion: isLastVersion,
+              lastVersion: lastVersion,
+              fileName: fileName,
+              link: link
+            });
+          })
+        } else {
+          var fileName = NAME + '-' + process.platform + '-' + process.arch + '.zip';
+          var link = data['package_url'].replace(/(\/*$)/g, '') +
+            '/' + data['version'] + '/' + fileName;
+          console.log("download url:", link);
+
+          fn({
+            currentVersion: gVersion,
+            isLastVersion: isLastVersion,
+            lastVersion: lastVersion,
+            fileName: fileName,
+            link: link
+          });
+        }
+
       });
     }
 
@@ -71,14 +109,13 @@ angular.module('web')
       return 0;
     }
 
-
     function getUpgradeFileName() {
-      if(process.platform=='darwin'){
+      if (process.platform == 'darwin') {
         return NAME + '.dmg';
-      }else{
-        return NAME + '-'+process.platform+'-'+process.arch+'.zip';
+      } else {
+        return NAME + '-' + process.platform + '-' + process.arch + '.zip';
       }
-      
+
       // if ((navigator.platform == "Win32") || (navigator.platform == "Windows")) {
       //   return NAME + '-'+process.platform+'-'+process.arch+'.zip';
       // } else if ((navigator.platform == "Mac68K") || (navigator.platform == "MacPPC") || (navigator.platform == "Macintosh") || (navigator.platform == "MacIntel")) {
@@ -88,7 +125,5 @@ angular.module('web')
       //   return NAME + '-linux-x64.zip';
       // }
     }
-
-
 
   }]);
