@@ -56,7 +56,7 @@ function createWindow() {
     minWidth: 1020,
     minHeight: 660,
     title: custom.title || "OSS Browser",
-    icon: custom.icon_ico || path.join(__dirname, 'icons', 'icon.ico')
+    icon: custom.logo_ico || path.join(__dirname, 'icons', 'icon.ico')
   };
 
   if(process.platform=='linux'){
