@@ -59,6 +59,7 @@ oss-browser/
 
 ## 4. build
 
+* 如果在 windows系统下运行
 
 ```
 npm run all
@@ -66,14 +67,26 @@ npm run all
 会在 build 下生成几个文件夹。即是安装文件。你可以手动zip一下，再发布。
 
 
-* 如果是在 mac 下，请运行： 
+* 如果是在 mac 下运行，
+
+先修改Makefile中的 VERSION 和 NAME 变量，VERSION 需要和 custom/index.js中的version相同，NAME需要和appId相同。
+
+然后运行：
 
 ```
-make all 
+make all
 ```
 除了会在 build 下生成几个目录，
 
-还会在 releases 目录下，生成几个压缩包。这几个压缩包即安装文件。
+还会在 releases 目录下，生成几个压缩包(绿色免安装版)。
+
+
+
+### (可选) 其他平台相关的安装文件(包含安装向导的):
+
+```
+make dmg  # 只能在mac系统下build， *.dmg 文件
+```
 
 
 
@@ -107,6 +120,7 @@ oss-browser-publish 目录结构:
             |-- oss-browser-win32-ia32.zip   # windows 32位
             |-- oss-browser-win32-x64.zip    # windows 64位
             |-- oss-browser-darwin-x64.zip   # mac 64位
+            |-- oss-browser.dmg         # 如果在mac下build过： make dmg
       |-- 1.2.5
       |-- ...
 ```
@@ -115,3 +129,8 @@ oss-browser-publish 目录结构:
 将build好的安装包，上传到 oss-browser-publish 的版本目录下。
 
 文件上传完成后，修改upgrade.json中的version，旧版本的客户端即可查询到有版本更新。
+
+
+> release note 更新
+
+在 ./release-notes/ 目录下对于的版本号文件，请使用markdown编写release notes。
