@@ -159,11 +159,20 @@ gulp.task('gen-package', function () {
   gulp.src(['./package.json'])
   .on('end', function(){
     var info = require('./package');
+
     delete info.devDependencies;
     info.scripts = {
       'start': 'electron .'
     };
     info.main="main.js";
+
+    var custom = {};
+    try{ custom = require('./custom') }catch(e){}
+    if(custom.appId){
+      info.name= custom.appId;
+      info.version = custom.version;
+    }
+
     try{ fs.statSync(DIST); }catch(e){ fs.mkdirSync(DIST); }
     fs.writeFileSync(DIST+'/package.json', JSON.stringify(info,' ',2));
     exec('cd dist && cnpm i');
