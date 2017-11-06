@@ -142,7 +142,7 @@ gulp.task('copy-static', function () {
     .pipe(gulp.dest(DIST+'/static'));
 });
 gulp.task('copy-custom', function () {
-  gulp.src(['!./custom/releases','!./custom/build','./custom/*'])
+  gulp.src(['./custom/**/*'])
     .pipe(gulp.dest(DIST+'/custom'));
 });
 
@@ -159,7 +159,7 @@ gulp.task('gen-package', function () {
   gulp.src(['./package.json'])
   .on('end', function(){
     var info = require('./package');
-    
+
     delete info.devDependencies;
     info.scripts = {
       'start': 'electron .'
