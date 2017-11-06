@@ -46,7 +46,7 @@ try{
 let win;
 
 if (process.platform == 'darwin') {
-  app.dock.setIcon(custom.icon_png || path.join(__dirname, 'icons', 'icon.png'));
+  app.dock.setIcon(custom.logo_png || path.join(__dirname, 'icons', 'icon.png'));
 }
 
 function createWindow() {
@@ -60,7 +60,7 @@ function createWindow() {
   };
 
   if(process.platform=='linux'){
-    opt.icon = custom.icon_png || path.join(__dirname, 'icons', 'icon.png');
+    opt.icon = custom.logo_png || path.join(__dirname, 'icons', 'icon.png');
   }
   // Create the browser window.   http://electron.atom.io/docs/api/browser-window/
   win = new BrowserWindow(opt);
