@@ -17,7 +17,7 @@
     "mac": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=darwin --arch=x64 --icon=./custom/logo.icns",
     "linux32": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=linux --arch=ia32",
     "linux64": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=linux --arch=x64",
-    "all": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --all --icon=./custom/"
+    "all": "npm run win32 && npm run win64 && npm run mac && npm run linux32 && npm run linux64"
   },
   "engines": {
     "node": "7.9.0"

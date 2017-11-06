@@ -1,8 +1,9 @@
 ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/
 ELECTRON_VERSION=1.7.5
 BUILD=ELECTRON_MIRROR=$(ELECTRON_MIRROR) electron-packager ./dist --asar --overwrite --out=build --version $(ELECTRON_VERSION)
-VERSION=1.3.0
-NAME=oss-browser
+
+VERSION=1.0.0
+NAME=Novogene
 
 i:
 	cnpm i
@@ -39,11 +40,13 @@ linux32:
 	npm run linux32
 	rm -rf releases/$(VERSION)/$(NAME)-linux-ia32.zip && mkdir -p releases/$(VERSION)
 	cd build && zip ../releases/$(VERSION)/$(NAME)-linux-ia32.zip -r $(NAME)-linux-ia32
-mac_build:
+mac:
 	npm run mac
 	rm -rf releases/$(VERSION)/$(NAME)-darwin-x64.zip && mkdir -p releases/$(VERSION)
-	#cd build && zip ../releases/$(VERSION)/$(NAME)-darwin-x64.zip -r $(NAME)-darwin-x64
-mac:mac_build
+	cd build && zip ../releases/$(VERSION)/$(NAME)-darwin-x64.zip -r $(NAME)-darwin-x64
+dmg:
+	npm run mac
+	rm -rf releases/$(VERSION)/$(NAME)-darwin-x64.zip && mkdir -p releases/$(VERSION)
 	rm build/$(NAME)-darwin-x64/LICENSE* build/$(NAME)-darwin-x64/version
 	ln -s /Applications/ build/$(NAME)-darwin-x64/Applications
 	#cp dist/icons/icon.icns build/$(NAME)-darwin-x64/.VolumeIcon.icns
@@ -52,7 +55,7 @@ mac:mac_build
 	rm -f releases/$(VERSION)/$(NAME).dmg
 	hdiutil create -size 250M -format UDZO -srcfolder build/$(NAME)-darwin-x64 releases/$(VERSION)/$(NAME).dmg
 
-all:win32 win64 linux64 mac
+all:win32 win64 linux32 linux64 mac
 
 
 .PHONY:build
