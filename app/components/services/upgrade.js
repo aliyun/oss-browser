@@ -26,13 +26,26 @@ angular.module('web')
       //   var pre = upgrade_url.substring(0, 'aliyun/oss-browser'.length+ind);
       //   $.get(pre + '/master/release-notes/'+version+'.md', fn);
       // }
-      if (!release_notes_url) return;
+      if (!release_notes_url) {
+        fn('');
+        return;
+      }
       $.get(release_notes_url + version + '.md', fn);
 
     }
 
     function load(fn) {
-      if (!upgrade_url) return;
+      if (!upgrade_url) {
+        fn({
+          currentVersion: Global.app.version,
+          isLastVersion: true,
+          lastVersion: Global.app.version,
+          fileName: '',
+          link: ''
+        });
+        return;
+      }
+
       $.getJSON(upgrade_url, function(data) {
 
         var isLastVersion = compareVersion(gVersion, data.version) >= 0;

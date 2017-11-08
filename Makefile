@@ -3,7 +3,7 @@ ELECTRON_VERSION=1.7.5
 BUILD=ELECTRON_MIRROR=$(ELECTRON_MIRROR) electron-packager ./dist --asar --overwrite --out=build --version $(ELECTRON_VERSION)
 
 VERSION=1.3.0
-NAME=oss-browser
+NAME=Novogene
 
 i:
 	cnpm i

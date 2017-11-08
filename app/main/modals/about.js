@@ -18,7 +18,6 @@ angular.module('web')
       init();
 
       function init() {
-        if (!Global.upgrade_url) return;
 
         $scope.isLoading = true;
         upgradeSvs.load(function(info) {
