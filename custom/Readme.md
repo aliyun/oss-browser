@@ -90,7 +90,19 @@ make dmg  # 只能在mac系统下build， *.dmg 文件
 
 
 
-## 5. 发布
+## 5. 发布(可选)
+
+custom/index.js中的这2个变量如果不配置，则build出来的应用没有自动检测升级功能：
+```
+//release notes目录后缀，里面有 ${version}.md, 如 1.0.0.md
+release_notes_url: 'https://raw.githubusercontent.com/aliyun/oss-browser/master/release-notes/',
+
+//升级检测链接
+upgrade_url: "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
+```
+
+
+### 如何配置:
 
 我们可以将安装包上传到oss的某个目录下（如：oss-browser-publish），将这个目录设置为公共读。
 
