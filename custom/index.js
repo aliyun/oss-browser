@@ -19,13 +19,13 @@ module.exports= {
 
 
   //logo png 格式, 主要用于mac和linux系统
-  logo_png: path.join(__dirname, './logo.png'),
+  logo_png: path.join(__dirname, './icon.png'),
 
   //logo icns 格式，主要用于mac系统
-  logo_ico: path.join(__dirname, './logo.icns'),
+  logo_ico: path.join(__dirname, './icon.icns'),
 
   //logo ico 格式，主要用于windows系统
-  logo_ico: path.join(__dirname, './logo.ico'),
+  logo_ico: path.join(__dirname, './icon.ico'),
 
 
   //release notes目录后缀，里面有 ${version}.md, 如 1.0.0.md
