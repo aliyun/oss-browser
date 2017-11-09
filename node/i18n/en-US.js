@@ -234,10 +234,10 @@ module.exports = {
   'unit.second': 's',
 
   'genAuthToken.message3.1': 'You also need to specify a role',
-  'genAuthToken.message3.2': 'This role requires at least {{privilege}} access to this {{type}}',
+  'genAuthToken.message3.2': 'This role requires at least {{privilege}} permission to access this {{type}}',
 
   'genAuthToken.message4': 'Authorization Token',
-  'genAuthToken.message5': 'Log in to the OSS browser using the generated authorization code above, You can get {{privilege}} access to this {{type}} [{{object}}], Valid until {{expiration}}.',
+  'genAuthToken.message5': 'Log in to the OSS browser using the generated authorization code above, You can get {{privilege}} permission to access this {{type}} [{{object}}], Valid until {{expiration}}.',
   'genAuthToken.message6.1': 'Generate',
   'genAuthToken.message6.2': 'Re-Generate',
 
