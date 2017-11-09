@@ -9,4 +9,4 @@ For English:
 
 * [Access Key-based logon](en-aklogin.md)
 * [Authorization code support](en-authToken.md)
-* [邮件设置](en-smtpSetting.md)
+* [Email sending settings](en-smtpSetting.md)
