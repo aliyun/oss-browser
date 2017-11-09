@@ -14,7 +14,7 @@
     "build": "gulp build",
     "win64": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=win32 --arch=x64",
     "win32": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=win32 --arch=ia32",
-    "mac": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=darwin --arch=x64 --icon=./custom/logo.icns",
+    "mac": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=darwin --arch=x64 --icon=./custom/icon.icns",
     "linux32": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=linux --arch=ia32",
     "linux64": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --platform=linux --arch=x64",
     "all": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.5 --all --icon=./custom/"

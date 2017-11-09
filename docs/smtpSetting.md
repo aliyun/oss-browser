@@ -1,5 +1,7 @@
 # 邮件发送设置
 
+> [For English](en-smtpSetting.md)
+
 ## 举例参考:
 
 

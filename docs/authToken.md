@@ -1,5 +1,7 @@
 # 授权码支持
 
+> [For English](en-authToken.md)
+
 主要支持2个功能:
 
 1. 使用阿里云STS服务临时授权得到授权码。
@@ -38,7 +40,7 @@
 
 如果您使用程序生成授权码, 请按照以下格式生成：
 
-```
+```javascript
 var opt = {
   id: '',
   secret: '',

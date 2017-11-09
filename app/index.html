@@ -80,10 +80,10 @@
         i18n: require('./node/i18n'),
 
         //release notes目录后缀，里面有 ${version}.md, 如 1.0.0.md
-        release_notes_url: custom.release_notes_url || 'https://raw.githubusercontent.com/aliyun/oss-browser/master/release-notes/',
+        release_notes_url: custom.release_notes_url,// || 'https://raw.githubusercontent.com/aliyun/oss-browser/master/release-notes/',
 
         //升级检测链接
-        upgrade_url: custom.upgrade_url ||  "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
+        upgrade_url: custom.upgrade_url,// ||  "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
 
         about_html: custom.about_html
       };

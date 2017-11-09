@@ -45,8 +45,6 @@ mac:
 	rm -rf releases/$(VERSION)/$(NAME)-darwin-x64.zip && mkdir -p releases/$(VERSION)
 	cd build && zip ../releases/$(VERSION)/$(NAME)-darwin-x64.zip -r $(NAME)-darwin-x64
 dmg:
-	npm run mac
-	rm -rf releases/$(VERSION)/$(NAME)-darwin-x64.zip && mkdir -p releases/$(VERSION)
 	rm build/$(NAME)-darwin-x64/LICENSE* build/$(NAME)-darwin-x64/version
 	ln -s /Applications/ build/$(NAME)-darwin-x64/Applications
 	#cp dist/icons/icon.icns build/$(NAME)-darwin-x64/.VolumeIcon.icns

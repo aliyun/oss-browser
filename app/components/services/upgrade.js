@@ -1,5 +1,5 @@
 angular.module('web')
-  .factory('upgradeSvs', [function () {
+  .factory('upgradeSvs', [function() {
 
     var NAME = Global.app.id || 'oss-browser';
 
@@ -26,13 +26,27 @@ angular.module('web')
       //   var pre = upgrade_url.substring(0, 'aliyun/oss-browser'.length+ind);
       //   $.get(pre + '/master/release-notes/'+version+'.md', fn);
       // }
+      if (!release_notes_url) {
+        fn('');
+        return;
+      }
       $.get(release_notes_url + version + '.md', fn);
 
     }
 
     function load(fn) {
+      if (!upgrade_url) {
+        fn({
+          currentVersion: Global.app.version,
+          isLastVersion: true,
+          lastVersion: Global.app.version,
+          fileName: '',
+          link: ''
+        });
+        return;
+      }
 
-      $.getJSON(upgrade_url, function (data) {
+      $.getJSON(upgrade_url, function(data) {
 
         var isLastVersion = compareVersion(gVersion, data.version) >= 0;
         var lastVersion = data.version;
@@ -46,7 +60,7 @@ angular.module('web')
           $.ajax({
             method: 'head',
             url: link
-          }).then(function () {
+          }).then(function() {
 
             console.log("download url:", link);
 
@@ -57,8 +71,9 @@ angular.module('web')
               fileName: fileName,
               link: link
             });
-          }, function () {
-            var fileName = NAME + '-' + process.platform + '-' + process.arch + '.zip';
+          }, function() {
+            var fileName = NAME + '-' + process.platform + '-' +
+              process.arch + '.zip';
             var link = data['package_url'].replace(/(\/*$)/g, '') +
               '/' + data['version'] + '/' + fileName;
 
@@ -73,7 +88,8 @@ angular.module('web')
             });
           })
         } else {
-          var fileName = NAME + '-' + process.platform + '-' + process.arch + '.zip';
+          var fileName = NAME + '-' + process.platform + '-' + process.arch +
+            '.zip';
           var link = data['package_url'].replace(/(\/*$)/g, '') +
             '/' + data['version'] + '/' + fileName;
           console.log("download url:", link);
