@@ -53,7 +53,7 @@ dmg:
 	rm -f releases/$(VERSION)/$(NAME).dmg
 	hdiutil create -size 250M -format UDZO -srcfolder build/$(NAME)-darwin-x64 releases/$(VERSION)/$(NAME).dmg
 
-all:win32 win64 linux32 linux64 mac dmg
+all:win32 win64 linux32 linux64 mac
 
 
 .PHONY:build
