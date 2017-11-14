@@ -27,9 +27,9 @@ angular.module('web')
     },
 
     bucketACL: [
+      {acl:'private',label: '私有'}, //私有
       {acl:'public-read',label: '公共读'}, //公共读
       {acl:'public-read-write',label: '公共读写'}, //公共读写
-      {acl:'private',label: '私有'} //私有
     ],
 
     //https://help.aliyun.com/document_detail/31837.html
