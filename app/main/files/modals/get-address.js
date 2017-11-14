@@ -38,6 +38,7 @@ angular.module('web')
             if(xhr.status < 300){
               $scope.err = null;
               $scope.step=1;
+              $scope.info.url = $scope.item.url;
             }
             else if(xhr.status==403){
               $scope.step = 2;
