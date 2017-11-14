@@ -39,6 +39,7 @@ angular.module('web')
               $scope.err = null;
               $scope.step=1;
               $scope.info.url = $scope.item.url;
+              safeApply($scope);
             }
             else if(xhr.status==403){
               $scope.step = 2;
