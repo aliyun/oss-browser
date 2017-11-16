@@ -304,6 +304,8 @@ angular.module('web')
           });
           $rootScope.bucketMap = m;
 
+          safeApply($scope);
+
           if (fn) fn();
 
         }, function (err) {
@@ -314,6 +316,8 @@ angular.module('web')
 
           $scope.buckets = [];
           $rootScope.bucketMap = {};
+
+          safeApply($scope);
 
           if (fn) fn();
         });
