@@ -1166,13 +1166,14 @@ angular.module('web')
                 });
                 t = t.concat(result['Buckets']);
               }
+              resolve(t);
 
-              if (result.NextMarker) {
-                opt.Marker = result.NextMarker;
-                $timeout(_dig,NEXT_TICK);
-              } else {
-                resolve(t);
-              }
+              // if (result.NextMarker) {
+              //   opt.Marker = result.NextMarker;
+              //   $timeout(_dig,NEXT_TICK);
+              // } else {
+              //   resolve(t);
+              // }
             });
           }
         });

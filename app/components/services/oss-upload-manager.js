@@ -340,10 +340,11 @@ angular.module('web')
       function loadProg() {
         try {
           var data = fs.readFileSync(getUpProgFilePath());
+          return JSON.parse(data ? data.toString() : '[]');
         } catch (e) {
 
         }
-        return JSON.parse(data ? data.toString() : '[]');
+        return [];
       }
 
       //上传进度保存路径

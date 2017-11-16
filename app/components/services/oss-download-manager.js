@@ -301,10 +301,11 @@ angular.module('web')
     function loadProg() {
       try {
         var data = fs.readFileSync(getDownProgFilePath());
+        return JSON.parse(data ? data.toString() : '[]');
       } catch (e) {
 
       }
-      return JSON.parse(data ? data.toString() : '[]');
+      return [];
     }
 
     //下载进度保存路径
