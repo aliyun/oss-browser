@@ -329,7 +329,7 @@ angular.module('web')
           //console.log('request save upload:', t);
 
           //console.log('-save')
-          fs.writeFileSync(getUpProgFilePath(), JSON.stringify(t, ' ', 2));
+          fs.writeFileSync(getUpProgFilePath(), JSON.stringify(t));
           $scope.calcTotalProg();
         }, 20);
       }

@@ -290,7 +290,7 @@ angular.module('web')
         });
         //console.log('save:', t);
 
-        fs.writeFileSync(getDownProgFilePath(), JSON.stringify(t, ' ', 2));
+        fs.writeFileSync(getDownProgFilePath(), JSON.stringify(t));
         $scope.calcTotalProg();
       },20);
     }
