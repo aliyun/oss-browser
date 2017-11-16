@@ -62,7 +62,7 @@
     "spectron": "^3.7.2"
   },
   "dependencies": {
-    "aliyun-sdk": "1.10.9",
+    "aliyun-sdk": "1.10.19",
     "clipboard": "^1.7.1",
     "koa": "^2.3.0",
     "koa-convert": "^1.2.0",
