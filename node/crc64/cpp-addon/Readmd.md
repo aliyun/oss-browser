@@ -1,5 +1,7 @@
 # crc64 prebuild module
 
+请先安装：node-gyp https://github.com/nodejs/node-gyp#installation
+
 ## 1. 仅支持以下版本:
 
 ```

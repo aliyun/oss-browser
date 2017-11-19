@@ -8,16 +8,16 @@
     "dev:run": "cross-env NODE_ENV=development electron .",
     "postbuild": "node gen",
     "prod": "cross-env NODE_ENV=production cd dist && electron .",
-    "clean": "rm -rf dist node_modules build releases node/ossstore/node_modules",
+    "clean": "rm -rf dist node_modules build releases node/crc64/cpp-addon/node_modules node/ossstore/node_modules",
     "watch": "gulp watch",
     "postinstall": "npm run build",
     "build": "gulp build",
-    "win64": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.9 --platform=win32 --arch=x64",
-    "win32": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.9 --platform=win32 --arch=ia32",
-    "mac": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.9 --platform=darwin --arch=x64 --icon=./custom/icon.icns",
-    "linux32": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.9 --platform=linux --arch=ia32",
-    "linux64": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.9 --platform=linux --arch=x64",
-    "all": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=1.7.9 --all --icon=./custom/"
+    "win64": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=${npm_package_devDependencies_electron} --platform=win32 --arch=x64",
+    "win32": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=${npm_package_devDependencies_electron} --platform=win32 --arch=ia32",
+    "mac": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=${npm_package_devDependencies_electron} --platform=darwin --arch=x64 --icon=./custom/icon.icns",
+    "linux32": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=${npm_package_devDependencies_electron} --platform=linux --arch=ia32",
+    "linux64": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=${npm_package_devDependencies_electron} --platform=linux --arch=x64",
+    "all": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist --asar --overwrite --out=build --version=${npm_package_devDependencies_electron} --all --icon=./custom/"
   },
   "engines": {
     "node": "7.9.0"
@@ -37,7 +37,7 @@
     "codemirror": "^5.19.0",
     "commander": "~2.9.0",
     "cross-env": "^3.1.4",
-    "electron": "1.7.9",
+    "electron": "1.6.5",
     "electron-packager": "7.1.0",
     "font-awesome": "^4.7.0",
     "gulp": "~3.5.5",
