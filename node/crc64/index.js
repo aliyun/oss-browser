@@ -1,6 +1,6 @@
 
 console.log(`run on: platform=${process.platform},arch=${process.arch}`);
-if(process.arch=='x64' && ['darwin','win32','linux'].indexOf(process.platform)!=-1){
+if(process.arch=='x64' || (process.platform=='win32' && process.arch=='ia32')){
 
   try{
     //console.log(require('./cpp-addon').crc64('123456789'))
