@@ -8,7 +8,7 @@
     "dev:run": "cross-env NODE_ENV=development electron .",
     "postbuild": "node gen",
     "prod": "cross-env NODE_ENV=production cd dist && electron .",
-    "clean": "rm -rf dist node_modules build releases node/crc64/cpp-addon/node_modules node/ossstore/node_modules",
+    "clean": "shx rm -rf dist node_modules build releases node/crc64/cpp-addon/node_modules node/ossstore/node_modules",
     "watch": "gulp watch",
     "postinstall": "npm run build",
     "build": "gulp build",
@@ -53,12 +53,13 @@
     "karma-chrome-launcher": "^0.1.2",
     "karma-jasmine": "^0.1.5",
     "mocha": "~2.4.5",
+    "moment": "~2.10.6",
     "npm-run-all": "^4.0.2",
     "request": "^2.72.0",
     "shelljs": "~0.7.0",
     "should": "~9.0.0",
     "showdown": "^1.4.2",
-    "moment": "~2.10.6",
+    "shx": "^0.2.2",
     "spectron": "^3.7.2"
   },
   "dependencies": {
