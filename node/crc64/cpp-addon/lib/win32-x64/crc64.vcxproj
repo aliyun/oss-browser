@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5623FA4E-F03B-BFE1-4765-2BE8881AA618}</ProjectGuid>
+    <ProjectGuid>{633742AB-6554-4EA5-45A9-654E12A8C1EC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>crc64</RootNamespace>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
@@ -47,7 +47,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\include\node;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\src;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\deps\uv\include;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Administrator\.node-gyp\iojs-1.6.5\include\node;C:\Users\Administrator\.node-gyp\iojs-1.6.5\src;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\uv\include;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -66,7 +66,7 @@
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\x64\iojs.lib&quot;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\Administrator\.node-gyp\iojs-1.6.5\x64\iojs.lib&quot;</AdditionalDependencies>
       <AdditionalOptions>/ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <AllowIsolation>true</AllowIsolation>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -81,13 +81,13 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\include\node;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\src;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\deps\uv\include;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Administrator\.node-gyp\iojs-1.6.5\include\node;C:\Users\Administrator\.node-gyp\iojs-1.6.5\src;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\uv\include;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=crc64;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_NODE_EXTENSION;DEBUG;_DEBUG;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\include\node;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\src;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\deps\uv\include;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Administrator\.node-gyp\iojs-1.6.5\include\node;C:\Users\Administrator\.node-gyp\iojs-1.6.5\src;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\uv\include;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -114,7 +114,7 @@
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\x64\iojs.lib&quot;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\Administrator\.node-gyp\iojs-1.6.5\x64\iojs.lib&quot;</AdditionalDependencies>
       <AdditionalOptions>/ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <AllowIsolation>true</AllowIsolation>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -132,7 +132,7 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\include\node;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\src;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\deps\uv\include;C:\Users\guangchun.luo\.node-gyp\iojs-1.6.11\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Administrator\.node-gyp\iojs-1.6.5\include\node;C:\Users\Administrator\.node-gyp\iojs-1.6.5\src;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\uv\include;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=crc64;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_NODE_EXTENSION;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
@@ -141,7 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\crc64.cc"/>
-    <ClCompile Include="C:\Users\guangchun.luo\AppData\Roaming\npm\node_modules\cnpm\node_modules\node-gyp\src\win_delay_load_hook.cc"/>
+    <ClCompile Include="C:\Program Files\nodejs\node_modules\npm\node_modules\node-gyp\src\win_delay_load_hook.cc"/>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
   <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets"/>
