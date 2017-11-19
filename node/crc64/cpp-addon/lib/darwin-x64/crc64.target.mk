@@ -45,10 +45,10 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.7.9/include/node \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.7.9/src \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.7.9/deps/uv/include \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.7.9/deps/v8/include
+	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/include/node \
+	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/src \
+	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/deps/uv/include \
+	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/deps/v8/include
 
 DEFS_Release := \
 	'-DNODE_GYP_MODULE_NAME=crc64' \
@@ -91,10 +91,10 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.7.9/include/node \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.7.9/src \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.7.9/deps/uv/include \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.7.9/deps/v8/include
+	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/include/node \
+	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/src \
+	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/deps/uv/include \
+	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/deps/v8/include
 
 OBJS := \
 	$(obj).target/$(TARGET)/crc64.o
