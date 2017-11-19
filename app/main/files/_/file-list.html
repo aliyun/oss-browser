@@ -1,6 +1,8 @@
 <div ng-if="!isLoading && (!objects || objects.length==0)" no-data></div>
 
-<div ng-if="!isLoading && objects.length>0" style="height:100%" ng-click="toggleTransVisible(false);">
+<div ng-if="!isLoading && objects.length>0"
+   context-menu="fileSpacerMenuOptions"
+   style="height:100%" ng-click="toggleTransVisible(false);">
   <section ng-if="ref.isListView">
     <table class="table table-condensed table-striped">
       <tr>
@@ -26,7 +28,11 @@
           &nbsp;</th>
       </tr>
       <!--|filter:{name:sch.objectName}-->
-      <tr ng-repeat="item in objects" ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);" ng-class="{'info': sel.x['i_'+$index]}">
+      <tr ng-repeat="item in objects"
+       context-menu="fileMenuOptions"
+       context-menu-class="context-menu-custom-cls"
+       ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);"
+       ng-class="{'info': sel.x['i_'+$index]}">
         <td class="text-center">
           <input type="checkbox" ng-model="sel.x['i_'+$index]" name="x" ng-change="selectChanged($event,$index)" ng-click="$event.stopPropagation()" />
         </td>
@@ -109,6 +115,7 @@
   <div ng-if="!ref.isListView" class="pd10" style="height:100%" ng-click="sel.all=false;selectAll();">
     <!--|filter:{name:sch.objectName}-->
     <div ng-repeat="item in objects" item-index="{{$index}}" class="item-block"
+    context-menu="fileMenuOptions(item, $index)" 
     ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);$event.stopPropagation()"
     ng-dblclick="item.isFolder!=true?showPreview(item):goIn(currentBucket,item.path);$event.stopPropagation()"
       ng-class="{ 'active':sel.x[ 'i_'+$index]}">

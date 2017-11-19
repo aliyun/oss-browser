@@ -89,6 +89,8 @@ gulp.task('libJS', function () {
 
       './node_modules/angular-translate/dist/angular-translate.min.js',
 
+      './node_modules/angular-bootstrap-contextmenu/contextMenu.js'
+
     ];
 
     // code mirror modes

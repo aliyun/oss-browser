@@ -91,8 +91,181 @@ angular.module('web')
           downloads: '',
           uploadsChange: uploadsChange,
           downloadsChange: downloadsChange,
-        }
+        },
+
+
       });
+      $scope.fileSpacerMenuOptions = [
+        [function(){
+          return '<i class="glyphicon glyphicon-cloud-upload text-info"></i> ' + T('upload')
+        }, function ($itemScope, $event) {
+          showUploadDialog()
+        }, function(){
+          return $scope.currentAuthInfo.privilege!='readOnly'
+        }],
+        [function(){
+          return '<i class="glyphicon glyphicon-plus text-success"></i> ' + T('folder.create')
+        }, function ($itemScope, $event) {
+          showAddFolder()
+        }, function(){
+          return $scope.currentAuthInfo.privilege!='readOnly'
+        }],
+
+        [function(){
+          return '<i class="fa fa-paste text-primary"></i> ' + T('paste') + ($scope.keepMoveOptions?'('+$scope.keepMoveOptions.items.length+')':'')
+        }, function ($itemScope, $event) {
+          showPaste()
+        }, function(){
+          return $scope.keepMoveOptions
+        }]
+      ];
+
+      $scope.fileMenuOptions = function(item, $index){
+        if($scope.sel.x['i_'+$index]){
+          //pass
+        }
+        else{
+          $scope.objects.forEach(function(n,i){
+              $scope.sel.x['i_'+i]=false;
+          });
+          $scope.sel.x['i_'+$index] = true;
+          selectChanged();
+        }
+
+
+        return [
+          [function(){
+            //download
+            return '<i class="glyphicon glyphicon-cloud-download text-primary"></i> ' + T('download')
+          }, function ($itemScope, $event) {
+            showDownloadDialog()
+          }, function(){
+            return $scope.sel.has
+          }],
+          [function(){
+            //copy
+            return '<i class="fa fa-clone text-primary"></i> ' + T('copy')
+          }, function ($itemScope, $event) {
+            showMove($scope.sel.has, true)
+          }, function(){
+            return $scope.sel.has && $scope.currentAuthInfo.privilege!='readOnly'
+          }],
+
+          [function(){
+            //move
+            return '<i class="fa fa-cut text-primary"></i> ' + T('move')
+          }, function ($itemScope, $event) {
+            showMove($scope.sel.has)
+          }, function(){
+            return $scope.sel.has && $scope.currentAuthInfo.privilege!='readOnly'
+          }],
+
+
+          [function(){
+            return '<i class="fa fa-edit text-info"></i> ' + T('rename')
+          }, function ($itemScope, $event) {
+            showRename($scope.sel.has[0])
+          }, function(){
+            return $scope.sel.has && ($scope.sel.has.length==1) && $scope.currentAuthInfo.privilege!='readOnly' && $scope.sel.has[0].storageClass!='Archive';
+          }],
+
+          [function(){
+            return '<i class="fa fa-shield text-success"></i> ' + T('acl')
+          }, function ($itemScope, $event) {
+            showACL($scope.sel.has[0])
+          }, function(){
+            return $scope.sel.has && $scope.sel.has.length==1 && !$scope.sel.has[0].isFolder && $scope.currentAuthInfo.privilege!='readOnly';
+          }],
+
+
+          [function(){
+            return '<i class="fa fa-shield text-warning"></i> ' + T('simplePolicy')
+          }, function ($itemScope, $event) {
+            showGrant($scope.sel.has)
+          }, function(){
+            return $scope.sel.has && $scope.currentAuthInfo.id.indexOf('STS.')!=0;
+          }],
+
+          [function(){
+            //生成授权码
+            return '<i class="fa fa-shield text-success"></i> ' + T('genAuthToken')
+          }, function ($itemScope, $event) {
+            showGrantToken($scope.sel.has[0])
+          }, function(){
+            return $scope.sel.has && $scope.sel.has.length==1 && $scope.sel.has[0].isFolder && $scope.currentAuthInfo.id.indexOf('STS.')!=0;
+          }],
+
+          [function(){
+            //获取地址
+            return '<i class="fa fa-download"></i> ' + T('getAddress')
+          }, function ($itemScope, $event) {
+             showAddress($scope.sel.has[0])
+          }, function(){
+            return $scope.sel.has && $scope.sel.has.length==1 && !$scope.sel.has[0].isFolder && $scope.currentAuthInfo.id.indexOf('STS.')!=0;
+          }],
+
+          [function(){
+            //Http头
+            return '<i class="fa fa-cog"></i> ' + T('http.headers')
+          }, function ($itemScope, $event) {
+            showHttpHeaders($scope.sel.has[0])
+          }, function(){
+            return $scope.sel.has && $scope.sel.has.length==1 && !$scope.sel.has[0].isFolder;
+          }],
+
+          [function(){
+            return '<i class="fa fa-remove text-danger"></i> ' + T('delete')
+          }, function ($itemScope, $event) {
+            showDeleteFilesSelected();
+          }, function(){
+            return $scope.sel.has && $scope.currentAuthInfo.privilege!='readOnly'
+          }]
+        ];
+      };
+      $scope.bucketSpacerMenuOptions = [
+        [function(){
+          return '<i class="glyphicon glyphicon-plus text-success"></i> ' + T('bucket.add')
+        }, function ($itemScope, $event) {
+          showAddBucket()
+        }]
+      ];
+
+      $scope.bucketMenuOptions = [
+        [function ($itemScope, $event, modelValue, text, $li) {
+          $scope.bucket_sel.item = $itemScope.item
+          return '<i class="fa fa-copy"></i> '+T('bucket.multipart');
+          // <!-- 碎片 -->
+        }, function ($itemScope, $event) {
+            // Action
+          showBucketMultipart($scope.bucket_sel.item);
+        }],
+
+        [function ($itemScope, $event, modelValue, text, $li) {
+          $scope.bucket_sel.item = $itemScope.item
+          return '<i class="fa fa-shield text-success"></i> '+T('acl');
+        }, function ($itemScope, $event) {
+            // Action
+          showUpdateBucket($scope.bucket_sel.item);
+        }],
+
+        [function ($itemScope, $event, modelValue, text, $li) {
+          $scope.bucket_sel.item = $itemScope.item
+          return '<i class="fa fa-shield text-warning"></i> '+T('simplePolicy');
+        }, function ($itemScope, $event) {
+            // Action
+          showGrant([$scope.bucket_sel.item]);
+        }],
+
+        [function ($itemScope, $event, modelValue, text, $li) {
+          $scope.bucket_sel.item = $itemScope.item
+          return '<i class="fa fa-remove text-danger"></i> '+T('delete');
+        }, function ($itemScope, $event) {
+            // Action
+          showDeleteBucket($scope.bucket_sel.item);
+        }]
+      ];
+
+      /////////////////////////////////
 
       var tid_uploads;
       function uploadsChange(){
