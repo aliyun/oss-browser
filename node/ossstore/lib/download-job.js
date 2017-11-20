@@ -16,6 +16,7 @@ class DownloadJob extends Base {
    *    config.checkPoint
    *
    *    config.chunkSize
+   *    config.enableCrc64
    */
   constructor(ossClient, config) {
     super();
@@ -48,6 +49,7 @@ class DownloadJob extends Base {
     this.stopFlag = this.status != 'running';
 
     this.checkPoints = this._config.checkPoints;
+    this.enableCrc64 = this._config.enableCrc64;
 
     //console.log('created download job');
 
@@ -269,9 +271,9 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
         self.prog.loaded += checkPoints.Parts[k].loaded;
       }
 
-      checkFileHash(tmpName, fileMd5, hashCrc64ecma, function (err) {
+      checkFileHash(tmpName, fileMd5, self.enableCrc64 ? hashCrc64ecma : null, function (err) {
         if (err) {
-          self.message="failed to check crc64:"+ (err.message||err);
+          self.message=(err.message||err);
           console.error(self.message, self.to.path);
           self._changeStatus('failed');
           self.emit('error', err);
@@ -441,9 +443,9 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             //下载完成
             //util.closeFD(keepFd);
             //检验MD5
-            checkFileHash(tmpName, fileMd5, hashCrc64ecma, function (err) {
+            checkFileHash(tmpName, fileMd5, self.enableCrc64?hashCrc64ecma:null, function (err) {
               if (err) {
-                self.message = 'failed to check crc64:'+ (err.message||err);
+                self.message = (err.message||err);
                 console.error(self.message, self.to.path);
                 self._changeStatus('failed');
                 self.emit('error', err);
@@ -517,8 +519,9 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
   }
 
   function checkFileHash(tmpName, fileMd5, hashCrc64ecma, fn) {
-    console.time(`check crc64 ${tmpName}`);
+
     if(hashCrc64ecma){
+        console.time(`check crc64 ${tmpName}`);
       util.getFileCrc64(tmpName, function(err, crc64Str){
         console.timeEnd(`check crc64 ${tmpName}`);
         if (err) {
@@ -538,8 +541,11 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
         if (err) {
           fn(new Error('Checking md5 failed: ' + err.message));
         } else if (md5str != fileMd5) {
-          fn(new Error('MD5 mismatch, file md5 should be:'+fileMd5+', but we got:'+md5str));
-        } else fn(null);
+          fn(new Error('ContentMD5 mismatch, file md5 should be:'+fileMd5+', but we got:'+md5str));
+        } else{
+          console.info('check md5 success: file['+tmpName+'],'+md5str)
+          fn(null);
+        }
       });
     }
     else{

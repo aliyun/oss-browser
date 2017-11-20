@@ -118,6 +118,7 @@ OssStore.prototype.setStsToken = function(stsToken){
  *    options.to    {object|string} oss path, as object: {bucket:'bucket',key:'pic/b.jpg'} as string: 'oss://bucket/pic/b.jpg'
  *
  *    options.checkPoints {object} saveCpt
+ *    options.enableCrc64 {boolean}
  */
 OssStore.prototype.createUploadJob = function createUploadJob(options) {
 
@@ -154,6 +155,7 @@ OssStore.prototype.createUploadJob = function createUploadJob(options) {
  *    options.to  {string} local path string,  example: '/home/admin/a.jpg'
  *
  *    options.checkpoint {object} saveCpt
+ *    options.enableCrc64 {boolean}
  */
 OssStore.prototype.createDownloadJob = function createDownloadJob(options) {
 

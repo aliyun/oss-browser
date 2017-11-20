@@ -4,7 +4,7 @@ module.exports = {
   'name': 'Name',
   'type': 'Type',
   'customize': 'Customize',
-  'public.cloud': 'Public Cloud',  
+  'public.cloud': 'Public Cloud',
 
   'region.oss-cn-hangzhou': 'East China 1(Hangzhou)',
   'region.oss-cn-shanghai': 'East China 2(Shanghai)',
@@ -168,6 +168,8 @@ module.exports = {
   //settings
   'settings.maxUploadNum': 'Upload tasks concurrent number',
   'settings.maxDownloadNum': 'Download tasks concurrent number',
+  'settings.enableCrc64': 'Enable CRC64 checking',
+  'settings.enableCrc64.msg': 'If disabled, content-md5 checking is used by default',
   'settings.WhetherShowThumbnail': 'Whether to show the image thumbnail',
   'settings.WhetherShowThumbnail.msg': 'Displaying thumbnails in the list of files will consume a certain amount of traffic',
   'settings.success': 'Saved successfully',

@@ -52,18 +52,7 @@ function getFileCrc64(p, fn){
 };
 
 function getBigFileMd5(p, fn){
-   var md5sum = crypto.createHash('md5');
-   var stream = fs.createReadStream(p);
-   stream.on('data', function(chunk) {
-       md5sum.update(chunk);
-   });
-   stream.on('end', function() {
-     str = md5sum.digest('base64');
-     fn(null, str);
-   });
-   stream.on('error', function(err) {
-     fn(err);
-   });
+  util.getBigFileMd5(p, fn)
 }
 
 function getSensibleChunkSize(size) {

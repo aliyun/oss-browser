@@ -2,7 +2,7 @@
 # ELECTRON_VERSION=1.6.5
 # BUILD=ELECTRON_MIRROR=$(ELECTRON_MIRROR) electron-packager ./dist --asar --overwrite --out=build --version $(ELECTRON_VERSION)
 
-VERSION=1.3.2
+VERSION=1.3.3
 NAME=oss-browser
 
 i:
