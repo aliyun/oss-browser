@@ -12,6 +12,8 @@ module.exports = {
   parseLocalPath: util.parseLocalPath,
   parseOssPath: util.parseOssPath,
 
+  getBigFileMd5: getBigFileMd5,
+
   getPartProgress: getPartProgress,
   checkAllPartCompleted: checkAllPartCompleted,
 
@@ -28,7 +30,9 @@ module.exports = {
  //  以下是纯函数
  ************************************/
 
-
+function getBigFileMd5(p, fn){
+  util.getBigFileMd5(p, fn)
+}
 function getFileCrc64(self, p, fn){
   if(self.crc64Str){
     fn(null, self.crc64Str);
