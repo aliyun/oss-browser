@@ -38,6 +38,7 @@ cd oss-browser
 
 ```
 cnpm i   # 安装 node 模块依赖
+npm run build  # 生成dist目录
 ```
 
 启动界面：
@@ -48,14 +49,27 @@ npm run dev # 开发模式启动
 这时，你可以看到界面了（开发模式，可以按 command+r 刷新)。
 
 
-## 3. 修改 custom 配置
+## 3. 自定义 custom 配置
+
 
 ```
 oss-browser/
   |-- custom
 ```
 
-修改 custom 中的 index.js 配置 和 图标即可。
+将 custom 目录复制一份到其他地方，比如 ~/Desktop/custom/,
+修改目录下的 index.js 配置 和 图标即可。
+
+
+然后指定custom路径 build:
+```
+C=~/Desktop/custom npm run build
+```
+
+开发模式启动：
+```
+C=~/Desktop/custom npm run dev #开发模式启动
+```
 
 ## 4. build
 
