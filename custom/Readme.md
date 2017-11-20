@@ -63,12 +63,12 @@ oss-browser/
 
 然后指定custom路径 build:
 ```
-C=~/Desktop/custom npm run build
+C=~/Desktop/custom/ npm run build
 ```
 
 开发模式启动：
 ```
-C=~/Desktop/custom npm run dev #开发模式启动
+C=~/Desktop/custom/ npm run dev #开发模式启动
 ```
 
 ## 4. build
@@ -77,6 +77,8 @@ C=~/Desktop/custom npm run dev #开发模式启动
 
 ```
 npm run all
+
+# npm run all app_name=oss-browser # 自定义app_name
 ```
 会在 build 下生成几个文件夹。即是安装文件。你可以手动zip一下，再发布。
 
@@ -88,19 +90,20 @@ npm run all
 然后运行：
 
 ```
-make all
+make all NAME=oss-browser
 ```
-除了会在 build 下生成几个目录，
 
-还会在 releases 目录下，生成几个压缩包(绿色免安装版)。
+* 可以指定 NAME 和 VERSION 变量(可选).
+* 除了会在 build 下生成几个目录，还会在 releases 目录下，生成几个压缩包(绿色免安装版)。
 
 
 
 ### (可选) 其他平台相关的安装文件(包含安装向导的):
 
 ```
-make dmg  # 只能在mac系统下build， *.dmg 文件
+make dmg NAME=oss-browser # 只能在mac系统下build， *.dmg 文件
 ```
+* 可以指定 NAME 和 VERSION 变量(可选).
 
 
 
