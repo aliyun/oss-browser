@@ -43,11 +43,11 @@ angular.module('web')
         $scope.eptplType = (v==DEF_EP_TPL)?'default':'customize';
       });
 
-      
+
       function eptplChange(t){
         $scope.eptplType=t;
         console.log(t);
-        if(t=='default'){ 
+        if(t=='default'){
            $scope.item.eptpl = DEF_EP_TPL;
         }else{
           $scope.item.eptpl ='';
@@ -103,7 +103,7 @@ angular.module('web')
         $scope.flags.showHis = localStorage.getItem(SHOW_HIS) || 'NO';
         angular.extend($scope.item , AuthInfo.getRemember());
 
-        
+
         //临时token
         $scope.item.authToken = localStorage.getItem(KEY_AUTHTOKEN) || '';
         authTokenChange();
@@ -166,6 +166,9 @@ angular.module('web')
         localStorage.setItem(KEY_REMEMBER,$scope.flags.remember);
 
         var data = angular.copy($scope.item);
+        //trim password
+        if(data.secret) data.secret = data.secret.trim();
+
         delete data.authToken;
         delete data.securityToken;
 
@@ -174,6 +177,7 @@ angular.module('web')
         }
 
         Toast.info('正在登录中...', 1000);
+
 
 
         Auth.login(data).then(function(){

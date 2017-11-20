@@ -386,7 +386,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             console.warn('用户取消');
             return;
           }
- 
+
           if (retryCount < maxRetries && err.code!='InvalidObjectState' ) {
             retryCount++;
             console.log(`retry download part [${n}] error:${err}, ${self.to.path}`);
@@ -526,7 +526,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
         } else if (crc64Str!=null && crc64Str != hashCrc64ecma) {
           fn(new Error('HashCrc64ecma mismatch, file['+tmpName+'] crc64 hash should be:'+hashCrc64ecma+', but we got:'+crc64Str));
         } else{
-          console.info('check crc success: file['+tmpName+']')
+          console.info('check crc success: file['+tmpName+'],'+crc64Str)
           fn(null);
         }
       });

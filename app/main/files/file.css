@@ -8,3 +8,14 @@
 .vis_1{
   visibility: visible;
 }
+
+.dropdown-menu > .disabled > a i.text-primary,
+.dropdown-menu > .disabled > a i.text-warning,
+.dropdown-menu > .disabled > a i.text-danger,
+.dropdown-menu > .disabled > a i.text-info,
+.dropdown-menu > .disabled > a i.text-success,
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus{
+  color:#ccc;
+}
