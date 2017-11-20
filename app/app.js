@@ -3,7 +3,8 @@ angular.module('web', ['ui.router',
     'ui.codemirror',
     'pascalprecht.translate',
     'ngSanitize',
-    'templates'
+    'templates',
+    'ui.bootstrap.contextMenu'
   ])
   .config(['$stateProvider', '$urlRouterProvider', '$translateProvider',
     function ($stateProvider, $urlRouterProvider, $translateProvider) {

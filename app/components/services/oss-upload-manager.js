@@ -329,7 +329,7 @@ angular.module('web')
           //console.log('request save upload:', t);
 
           //console.log('-save')
-          fs.writeFileSync(getUpProgFilePath(), JSON.stringify(t, ' ', 2));
+          fs.writeFileSync(getUpProgFilePath(), JSON.stringify(t));
           $scope.calcTotalProg();
         }, 20);
       }
@@ -340,10 +340,11 @@ angular.module('web')
       function loadProg() {
         try {
           var data = fs.readFileSync(getUpProgFilePath());
+          return JSON.parse(data ? data.toString() : '[]');
         } catch (e) {
 
         }
-        return JSON.parse(data ? data.toString() : '[]');
+        return [];
       }
 
       //上传进度保存路径
