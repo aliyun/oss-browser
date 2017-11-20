@@ -1323,7 +1323,7 @@ angular.module('web')
         }
 
         //region是domain
-        if (region.indexOf('.') != -1) {
+        if (region && region.indexOf('.') != -1) {
           if (region.indexOf('http') != 0) {
             region = Global.ossEndpointProtocol == 'https:' ? ('https://' + region + ':443') : ('http://' + region);
           }
