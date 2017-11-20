@@ -29,8 +29,7 @@
       </tr>
       <!--|filter:{name:sch.objectName}-->
       <tr ng-repeat="item in objects"
-       context-menu="fileMenuOptions"
-       context-menu-class="context-menu-custom-cls"
+       context-menu="fileMenuOptions(item, $index)" 
        ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);"
        ng-class="{'info': sel.x['i_'+$index]}">
         <td class="text-center">
@@ -115,7 +114,7 @@
   <div ng-if="!ref.isListView" class="pd10" style="height:100%" ng-click="sel.all=false;selectAll();">
     <!--|filter:{name:sch.objectName}-->
     <div ng-repeat="item in objects" item-index="{{$index}}" class="item-block"
-    context-menu="fileMenuOptions(item, $index)" 
+    context-menu="fileMenuOptions(item, $index)"
     ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);$event.stopPropagation()"
     ng-dblclick="item.isFolder!=true?showPreview(item):goIn(currentBucket,item.path);$event.stopPropagation()"
       ng-class="{ 'active':sel.x[ 'i_'+$index]}">
