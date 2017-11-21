@@ -168,8 +168,6 @@ module.exports = {
   //settings
   'settings.maxUploadNum': '最大上传任务数',
   'settings.maxDownloadNum': '最大下载任务数',
-  'settings.enableCrc64': '启用CRC64校验',
-  'settings.enableCrc64.msg': '如果不启用crc64校验，默认使用content md5校验',
   'settings.WhetherShowThumbnail': '是否显示图片缩略',
   'settings.WhetherShowThumbnail.msg': '在文件列表中显示图片缩略, 会消耗一定的流量',
   'settings.success': '已经保存设置',

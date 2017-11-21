@@ -12,16 +12,15 @@ module.exports = {
   parseLocalPath: util.parseLocalPath,
   parseOssPath: util.parseOssPath,
 
-  getBigFileMd5: getBigFileMd5,
-
   getPartProgress: getPartProgress,
   checkAllPartCompleted: checkAllPartCompleted,
 
   getUploadId: getUploadId,
   completeMultipartUpload: completeMultipartUpload,
 
-  getFileCrc64: getFileCrc64,
-  computeMaxConcurrency: computeMaxConcurrency
+  computeMaxConcurrency: computeMaxConcurrency,
+
+  checkFileHash: util.checkFileHash
 };
 
 
@@ -30,10 +29,8 @@ module.exports = {
  //  以下是纯函数
  ************************************/
 
-function getBigFileMd5(p, fn){
-  util.getBigFileMd5(p, fn)
-}
-function getFileCrc64(self, p, fn){
+
+function getFileCrc64_2(self, p, fn){
   if(self.crc64Str){
     fn(null, self.crc64Str);
     return;
