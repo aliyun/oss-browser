@@ -271,7 +271,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
         self.prog.loaded += checkPoints.Parts[k].loaded;
       }
 
-      checkFileHash(tmpName, fileMd5, self.enableCrc64 ? hashCrc64ecma : null, function (err) {
+      util.checkFileHash(tmpName,  hashCrc64ecma , fileMd5,  function (err) {
         if (err) {
           self.message=(err.message||err);
           console.error(self.message, self.to.path);
@@ -443,7 +443,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             //下载完成
             //util.closeFD(keepFd);
             //检验MD5
-            checkFileHash(tmpName, fileMd5, self.enableCrc64?hashCrc64ecma:null, function (err) {
+            util.checkFileHash(tmpName,  hashCrc64ecma, fileMd5, function (err) {
               if (err) {
                 self.message = (err.message||err);
                 console.error(self.message, self.to.path);
@@ -518,43 +518,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     return chunks.length > 0;
   }
 
-  function checkFileHash(tmpName, fileMd5, hashCrc64ecma, fn) {
 
-    if(hashCrc64ecma){
-        console.time(`check crc64 ${tmpName}`);
-      util.getFileCrc64(tmpName, function(err, crc64Str){
-        console.timeEnd(`check crc64 ${tmpName}`);
-        if (err) {
-          fn(new Error('Checking file['+tmpName+'] crc64 hash failed: ' + err.message));
-        } else if (crc64Str!=null && crc64Str != hashCrc64ecma) {
-          fn(new Error('HashCrc64ecma mismatch, file['+tmpName+'] crc64 hash should be:'+hashCrc64ecma+', but we got:'+crc64Str));
-        } else{
-          console.info('check crc success: file['+tmpName+'],'+crc64Str)
-          fn(null);
-        }
-      });
-    }
-    else if(fileMd5){
-
-      //检验MD5
-      util.getBigFileMd5(tmpName, function (err, md5str) {
-        if (err) {
-          fn(new Error('Checking md5 failed: ' + err.message));
-        } else if (md5str != fileMd5) {
-          fn(new Error('ContentMD5 mismatch, file md5 should be:'+fileMd5+', but we got:'+md5str));
-        } else{
-          console.info('check md5 success: file['+tmpName+'],'+md5str)
-          fn(null);
-        }
-      });
-    }
-    else{
-      //没有MD5，不校验
-      console.log(tmpName,',not found content md5, just pass');
-      fn(null);
-      return;
-    }
-  }
 
   function writeFileRange(tmpName, data, start, fn) {
     var file = fs.createWriteStream(tmpName, {

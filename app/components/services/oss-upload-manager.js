@@ -291,7 +291,6 @@ angular.module('web')
             endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket, auth.eptpl)
           });
         }
-        opt.enableCrc64= settingsSvs.enableCrc64.get()==1;
         return store.createUploadJob(opt);
         // {
         //   region: opt.region,

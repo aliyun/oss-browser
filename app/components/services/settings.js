@@ -44,14 +44,6 @@ angular.module('web')
       set: function(v){
         return localStorage.setItem('mailSender',JSON.stringify(v));
       }
-    },
-    enableCrc64: {
-      get: function(){
-        return parseInt(localStorage.getItem('enableCrc64')||1);
-      },
-      set: function(v){
-        return localStorage.setItem('enableCrc64',v);
-      }
     }
   };
 }]);
