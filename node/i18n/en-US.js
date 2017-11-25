@@ -4,7 +4,7 @@ module.exports = {
   'name': 'Name',
   'type': 'Type',
   'customize': 'Customize',
-  'public.cloud': 'Public Cloud',  
+  'public.cloud': 'Public Cloud',
 
   'region.oss-cn-hangzhou': 'East China 1(Hangzhou)',
   'region.oss-cn-shanghai': 'East China 2(Shanghai)',

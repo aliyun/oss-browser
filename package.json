@@ -1,6 +1,6 @@
 {
   "name": "oss-browser",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "main": "dist/main.js",
   "scripts": {
     "test": "ava test",
@@ -8,15 +8,8 @@
     "dev:run": "cross-env NODE_ENV=development electron .",
     "postbuild": "node gen",
     "prod": "cross-env NODE_ENV=production cd dist && electron .",
-    "clean": "rm -rf dist node_modules build releases node/crc64/cpp-addon/node_modules node/ossstore/node_modules",
-    "watch": "gulp watch --custom=${C}",
-    "build": "gulp build --custom=${C}",
-    "win64": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist ${app_name} --asar --overwrite --out=build --version=${npm_package_devDependencies_electron} --platform=win32 --arch=x64",
-    "win32": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist ${app_name} --asar --overwrite --out=build --version=${npm_package_devDependencies_electron} --platform=win32 --arch=ia32",
-    "mac": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist ${app_name} --asar --overwrite --out=build --version=${npm_package_devDependencies_electron} --platform=darwin --arch=x64 --icon=./dist/custom/icon.icns",
-    "linux32": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist ${app_name} --asar --overwrite --out=build --version=${npm_package_devDependencies_electron} --platform=linux --arch=ia32",
-    "linux64": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist ${app_name} --asar --overwrite --out=build --version=${npm_package_devDependencies_electron} --platform=linux --arch=x64",
-    "all": "cross-env ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager ./dist ${app_name} --asar --overwrite --out=build --version=${npm_package_devDependencies_electron} --all --icon=./dist/custom/"
+    "watch": "gulp watch --custom=$custom",
+    "build": "gulp build --custom=$custom"
   },
   "engines": {
     "node": "7.9.0"

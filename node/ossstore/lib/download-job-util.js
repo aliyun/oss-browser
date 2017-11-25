@@ -9,14 +9,11 @@ module.exports = {
 
   parseLocalPath: util.parseLocalPath,
   parseOssPath: util.parseOssPath,
-  getBigFileMd5: getBigFileMd5,
-  getFileCrc64: getFileCrc64,
 
   headObject: headObject,
-  computeMaxConcurrency: computeMaxConcurrency
+  computeMaxConcurrency: computeMaxConcurrency,
+  checkFileHash : util.checkFileHash
 };
-
-
 
 function headObject(self, objOpt, fn){
   var retryTimes = 0;
@@ -47,24 +44,7 @@ function headObject(self, objOpt, fn){
     });
   }
 }
-function getFileCrc64(p, fn){
-  util.getFileCrc64(p,fn);
-};
 
-function getBigFileMd5(p, fn){
-   var md5sum = crypto.createHash('md5');
-   var stream = fs.createReadStream(p);
-   stream.on('data', function(chunk) {
-       md5sum.update(chunk);
-   });
-   stream.on('end', function() {
-     str = md5sum.digest('base64');
-     fn(null, str);
-   });
-   stream.on('error', function(err) {
-     fn(err);
-   });
-}
 
 function getSensibleChunkSize(size) {
   var MaxChunkSize = 5 * 1024 * 1024; //5MB

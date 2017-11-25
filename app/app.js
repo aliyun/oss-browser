@@ -30,6 +30,8 @@ angular.module('web', ['ui.router',
         $translateProvider.translations(k, Global.i18n[k].content);
       }
       $translateProvider.preferredLanguage('zh-CN');
+
+      $translateProvider.useSanitizeValueStrategy('escapeParameters');
     }
   ])
   .run(['$rootScope', '$translate', 'Toast', function ($rootScope, $translate, Toast) {

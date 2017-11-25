@@ -11,7 +11,7 @@ angular.module('web')
         maxDownloadJobCount: settingsSvs.maxDownloadJobCount.get(),
         showImageSnapshot: settingsSvs.showImageSnapshot.get(),
         historiesLength : settingsSvs.historiesLength.get(),
-        mailSmtp : settingsSvs.mailSmtp.get(),
+        mailSmtp : settingsSvs.mailSmtp.get()
       },
       reg: {
         email: Const.REG.EMAIL
