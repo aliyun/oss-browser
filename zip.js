@@ -12,15 +12,19 @@ if(process.argv.length>3){
   if(process.platform!='win32') sh.exec(`zip ${dest} -r ${src}`, function(code, stdout, stderr){
      if(stderr)console.log(stderr)
   })
-  else zip(src+'**/*', dest)
+  else{
+    if(src.indexOf('darwin')!=-1){
+      console.log('can not zip *.app for mac os in windows, you should zip it manually! Location is '+dest)
+    }
+    else zip(src, dest)
+  }
 }
 
 
 
 /**
-* @param src 'subdir/*.txt'
+* @param src 'subdir/'
 * @param dest 'a.zip'
-* @param cwd 'subdir/'
 */
 function zip(src, dest){
   return new Promise((a,b)=>{
@@ -65,7 +69,7 @@ function zip(src, dest){
     archive.pipe(output);
 
     // append files from a glob pattern
-    archive.glob(src);
+    archive.directory(src);
 
     // finalize the archive (ie we are done appending files but streams have to finish yet)
     // 'close', 'end' or 'finish' may be fired right after calling this method so register to them beforehand
