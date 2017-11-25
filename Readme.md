@@ -101,23 +101,30 @@ cnpm 是 npm（node 包管理工具）的中国镜像，可以提高下载依赖
 cnpm i -g windows-build-tools
 ```
 
+还需要下载make.exe，放到 `C:\windows\` 目录下
+
+[make.exe(64位版本)](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/windows-tools/64/make.exe)
+
+[make.exe(32位版本)](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/windows-tools/32/make.exe)
+
+
 ### (4) 下载代码
 
 ```
 git clone git@github.com:aliyun/oss-browser.git
 ```
 
-安装依赖(请使用cnpm):
+安装依赖:
 
 ```
-cnpm i
+make i
 ```
 
 
 ### (5) 运行
 
 ```
-npm run dev  # 开发模式运行, command+option+i 可用打开调试界面, win或linux按 F12.
+make run  # 开发模式运行, command+option+i 可用打开调试界面, win或linux按 F12.
 ```
 
 开发模式下，会自动监听源码,如有修改,会自动build 前端代码到dist目录。
@@ -126,11 +133,11 @@ npm run dev  # 开发模式运行, command+option+i 可用打开调试界面, wi
 ### (6) 打包
 
 ```
-npm run build  # build前端代码到dist目录
+make build  # build前端代码到dist目录
 ```
 
 ```
-npm run win64  # 打包win64程序， 可选: mac, linux64 等
+make win64  # 打包win64程序， 可选: mac, linux64,linux32,win32,win64,all.
 ```
 
 
