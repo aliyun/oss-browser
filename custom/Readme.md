@@ -33,21 +33,24 @@ git clone {git地址}
 cd oss-browser
 ```
 
-### (4) 安装 make 命令
+### (4) 如果使用 windows 系统，需要安装下列软件：
 
-ubuntu 和 mac 默认有 make 命令。
+* 需要安装gitbash:
 
-windows 需要下载make.exe，放到 `C:\windows\` 目录下：
+请自行下载安装。
+
+* 需要安装 windows-build-tools:
+
+```
+cnpm i -g windows-build-tools
+```
+
+* 还需要下载make.exe，放到 `C:\windows\` 目录下
 
 [make.exe(64位版本)](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/windows-tools/64/make.exe)
 
 [make.exe(32位版本)](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/windows-tools/32/make.exe)
 
-在centos 下，使用以下命令安装:
-
-```
-yum install make
-```
 
 
 ## 2. 开始尝试启动
