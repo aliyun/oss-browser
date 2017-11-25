@@ -264,7 +264,6 @@ angular.module('web')
           endpoint: ossSvs2.getOssEndpoint(opt.region, opt.from.bucket, auth.eptpl)
         });
       }
-
       return store.createDownloadJob(opt);
     }
 

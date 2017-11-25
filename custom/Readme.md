@@ -33,24 +33,42 @@ git clone {git地址}
 cd oss-browser
 ```
 
+### (4) 如果使用 windows 系统，需要安装下列软件：
+
+* 需要安装gitbash:
+
+请自行下载安装。
+
+* 需要安装 windows-build-tools:
+
+```
+cnpm i -g windows-build-tools
+```
+
+* 还需要下载make.exe，放到 `C:\windows\` 目录下
+
+[make.exe(64位版本)](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/windows-tools/64/make.exe)
+
+[make.exe(32位版本)](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/windows-tools/32/make.exe)
+
+
 
 ## 2. 开始尝试启动
 
 ```
-cnpm i   # 安装 node 模块依赖
-npm run build  # 生成dist目录
+make i   # 安装 node 模块依赖
+make build  # 生成dist目录
 ```
 
 启动界面：
 ```
-npm run dev # 开发模式启动
+make run # 开发模式启动
 ```
 
 这时，你可以看到界面了（开发模式，可以按 command+r 刷新)。
 
 
 ## 3. 自定义 custom 配置
-
 
 ```
 oss-browser/
@@ -60,50 +78,42 @@ oss-browser/
 将 custom 目录复制一份到其他地方，比如 ~/Desktop/custom/,
 修改目录下的 index.js 配置 和 图标即可。
 
+Makefile有3个变量，可以替换,分别为：NAME,CUSTOM,VERSION.
+
+* 假设你的应用名为: my-oss-browser
+* 假设你的custom目录为: ~/Desktop/custom/
 
 然后指定custom路径 build:
 ```
-C=~/Desktop/custom/ npm run build
+make build NAME=my-oss-browser CUSTOM=~/Desktop/custom/
 ```
 
 开发模式启动：
 ```
-C=~/Desktop/custom/ npm run dev #开发模式启动
+make run NAME=my-oss-browser CUSTOM=~/Desktop/custom/
 ```
+
 
 ## 4. build
 
-* 如果在 windows系统下运行
 
 ```
-npm run all
-
-# npm run all app_name=oss-browser # 自定义app_name
-```
-会在 build 下生成几个文件夹。即是安装文件。你可以手动zip一下，再发布。
-
-
-* 如果是在 mac 下运行，
-
-先修改Makefile中的 VERSION 和 NAME 变量，VERSION 需要和 custom/index.js中的version相同，NAME需要和appId相同。
-
-然后运行：
-
-```
-make all NAME=oss-browser
+make all NAME=my-oss-browser CUSTOM=~/Desktop/custom/
 ```
 
-* 可以指定 NAME 和 VERSION 变量(可选).
+* Makefile中的 VERSION 和 NAME 变量，VERSION 需要和 custom/index.js 中的version相同，NAME需要和appId相同。
+* 可以指定 NAME,CUSTOM 和 VERSION 变量.
 * 除了会在 build 下生成几个目录，还会在 releases 目录下，生成几个压缩包(绿色免安装版)。
 
 
 
-### (可选) 其他平台相关的安装文件(包含安装向导的):
+### (可选) mac平台相关的安装文件
 
 ```
-make dmg NAME=oss-browser # 只能在mac系统下build， *.dmg 文件
+make dmg NAME=oss-browser # 只能在mac系统下build，生成 releases/${VERSION}/oss-browser.dmg 文件
 ```
-* 可以指定 NAME 和 VERSION 变量(可选).
+* 此命令需要在 make mac 或者 make all 命令后执行。
+* 可以指定 NAME, CUSTOM 和 VERSION 变量。
 
 
 

@@ -10,16 +10,16 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 ## 1. 客户端下载：
 
-最新版本`1.3.2`，下载地址如下，解压即可使用。
+最新版本`1.3.3`，下载地址如下，解压即可使用。
 
-> [<h4>Window x32版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.3.2/oss-browser-win32-ia32.zip)
+> [<h4>Window x32版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.3.3/oss-browser-win32-ia32.zip)
 
 
-> [<h4>Window x64版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.3.2/oss-browser-win32-x64.zip)
+> [<h4>Window x64版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.3.3/oss-browser-win32-x64.zip)
 
-> [<h4>Mac 版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.3.2/oss-browser.dmg)
+> [<h4>Mac 版下载</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.3.3/oss-browser.dmg)
 
-> [<h4>Ubuntu x64版</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.3.2/oss-browser-linux-x64.zip)
+> [<h4>Ubuntu x64版</h4>](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.3.3/oss-browser-linux-x64.zip)
 
 其他版本暂不提供，可以自行build。
 
@@ -95,11 +95,25 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 cnpm 是 npm（node 包管理工具）的中国镜像，可以提高下载依赖包的效率。
 
-### (3) 在windows系统下，需要安装 windows-build-tools
+### (3) 如果使用 windows 系统，需要安装下列软件：
+
+* 需要安装gitbash:
+
+请自行下载安装。
+
+* 需要安装 windows-build-tools:
 
 ```
 cnpm i -g windows-build-tools
 ```
+
+* 还需要下载make.exe，放到 `C:\windows\` 目录下
+
+[make.exe(64位版本)](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/windows-tools/64/make.exe)
+
+[make.exe(32位版本)](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/windows-tools/32/make.exe)
+
+
 
 ### (4) 下载代码
 
@@ -107,17 +121,17 @@ cnpm i -g windows-build-tools
 git clone git@github.com:aliyun/oss-browser.git
 ```
 
-安装依赖(请使用cnpm):
+安装依赖:
 
 ```
-cnpm i
+make i
 ```
 
 
 ### (5) 运行
 
 ```
-npm run dev  # 开发模式运行, command+option+i 可用打开调试界面, win或linux按 F12.
+make run  # 开发模式运行, command+option+i 可用打开调试界面, win或linux按 F12.
 ```
 
 开发模式下，会自动监听源码,如有修改,会自动build 前端代码到dist目录。
@@ -126,11 +140,11 @@ npm run dev  # 开发模式运行, command+option+i 可用打开调试界面, wi
 ### (6) 打包
 
 ```
-npm run build  # build前端代码到dist目录
+make build  # build前端代码到dist目录
 ```
 
 ```
-npm run win64  # 打包win64程序， 可选: mac, linux64 等
+make win64  # 打包win64程序， 可选: mac, linux64,linux32,win32,win64,all.
 ```
 
 

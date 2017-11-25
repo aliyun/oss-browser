@@ -18,8 +18,9 @@ module.exports = {
   getUploadId: getUploadId,
   completeMultipartUpload: completeMultipartUpload,
 
-  getFileCrc64: getFileCrc64,
-  computeMaxConcurrency: computeMaxConcurrency
+  computeMaxConcurrency: computeMaxConcurrency,
+
+  checkFileHash: util.checkFileHash
 };
 
 
@@ -29,7 +30,7 @@ module.exports = {
  ************************************/
 
 
-function getFileCrc64(self, p, fn){
+function getFileCrc64_2(self, p, fn){
   if(self.crc64Str){
     fn(null, self.crc64Str);
     return;
