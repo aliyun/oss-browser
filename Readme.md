@@ -95,17 +95,24 @@ OSS Browser 提供类似windows资源管理器功能。用户可以很方便的�
 
 cnpm 是 npm（node 包管理工具）的中国镜像，可以提高下载依赖包的效率。
 
-### (3) 在windows系统下，需要安装 windows-build-tools
+### (3) 如果使用 windows 系统，需要安装下列软件：
+
+* 需要安装gitbash:
+
+请自行下载安装。
+
+* 需要安装 windows-build-tools:
 
 ```
 cnpm i -g windows-build-tools
 ```
 
-还需要下载make.exe，放到 `C:\windows\` 目录下
+* 还需要下载make.exe，放到 `C:\windows\` 目录下
 
 [make.exe(64位版本)](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/windows-tools/64/make.exe)
 
 [make.exe(32位版本)](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/windows-tools/32/make.exe)
+
 
 
 ### (4) 下载代码
