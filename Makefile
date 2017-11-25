@@ -5,7 +5,7 @@ CUSTOM=./custom
 
 GULP=node ./node_modules/gulp/bin/gulp.js
 PKGER=node node_modules/electron-packager/cli.js
-ZIP=node zip.js
+ZIP=node ../zip.js
 
 ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/
 ELECTRON_VERSION=1.6.5
@@ -32,23 +32,23 @@ build:
 win64:
 	$(BUILD) --platform=win32 --arch=x64
 	rm -rf releases/$(VERSION)/$(NAME)-win32-x64.zip && mkdir -p releases/$(VERSION)
-	$(ZIP) releases/$(VERSION)/$(NAME)-win32-x64.zip build/$(NAME)-win32-x64/
+	cd build && $(ZIP) ../releases/$(VERSION)/$(NAME)-win32-x64.zip $(NAME)-win32-x64/
 win32:
 	$(BUILD) --platform=win32 --arch=ia32
 	rm -rf releases/$(VERSION)/$(NAME)-win32-ia32.zip && mkdir -p releases/$(VERSION)
-	$(ZIP) releases/$(VERSION)/$(NAME)-win32-ia32.zip build/$(NAME)-win32-ia32/
+	cd build && $(ZIP) ../releases/$(VERSION)/$(NAME)-win32-ia32.zip $(NAME)-win32-ia32/
 linux64:
 	$(BUILD) --platform=linux --arch=x64
 	rm -rf releases/$(VERSION)/$(NAME)-linux-x64.zip && mkdir -p releases/$(VERSION)
-	$(ZIP) releases/$(VERSION)/$(NAME)-linux-x64.zip build/$(NAME)-linux-x64/
+	cd build && $(ZIP) ../releases/$(VERSION)/$(NAME)-linux-x64.zip $(NAME)-linux-x64/
 linux32:
 	$(BUILD) --platform=linux --arch=ia32
 	rm -rf releases/$(VERSION)/$(NAME)-linux-ia32.zip && mkdir -p releases/$(VERSION)
-	$(ZIP) releases/$(VERSION)/$(NAME)-linux-ia32.zip build/$(NAME)-linux-ia32/
+	cd build && $(ZIP) ../releases/$(VERSION)/$(NAME)-linux-ia32.zip $(NAME)-linux-ia32/
 mac:
 	$(BUILD) --platform=darwin --arch=x64 --icon=$(CUSTOM)/icon.icns
 	rm -rf releases/$(VERSION)/$(NAME)-darwin-x64.zip && mkdir -p releases/$(VERSION)
-	$(ZIP) releases/$(VERSION)/$(NAME)-darwin-x64.zip build/$(NAME)-darwin-x64/
+	cd build && $(ZIP) ../releases/$(VERSION)/$(NAME)-darwin-x64.zip $(NAME)-darwin-x64/
 dmg:
 	rm build/$(NAME)-darwin-x64/LICENSE* build/$(NAME)-darwin-x64/version
 	ln -s /Applications/ build/$(NAME)-darwin-x64/Applications
