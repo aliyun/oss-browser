@@ -9,18 +9,10 @@ var app_version = process.env.version || pkg.version;
 if(process.argv.length>3){
   var dest = process.argv[2].trim();
   var src = process.argv[3].trim();
-  zip(src+'**/*', dest)
-  // var fileName='';
-  // sh.mkdir('-p',`releases/${app_version}`)
-  // switch(type){
-  //   case 'mac': fileName = `${app_name}-darwin-x64`; break;
-  //   case 'win32': fileName = `${app_name}-win32-ia32`; break;
-  //   case 'win64': fileName= `${app_name}-win32-x64`; break;
-  //   case 'linux32': fileName = `${app_name}-linux-ia32`; break;
-  //   case 'linux64': fileName= `${app_name}-linux-x64`; break;
-  // }
-  // sh.rm('-rf',`releases/${app_version}/${fileName}`)
-  // zip(`./build/${fileName}/**/*`, `./releases/${app_version}/${fileName}.zip`);
+  if(process.platform!='win32') sh.exec(`zip ${dest} -r ${src}`, function(code, stdout, stderr){
+     if(stderr)console.log(stderr)
+  })
+  else zip(src+'**/*', dest)
 }
 
 
@@ -28,6 +20,7 @@ if(process.argv.length>3){
 /**
 * @param src 'subdir/*.txt'
 * @param dest 'a.zip'
+* @param cwd 'subdir/'
 */
 function zip(src, dest){
   return new Promise((a,b)=>{
@@ -40,8 +33,8 @@ function zip(src, dest){
     // listen for all archive data to be written
     // 'close' event is fired only when a file descriptor is involved
     output.on('close', function() {
-      console.log(archive.pointer() + ' total bytes');
-      console.log('archiver has been finalized and the output file descriptor has closed.');
+      console.info(archive.pointer() + ' total bytes');
+      console.info('archiver has been finalized and the output file descriptor has closed.');
       a();
     });
 
@@ -49,14 +42,14 @@ function zip(src, dest){
     // It is not part of this library but rather from the NodeJS Stream API.
     // @see: https://nodejs.org/api/stream.html#stream_event_end
     output.on('end', function() {
-      console.log('Data has been drained');
+      console.info('Data has been drained');
     });
 
     // good practice to catch warnings (ie stat failures and other non-blocking errors)
     archive.on('warning', function(err) {
       if (err.code === 'ENOENT') {
         // log warning
-        console.warning(err);
+        console.warn(err);
       } else {
         // throw error
         b(err)
@@ -72,7 +65,7 @@ function zip(src, dest){
     archive.pipe(output);
 
     // append files from a glob pattern
-    archive.glob(src, false);
+    archive.glob(src);
 
     // finalize the archive (ie we are done appending files but streams have to finish yet)
     // 'close', 'end' or 'finish' may be fired right after calling this method so register to them beforehand
