@@ -29,10 +29,15 @@
         <div class="input-group">
           <input type="text" id="genAddress" ng-model="item.url" rows="4"  class="input-md form-control"/>
           <span class="input-group-btn">
-            <a href="" class="btn btn-default"  clipboard-button target="'#genAddress'">
+            <a href="" class="btn btn-info"  clipboard-button target="'#genAddress'">
               <!-- 点击复制 -->
               {{'click.copy'|translate}}
             </a>
+          </span>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="info.showSendTo=!info.showSendTo">
+              {{'send.email'|translate}}
+            </button>
           </span>
         </div>
       </div>
