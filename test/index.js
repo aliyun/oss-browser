@@ -19,17 +19,18 @@ test.beforeEach(async t => {
 });
 
 test.afterEach.always(async t => {
-   await t.context.app.stop();
+   //await t.context.app.stop();
 });
 
 
 
 test(async t => {
   const app = t.context.app;
-  await app.client.waitUntilWindowLoaded();
+  const browser = app.client;
+  await browser.waitUntilWindowLoaded();
 
   const win = app.browserWindow;
-  t.is(await app.client.getWindowCount(), 1);
+  t.is(await browser.getWindowCount(), 1);
   t.false(await win.isMinimized());
   t.false(await win.isDevToolsOpened());
   t.true(await win.isVisible());
@@ -40,19 +41,25 @@ test(async t => {
   t.true(height > 0);
 
 
-  var text = await app.client.getText('.navbar-brand');
+  var text = await browser.getText('.navbar-brand');
   t.true(text=='OSS浏览器')
 
 
   //如果没退出，先退出
   console.log('如果没退出，先退出 ');
-  var logoutBtnVisible = await app.client.isVisible('[ng-click="logout()"]');
+
+  var logoutBtnVisible = await browser.isVisible('[ng-click="logout()"]');
   if(logoutBtnVisible){
     console.log('发现退出按钮，点击');
-    await app.client.click('[ng-click="logout()"]')
-    await app.client.click('button[ng-click="ok()"]')
+    await browser.click('[ng-click="logout()"]')
+    await browser.click('button[ng-click="ok()"]')
   }
 
+  //切换为中文
+  browser.setValue('[ng-model="langSettings.lang"]','string:zh-CN')
+
+  //登录
+  
 
 
 

@@ -1,5 +1,5 @@
 
-VERSION=1.3.4
+VERSION=1.4.0
 NAME=oss-browser
 CUSTOM=./custom
 
@@ -50,14 +50,13 @@ mac:
 	rm -rf releases/$(VERSION)/$(NAME)-darwin-x64.zip && mkdir -p releases/$(VERSION)
 	cd build && $(ZIP) ../releases/$(VERSION)/$(NAME)-darwin-x64.zip $(NAME)-darwin-x64/
 dmg:
-	rm build/$(NAME)-darwin-x64/LICENSE* build/$(NAME)-darwin-x64/version
-	ln -s /Applications/ build/$(NAME)-darwin-x64/Applications
+	rm build/$(NAME)-darwin-x64/LICENSE* build/$(NAME)-darwin-x64/version || continue
+	ln -s /Applications/ build/$(NAME)-darwin-x64/Applications || continue
 	#cp dist/icons/icon.icns build/$(NAME)-darwin-x64/.VolumeIcon.icns
 	#mkdir -p build/$(NAME)-darwin-x64/.background
 	#cp dist/icons/background.tiff build/$(NAME)-darwin-x64/.background
-	rm -f releases/$(VERSION)/$(NAME).dmg
-	hdiutil create -size 250M -format UDZO -srcfolder build/$(NAME)-darwin-x64 releases/$(VERSION)/$(NAME).dmg
-
+	rm -f releases/$(VERSION)/$(NAME).dmg || continue
+	hdiutil create -size 250M -format UDZO -srcfolder build/$(NAME)-darwin-x64 -o releases/$(VERSION)/$(NAME).dmg
 all:win32 win64 linux32 linux64 mac
 	@echo 'Done'
 
