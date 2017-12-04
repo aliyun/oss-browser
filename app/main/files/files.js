@@ -426,7 +426,8 @@ angular.module('web')
 
         ossSvs2.listFiles(info.region, info.bucket, info.key, marker || '').then(function (result) {
 
-          var arr = settingsSvs.showImageSnapshot.get() == 1 ? signPicURL(info, result.data) : result.data;
+          var arr = result.data;
+          settingsSvs.showImageSnapshot.get() == 1 ? signPicURL(info, arr) : null
 
           $scope.objects = $scope.objects.concat(arr);
           $scope.nextObjectsMarker = result.marker || null;
@@ -457,12 +458,25 @@ angular.module('web')
       }
 
       function signPicURL(info, result) {
-        angular.forEach(result, function (n) {
-          if (!n.isFolder && fileSvs.getFileType(n).type == 'picture') {
-            n.pic_url = ossSvs2.signatureUrl(info.region, info.bucket, n.path, 3600);
-          }
-        });
-        return result;
+        var authInfo = AuthInfo.get();
+        if(authInfo.id.indexOf('STS.')==0){
+          angular.forEach(result, function (n) {
+            ossSvs2.getImageBase64Url(info.region, info.bucket, n.path).then(function(data){
+              if(data.ContentType.indexOf('image/')==0){
+                var base64str = new Buffer(data.Body).toString('base64');
+                n.pic_url = 'data:'+data.ContentType+';base64,'+base64str;
+              }
+            })
+          });
+        }
+        else{
+          angular.forEach(result, function (n) {
+            if (!n.isFolder && fileSvs.getFileType(n).type == 'picture') {
+              n.pic_url = ossSvs2.signatureUrl(info.region, info.bucket, n.path, 3600);
+            }
+          });
+        }
+        //return result;
       }
 
       function listBuckets(fn) {
