@@ -30,7 +30,6 @@ angular.module('web')
         var ignoreError = true;
 
         //console.log(item, currentInfo)
-
         $.ajax({url: item.url,
           headers: {'Range':'bytes=0-1','x-random':Math.random(),'Cache-Control':"no-cache"},
           complete: function(xhr){
@@ -38,6 +37,8 @@ angular.module('web')
             if(xhr.status < 300){
               $scope.err = null;
               $scope.step=1;
+
+              $scope.item.url = encodeURI($scope.item.url);
               $scope.info.url = $scope.item.url;
               safeApply($scope);
             }

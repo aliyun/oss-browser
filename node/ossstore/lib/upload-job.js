@@ -241,7 +241,8 @@ UploadJob.prototype.uploadSingle = function () {
         //console.log('[putObject] returns:',err,JSON.stringify(data))
         if (err) {
 
-          if(retryTimes>10 ){
+          if(err.message.indexOf('Access denied')!=-1
+          || retryTimes>10 ){
             self.message=err.message;
             self._changeStatus('failed');
             self.emit('error', err);
