@@ -27,6 +27,7 @@ angular.module('web')
         listFiles: listFiles,
         getContent: getContent,
         saveContent: saveContent,
+        getImageBase64Url: getImageBase64Url,
 
         //重命名
         moveFile: moveFile,
@@ -714,6 +715,25 @@ angular.module('web')
         });
       }
 
+      function getImageBase64Url(region, bucket, key) {
+        return new Promise(function (a, b) {
+          var client = getClient({
+            region: region,
+            bucket: bucket
+          });
+          client.getObject({
+            Bucket: bucket,
+            Key: key
+          }, function (err, data) {
+            if (err) {
+              handleError(err);
+              b(err);
+            } else {
+              a(data);
+            }
+          });
+        });
+      }
       function getContent(region, bucket, key) {
         return new Promise(function (a, b) {
           var client = getClient({
