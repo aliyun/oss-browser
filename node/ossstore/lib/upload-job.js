@@ -242,6 +242,7 @@ UploadJob.prototype.uploadSingle = function () {
         if (err) {
 
           if(err.message.indexOf('Access denied')!=-1
+          || err.message.indexOf('You have no right to access')!=-1
           || retryTimes>10 ){
             self.message=err.message;
             self._changeStatus('failed');
