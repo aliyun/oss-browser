@@ -128,7 +128,7 @@ function getUploadId(checkPoints, self, params, fn){
 
       //console.log(err, res, '<========')
       if (err) {
-        if(retryTimes > 10){
+        if(err.message.indexOf('You have no right to access')!=-1 || retryTimes > 10){
           fn(err);
         }else{
 
