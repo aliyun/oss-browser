@@ -393,7 +393,19 @@ module.exports = {
   'send.to': '发送到',
   'send.email': '发送邮件',
   'send.now': '立即发送',
+  'file.download.address': '文件下载地址',
 
+  'copy.successfully': '已复制到剪贴板',
+  'click.download': '点此下载',
+  'qrcode.download': '扫码下载',
+
+  'saving': '正在保存',
+  'save.successfully': '保存成功',
+  'content.isnot.modified': '内容没有修改',
+
+  'logining': '正在登录中...',
+  'login.successfully': '登录成功，正在跳转...',
+  'login.endpoint.error': '请确定Endpoint是否正确',
 
 
 }

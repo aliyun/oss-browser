@@ -89,7 +89,7 @@ button.btn.btn-sm {
 }
 
 html, body {
-    
+
 }
 .shadow10{
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
@@ -102,4 +102,8 @@ html, body {
 }
 .text-orange{
   color:orange;
+}
+
+.truncate{
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }

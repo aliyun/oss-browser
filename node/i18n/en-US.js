@@ -393,5 +393,17 @@ module.exports = {
   'send.to': 'Mail to',
   'send.email': 'Mail it',
   'send.now': 'Send',
+  'file.download.address': 'file download address',
 
+  'copy.successfully': 'It has been copied to the clipboard',
+  'click.download': 'click to download',
+  'qrcode.download': 'scan qrcode to download',
+
+  'saving': 'Saving',
+  'save.successfully': 'Saved',
+  'content.isnot.modified': 'The content is not modified',
+
+  'logining': 'Logging in ...',
+  'login.successfully': 'Login successful, jumping ...',
+  'login.endpoint.error': 'Please make sure Endpoint is correct',
 }

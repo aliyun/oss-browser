@@ -11,13 +11,14 @@
   </div>
   <div class="modal-body">
 
-    <div class="form-group">
+    <div class="form-group" ng-class="{'has-error':!form1.name.$valid}">
       <label class="col-sm-2 control-label" for="name">
         {{'name'|translate}}:
         <!-- 名称: -->
       </label>
       <div class="col-sm-8">
-        <input type="text" ng-model="item.name" id="name" autocomplete="off" autofocus name="name" required="required"
+        <input type="text" ng-model="item.name" id="name" autocomplete="off"
+        autofocus name="name" required="required" ng-pattern="reg"
         placeholder="{{'bucket.name'|translate}}" class="input-md form-control"/>
       </div>
     </div>
