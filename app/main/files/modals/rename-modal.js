@@ -26,15 +26,17 @@ angular.module('web')
       function onSubmit(form) {
         if (!form.$valid)return;
 
+        var title = T('whetherCover.title'); //是否覆盖
+        var msg1 = T('whetherCover.message1'); //已经有同名目录，是否覆盖?
+        var msg2 = T('whetherCover.message2'); //已经有同名文件，是否覆盖?
+        //console.log(title, msg1,msg2)
+
         if($scope.item.isFolder){
           var newPath = moveTo.key==''?item.name: (moveTo.key.replace(/(\/$)/,'') +'/' + item.name);
           newPath += '/';
           //console.log(item.path, newPath)
           if(item.path==newPath)return;
 
-          var title = T('whetherCover.title'); //是否覆盖
-          var msg1 = T('whetherCover.message1'); //已经有同名目录，是否覆盖?
-          var msg2 = T('whetherCover.message2'); //已经有同名文件，是否覆盖?
 
           $scope.isLoading=true;
           ossSvs2.checkFolderExists(moveTo.region,moveTo.bucket, newPath).then(function(has){

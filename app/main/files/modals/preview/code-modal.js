@@ -1,7 +1,7 @@
 angular.module('web')
-  .controller('codeModalCtrl', ['$scope', '$uibModalInstance','$timeout', '$uibModal', 'bucketInfo', 'objectInfo', 'fileType', 'showFn', 'Toast', 'DiffModal', 'ossSvs2', 'safeApply',
-    function ($scope, $modalInstance, $timeout, $modal, bucketInfo, objectInfo, fileType, showFn, Toast, DiffModal, ossSvs2, safeApply) {
-
+  .controller('codeModalCtrl', ['$scope', '$uibModalInstance','$translate','$timeout', '$uibModal', 'bucketInfo', 'objectInfo', 'fileType', 'showFn', 'Toast', 'DiffModal', 'ossSvs2', 'safeApply',
+    function ($scope, $modalInstance,$translate, $timeout, $modal, bucketInfo, objectInfo, fileType, showFn, Toast, DiffModal, ossSvs2, safeApply) {
+      var T = $translate.instant;
       angular.extend($scope, {
         bucketInfo: bucketInfo,
         objectInfo: objectInfo,
@@ -41,15 +41,15 @@ angular.module('web')
 
         if (originalContent != v) {
           DiffModal.show('Diff', originalContent, v, function (v) {
-            Toast.info('正在保存...');
+            Toast.info(T('saving')); //'正在保存...'
 
             ossSvs2.saveContent(bucketInfo.region, bucketInfo.bucket, objectInfo.path, v).then(function (result) {
-              Toast.success('保存成功');
+              Toast.success(T('save.successfully'));//'保存成功'
               cancel();
             });
           });
         } else {
-          Toast.info('内容没有修改');
+          Toast.info(T('content.isnot.modified')); //内容没有修改
         }
       }
 

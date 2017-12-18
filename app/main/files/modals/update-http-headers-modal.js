@@ -61,6 +61,7 @@ angular.module('web')
         angular.forEach(metaItems,function(n){
           if(n.key && n.value)metas[n.key]=n.value;
         });
+        //console.log(headers, metas)
         Toast.info(T('setting.on')); //'正在设置..'
 
         ossSvs2.setMeta(currentInfo.region, currentInfo.bucket, item.path, headers, metas).then(function(result){

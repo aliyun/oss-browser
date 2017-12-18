@@ -70,16 +70,16 @@ angular.module('web')
         var t=[ ];
         var name = $scope.item.name;
 
-        t.push('点此下载: <a href="'+url+'" target="_blank">'+name+'</a>');
+        t.push(T('click.download')+': <a href="'+url+'" target="_blank">'+name+'</a>'); //点此下载
 
-        t.push('扫码下载:')
+        t.push(T('qrcode.download')+':') //扫码下载
 
         var src = $('#addr-qrcode-wrap canvas')[0].toDataURL("image/jpeg");
         t.push('<img src="'+src+'" style="width:300px;height:300px"/>');
 
 
         var sendInfo = {
-          subject: '文件下载地址:['+ name+']',
+          subject: T('file.download.address')+':['+ name+']',
           to: $scope.info.mailTo,
           html: t.join('<br/>')
         };
