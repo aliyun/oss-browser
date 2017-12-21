@@ -201,7 +201,7 @@ UploadJob.prototype.startSpeedCounter = function(){
     tick++;
     if(tick>5){
       tick=0;
-      self.maxConcurrency = util.computeMaxConcurrency(self.speed);
+      self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.checkPoints.chunkSize);
       if(isDebug) console.info('set max concurrency:', self.maxConcurrency, self.from.path);
     }
 
@@ -267,6 +267,8 @@ UploadJob.prototype.uploadSingle = function () {
              }else{
                self._changeStatus('finished');
                self.emit('complete');
+               console.log('upload: '+self.from.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
+
              }
           });
         }
@@ -320,6 +322,8 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     self._changeStatus('finished');
     self.emit('partcomplete', util.getPartProgress(checkPoints), JSON.parse(JSON.stringify(checkPoints)));
     self.emit('complete');
+    console.log('upload: '+self.from.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
+
     return;
   }
 
@@ -604,6 +608,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
              checkPoints.done=true;
              self._changeStatus('finished');
              self.emit('complete');
+             console.log('upload: '+self.from.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
            }
         });
 

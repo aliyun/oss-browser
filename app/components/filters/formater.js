@@ -27,7 +27,6 @@ angular.module('web')
       catch(e){
         return de;
       }
-
     };
   })
   .filter('elapse', function(){
@@ -43,20 +42,25 @@ angular.module('web')
       else if(ms < 1000) return ms+'ms';
 
       //return moment.duration(ms).humanize();
-
+      var t=[];
       var h = Math.floor(ms/3600/1000);
       if(h){
         ms = ms-h*3600*1000;
+        t.push(h+'h')
       }
       var m = Math.floor(ms/60/1000);
       if(m){
         ms = ms-m*60*1000;
+        t.push(m+'m')
+
       }
       var s = Math.floor(ms/1000);
       if(s){
         ms = ms-s*1000;
+        t.push(s+'s')
+
       }
-      return h+':'+m+':'+s;
+      return t.join('')
 
     };
   })
