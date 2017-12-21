@@ -147,7 +147,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
     tick++;
     if(tick>5){
       tick=0;
-      self.maxConcurrency = util.computeMaxConcurrency(self.speed);
+      self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.checkPoints.chunkSize);
       console.log('max concurrency:', self.maxConcurrency);
     }
   }, 1000);
@@ -233,6 +233,8 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             done: 0
           });
           self.emit('complete');
+          console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
+
         }
       });
       return;
@@ -293,6 +295,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
               done: chunkNum
             });
             self.emit('complete');
+            console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
           }
         });
       });
@@ -465,6 +468,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
                     done: completedCount
                   }, checkPoints);
                   self.emit('complete');
+                  console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
                 }
 
               });

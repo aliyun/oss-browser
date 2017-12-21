@@ -228,28 +228,45 @@ function prepareChunks(filePath, checkPoints, fn){
 /**
  * @param total size
  */
-function getSensibleChunkSize(total) {
+function getSensibleChunkSize(size) {
 
-  var minChunkSize = 5 * 1024 * 1024;  //5MB
-  if(total <= minChunkSize){
-    return minChunkSize;
+  var chunkSize = 5 * 1024 * 1024;  //5MB
+  if(size <= chunkSize){
+    return chunkSize;
   }
 
-  var parts = Math.ceil(total / minChunkSize);
+  if(size > 1024*1024*1024){
+    chunkSize = 10 * 1024 * 1024; //10MB
+  }
+
+  if(size > 20*1024*1024*1024){
+    chunkSize = 20 * 1024 * 1024; //20MB
+  }
+
+  var parts = Math.ceil(size / chunkSize);
   if (parts > 10000) {
-    return Math.ceil(total / 10000);
+    return Math.ceil(size / 10000);
   }
-
-  return minChunkSize;
+  return chunkSize;
 }
 
 
 //根据网速调整上传并发量
-function computeMaxConcurrency(speed){
-  if(speed > 8*1024*1024) return 10;
-  else if(speed > 5*1024*1024) return 7;
-  else if(speed > 2*1024*1024) return 5;
-  else if(speed > 1024*1024) return 3;
-  else if(speed > 100*1024) return 2;
-  else return 1;
+function computeMaxConcurrency(speed, chunkSize){
+  if(speed > chunkSize){
+    return Math.ceil(speed / chunkSize)+1
+  }
+  else if(speed > chunkSize/2){
+    return 2;
+  }else{
+    return 1;
+  }
+
+  // if(speed > 11*1024*1024) return 13;
+  // else if(speed > 8*1024*1024) return 10;
+  // else if(speed > 5*1024*1024) return 7;
+  // else if(speed > 2*1024*1024) return 5;
+  // else if(speed > 1024*1024) return 3;
+  // else if(speed > 100*1024) return 2;
+  // else return 1;
 }
