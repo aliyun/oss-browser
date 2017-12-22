@@ -248,7 +248,7 @@ module.exports = {
   'deleteModal.message2': 'Has been cancelled',
   'deleteModal.message3': 'Some directories or files can not be deleted',
 
-  'paste.message1': '{{action}} <span class="text-info">{{name}}...</span> to this directory (The same file or directory will be covered)？',
+  'paste.message1': '<span class="text-info">{{action}}</span> <span class="text-info">{{name}}...</span> to this directory (The same file or directory will be covered)？',
 
   'acl.update.title': 'Update ACL',
   'acl.update.success': 'ACL Updated successfully',

@@ -50,8 +50,8 @@ angular.module('web')
           $scope.isLoading=false;
 
           angular.extend($scope.upgradeInfo, info);
+          safeApply($scope); 
 
-          safeApply($scope);
         });
       }
 
