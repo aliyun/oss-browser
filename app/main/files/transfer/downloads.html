@@ -59,14 +59,14 @@
                 </div>
 
                 <div class="col-sm-2 text-overflow text-{{item.status|statusCls}}">
-                    <span ng-show="!item.speed">{{item.status|status}}
+                    <span ng-show="item.status=='verifying' ||!item.speed">{{item.status|status}}
                        <i ng-if="item.message"
                        uib-tooltip="{{item.message}}" tooltip-placement="left" tooltip-append-to-body="true"
                        class="fa fa-info-circle"></i>
                     </span>
-                <span ng-show="item.speed">
-                    {{item.speed|sizeFormat}}/s
-                </span>
+                    <small ng-show="item.status!='verifying' && item.speed">
+                        {{item.speed|sizeFormat}}/s
+                    </small>
                 </div>
 
                 <div class="col-sm-4 text-overflow">
@@ -76,7 +76,7 @@
 
 
                 <div class="col-sm-2 text-right">
-                    <a ng-if="item.status=='running' || item.status=='waiting'" href="" ng-click="item.stop()"
+                    <a ng-if="item.status=='running' || item.status=='waiting'|| item.status=='verifying'" href="" ng-click="item.stop()"
                        class="btn btn-default btn-xs">
                         <i class="glyphicon glyphicon-pause text-warning"></i>
                     </a>

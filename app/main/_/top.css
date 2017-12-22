@@ -40,3 +40,29 @@
   color:#f60;
   cursor:pointer;
 }
+
+
+
+
+@keyframes newcolor
+{
+  0% {background: red;}
+  25% {background: orange;}
+  50% {background: green;}
+  75% {background: orange;}
+  100% {background: red;}
+}
+
+@-webkit-keyframes newcolor /* Safari 和 Chrome */
+{
+0% {background: red;}
+25% {background: orange;}
+50% {background: green;}
+75% {background: orange;}
+100% {background: red;}
+}
+.new-animate{
+  animation: newcolor 5s;
+  -webkit-animation: newcolor 5s;
+  animation-iteration-count: infinite;
+}

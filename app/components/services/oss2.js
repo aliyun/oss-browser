@@ -1260,8 +1260,9 @@ angular.module('web')
         }
 
         var endpoint = getOssEndpoint(authInfo.region || 'oss-cn-beijing', bucket, authInfo.eptpl);
+
         var options = {
-          region: authInfo.region,
+          //region: authInfo.region,
           accessKeyId: authInfo.id || 'a',
           secretAccessKey: authInfo.secret || 'a',
           endpoint: endpoint,
@@ -1335,30 +1336,30 @@ angular.module('web')
 
         //-------------------------
 
-        var isHttps = Global.ossEndpointProtocol == 'https:';
-        //通过bucket获取endpoint
-        if (bucket && $rootScope.bucketMap && $rootScope.bucketMap[bucket]) {
-          var endpoint = $rootScope.bucketMap[bucket][$rootScope.internalSupported?'intranetEndpoint':'extranetEndpoint'];
-          if (endpoint) return isHttps ? ('https://' + endpoint + ':443') : ('http://' + endpoint);
-        }
-
-        //region是domain
-        if (region && region.indexOf('.') != -1) {
-          if (region.indexOf('http') != 0) {
-            region = Global.ossEndpointProtocol == 'https:' ? ('https://' + region + ':443') : ('http://' + region);
-          }
-          return region;
-        }
-
-        //region
-        if (Global.ossEndpointProtocol == 'https:') {
-          return $rootScope.internalSupported
-              ?'https://' + region + '-internal.aliyuncs.com:443'
-              :'https://' + region + '.aliyuncs.com:443';
-        }
-        return $rootScope.internalSupported
-              ? 'http://' + region + '-internal.aliyuncs.com'
-              : 'http://' + region + '.aliyuncs.com';
+        // var isHttps = Global.ossEndpointProtocol == 'https:';
+        // //通过bucket获取endpoint
+        // if (bucket && $rootScope.bucketMap && $rootScope.bucketMap[bucket]) {
+        //   var endpoint = $rootScope.bucketMap[bucket][$rootScope.internalSupported?'intranetEndpoint':'extranetEndpoint'];
+        //   if (endpoint) return isHttps ? ('https://' + endpoint + ':443') : ('http://' + endpoint);
+        // }
+        //
+        // //region是domain
+        // if (region && region.indexOf('.') != -1) {
+        //   if (region.indexOf('http') != 0) {
+        //     region = Global.ossEndpointProtocol == 'https:' ? ('https://' + region + ':443') : ('http://' + region);
+        //   }
+        //   return region;
+        // }
+        //
+        // //region
+        // if (Global.ossEndpointProtocol == 'https:') {
+        //   return $rootScope.internalSupported
+        //       ?'https://' + region + '-internal.aliyuncs.com:443'
+        //       :'https://' + region + '.aliyuncs.com:443';
+        // }
+        // return $rootScope.internalSupported
+        //       ? 'http://' + region + '-internal.aliyuncs.com'
+        //       : 'http://' + region + '.aliyuncs.com';
       }
 
     }

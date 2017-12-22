@@ -47,21 +47,39 @@ function headObject(self, objOpt, fn){
 
 
 function getSensibleChunkSize(size) {
-  var MaxChunkSize = 5 * 1024 * 1024; //5MB
+  var chunkSize = 5 * 1024 * 1024; //5MB
 
-  if(size < MaxChunkSize){
+  if(size < chunkSize){
     return size;
   }
+
+  if(size > 1024*1024*1024){
+    chunkSize = 10 * 1024 * 1024; //10MB
+  }
+
+  if(size > 20*1024*1024*1024){
+    chunkSize = 20 * 1024 * 1024; //20MB
+  }
+
   var c = Math.ceil(size/5000);
-  return Math.max(c, MaxChunkSize);
+  return Math.max(c, chunkSize);
 }
 
 //根据网速调整下载并发量
-function computeMaxConcurrency(speed){
-  if(speed > 8*1024*1024) return 10;
-  else if(speed > 5*1024*1024) return 7;
-  else if(speed > 2*1024*1024) return 5;
-  else if(speed > 1024*1024) return 3;
-  else if(speed > 100*1024) return 2;
-  else return 1;
+function computeMaxConcurrency(speed, chunkSize){
+  if(speed > chunkSize){
+    return Math.ceil(speed / chunkSize)+1
+  }
+  else if(speed > chunkSize/2){
+    return 2;
+  }else{
+    return 1;
+  }
+  // if(speed > 11*1024*1024) return 13;
+  // else if(speed > 8*1024*1024) return 10;
+  // else if(speed > 5*1024*1024) return 7;
+  // else if(speed > 2*1024*1024) return 5;
+  // else if(speed > 1024*1024) return 3;
+  // else if(speed > 100*1024) return 2;
+  // else return 1;
 }

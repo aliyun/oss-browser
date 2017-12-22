@@ -16,7 +16,7 @@
       <!-- 将删除以下目录或文件: -->
     </div>
     <ul>
-      <li ng-repeat="item in items">
+      <li ng-repeat="item in items" class="break">
         <i class="fa fa-folder" style="color:orange" ng-if="item.isFolder"></i>
         <i class="fa fa-file" ng-if="!item.isFolder"></i>
         {{item.name}}
