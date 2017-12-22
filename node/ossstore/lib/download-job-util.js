@@ -52,13 +52,23 @@ function getSensibleChunkSize(size) {
   if(size < chunkSize){
     return size;
   }
-
-  if(size > 1024*1024*1024){
+  else if(size < 100 * 1024*1024){
     chunkSize = 10 * 1024 * 1024; //10MB
   }
-
-  if(size > 20*1024*1024*1024){
+  else if(size < 500 * 1024*1024){
     chunkSize = 20 * 1024 * 1024; //20MB
+  }
+  else if(size < 1024 * 1024*1024){
+    chunkSize = 30 * 1024 * 1024; //30MB
+  }
+  else if(size < 5* 1024 * 1024*1024){
+    chunkSize = 50 * 1024 * 1024; //50MB
+  }
+  else if(size < 10* 1024 * 1024*1024){
+    chunkSize = 60 * 1024 * 1024; //60MB
+  }
+  else{
+    chunkSize = 80 * 1024 * 1024; //80MB
   }
 
   var c = Math.ceil(size/5000);
@@ -67,14 +77,16 @@ function getSensibleChunkSize(size) {
 
 //根据网速调整下载并发量
 function computeMaxConcurrency(speed, chunkSize){
+  //console.log('---',speed, chunkSize)
   if(speed > chunkSize){
-    return Math.ceil(speed / chunkSize)+1
+    return Math.ceil(speed / chunkSize) * 3;
   }
   else if(speed > chunkSize/2){
-    return 2;
+    return 6;
   }else{
-    return 1;
+    return 3;
   }
+
   // if(speed > 11*1024*1024) return 13;
   // else if(speed > 8*1024*1024) return 10;
   // else if(speed > 5*1024*1024) return 7;
