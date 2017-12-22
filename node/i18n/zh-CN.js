@@ -248,7 +248,7 @@ module.exports = {
   'deleteModal.message2': '用户取消删除',
   'deleteModal.message3': '部分目录或文件无法删除',
 
-  'paste.message1': '将 <span class="text-info">{{name}}等</span> {{action}} 到这个目录下面（如有相同的文件或目录则覆盖）？',
+  'paste.message1': '将 <span class="text-info">{{name}}等</span> <span class="text-info">{{action}}</span> 到这个目录下面（如有相同的文件或目录则覆盖）？',
 
   'acl.update.title': '设置ACL权限',
   'acl.update.success': '修改ACL权限成功',

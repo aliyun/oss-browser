@@ -248,7 +248,7 @@ module.exports = {
   'deleteModal.message2': 'キャンセルされました',
   'deleteModal.message3': 'いくつかのディレクトリやファイルは削除できません',
 
-  'paste.message1': 'このディレクトリに{{action}} <span class="text-info">{{name}}...</span>  (同じファイルまたはディレクトリが対象となります)？',
+  'paste.message1': 'このディレクトリに<span class="text-info">{{action}}</span> <span class="text-info">{{name}}...</span>  (同じファイルまたはディレクトリが対象となります)？',
 
   'acl.update.title': 'Updateを更新する',
   'acl.update.success': 'ACLは正常に更新されました',

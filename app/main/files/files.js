@@ -953,7 +953,7 @@ angular.module('web')
         //   $scope.keepMoveOptions = null;
         //   return;
         // }
-        var keyword = $scope.keepMoveOptions.isCopy ? '<span class="text-primary">'+T('copy')+'</span>' : '<span class="text-danger">'+T('move')+'</span>';
+        var keyword = $scope.keepMoveOptions.isCopy ? T('copy'): T('move');
 
         if($scope.keepMoveOptions.items.length==1 && $scope.currentInfo.bucket==$scope.keepMoveOptions.currentInfo.bucket){
            //1个支持重命名
