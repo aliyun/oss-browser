@@ -55,6 +55,9 @@ function getSensibleChunkSize(size) {
   else if(size < 100 * 1024*1024){
     chunkSize = 10 * 1024 * 1024; //10MB
   }
+  else if(size < 500 * 1024*1024){
+    chunkSize = 20 * 1024 * 1024; //20MB
+  }
   else if(size < 1024 * 1024*1024){
     chunkSize = 30 * 1024 * 1024; //30MB
   }
@@ -74,8 +77,7 @@ function getSensibleChunkSize(size) {
 
 //根据网速调整下载并发量
 function computeMaxConcurrency(speed, chunkSize){
-  console.log('---',speed, chunkSize)
-
+  //console.log('---',speed, chunkSize)
   if(speed > chunkSize){
     return Math.ceil(speed / chunkSize) * 3;
   }
