@@ -180,7 +180,7 @@ UploadJob.prototype.startUpload = function () {
 UploadJob.prototype.startSpeedCounter = function(){
   var self = this;
 
-  self.lastLoaded = 0;
+  self.lastLoaded = self.prog.loaded||0;
 
   var tick = 0;
   clearInterval(self.speedTid);

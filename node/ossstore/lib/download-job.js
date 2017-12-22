@@ -126,7 +126,7 @@ DownloadJob.prototype._changeStatus = function (status) {
 DownloadJob.prototype.startSpeedCounter = function () {
   var self = this;
 
-  self.lastLoaded = 0;
+  self.lastLoaded =self.prog.loaded|| 0;
   var tick=0;
   clearInterval(self.speedTid);
   self.speedTid = setInterval(function () {
@@ -147,7 +147,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
     tick++;
     if(tick>5){
       tick=0;
-      self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.checkPoints.chunkSize);
+      self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.chunkSize);
       console.log('max concurrency:', self.maxConcurrency);
     }
   }, 1000);
@@ -202,7 +202,6 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
       self.emit('error', err);
       return;
     }
-    //console.log(headers)
 
     fileMd5 = headers.ContentMD5;//.replace(/(^\"*)|(\"*$)/g, '');
     //console.log('file md5:',fileMd5);
@@ -244,7 +243,10 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
       return;
     }
 
+
     chunkSize = checkPoints.chunkSize || self._config.chunkSize || util.getSensibleChunkSize(self.prog.total);
+
+    self.chunkSize=chunkSize;
 
     console.log('chunkSize:',chunkSize);
 
