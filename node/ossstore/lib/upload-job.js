@@ -122,7 +122,7 @@ UploadJob.prototype.deleteOssFile = function(){
    var self = this;
    self.oss.deleteObject({Bucket: self.to.bucket, Key: self.to.key}, function(err){
      if(err) console.error(err);
-     else console.log('crc checking failed, oss file [oss://'+  self.to.bucket+'/'+self.to.key+'] is deleted');
+     else console.log('crc64 verifying failed, oss file [oss://'+  self.to.bucket+'/'+self.to.key+'] is deleted');
    });
 };
 
@@ -256,7 +256,7 @@ UploadJob.prototype.uploadSingle = function () {
           }
         }
         else {
-
+          self._changeStatus('verifying');
           util.checkFileHash(self.from.path, data['HashCrc64ecma'], data['ContentMD5'], function(err){
              if(err){
                self.message = (err.message||err);
@@ -596,7 +596,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
         self.emit('error', err);
       }
       else{
-
+        self._changeStatus('verifying');
         util.checkFileHash(self.from.path, data['HashCrc64ecma'], data['ContentMD5'], function(err){
            if(err){
              self.message = (err.message||err);

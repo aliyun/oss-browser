@@ -83,7 +83,7 @@ angular.module('web')
             var arr = $scope.lists.uploadJobList;
             for (var i = 0; i < arr.length; i++) {
               var n = arr[i];
-              if (n.status == 'running' || n.status == 'waiting') n.stop();
+              if (n.status == 'running' || n.status == 'waiting'|| n.status == 'verifying') n.stop();
               arr.splice(i, 1);
               i--;
             }
@@ -106,9 +106,9 @@ angular.module('web')
           $scope.allActionBtnDisabled=true;
 
           angular.forEach(arr, function (n) {
-            if (n.status == 'running' || n.status == 'waiting') n.stop();
+            if (n.status == 'running' || n.status == 'waiting'|| n.status == 'verifying') n.stop();
           });
-          Toast.info(T('pause.success'));  
+          Toast.info(T('pause.success'));
 
           $timeout(function () {
             ossUploadManager.saveProg();

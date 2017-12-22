@@ -272,7 +272,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
       for (var k in checkPoints.Parts) {
         self.prog.loaded += checkPoints.Parts[k].loaded;
       }
-
+      self._changeStatus('verifying');
       util.checkFileHash(tmpName,  hashCrc64ecma , fileMd5,  function (err) {
         if (err) {
           self.message=(err.message||err);
@@ -446,6 +446,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             //下载完成
             //util.closeFD(keepFd);
             //检验MD5
+            self._changeStatus('verifying');
             util.checkFileHash(tmpName,  hashCrc64ecma, fileMd5, function (err) {
               if (err) {
                 self.message = (err.message||err);

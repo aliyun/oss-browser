@@ -316,6 +316,7 @@ module.exports = {
   'status.failed': 'Failed',
   'status.finished': 'Finished',
   'status.waiting': 'Waiting',
+  'status.verifying': 'Verifying',
 
   'users': 'Sub Users',
   'users.title': 'Sub Users',

@@ -316,6 +316,7 @@ module.exports = {
   'status.failed': '失败',
   'status.finished': '完成',
   'status.waiting': '等待',
+  'status.verifying': '校验',
 
   'users': '子用户',
   'users.title': '子用户管理',
