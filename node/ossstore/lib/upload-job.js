@@ -122,7 +122,7 @@ UploadJob.prototype.deleteOssFile = function(){
    var self = this;
    self.oss.deleteObject({Bucket: self.to.bucket, Key: self.to.key}, function(err){
      if(err) console.error(err);
-     else console.log('crc checking failed, oss file [oss://'+  self.to.bucket+'/'+self.to.key+'] is deleted');
+     else console.log('crc64 verifying failed, oss file [oss://'+  self.to.bucket+'/'+self.to.key+'] is deleted');
    });
 };
 
@@ -201,7 +201,7 @@ UploadJob.prototype.startSpeedCounter = function(){
     tick++;
     if(tick>5){
       tick=0;
-      self.maxConcurrency = util.computeMaxConcurrency(self.speed);
+      self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.checkPoints.chunkSize);
       if(isDebug) console.info('set max concurrency:', self.maxConcurrency, self.from.path);
     }
 
@@ -242,6 +242,7 @@ UploadJob.prototype.uploadSingle = function () {
         if (err) {
 
           if(err.message.indexOf('Access denied')!=-1
+          || err.message.indexOf('You have no right to access')!=-1
           || retryTimes>10 ){
             self.message=err.message;
             self._changeStatus('failed');
@@ -255,7 +256,7 @@ UploadJob.prototype.uploadSingle = function () {
           }
         }
         else {
-
+          self._changeStatus('verifying');
           util.checkFileHash(self.from.path, data['HashCrc64ecma'], data['ContentMD5'], function(err){
              if(err){
                self.message = (err.message||err);
@@ -266,6 +267,8 @@ UploadJob.prototype.uploadSingle = function () {
              }else{
                self._changeStatus('finished');
                self.emit('complete');
+               console.log('upload: '+self.from.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
+
              }
           });
         }
@@ -319,6 +322,8 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     self._changeStatus('finished');
     self.emit('partcomplete', util.getPartProgress(checkPoints), JSON.parse(JSON.stringify(checkPoints)));
     self.emit('complete');
+    console.log('upload: '+self.from.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
+
     return;
   }
 
@@ -591,7 +596,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
         self.emit('error', err);
       }
       else{
-
+        self._changeStatus('verifying');
         util.checkFileHash(self.from.path, data['HashCrc64ecma'], data['ContentMD5'], function(err){
            if(err){
              self.message = (err.message||err);
@@ -603,6 +608,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
              checkPoints.done=true;
              self._changeStatus('finished');
              self.emit('complete');
+             console.log('upload: '+self.from.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
            }
         });
 

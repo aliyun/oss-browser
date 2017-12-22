@@ -73,14 +73,14 @@ module.exports = {
   'storageClassesType.ia': 'IA',
   'storageClassesType.archive': 'アーカイブ',
 
-  'aclType.default': 'バケットから継承する',
-  'aclType.public-read-write': 'パブリック読み取りと書き込み',
-  'aclType.public-read': '一般公開',
-  'aclType.private': 'プライベート',
+  'aclType.default': 'バケツからの継承',
+  'aclType.public-read-write': '公開可読は書く',
+  'aclType.public-read': '公開読み取っ',
+  'aclType.private': '非公開',
 
   'files': 'ファイル',
   'settings': '設定',
-  'about': '約',
+  'about': 'について',
   'bookmarks': 'ブックマーク',
   'logout': 'ログアウト',
   'logout.message': 'ログアウトしてもよろしいですか?',
@@ -193,7 +193,7 @@ module.exports = {
   'move': '移動',
   'paste': 'ペースト',
   'rename': '名前を変更する',
-  'getAddress': '住所',
+  'getAddress': 'アドレスを取得する',
   'genAuthToken': '認証トークン',
 
   'rename.to': '名前を変更する',
@@ -248,7 +248,7 @@ module.exports = {
   'deleteModal.message2': 'キャンセルされました',
   'deleteModal.message3': 'いくつかのディレクトリやファイルは削除できません',
 
-  'paste.message1': 'このディレクトリに{{action}} <span class="text-info">{{name}}...</span>  (同じファイルまたはディレクトリが対象となります)？',
+  'paste.message1': 'このディレクトリに<span class="text-info">{{action}}</span> <span class="text-info">{{name}}...</span>  (同じファイルまたはディレクトリが対象となります)？',
 
   'acl.update.title': 'Updateを更新する',
   'acl.update.success': 'ACLは正常に更新されました',
@@ -287,8 +287,8 @@ module.exports = {
   'lastModifyTime': '最終更新日',
   'loading.more': 'もっと読み込んでいます...',
 
-  'download.addtolist.on': 'Being added to the download queue',
-  'download.addtolist.success': 'All added',
+  'download.addtolist.on': 'ダウンロードキューに追加中',
+  'download.addtolist.success': 'すべて追加されました',
 
   'upload.addtolist.on': 'ダウンロードキューに追加中',
   'upload.addtolist.success': 'すべて追加されました',
@@ -316,6 +316,7 @@ module.exports = {
   'status.failed': '失敗',
   'status.finished': '完了',
   'status.waiting': '待っている',
+  'status.verifying': '検証中',
 
   'users': 'サブユーザ',
   'users.title': 'サブユーザ',
@@ -393,5 +394,18 @@ module.exports = {
   'send.to': '送信先',
   'send.email': 'メールする',
   'send.now': '送信',
+  'file.download.address': 'ファイルダウンロードアドレス',
 
+  'copy.successfully': 'もうクリップボードにコピー',
+  'click.download': 'ここをクリックしてダウンロードする',
+  'qrcode.download': '掃くダウンロード',
+
+
+  'saving': '保存する',
+  'save.successfully': '成功を保存する',
+  'content.isnot.modified': '内容は修正していません',
+
+  'logining': 'ログイン中...',
+  'login.successfully': '成功したログイン、ジャンプ中...',
+  'login.endpoint.error': 'エンドポイントが正しいことを確認してください',
 }

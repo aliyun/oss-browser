@@ -176,13 +176,13 @@ angular.module('web')
           AuthInfo.remember(data);
         }
 
-        Toast.info('正在登录中...', 1000);
+        Toast.info(T('logining'), 1000);
 
 
 
         Auth.login(data).then(function(){
           if($scope.flags.remember=='YES') AuthInfo.addToHistories(data);
-          Toast.success('登录成功，正在跳转...', 1000);
+          Toast.success(T('login.successfully'), 1000);
           $location.url('/');
         },function(err){
           Toast.error(err.code+':'+err.message);
@@ -203,10 +203,10 @@ angular.module('web')
 
         var data = angular.copy($scope.authTokenInfo);
 
-        Toast.info('正在登录...', 1000);
+        Toast.info(T('logining'), 1000);//'正在登录...'
 
         Auth.login(data).then(function(){
-          Toast.success('登录成功，正在跳转...', 1000);
+          Toast.success(T('login.successfully'), 1000);//'登录成功，正在跳转...'
           $location.url('/');
         },function(err){
           Toast.error(err.code+':'+err.message);

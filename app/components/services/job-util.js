@@ -10,6 +10,7 @@ angular.module('web')
         if(!s)return 'default';
         switch(s.toLowerCase()){
           case 'running': return 'info';
+          case 'verifying': return 'primary';
           case 'failed': return 'danger';
           case 'finished': return 'success';
           case 'stopped': return 'warning';
@@ -24,6 +25,7 @@ angular.module('web')
           case 'failed': return T('status.failed');//'失败';
           case 'finished': return T('status.finished');// '完成';
           case 'stopped': return T('status.stopped');//'暂停';
+          case 'verifying': return T('status.verifying');//'';
           default : return T('status.waiting');//'等待';
         }
       }

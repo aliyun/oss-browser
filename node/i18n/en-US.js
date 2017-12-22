@@ -248,7 +248,7 @@ module.exports = {
   'deleteModal.message2': 'Has been cancelled',
   'deleteModal.message3': 'Some directories or files can not be deleted',
 
-  'paste.message1': '{{action}} <span class="text-info">{{name}}...</span> to this directory (The same file or directory will be covered)？',
+  'paste.message1': '<span class="text-info">{{action}}</span> <span class="text-info">{{name}}...</span> to this directory (The same file or directory will be covered)？',
 
   'acl.update.title': 'Update ACL',
   'acl.update.success': 'ACL Updated successfully',
@@ -316,6 +316,7 @@ module.exports = {
   'status.failed': 'Failed',
   'status.finished': 'Finished',
   'status.waiting': 'Waiting',
+  'status.verifying': 'Verifying',
 
   'users': 'Sub Users',
   'users.title': 'Sub Users',
@@ -393,5 +394,17 @@ module.exports = {
   'send.to': 'Mail to',
   'send.email': 'Mail it',
   'send.now': 'Send',
+  'file.download.address': 'file download address',
 
+  'copy.successfully': 'It has been copied to the clipboard',
+  'click.download': 'click to download',
+  'qrcode.download': 'scan qrcode to download',
+
+  'saving': 'Saving',
+  'save.successfully': 'Saved',
+  'content.isnot.modified': 'The content is not modified',
+
+  'logining': 'Logging in ...',
+  'login.successfully': 'Login successful, jumping ...',
+  'login.endpoint.error': 'Please make sure Endpoint is correct',
 }

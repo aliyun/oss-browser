@@ -4,8 +4,8 @@
  */
 
 angular.module('web')
-  .directive('clipboardButton', ['Toast', function(Toast) {
-
+  .directive('clipboardButton', ['$translate','Toast', function($translate, Toast) {
+    var T = $translate.instant;
     return {
       restrict: 'EA',
       scope: {
@@ -23,7 +23,7 @@ angular.module('web')
         });
 
         d.on('success',function(){
-          Toast.success('复制成功');
+          Toast.success(T('copy.successfully')); //'复制成功'
         });
 
       }
