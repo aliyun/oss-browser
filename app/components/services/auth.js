@@ -10,7 +10,7 @@ angular.module('web')
       function login(data) {
 
         var df = $q.defer();
-        data.httpOptions={timeout:10000};
+        data.httpOptions={timeout:15000};
 
         if (data.osspath) {
 
