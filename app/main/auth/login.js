@@ -131,7 +131,7 @@ angular.module('web')
 
       function showRemoveHis(h){
         var title = T('auth.removeAK.title'); //删除AK
-        var message = T('auth.removeAK.message',{id: '<code>'+h.id+'</code>'}); //'ID：'+h.id+', 确定删除?'
+        var message = T('auth.removeAK.message',{id: h.id}); //'ID：'+h.id+', 确定删除?'
         Dialog.confirm(title,message,function(b){
           if(b){
             AuthInfo.removeFromHistories(h.id);

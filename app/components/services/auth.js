@@ -8,6 +8,7 @@ angular.module('web')
       };
 
       function login(data) {
+        if(!data.osspath)delete data.region;
 
         var df = $q.defer();
         data.httpOptions={timeout:15000};
