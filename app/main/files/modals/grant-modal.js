@@ -142,7 +142,7 @@ angular.module('web')
 
         var name =  (Math.random()+'').substring(2);
         if($scope.items && $scope.items.length==1){
-          name = $scope.items[0].name.replace(/[\W_]+/g,'-');
+          name = $scope.items[0].name;//.replace(/[\W_]+/g,'-');
         }
         $scope.grant.policyName = 'plc-'+ privType +'-'+ name;
       }
