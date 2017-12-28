@@ -284,18 +284,20 @@ angular.module('web')
       var t=[];
 
       function dig(marker){
-        var opt= {};
-        if(marker)opt.marker=marker;
+        var opt= { MaxItems:100 };
+        if(marker) opt.Marker=marker;
         ram[callFn].call(ram, opt, function(err, res){
+
           if(err){
             df.reject(err);
             if(!ignoreError) handleError(err);
             return;
           }
-          var marker = res.Marker;
+
+          var marker2 = res.Marker;
           t = t.concat(res[resultKey+'s'][resultKey]);
-          if(marker){
-            dig(marker);
+          if(marker2){
+            dig(marker2);
           }
           else{
             df.resolve(t);

@@ -63,7 +63,7 @@ module.exports = {
   'close': 'Close',
 
   'auth.removeAK.title': 'Remove AK',
-  'auth.removeAK.message': 'Remove AK：{{id}}, Are you sure?',
+  'auth.removeAK.message': 'Remove AK：<code>{{id}}</code>, Are you sure?',
 
   'auth.clearAKHistories.title': 'Clear AK Histories',
   'auth.clearAKHistories.message': 'Are you sure?',

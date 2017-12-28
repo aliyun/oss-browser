@@ -23,7 +23,7 @@ angular.module('web')
     SHOW_HIS: 'show-his',
 
     REG: {
-      EMAIL: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+      EMAIL:  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
     },
 
     bucketACL: [
