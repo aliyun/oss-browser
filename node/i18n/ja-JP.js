@@ -63,7 +63,7 @@ module.exports = {
   'close': 'クローズ',
 
   'auth.removeAK.title': 'AK削除',
-  'auth.removeAK.message': '本当にAKを削除しますか：{{id}}？',
+  'auth.removeAK.message': '本当にAKを削除しますか：<code>{{id}}</code>？',
 
   'auth.clearAKHistories.title': 'AK 履歴削除',
   'auth.clearAKHistories.message': '確定ですか?',
