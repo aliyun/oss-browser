@@ -1243,7 +1243,7 @@ angular.module('web')
       function getClient(opt) {
 
         var options = prepaireOptions(opt)
-        //console.log(options)
+        // console.log(options)
         var client = new ALY.OSS(options);
         return client;
       }

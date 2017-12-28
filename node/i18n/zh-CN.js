@@ -63,7 +63,7 @@ module.exports = {
   'close': '关闭',
 
   'auth.removeAK.title': '删除AK',
-  'auth.removeAK.message': 'ID：{{id}}, 确定删除?',
+  'auth.removeAK.message': 'ID：<code>{{id}}</code>, 确定删除?',
 
   'auth.clearAKHistories.title': '清空AK历史',
   'auth.clearAKHistories.message': '确定?',
