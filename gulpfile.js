@@ -157,7 +157,7 @@ gulp.task('copy-icons', function () {
     .pipe(gulp.dest(DIST+'/icons'));
 });
 gulp.task('copy-node', function () {
-  gulp.src('./node/**')
+  gulp.src(['./node/**','!node/crc64/**/node_modules/**'])
     .pipe(gulp.dest(DIST+'/node'));
 });
 
@@ -214,6 +214,7 @@ gulp.task('gen-package', function () {
 
 gulp.task('watch', function () {
   gulp.watch([
+    '!'+DIST+'/**/node_modules/**',
     DIST + '/**/*.html',
     DIST + '/**/*.js',
     DIST + '/**/*.css'
@@ -241,7 +242,7 @@ gulp.task('watch', function () {
 
   gulp.watch(['./custom/**'], ['copy-custom']);
 
-  gulp.watch('./node/**', ['copy-node']);
+  gulp.watch(['./node/**','!node/crc64/**/node_modules/**'], ['copy-node']);
 
 });
 
