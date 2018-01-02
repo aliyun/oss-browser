@@ -190,5 +190,20 @@ function getMenuTemplate() {
       accelerator: "CmdOrCtrl+A",
       selector: "selectAll:"
     }]
+  },{
+    label: 'Window',
+    submenu: [{
+      label: 'Minimize',
+      accelerator: "CmdOrCtrl+M",
+      click: function() {
+        win.minimize();
+      }
+    },{
+      label: 'Close',
+      accelerator: "CmdOrCtrl+W",
+      click: function() {
+        win.close();
+      }
+    }]
   }];
 }
