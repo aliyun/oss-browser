@@ -1,5 +1,5 @@
 
-VERSION=1.4.3
+VERSION=1.4.4
 NAME=oss-browser
 CUSTOM=./custom
 
@@ -28,6 +28,7 @@ watch:
 	$(GULP) watch --custom=$(CUSTOM)
 build:
 	$(GULP) build --custom=$(CUSTOM)
+	node gen.js
 
 win64:
 	$(BUILD) --platform=win32 --arch=x64

@@ -70,7 +70,7 @@ function getBigFileMd5(p, fn){
 
 function getFileCrc64(p, fn){
   console.time('get crc64 hash for ['+p+']');
-  CRC64.crc64File(p, function(err, data){
+  CRC64.crc64FileProcess(p, function(err, data){
     console.timeEnd('get crc64 hash for ['+p+']');
     console.log(data);
     fn(err, data);
