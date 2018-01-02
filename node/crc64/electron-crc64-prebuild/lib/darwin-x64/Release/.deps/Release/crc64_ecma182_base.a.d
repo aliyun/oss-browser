@@ -1,0 +1,1 @@
+cmd_Release/crc64_ecma182_base.a := rm -f Release/crc64_ecma182_base.a && ./gyp-mac-tool filter-libtool libtool  -static -o Release/crc64_ecma182_base.a Release/obj.target/crc64_ecma182_base/src/crc64_ecma_182.o
