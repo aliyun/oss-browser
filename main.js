@@ -35,7 +35,7 @@ ipcMain.on('asynchronous-message', (event, arg) => {
 
 var custom={};
 try{
-  custom = require('./custom')
+  custom = require(path.join(__dirname,'../custom'));
 }catch(e){
   console.log('没有自定义模块')
 }

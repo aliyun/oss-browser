@@ -1,4 +1,5 @@
 {
-  "version": "1.4.5",
-  "package_url": "http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/"
+  "version": "1.5.0",
+  "package_url": "http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/",
+  "files": ["app.asar"]
 }

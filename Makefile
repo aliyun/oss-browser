@@ -1,5 +1,5 @@
 
-VERSION=1.4.5
+VERSION=1.5.0
 NAME=oss-browser
 CUSTOM=./custom
 
@@ -32,22 +32,27 @@ build:
 
 win64:
 	$(BUILD) --platform=win32 --arch=x64
+	cp -rf $(CUSTOM) build/$(NAME)-win32-x64/resources
 	rm -rf releases/$(VERSION)/$(NAME)-win32-x64.zip && mkdir -p releases/$(VERSION)
 	cd build && $(ZIP) ../releases/$(VERSION)/$(NAME)-win32-x64.zip $(NAME)-win32-x64/
 win32:
 	$(BUILD) --platform=win32 --arch=ia32
+	cp -rf $(CUSTOM) build/$(NAME)-win32-ia32/resources
 	rm -rf releases/$(VERSION)/$(NAME)-win32-ia32.zip && mkdir -p releases/$(VERSION)
 	cd build && $(ZIP) ../releases/$(VERSION)/$(NAME)-win32-ia32.zip $(NAME)-win32-ia32/
 linux64:
 	$(BUILD) --platform=linux --arch=x64
+	cp -rf $(CUSTOM) build/$(NAME)-linux-x64/resources
 	rm -rf releases/$(VERSION)/$(NAME)-linux-x64.zip && mkdir -p releases/$(VERSION)
 	cd build && $(ZIP) ../releases/$(VERSION)/$(NAME)-linux-x64.zip $(NAME)-linux-x64/
 linux32:
 	$(BUILD) --platform=linux --arch=ia32
+	cp -rf $(CUSTOM) build/$(NAME)-linux-ia32/resources
 	rm -rf releases/$(VERSION)/$(NAME)-linux-ia32.zip && mkdir -p releases/$(VERSION)
 	cd build && $(ZIP) ../releases/$(VERSION)/$(NAME)-linux-ia32.zip $(NAME)-linux-ia32/
 mac:
 	$(BUILD) --platform=darwin --arch=x64 --icon=$(CUSTOM)/icon.icns
+	cp -rf $(CUSTOM) build/$(NAME)-darwin-x64/$(NAME).app/Contents/Resources
 	rm -rf releases/$(VERSION)/$(NAME)-darwin-x64.zip && mkdir -p releases/$(VERSION)
 	cd build && $(ZIP) ../releases/$(VERSION)/$(NAME)-darwin-x64.zip $(NAME)-darwin-x64/
 dmg:
