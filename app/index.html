@@ -5,9 +5,11 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title>OSS Browser</title>
     <script>
+    const path= require('path');
+
     var custom= {};
     try{
-      custom = require('./custom')
+      custom = require(path.join(__dirname,'../custom/index.js'));
     }catch(e){
       console.log('没有自定义模块')
     };
@@ -42,7 +44,6 @@
     <script src="templates.js"></script>
     <script>
       const {ipcRenderer,shell} = require('electron');
-      const path= require('path');
 
       ipcRenderer.on('asynchronous-reply', (event, arg) => {
         Global.staticServerPort = arg;
@@ -80,10 +81,10 @@
         i18n: require('./node/i18n'),
 
         //release notes目录后缀，里面有 ${version}.md, 如 1.0.0.md
-        release_notes_url: custom.release_notes_url,// || 'https://raw.githubusercontent.com/aliyun/oss-browser/master/release-notes/',
-
-        //升级检测链接
-        upgrade_url: custom.upgrade_url,// ||  "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
+        release_notes_url:  'https://raw.githubusercontent.com/aliyun/oss-browser/master/release-notes/',
+        //
+        // //升级检测链接
+        upgrade_url:  "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
 
         about_html: custom.about_html
       };
@@ -91,7 +92,7 @@
         if(custom.appName)
           for(var k in custom.appName){
             if(Global.i18n[k])
-               Global.i18n[k].content['app.name']=custom.appName[k];
+               Global.i18n[k].content['app.name']=custom.appName[k]||'OSS Browser';
           }
       })();
 

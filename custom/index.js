@@ -1,5 +1,4 @@
 const path = require('path');
-const pkg = require('../package.json');
 
 module.exports= {
   //窗体title
@@ -14,10 +13,6 @@ module.exports= {
     'en-US': 'OSS Browser',
   },
 
-  //自定义版本号，如果不设置，使用package.json中的version
-  version: pkg.version,
-
-
   //logo png 格式, 主要用于mac和linux系统
   logo_png: path.join(__dirname, './icon.png'),
 
@@ -26,13 +21,6 @@ module.exports= {
 
   //logo ico 格式，主要用于windows系统
   logo_ico: path.join(__dirname, './icon.ico'),
-
-
-  //release notes目录后缀，里面有 ${version}.md, 如 1.0.0.md
-  release_notes_url: 'https://raw.githubusercontent.com/aliyun/oss-browser/master/release-notes/',
-
-  //升级检测链接
-  upgrade_url: "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
 
   //“关于”弹窗的主要内容
   //about_html: '<div>开源地址:</div>',
