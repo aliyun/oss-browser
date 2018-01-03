@@ -195,11 +195,22 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
 
   util.headObject(self, objOpt, function (err, headers) {
     if (err) {
-      self.message = 'failed to get oss object meta: ' + err.message;
-      //console.error(self.message);
-      console.error(self.message, self.to.path);
-      self._changeStatus('failed');
-      self.emit('error', err);
+      console.log(err)
+      if(err.message.indexOf('Network Failure')!=-1
+    || err.message.indexOf('getaddrinfo ENOTFOUND')!=-1){
+        self.message = 'failed to get oss object meta: ' + err.message;
+        //console.error(self.message);
+        console.error(self.message, self.to.path);
+        self.stop();
+        self.emit('error', err);
+      }
+      else{
+        self.message = 'failed to get oss object meta: ' + err.message;
+        //console.error(self.message);
+        console.error(self.message, self.to.path);
+        self._changeStatus('failed');
+        self.emit('error', err);
+      }
       return;
     }
 
@@ -394,21 +405,32 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             return;
           }
 
-          if (retryCount < maxRetries && err.code!='InvalidObjectState' ) {
-            retryCount++;
-            console.log(`retry download part [${n}] error:${err}, ${self.to.path}`);
+          if(retryCount >= maxRetries){
             checkPoints.Parts[partNumber].loaded = 0;
-            setTimeout(function(){
-              doDownload(n);
-            },2000);
-
-          } else {
+            self.message = `failed to download part [${n}]: ${err.message}`;
+            //console.error(self.message);
+            console.error(self.message, self.to.path);
+            //self._changeStatus('failed');
+            self.stop();
+            //self.emit('error', err);
+            //util.closeFD(keepFd);
+          }
+          else if(err.code=='InvalidObjectState' ){
+            checkPoints.Parts[partNumber].loaded = 0;
             self.message = `failed to download part [${n}]: ${err.message}`;
             //console.error(self.message);
             console.error(self.message, self.to.path);
             self._changeStatus('failed');
             self.emit('error', err);
             //util.closeFD(keepFd);
+          }
+          else{
+            retryCount++;
+            console.log(`retry download part [${n}] error:${err}, ${self.to.path}`);
+            checkPoints.Parts[partNumber].loaded = 0;
+            setTimeout(function(){
+              doDownload(n);
+            },2000);
           }
           return;
         }

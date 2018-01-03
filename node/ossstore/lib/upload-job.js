@@ -474,8 +474,14 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
 
         console.warn('multiErr, upload part error:', multiErr.message||multiErr, partParams, self.from.path);
 
-        if (retries[partNumber] >= maxRetries
-        || multiErr.message.indexOf('The specified upload does not exist')!=-1) {
+        if (retries[partNumber] >= maxRetries){
+          self.message='上传分片失败: #'+partNumber;
+          checkPoints.Parts[partNumber].loaded = 0;
+          self.stop();
+          self.emit('error', multiErr);
+          concurrency--;
+        }
+        else if(multiErr.message.indexOf('The specified upload does not exist')!=-1) {
           //console.error('上传分片失败: #', partNumber);
           //util.closeFD(keepFd);
           self.message='上传分片失败: #'+partNumber;
