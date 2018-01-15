@@ -408,4 +408,6 @@ module.exports = {
   'logining': 'ログイン中...',
   'login.successfully': '成功したログイン、ジャンプ中...',
   'login.endpoint.error': 'エンドポイントが正しいことを確認してください',
+
+  'startUpgrade': '更新を開始',
 }

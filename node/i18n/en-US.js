@@ -407,4 +407,6 @@ module.exports = {
   'logining': 'Logging in ...',
   'login.successfully': 'Login successful, jumping ...',
   'login.endpoint.error': 'Please make sure Endpoint is correct',
+
+  'startUpgrade': 'Upgrade',
 }

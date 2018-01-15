@@ -6,6 +6,9 @@
     <title>OSS Browser</title>
     <script>
     const path= require('path');
+    const os = require('os');
+    const fs = require('fs');
+    const request = require('request');
 
     var custom= {};
     try{
@@ -24,7 +27,13 @@
     <!-- <div ng-include="'main/_/loading.html'"></div>  -->
     <toast-list></toast-list>
 
-    <div ui-view=""></div>
+    <div ui-view="">
+      <!-- loading -->
+       <section style="text-align:center;display:block;width:128px;margin:100px auto">
+         <img src="icons/icon.png" style="width:100%;border-radius:50%;box-shadow:0 0 5px rgba(0,0,0,0.5)">
+         <div>OSS Browser</div>
+       </section>
+    </div>
 
     <!-- Insert this line above script imports  -->
     <script>
@@ -44,14 +53,26 @@
     <script src="templates.js"></script>
     <script>
       const {ipcRenderer,shell} = require('electron');
+      var isDev = process.env.NODE_ENV=='development';
 
-      ipcRenderer.on('asynchronous-reply', (event, arg) => {
-        Global.staticServerPort = arg;
-        console.log(arg);
+      ipcRenderer.on('asynchronous-reply', (event, data) => {
+        switch(data.key){
+          case 'getStaticServerPort':
+            Global.staticServerPort = data.port;
+            break;
+        }
       });
       setTimeout(function(){
-        ipcRenderer.send('asynchronous-message', 'getStaticServerPort');
+        ipcRenderer.send('asynchronous', {key: 'getStaticServerPort' });
       },1000);
+
+      //自动升级
+      // setTimeout(function(){
+      //   ipcRenderer.send('asynchronous-message', 'checkUpgrade');
+      // },2000);
+      // setInterval(function(){
+      //   ipcRenderer.send('asynchronous-message', 'checkUpgrade');
+      // },60000);
 
 
       function openExternal(url){
@@ -60,7 +81,13 @@
       }
 
       function openDevTools(){
-        ipcRenderer.send('asynchronous-message', 'openDevTools');
+        ipcRenderer.send('asynchronous', {key: 'openDevTools'});
+      }
+      function gInstallAndRestart(version){
+        ipcRenderer.send('asynchronous', {key:'installRestart', version: version});
+        // setTimeout(function(){
+        //   process.exit(0);
+        // },1);
       }
 
 
@@ -80,11 +107,13 @@
         },
         i18n: require('./node/i18n'),
 
+        config_path: path.join(os.homedir(), '.oss-browser'),
+
         //release notes目录后缀，里面有 ${version}.md, 如 1.0.0.md
-        release_notes_url:  'https://raw.githubusercontent.com/aliyun/oss-browser/master/release-notes/',
-        //
+        release_notes_url:  `https://raw.githubusercontent.com/aliyun/oss-browser/${isDev?'dev':'master'}/release-notes/`,
+
         // //升级检测链接
-        upgrade_url:  "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
+        upgrade_url:  `https://raw.githubusercontent.com/aliyun/oss-browser/${isDev?'dev':'master'}/upgrade.json`,
 
         about_html: custom.about_html
       };

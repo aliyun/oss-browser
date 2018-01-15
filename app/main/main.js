@@ -1,7 +1,20 @@
 
 angular.module('web')
-   .controller('mainCtrl',['$scope','$rootScope', '$state', '$q','Const','AuthInfo',
-    function($scope, $rootScope, $state, $q, Const, AuthInfo){
+   .controller('mainCtrl',['$scope','$rootScope', '$timeout', '$state', '$q','Const','AuthInfo','autoUpgradeSvs',
+    function($scope, $rootScope, $timeout, $state, $q, Const, AuthInfo, autoUpgradeSvs){
+
+      angular.extend($scope, {
+        upgradeInfo: {
+          isLastVersion: true
+        }
+      });
+
+      $timeout(function(){
+        autoUpgradeSvs.load(function(info){
+           angular.extend($scope.upgradeInfo, info)
+        })
+      },2000)
+
       // var isInit = false;
       //
       // $scope.$on('$stateChangeSuccess', function(){
@@ -13,7 +26,7 @@ angular.module('web')
       // $rootScope.internalSupported  = false;
       // $scope.netInit = init;
       //
-      // function init(){ 
+      // function init(){
       //   var df = $q.defer();
       //   $.ajax({url:'http://'+(region||'oss-cn-beijing')+'-internal.aliyuncs.com',timeout:2000,error:function(xhr){
       //     isInit=true;

@@ -7,7 +7,8 @@ const {
   BrowserWindow
 } = electron;
 
-
+const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const nativeImage = require('electron').nativeImage;
 
@@ -25,11 +26,7 @@ for(var port of PORTS){
     console.log(e);
   }
 }
-//监听web page里发出的message
-ipcMain.on('asynchronous-message', (event, arg) => {
-  //在main process里向web page发出message
-  event.sender.send('asynchronous-reply', port);
-});
+
 ///*****************************************
 
 
@@ -101,9 +98,41 @@ function createWindow() {
   }
 
 }
-ipcMain.on('asynchronous-message', (event, msg) => {
-   if(msg=='openDevTools') win.webContents.openDevTools();
+
+
+
+//监听web page里发出的message
+ipcMain.on('asynchronous', (event, data) => {
+  switch (data.key) {
+    case 'getStaticServerPort':
+      //在main process里向web page发出message
+      event.sender.send('asynchronous-reply', {key:data.key, port: port });
+      break;
+    case 'openDevTools':
+       win.webContents.openDevTools();
+      break;
+    case 'installRestart':
+
+      var version = data.version;
+      //Copy
+      var from = path.join(os.homedir(), '.oss-browser', version+'-app.asar');
+      var to = path.join(path.dirname(__dirname), 'app.asar');
+
+      fs.writeFileSync(path.join(os.homedir(), '.oss-browser','a.txt'),'copy:'+from+','+to);
+      win.close();
+      
+      setTimeout(function(){
+        fs.rename(from ,to, function(e){
+          if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','c.txt'), JSON.stringify(e))
+          createWindow();
+        });
+      },1000);
+
+      break;
+  }
+
 });
+
 
 //singleton
 const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {

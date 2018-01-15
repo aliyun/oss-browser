@@ -12,9 +12,9 @@
   <h4 class="text-center">
     <img ng-src="{{app_logo}}" style="display:inline-block;" width="40"/>
       &nbsp;&nbsp;{{'app.name'|translate}}  <small class="text-orange">v {{info.currentVersion}}</small>
-      
+
       <div ng-if="custom_about_html" ng-bind-html="custom_about_html"></div>
-      
+
       <div class="pd4" ng-if="!custom_about_html">
        <small class="text-muted">
          {{'opensource.address'|translate}}:
@@ -37,12 +37,40 @@
         <!-- 发现新版本： -->
         v {{info.lastVersion}}
            &nbsp;&nbsp;&nbsp;&nbsp;
-           <a href="" ng-click="open(info.link)" class="btn btn-sm btn-success">
+           <!-- ng-click="open(info.link)" -->
+           <a ng-if="info.upgradeJob.status=='waiting'" href="" ng-click="startUpgrade()" class="btn btn-sm btn-success">
                <i class="fa fa-download"></i>
-               {{'clickToDownload'|translate}}
-               <!-- 点此下载 -->
+               <!-- {{'clickToDownload'|translate}} -->
+               {{'upgrade.start'|translate}}
              </a>
       </span>
+      {{info.upgradeJob}}
+
+      <!-- progress -->
+      <div ng-if="info.upgradeJob.status=='running'" style="margin:4px auto;">
+       <!-- 正在下载... -->
+       {{'upgrade.downloading'|translate}}
+        <div class="progress" style="height:10px">
+          <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="{{info.upgradeJob.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{info.upgradeJob.progress}}%">
+            <!-- <span>{{info.upgradeJob.progress}}%</span> -->
+          </div>
+        </div>
+      </div>
+
+      <div ng-if="info.upgradeJob.status=='failed'">
+
+        {{'upgrade.failed'|translate}}
+        <a href="" ng-click="open(info.link)" class="btn btn-sm btn-primary">
+            <i class="fa fa-download"></i>
+            {{'clickToDownload'|translate}}
+            <!-- 点此下载 -->
+          </a>
+      </div>
+
+      <div ng-if="info.upgradeJob.status=='finished'" class="text-center">
+        <a href="" ng-click="installAndRestart()" class="btn btn-success btn-sm">{{'upgrade.success'|translate}}</a>
+      </div>
+
       <h5 class="clearfix">
         <!-- 主要更新： -->
         {{'main.upgration'|translate}}:
