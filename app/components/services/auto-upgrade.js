@@ -196,8 +196,7 @@ angular.module('web')
 
         var isLastVersion = compareVersion(gVersion, data.version) >= 0;
         var lastVersion = data.version;
-
-       
+ 
         upgradeOpt.isLastVersion = isLastVersion;
         upgradeOpt.lastVersion = lastVersion;
 

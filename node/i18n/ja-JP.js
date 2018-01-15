@@ -409,5 +409,8 @@ module.exports = {
   'login.successfully': '成功したログイン、ジャンプ中...',
   'login.endpoint.error': 'エンドポイントが正しいことを確認してください',
 
-  'startUpgrade': '更新を開始',
+  'upgrade.start': '更新を開始',
+  'upgrade.downloading': 'ダウンロード',
+  'upgrade.download.field': '自動更新に失敗しました。インストールパッケージを手動でダウンロードしてください。',
+  'upgrade.download.success': 'ダウンロード、インストール、再起動',
 }

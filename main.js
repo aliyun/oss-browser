@@ -118,13 +118,14 @@ ipcMain.on('asynchronous', (event, data) => {
       var from = path.join(os.homedir(), '.oss-browser', version+'-app.asar');
       var to = path.join(path.dirname(__dirname), 'app.asar');
 
-      fs.writeFileSync(path.join(os.homedir(), '.oss-browser','a.txt'),'copy:'+from+','+to);
-      win.close();
+      // fs.writeFileSync(path.join(os.homedir(), '.oss-browser','a.txt'),'copy:'+from+','+to);
       
+
       setTimeout(function(){
         fs.rename(from ,to, function(e){
           if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','c.txt'), JSON.stringify(e))
-          createWindow();
+          app.relaunch();
+          app.exit(0);
         });
       },1000);
 
