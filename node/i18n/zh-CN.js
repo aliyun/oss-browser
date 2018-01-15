@@ -408,5 +408,9 @@ module.exports = {
   'login.successfully': '登录成功，正在跳转...',
   'login.endpoint.error': '请确定Endpoint是否正确',
 
+  'upgrade.start': '开始更新',
+  'upgrade.downloading': '正在下载...',
+  'upgrade.download.field': '自动更新失败, 请手动下载安装包。',
+  'upgrade.download.success': '下载成功, 安装并重启',
 
 }

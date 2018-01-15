@@ -157,7 +157,7 @@ gulp.task('copy-icons', function () {
     .pipe(gulp.dest(DIST+'/icons'));
 });
 gulp.task('copy-node', function () {
-  gulp.src(['./node/**','!node/crc64/**/node_modules/**'])
+  gulp.src(['./node/**/*'])
     .pipe(gulp.dest(DIST+'/node'));
 });
 
@@ -242,7 +242,7 @@ gulp.task('watch', function () {
 
   //gulp.watch(['./custom/**'], ['copy-custom']);
 
-  gulp.watch(['./node/**','!node/crc64/**/node_modules/**'], ['copy-node']);
+  gulp.watch(['./node/**'], ['copy-node']);
 
 });
 

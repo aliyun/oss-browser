@@ -50,44 +50,7 @@ angular.module('web')
 
         var isLastVersion = compareVersion(gVersion, data.version) >= 0;
         var lastVersion = data.version;
-
-        if (process.platform == 'darwin') {
-
-          fileName = NAME + '.dmg'
-          var link = data['package_url'].replace(/(\/*$)/g, '') +
-            '/' + data['version'] + '/' + fileName;
-
-          $.ajax({
-            method: 'head',
-            url: link
-          }).then(function() {
-
-            console.log("download url:", link);
-
-            fn({
-              currentVersion: gVersion,
-              isLastVersion: isLastVersion,
-              lastVersion: lastVersion,
-              fileName: fileName,
-              link: link
-            });
-          }, function() {
-            var fileName = NAME + '-' + process.platform + '-' +
-              process.arch + '.zip';
-            var link = data['package_url'].replace(/(\/*$)/g, '') +
-              '/' + data['version'] + '/' + fileName;
-
-            console.log("download url:", link);
-
-            fn({
-              currentVersion: gVersion,
-              isLastVersion: isLastVersion,
-              lastVersion: lastVersion,
-              fileName: fileName,
-              link: link
-            });
-          })
-        } else {
+ 
           var fileName = NAME + '-' + process.platform + '-' + process.arch +
             '.zip';
           var link = data['package_url'].replace(/(\/*$)/g, '') +
@@ -101,7 +64,6 @@ angular.module('web')
             fileName: fileName,
             link: link
           });
-        }
 
       });
     }
