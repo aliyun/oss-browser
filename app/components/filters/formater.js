@@ -73,7 +73,7 @@ angular.module('web')
 
     return function (n, ex) {
       if (n == 0)return 0;
-      if(!n)return '';
+      if(!n)return '0';
 
       var t = [];
       var left = n;

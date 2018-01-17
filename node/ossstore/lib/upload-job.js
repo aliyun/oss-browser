@@ -181,6 +181,7 @@ UploadJob.prototype.startSpeedCounter = function(){
   var self = this;
 
   self.lastLoaded = self.prog.loaded||0;
+  self.lastSpeed = 0;
 
   var tick = 0;
   clearInterval(self.speedTid);
@@ -192,6 +193,8 @@ UploadJob.prototype.startSpeedCounter = function(){
       return;
     }
     self.speed = self.prog.loaded - self.lastLoaded;
+    if(self.lastSpeed != self.speed) self.emit('speedChange',self.speed);
+    self.lastSpeed = self.speed;
     self.lastLoaded=self.prog.loaded;
 
     //推测耗时
@@ -478,7 +481,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
           self.message='上传分片失败: #'+partNumber;
           checkPoints.Parts[partNumber].loaded = 0;
           self.stop();
-          self.emit('error', multiErr);
+          //self.emit('error', multiErr);
           concurrency--;
         }
         else if(multiErr.message.indexOf('The specified upload does not exist')!=-1) {

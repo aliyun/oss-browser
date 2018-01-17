@@ -12,8 +12,23 @@ module.exports = {
 
   headObject: headObject,
   computeMaxConcurrency: computeMaxConcurrency,
-  checkFileHash : util.checkFileHash
+  checkFileHash : util.checkFileHash,
+
+  getPartProgress: getPartProgress,
 };
+
+function getPartProgress(parts){
+  var c = 0;
+  var len = 0
+  for(var k in parts){
+    len++;
+    if(parts[k].done) c++;
+  }
+  return {
+    done: c, total: len
+  }
+
+}
 
 function headObject(self, objOpt, fn){
   var retryTimes = 0;
