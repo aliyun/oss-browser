@@ -58,12 +58,13 @@
                 </div>
 
                 <div class="col-sm-2 text-overflow text-{{item.status|statusCls}}">
-                    <span ng-show="item.status=='verifying' || !item.speed">{{item.status|status:1}}
+                    <span ng-show="item.status!='running'">
+                      {{item.status|status:1}}
                       <i ng-if="item.message"
                       uib-tooltip="{{item.message}}" tooltip-placement="left" tooltip-append-to-body="true"
                       class="fa fa-info-circle"></i>
                     </span>
-                    <small ng-show="item.status!='verifying' && item.speed">
+                    <small ng-show="item.status=='running'">
                         {{item.speed|sizeFormat}}/s
                     </small>
                 </div>
