@@ -7,6 +7,7 @@ angular.module('web')
     angular.extend($scope, {
       showTab: 3,
       set: {
+        autoUpgrade: settingsSvs.autoUpgrade.get(),
         maxUploadJobCount: settingsSvs.maxUploadJobCount.get(),
         maxDownloadJobCount: settingsSvs.maxDownloadJobCount.get(),
         showImageSnapshot: settingsSvs.showImageSnapshot.get(),

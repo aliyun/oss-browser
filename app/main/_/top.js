@@ -1,8 +1,8 @@
 
 
 angular.module('web')
-  .controller('topCtrl', ['$scope', '$rootScope','$uibModal', '$location', '$translate', '$timeout','Dialog','Auth','Const', 'AuthInfo','safeApply',
-    function ($scope, $rootScope, $modal, $location, $translate, $timeout,Dialog,Auth, Const, AuthInfo, safeApply) {
+  .controller('topCtrl', ['$scope', '$rootScope','$uibModal', '$location', '$translate', '$timeout','Dialog','Auth','Const', 'AuthInfo','settingsSvs','autoUpgradeSvs','safeApply',
+    function ($scope, $rootScope, $modal, $location, $translate, $timeout,Dialog,Auth, Const, AuthInfo, settingsSvs, autoUpgradeSvs, safeApply) {
 
       var fs = require('fs');
       var path = require('path');
@@ -41,9 +41,16 @@ angular.module('web')
 
       $scope.$watch('upgradeInfo.isLastVersion', function(v){
         if(false===v){
-          $scope.showAbout();
+          if(1==settingsSvs.autoUpgrade.get()) autoUpgradeSvs.start()
+          else $scope.showAbout();
+
         }
-      })
+      });
+      $scope.$watch('upgradeInfo.upgradeJob.status', function(s){
+        if('failed'==s || 'finished'==s){
+           $scope.showAbout();
+        }
+      });
 
 
       $rootScope.showSettings = function(fn){

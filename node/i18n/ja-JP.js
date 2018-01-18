@@ -171,6 +171,8 @@ module.exports = {
   'settings.WhetherShowThumbnail': '画像のサムネイルを表示するかどうか',
   'settings.WhetherShowThumbnail.msg': 'ファイル一覧にサムネイルを表示すると一定量のトラフィックが消費されます',
   'settings.success': '正常に保存',
+  'settings.autoUpgrade': '自動更新',
+  'settings.autoUpgrade.msg': '自動ダウンロードパッケージ',
 
   //bookmark
   'bookmarks.title': 'ブックマーク',
