@@ -38,7 +38,7 @@
         v {{info.lastVersion}}
            &nbsp;&nbsp;&nbsp;&nbsp;
            <!-- ng-click="open(info.link)" -->
-           <a ng-if="info.upgradeJob.status=='waiting'" href="" ng-click="startUpgrade()" class="btn btn-sm btn-success">
+           <a ng-if="!info.upgradeJob||info.upgradeJob.status=='waiting'" href="" ng-click="startUpgrade()" class="btn btn-sm btn-success">
                <i class="fa fa-download"></i>
                <!-- {{'clickToDownload'|translate}} -->
                {{'upgrade.start'|translate}}
@@ -59,7 +59,7 @@
 
       <div ng-if="info.upgradeJob.status=='failed'">
 
-        {{'upgrade.failed'|translate}}
+        {{'upgrade.download.failed'|translate}}
         <a href="" ng-click="open(info.link)" class="btn btn-sm btn-primary">
             <i class="fa fa-download"></i>
             {{'clickToDownload'|translate}}
@@ -68,7 +68,7 @@
       </div>
 
       <div ng-if="info.upgradeJob.status=='finished'" class="text-center">
-        <a href="" ng-click="installAndRestart()" class="btn btn-success btn-sm">{{'upgrade.success'|translate}}</a>
+        <a href="" ng-click="installAndRestart()" class="btn btn-success btn-sm">{{'upgrade.download.success'|translate}}</a>
       </div>
 
       <h5 class="clearfix">

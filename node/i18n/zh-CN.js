@@ -411,6 +411,6 @@ module.exports = {
   'upgrade.start': '开始更新',
   'upgrade.downloading': '正在下载...',
   'upgrade.download.field': '自动更新失败, 请手动下载安装包。',
-  'upgrade.download.success': '下载成功, 安装并重启',
+  'upgrade.download.success': '已经下载成功, 现在安装并重启应用',
 
 }

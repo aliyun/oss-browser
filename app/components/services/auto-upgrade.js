@@ -124,7 +124,7 @@ angular.module('web')
               that.progress = Math.round(current*10000/that.total)/100;
               console.log(that.total)
 
-              var ws = fs.createWriteStream(to+'.download')
+              var ws = fs.createWriteStream(to+'.download',{flags:'a+'});
 
               request(from)
                 .on('error', function(err) {
@@ -196,10 +196,12 @@ angular.module('web')
 
         var isLastVersion = compareVersion(gVersion, data.version) >= 0;
         var lastVersion = data.version;
- 
+
         upgradeOpt.isLastVersion = isLastVersion;
         upgradeOpt.lastVersion = lastVersion;
 
+        //暂时只支持1个文件更新
+        data.file = data.files.length>0?data.files[0]:null;
 
         if(!isLastVersion && data.file){
 
