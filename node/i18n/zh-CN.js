@@ -171,6 +171,8 @@ module.exports = {
   'settings.WhetherShowThumbnail': '是否显示图片缩略',
   'settings.WhetherShowThumbnail.msg': '在文件列表中显示图片缩略, 会消耗一定的流量',
   'settings.success': '已经保存设置',
+  'settings.autoUpgrade': '自动更新',
+  'settings.autoUpgrade.msg': '自动下载更新包',
 
   //bookmark
   'bookmarks.title': '书签管理',
