@@ -66,5 +66,4 @@ dmg:
 all:win32 win64 linux32 linux64 mac
 	@echo 'Done'
 
-
 .PHONY:build

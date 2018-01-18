@@ -119,7 +119,7 @@ ipcMain.on('asynchronous', (event, data) => {
       var to = path.join(path.dirname(__dirname), 'app.asar');
 
       // fs.writeFileSync(path.join(os.homedir(), '.oss-browser','a.txt'),'copy:'+from+','+to);
-      
+
 
       setTimeout(function(){
         fs.rename(from ,to, function(e){
