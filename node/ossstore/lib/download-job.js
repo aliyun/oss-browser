@@ -53,7 +53,7 @@ class DownloadJob extends Base {
 
     //console.log('created download job');
 
-    this.maxConcurrency = 3;
+    this.maxConcurrency = 5;
   }
 }
 
@@ -151,7 +151,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
     tick++;
     if(tick>5){
       tick=0;
-      self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.chunkSize);
+      self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.chunkSize,self.maxConcurrency);
       console.log('max concurrency:', self.maxConcurrency);
     }
   }, 1000);

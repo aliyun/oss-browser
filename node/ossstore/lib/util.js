@@ -9,8 +9,38 @@ module.exports = {
   parseOssPath: parseOssPath,
   getFileCrc64: getFileCrc64,
   getBigFileMd5: getBigFileMd5,
-  checkFileHash: checkFileHash
+  checkFileHash: checkFileHash,
+  printPartTimeLine: printPartTimeLine
 };
+
+function printPartTimeLine(opt){
+  var min=opt[1].start,max=opt[1].end;
+  for(var k in opt){
+    min = Math.min(opt[k].start, min);
+    max = Math.max(opt[k].end, max)
+  }
+  //console.log(min, max)
+
+  var total = max-min;
+  var width = 600;
+
+  var t=[];
+  for(var k in opt){
+    t.push({
+      left: (opt[k].start - min)*600/total,
+      width: (opt[k].end - opt[k].start)*600/total,
+    });
+  }
+
+  //console.log(JSON.stringify(t, ' ',2));
+
+  //var t2=[];
+  for(var n of t){
+    console.log('%c',`background:green;margin-left:${n.left}px;padding-left:${n.width}px;`)
+    //t2.push(`<div style="height:6px;background:green;width:${n.width}px;margin-left:${n.left}px;clear:both;margin-top:1px;"></div>`)
+  }
+  console.log(t.length+' parts')
+}
 
 
 function checkFileHash(filePath, hashCrc64ecma,fileMd5, fn) {
