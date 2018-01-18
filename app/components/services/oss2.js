@@ -51,12 +51,36 @@ angular.module('web')
         updateACL: updateACL,
 
 
+
+
         getClient: getClient,
         parseOSSPath: parseOSSPath,
         getOssEndpoint: getOssEndpoint,
         parseRestoreInfo: parseRestoreInfo,
         signatureUrl: signatureUrl,
+
+        getClient2: getClient2,
+        signatureUrl2: signatureUrl2
       };
+ 
+
+      function getClient2(opt){
+        var options = prepaireOptions(opt)
+        // console.log(options)
+        var client = new OSS.Wrapper({
+          accessKeyId: options.accessKeyId,
+          accessKeySecret: options.secretAccessKey,
+          endpoint: options.endpoint,
+          bucket: opt.bucket,
+        });
+        return client;
+      }
+
+      function signatureUrl2(region ,bucket, key, expires, xprocess){
+        var client = getClient2({region:region, bucket: bucket});
+        return client.signatureUrl(key, {expires: 3600, process: xprocess});
+      }
+
 
       function checkFileExists(region, bucket, key) {
         return new Promise(function (a, b) {
@@ -1247,6 +1271,8 @@ angular.module('web')
         var client = new ALY.OSS(options);
         return client;
       }
+
+
 
       function prepaireOptions(opt){
         var authInfo = AuthInfo.get();
