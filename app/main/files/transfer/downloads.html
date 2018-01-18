@@ -54,25 +54,26 @@
                     <div class="progress mg0" style="height:4px;width:100%">
                         <div class="progress-bar progress-bar-{{item.status|statusCls}}"
                              ng-style="{width: (item.prog.loaded|persent:item.prog.total:item.status) + '%'}">
+
                         </div>
                     </div>
                 </div>
 
                 <div class="col-sm-2 text-overflow text-{{item.status|statusCls}}">
-                  <span ng-show="item.status!='running'">
+                  <small ng-show="item.status!='running'">
                     {{item.status|status:1}}
                     <i ng-if="item.message"
                     uib-tooltip="{{item.message}}" tooltip-placement="left" tooltip-append-to-body="true"
                     class="fa fa-info-circle"></i>
-                  </span>
+                  </small>
                   <small ng-show="item.status=='running'">
                       {{item.speed|sizeFormat}}/s
                   </small>
                 </div>
 
                 <div class="col-sm-4 text-overflow">
-                    <span ng-show="item.prog.total">{{item.prog.total|sizeFormat}}</span>
-                    <span ng-show="item.predictLeftTime">, {{item.predictLeftTime|leftTimeFormat}}</span>
+                    <small ng-show="item.prog.total"><span ng-if="item.prog.loaded!=item.prog.total">{{item.prog.loaded|sizeFormat}}/</span>{{item.prog.total|sizeFormat}}</small>
+                    <small ng-show="item.predictLeftTime">, {{item.predictLeftTime|leftTimeFormat}}</small>
                 </div>
 
 
