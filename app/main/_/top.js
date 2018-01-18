@@ -39,6 +39,11 @@ angular.module('web')
       $scope.authInfo.expirationStr = moment(new Date($scope.authInfo.expiration)).format('YYYY-MM-DD HH:mm:ss');
 
 
+      $scope.$watch('upgradeInfo.isLastVersion', function(v){
+        if(false===v){
+          $scope.showAbout();
+        }
+      })
 
 
       $rootScope.showSettings = function(fn){
