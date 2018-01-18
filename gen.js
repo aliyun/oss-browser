@@ -2,13 +2,14 @@ const fs = require('fs');
 const path = require('path');
 
 var ia32_start_version= '1.2.5';
-var dmg_end_version= '1.4.0';
+var maczip_start_version= '1.4.0';
+var dmg_end_version= '1.5.0';
 const PRE  = 'https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/';
 
 var t=[`All Releases for [ OSS Browser ]
 
-  ||Windows ia32|Windows x64| Mac(dmg) | Mac(zip) |Linux ia32|Linux x64|
-  |-----|-----|-----|-----|----|--------|--------|`];
+  ||Windows ia32|Windows x64| Mac(dmg) | Mac(zip) |Linux ia32|Linux x64|Release note|
+  |-----|-----|-----|-----|----|--------|--------|---|`];
 
 var vs = [];
 var arr = fs.readdirSync('./release-notes');
@@ -22,6 +23,9 @@ vs.sort(compareVersion);
 
 vs.forEach(version=>{
   if(compareVersion(version, dmg_end_version) <= 0){
+    var str = `|${version}|[Download](${PRE}${version}/oss-browser-win32-ia32.zip) |[Download](${PRE}${version}/oss-browser-win32-x64.zip) | - | [Download](${PRE}${version}/oss-browser-darwin-x64.zip) | [Download](${PRE}${version}/oss-browser-linux-ia32.zip) | [Download](${PRE}${version}/oss-browser-linux-x64.zip)|`;
+  }
+  else if(compareVersion(version, maczip_start_version) <= 0){
     var str = `|${version}|[Download](${PRE}${version}/oss-browser-win32-ia32.zip) |[Download](${PRE}${version}/oss-browser-win32-x64.zip) | [Download](${PRE}${version}/oss-browser.dmg) | [Download](${PRE}${version}/oss-browser-darwin-x64.zip) | [Download](${PRE}${version}/oss-browser-linux-ia32.zip) | [Download](${PRE}${version}/oss-browser-linux-x64.zip)|`;
   }
   else if(compareVersion(version, ia32_start_version)<0){
@@ -30,6 +34,7 @@ vs.forEach(version=>{
   else{
     var str = `|${version}||[Download](${PRE}${version}/oss-browser-win32-x64.zip) | [Download](${PRE}${version}/oss-browser.dmg) | | | [Download](${PRE}${version}/oss-browser-linux-x64.zip) |`;
   }
+  str+= '['+version + '.md](release-notes/'+version + '.md)|'
  t.push(str);
 });
 
