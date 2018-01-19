@@ -13,7 +13,7 @@ angular.module('web')
       var T = $translate.instant;
 
       angular.extend($scope, {
-        gtab: 1,
+        gtab: parseInt(localStorage.getItem('gtag')||1),
         flags: {
           remember: 'NO',
           showHis: 'NO'
@@ -41,6 +41,9 @@ angular.module('web')
 
       $scope.$watch('item.eptpl', function(v){
         $scope.eptplType = (v==DEF_EP_TPL)?'default':'customize';
+      });
+      $scope.$watch('gtab', function(v){
+        localStorage.setItem('gtag',v)
       });
 
 
@@ -88,7 +91,12 @@ angular.module('web')
 
                $scope.authTokenInfo.expirationStr = moment(new Date(info.expiration)).format('YYYY-MM-DD HH:mm:ss');
 
-            }else if(new Date(info.expiration).getTime() < new Date().getTime()){
+            }
+            else if(info.id && info.secret && !info.id.startsWith('STS.')){
+              //子用户ak
+              $scope.authTokenInfo = info;
+            }
+            else if(new Date(info.expiration).getTime() < new Date().getTime()){
                $scope.authTokenInfo = null;
             }
           }catch(e){
