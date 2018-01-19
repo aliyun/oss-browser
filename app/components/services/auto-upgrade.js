@@ -200,10 +200,12 @@ angular.module('web')
         upgradeOpt.isLastVersion = isLastVersion;
         upgradeOpt.lastVersion = lastVersion;
 
-        //暂时只支持1个文件更新
-        data.file = data.files.length>0?data.files[0]:null;
 
-        if(!isLastVersion && data.file){
+        if(!isLastVersion && data.files){
+          
+          //暂时只支持1个文件更新
+          data.file = data.files.length>0?data.files[0]:null;
+
 
           var jobs = [];
 
