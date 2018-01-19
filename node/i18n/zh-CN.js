@@ -415,4 +415,6 @@ module.exports = {
   'upgrade.download.field': '自动更新失败, 请手动下载安装包。',
   'upgrade.download.success': '已经下载成功, 现在安装并重启应用',
 
+  'Insufficient disk space': '磁盘空间不足',
+
 }

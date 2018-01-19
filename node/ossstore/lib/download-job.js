@@ -332,15 +332,25 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
         return;
       }
 
-      //util.closeFD(fd);
-      downloadPart(getNextPart());
+      util.getFreeDiskSize(tmpName, function(err, freeDiskSize){
+        console.log('got free disk size:',freeDiskSize, contentLength, freeDiskSize - contentLength)
+
+        if(!err){
+          if(contentLength > freeDiskSize - 10*1024*1024 ){
+            // < 100MB warning
+            self.message="Insufficient disk space";
+            self.stop();
+            return;
+          }
+        }
+        //downloadPart(getNextPart());
+      });
     });
 
   });
 
   function createFileIfNotExists(p, fn) {
     if (!fs.existsSync(p)) {
-      //if todo: mkdir
       fs.writeFile(tmpName, '', fn);
     } else {
       fn();

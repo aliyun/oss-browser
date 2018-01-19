@@ -414,4 +414,6 @@ module.exports = {
   'upgrade.downloading': 'Start download...',
   'upgrade.download.field': 'Automatic update failed, please manually download the installation package.',
   'upgrade.download.success': 'Download successfully, install and restart',
+
+  'Insufficient disk space': 'Insufficient disk space',
 }
