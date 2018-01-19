@@ -37,6 +37,11 @@ module.exports = {
   'auth.eptpl.popup.msg1': 'For Public Cloud, you can directly use the default settings',
   'auth.eptpl.popup.msg2': 'For Private Cloud, Please enter a custom Endpoint, such as:',
 
+  'auth.presetOssPath.popup.msg1': 'The current AK that has all Bucket rights does not need to set the "Preset OSS Path"',
+  'auth.presetOssPath.popup.msg2': 'The current AK only has the permissions of a Bucket or a certain path under a Bucket, you need to set the "Preset OSS Path"',
+
+  'auth.remember.popup.msg1': 'Check "Remember" to save the AK. When you login again, click AK History to select the key to log in. You do not need to enter AK manually. Please do not check it on a temporary computer!',
+
   'region': 'Region',
   'auth.region.placeholder': 'Optional',
   'auth.description': 'Description',

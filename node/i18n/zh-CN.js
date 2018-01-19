@@ -37,6 +37,11 @@ module.exports = {
   'auth.eptpl.popup.msg1': '公有云直接使用默认即可',
   'auth.eptpl.popup.msg2': '专有云请输入自定义Endpoint,如:',
 
+  'auth.presetOssPath.popup.msg1': '大权限子账号登录: 当前使用的AK已拥有所有Bucket的权限，不需要设置"预设OSS路径"',
+  'auth.presetOssPath.popup.msg2': '小权限子账号登录: 当前使用的AK只有某个Bucket或者Bucket下某个路径的权限，需要设置"预设OSS路径"',
+
+  'auth.remember.popup.msg1': '勾选"记住秘钥"可保存AK秘钥，再次登录时，单击AK历史，可选择该秘钥登录，不需要手动输入AK。请不要再临时使用的电脑上勾选！',
+
   'region': '区域',
   'auth.region.placeholder': '可选',
   'auth.description': '备注',
