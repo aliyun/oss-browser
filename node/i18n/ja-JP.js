@@ -415,4 +415,6 @@ module.exports = {
   'upgrade.downloading': 'ダウンロード',
   'upgrade.download.field': '自動更新に失敗しました。インストールパッケージを手動でダウンロードしてください。',
   'upgrade.download.success': 'ダウンロード、インストール、再起動',
+
+  'Insufficient disk space': 'ディスク容量不足',
 }
