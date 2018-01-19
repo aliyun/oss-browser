@@ -422,4 +422,7 @@ module.exports = {
 
   'Insufficient disk space': '磁盘空间不足',
 
+  'grant.email.title': 'OSS Browser 授权',
+  'grant.email.body.title': 'OSS Browser 目前支持2种方式登录, 您可以选择任意一种:',
+
 }

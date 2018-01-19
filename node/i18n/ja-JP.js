@@ -422,4 +422,7 @@ module.exports = {
   'upgrade.download.success': 'ダウンロード、インストール、再起動',
 
   'Insufficient disk space': 'ディスク容量不足',
+
+  'grant.email.title': 'OSSブラウザ認証',
+  'grant.email.body.title': 'OSSブラウザは現在2つのログイン方法をサポートしていますが、いずれかを選択できます:',
 }

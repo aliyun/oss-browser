@@ -343,7 +343,8 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             return;
           }
         }
-        //downloadPart(getNextPart());
+        
+        downloadPart(getNextPart());
       });
     });
 

@@ -179,9 +179,11 @@
                             ng-click="openURL('https://github.com/aliyun/oss-browser/blob/master/docs/authToken.md')">
                             <i class="fa fa-question-circle"></i></a></label>
                         <div class="col-sm-9">
+
                             <textarea required ng-model="item.authToken"  rows="10" ng-change="authTokenChange()"
                              class="form-control" id="input-x" placeholder="{{'auth.authToken.placeholder'|translate}}">
                              </textarea>
+
                              <small class="text-danger" ng-if="!authTokenInfo">
                                {{'auth.authToken.error.invalid'|translate}}
                                <!-- 请输入有效的授权码 -->
@@ -190,7 +192,7 @@
                               {{'auth.authToken.error.expired'|translate}}
                                <!-- 授权码已经过期 -->
                              </small>
-                             <small class="text-success" ng-if="authTokenInfo && !authTokenInfo.isExpired">
+                             <small class="text-success" ng-if="authTokenInfo && !authTokenInfo.isExpired && authTokenInfo.expiration">
                               ({{"auth.authToken.info.validUntil"|translate:{expiration:authTokenInfo.expirationStr} }},
                                <!-- (有效期至{{authTokenInfo.expiration|timeFormat}},  -->
                                {{'auth.authToken.info.leftTime'|translate}}: <my-timer class="text-warning" expiration="authTokenInfo.expiration"></my-timer>)
