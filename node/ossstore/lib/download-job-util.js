@@ -84,7 +84,7 @@ function getFreeDiskSize(p, fn){
   }
 }
 function parseSize(s){
-  var arr = s.match(/(\d+)(\D?)/);
+  var arr = s.match(/([\d.]+)(\D?).*/);
   return parseInt(arr[1]) * parseSizeUnit(arr[2])
 }
 function parseSizeUnit(g){
