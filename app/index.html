@@ -29,9 +29,14 @@
 
     <div ui-view="">
       <!-- loading -->
-       <section style="text-align:center;display:block;width:128px;margin:100px auto">
-         <img src="icons/icon.png" style="width:100%;border-radius:50%;box-shadow:0 0 5px rgba(0,0,0,0.5)">
-         <div>OSS Browser</div>
+       <section style="text-align:center;display:block;width:128px;margin:250px auto 0">
+         <div class="loadEffect">
+    		        <div><span></span></div>
+    		        <div><span></span></div>
+    		        <div><span></span></div>
+    		        <div><span></span></div>
+    		</div>
+
        </section>
     </div>
 
@@ -125,7 +130,6 @@
                Global.i18n[k].content['app.name']=custom.appName[k]||'OSS Browser';
           }
       })();
-
 
 
       $(function(){

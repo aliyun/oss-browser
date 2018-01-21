@@ -93,20 +93,19 @@ Makefile有3个变量，可以替换,分别为：NAME,CUSTOM,VERSION.
 
 然后指定custom路径 build:
 ```
-make build NAME=my-oss-browser CUSTOM=~/Desktop/custom/
+make build NAME=my-oss-browser CUSTOM=~/Desktop/custom
 ```
 
 开发模式启动：
 ```
-make run NAME=my-oss-browser CUSTOM=~/Desktop/custom/
+make run NAME=my-oss-browser CUSTOM=~/Desktop/custom
 ```
 
 
 ## 4. build
 
-
 ```
-make all NAME=my-oss-browser CUSTOM=~/Desktop/custom/
+make all NAME=my-oss-browser CUSTOM=~/Desktop/custom
 ```
 
 * Makefile中的 VERSION 和 NAME 变量，VERSION 需要和 custom/index.js 中的version相同，NAME需要和appId相同。
