@@ -115,7 +115,8 @@ ipcMain.on('asynchronous', (event, data) => {
 
       var version = data.version;
       //Copy
-      var from = path.join(os.homedir(), '.oss-browser', version+'-app.asar');
+      //var from = path.join(os.homedir(), '.oss-browser', version+'-app.asar');
+      var from = path.join(path.dirname(__dirname), version+'-app.asar');
       var to = path.join(path.dirname(__dirname), 'app.asar');
 
       // fs.writeFileSync(path.join(os.homedir(), '.oss-browser','a.txt'),'copy:'+from+','+to);
@@ -123,7 +124,7 @@ ipcMain.on('asynchronous', (event, data) => {
 
       setTimeout(function(){
         fs.rename(from ,to, function(e){
-          if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','c.txt'), JSON.stringify(e))
+          if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
           app.relaunch();
           app.exit(0);
         });

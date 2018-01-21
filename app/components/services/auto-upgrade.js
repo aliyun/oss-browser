@@ -7,22 +7,21 @@ angular.module('web')
     var release_notes_url = Global.release_notes_url;
     var upgrade_url = Global.upgrade_url;
     var gVersion = Global.app.version;
-    var config_path = Global.config_path;
-
+    //var config_path = Global.config_path;
 
     var upgradeOpt = {
-        currentVersion: gVersion,
-        isLastVersion: false,
-        lastVersion: gVersion,
-        fileName: '',
-        link: '',
-        // fileName: fileName,
-        // link: linkPre + '/'+ fileName,
-        upgradeJob: {
-          pkgLink: '',
-          progress: 0,
-          status: 'waiting'
-        }
+      currentVersion: gVersion,
+      isLastVersion: false,
+      lastVersion: gVersion,
+      fileName: '',
+      link: '',
+      // fileName: fileName,
+      // link: linkPre + '/'+ fileName,
+      upgradeJob: {
+        pkgLink: '',
+        progress: 0,
+        status: 'waiting'
+      }
     }
 
 
@@ -134,7 +133,7 @@ angular.module('web')
                 .on('data', function(chunk){
                     current += chunk.length;
                     that.progress = Math.round(current*10000/that.total)/100;
-                    console.log(that.progress)
+                    //console.log(that.progress)
                     that._changeProgress(that.progress);
                     // fs.appendFile(to+'.download', chunk, function(err){
                     //    if(err)console.log(err)
@@ -202,7 +201,7 @@ angular.module('web')
 
 
         if(!isLastVersion && data.files){
-          
+
           //暂时只支持1个文件更新
           data.file = data.files.length>0?data.files[0]:null;
 
@@ -226,7 +225,7 @@ angular.module('web')
 
           var jobsFinishedCount = 0;
 
-          var to = path.join(config_path, lastVersion+'-'+data.file);
+          var to = path.join(__dirname, '..', lastVersion+'-'+data.file);
 
           job = new FlatDownloadJob(data.file,
             pkgLink,
