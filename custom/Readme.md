@@ -33,9 +33,17 @@ git clone {git地址}
 cd oss-browser
 ```
 
-### (4) 如果使用 windows 系统，需要安装下列软件：
+### (4) 使用mac平台来build。
 
-* 需要安装gitbash:
+需要使用 brew 来安装 wine:
+
+```
+brew install wine
+```
+
+### (5) 如果使用 windows 系统(不推荐)，需要安装下列软件：
+
+* 需要安装 gitbash:
 
 请自行下载安装。
 
@@ -51,7 +59,7 @@ cnpm i -g windows-build-tools
 
 [make.exe(32位版本)](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/windows-tools/32/make.exe)
 
-
+* 可以还会遇到其他问题，请自行解决。
 
 ## 2. 开始尝试启动
 

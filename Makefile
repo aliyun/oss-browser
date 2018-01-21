@@ -8,7 +8,7 @@ PKGER=node node_modules/electron-packager/cli.js
 ZIP=node ../zip.js
 
 ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/
-ELECTRON_VERSION=1.6.5
+ELECTRON_VERSION=1.7.10
 BUILD=ELECTRON_MIRROR=$(ELECTRON_MIRROR) $(PKGER) ./dist $(NAME) --asar --overwrite --out=build --version $(ELECTRON_VERSION)
 
 
@@ -31,12 +31,12 @@ build:
 	node gen.js
 
 win64:
-	$(BUILD) --platform=win32 --arch=x64
+	$(BUILD) --platform=win32 --arch=x64 --icon=$(CUSTOM)/icon.ico
 	cp -rf $(CUSTOM) build/$(NAME)-win32-x64/resources
 	rm -rf releases/$(VERSION)/$(NAME)-win32-x64.zip && mkdir -p releases/$(VERSION)
 	cd build && $(ZIP) ../releases/$(VERSION)/$(NAME)-win32-x64.zip $(NAME)-win32-x64/
 win32:
-	$(BUILD) --platform=win32 --arch=ia32
+	$(BUILD) --platform=win32 --arch=ia32 --icon=$(CUSTOM)/icon.ico
 	cp -rf $(CUSTOM) build/$(NAME)-win32-ia32/resources
 	rm -rf releases/$(VERSION)/$(NAME)-win32-ia32.zip && mkdir -p releases/$(VERSION)
 	cd build && $(ZIP) ../releases/$(VERSION)/$(NAME)-win32-ia32.zip $(NAME)-win32-ia32/
