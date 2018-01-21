@@ -40,7 +40,7 @@ function getFreeDiskSize(p, fn){
         lastLine = (lastLine+'').trim();
 
         num = lastLine.match(/\s+([\d,]+)\s+/)[1];
-        num = parseInt(num.replace(',',''))
+        num = parseInt(num.replace(/,/g,''))
       }catch(e){
 
       }
