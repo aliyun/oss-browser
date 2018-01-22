@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('grantModalCtrl', ['$scope', '$q', '$uibModalInstance','$translate', 'items', 'currentInfo','ramSvs','settingsSvs','subUserAKSvs','Mailer','Const','Toast', 'safeApply',
-    function ($scope, $q, $modalInstance, $translate, items, currentInfo,ramSvs, settingsSvs, subUserAKSvs, Mailer, Const, Toast, safeApply) {
+  .controller('grantModalCtrl', ['$scope', '$q', '$uibModalInstance','$translate', 'items', 'currentInfo','ramSvs','settingsSvs','subUserAKSvs','Mailer','Const','Toast','AuthInfo', 'safeApply',
+    function ($scope, $q, $modalInstance, $translate, items, currentInfo,ramSvs, settingsSvs, subUserAKSvs, Mailer, Const, Toast, AuthInfo, safeApply) {
       var T = $translate.instant;
       angular.extend($scope, {
         cancel: cancel,
@@ -226,7 +226,7 @@ angular.module('web')
         }
 
         if($scope.grant.userName){
-          fn($scope.grant.userName)
+          fn($scope.grant.userName);
         }else{
           var userName = $scope.create.UserName;
           var comments = [];
@@ -242,34 +242,72 @@ angular.module('web')
             ramSvs.createAccessKey(userName).then(function(result){
               //AccessKeyId
               //console.log(result.AccessKey);
+              var id = result.AccessKey.AccessKeyId;
+              var secret = result.AccessKey.AccessKeySecret;
               subUserAKSvs.save({
-                AccessKeyId: result.AccessKey.AccessKeyId,
-                AccessKeySecret: result.AccessKey.AccessKeySecret,
+                AccessKeyId: id,
+                AccessKeySecret: secret,
                 UserName: userName
               });
 
-               var sendInfo = {
-                //  AccessKeyId: result.AccessKey.AccessKeyId,
-                //  AccessKeySecret: result.AccessKey.AccessKeySecret,
-                //  UserName: userName,
-                 subject: 'OSS Browser 授权',
-                 to: $scope.create.Email,
-                 html:
-                           '子用户名(Sub User): '+userName+ '<br/>'
-                         + 'AccessKeyId: '+result.AccessKey.AccessKeyId+ '<br/>'
-                         + 'AccessKeySecret: '+ result.AccessKey.AccessKeySecret+ '<br/>'
-                         + '区域(Region): '+ currentInfo.region  + '<br/>'
-                         + '授予权限(permission): '+$scope.grant.privType + '<br/>'
-                         + '授权路径(osspath): ' + comments.join(',<br/>')
-                         + '<hr/>'
-                         + '您可以使用 <a href="https://github.com/aliyun/oss-browser" target="_blank">OSS Browser</a> 浏览或管理这些文件。'
-               };
-
+              var sendInfo = getSendInfo(id,secret,userName, currentInfo.region, comments,$scope.create.Email, $scope.grant.privType);
               fn(userName, sendInfo);
             });
 
           });
         }
+      }
+
+
+      function getSendInfo(id, secret, userName, region, comments, toEmail, privType){
+        var opt = {
+          id: id,
+          secret: secret,
+          desc: userName,
+          region:  region,
+          osspath: comments[0],
+          eptpl: AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com'
+        };
+
+        var tokenStr = new Buffer(JSON.stringify(opt)).toString('base64');
+
+         var sendInfo = {
+          //  AccessKeyId: result.AccessKey.AccessKeyId,
+          //  AccessKeySecret: result.AccessKey.AccessKeySecret,
+          //  UserName: userName,
+           subject:  T('grant.email.title'),// 'OSS Browser 授权',
+           to: toEmail,
+           html:
+`${T('grant.email.body.title')}<br/>
+<br/>
+1. ${T('auth.akLogin')}:<br/>
+<br/>
+子用户名(Sub User): ${userName}<br/>
+AccessKeyId: ${id}<br/>
+AccessKeySecret: ${secret}<br/>
+区域(Region): ${region}<br/>
+授权路径(osspath): ${comments.join(',<br/>')}<br/>
+授予权限(permission): ${privType}<br/>
+<br/>
+
+2. ${T('auth.tokenLogin')}:<br/><br/>
+
+<code>${tokenStr}</code>
+
+<br/>
+<hr/>
+您可以使用 <a href="https://github.com/aliyun/oss-browser" target="_blank">OSS Browser</a> 浏览或管理这些文件。
+`
+                   //   '子用户名(Sub User): '+userName+ '<br/>'
+                   // + 'AccessKeyId: '+result.AccessKey.AccessKeyId+ '<br/>'
+                   // + 'AccessKeySecret: '+ result.AccessKey.AccessKeySecret+ '<br/>'
+                   // + '区域(Region): '+ currentInfo.region  + '<br/>'
+                   // + '授予权限(permission): '+$scope.grant.privType + '<br/>'
+                   // + '授权路径(osspath): ' + comments.join(',<br/>')
+                   // + '<hr/>'
+                   // + '您可以使用 <a href="https://github.com/aliyun/oss-browser" target="_blank">OSS Browser</a> 浏览或管理这些文件。'
+         };
+         return sendInfo;
       }
 
     }

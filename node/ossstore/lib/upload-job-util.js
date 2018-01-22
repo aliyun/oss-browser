@@ -20,7 +20,8 @@ module.exports = {
 
   computeMaxConcurrency: computeMaxConcurrency,
 
-  checkFileHash: util.checkFileHash
+  checkFileHash: util.checkFileHash,
+  printPartTimeLine: util.printPartTimeLine
 };
 
 
@@ -76,7 +77,7 @@ function checkAllPartCompleted(checkPoints){
 
 function completeMultipartUpload(self, doneParams ,fn){
   var retryTimes  = 0;
-  _dig();
+  setTimeout(_dig,10);
   function _dig(){
     self.oss.completeMultipartUpload(doneParams, function(err, data){
 
@@ -245,40 +246,32 @@ function getSensibleChunkSize(size) {
     chunkSize = 30 * 1024 * 1024; //30MB
   }
   else if(size < 5* 1024 * 1024*1024){
-    chunkSize = 50 * 1024 * 1024; //50MB
-  }
-  else if(size < 10* 1024 * 1024*1024){
-    chunkSize = 60 * 1024 * 1024; //60MB
+    chunkSize = 40 * 1024 * 1024; //40MB
   }
   else{
-    chunkSize = 80 * 1024 * 1024; //80MB
+    chunkSize = 50 * 1024 * 1024; //50MB
   }
 
-  var parts = Math.ceil(size / chunkSize);
-  if (parts > 10000) {
-    return Math.ceil(size / 10000);
-  }
-  return chunkSize;
+
+  var c = Math.ceil(size/10000);
+  return Math.max(c, chunkSize);
+
+  // var parts = Math.ceil(size / chunkSize);
+  // if (parts > 10000) {
+  //   return Math.ceil(size / 10000);
+  // }
+  // return chunkSize;
 }
 
 
 //根据网速调整上传并发量
-function computeMaxConcurrency(speed, chunkSize){
-  //console.log(speed, chunkSize)
-  if(speed > chunkSize){
-    return Math.ceil(speed / chunkSize) * 3;
-  }
-  else if(speed > chunkSize/2){
-    return 6;
-  }else{
-    return 3;
-  }
+function computeMaxConcurrency(speed, chunkSize, lastConcurrency){
+  lastConcurrency = lastConcurrency || 5;
+  if(speed > chunkSize * lastConcurrency * 0.9){
+    return lastConcurrency + 5;
 
-  // if(speed > 11*1024*1024) return 13;
-  // else if(speed > 8*1024*1024) return 10;
-  // else if(speed > 5*1024*1024) return 7;
-  // else if(speed > 2*1024*1024) return 5;
-  // else if(speed > 1024*1024) return 3;
-  // else if(speed > 100*1024) return 2;
-  // else return 1;
+  }else{
+    if(lastConcurrency > 5) return lastConcurrency-3;
+    return 5;
+  }
 }

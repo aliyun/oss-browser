@@ -33,9 +33,17 @@ git clone {git地址}
 cd oss-browser
 ```
 
-### (4) 如果使用 windows 系统，需要安装下列软件：
+### (4) 使用mac平台来build。
 
-* 需要安装gitbash:
+需要使用 brew 来安装 wine:
+
+```
+brew install wine
+```
+
+### (5) 如果使用 windows 系统(不推荐)，需要安装下列软件：
+
+* 需要安装 gitbash:
 
 请自行下载安装。
 
@@ -51,7 +59,7 @@ cnpm i -g windows-build-tools
 
 [make.exe(32位版本)](http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/windows-tools/32/make.exe)
 
-
+* 可以还会遇到其他问题，请自行解决。
 
 ## 2. 开始尝试启动
 
@@ -85,20 +93,19 @@ Makefile有3个变量，可以替换,分别为：NAME,CUSTOM,VERSION.
 
 然后指定custom路径 build:
 ```
-make build NAME=my-oss-browser CUSTOM=~/Desktop/custom/
+make build NAME=my-oss-browser CUSTOM=~/Desktop/custom
 ```
 
 开发模式启动：
 ```
-make run NAME=my-oss-browser CUSTOM=~/Desktop/custom/
+make run NAME=my-oss-browser CUSTOM=~/Desktop/custom
 ```
 
 
 ## 4. build
 
-
 ```
-make all NAME=my-oss-browser CUSTOM=~/Desktop/custom/
+make all NAME=my-oss-browser CUSTOM=~/Desktop/custom
 ```
 
 * Makefile中的 VERSION 和 NAME 变量，VERSION 需要和 custom/index.js 中的version相同，NAME需要和appId相同。
@@ -110,66 +117,12 @@ make all NAME=my-oss-browser CUSTOM=~/Desktop/custom/
 ### (可选) mac平台相关的安装文件
 
 ```
-make dmg NAME=oss-browser # 只能在mac系统下build，生成 releases/${VERSION}/oss-browser.dmg 文件
+make dmg NAME=my-oss-browser # 只能在mac系统下build，生成 releases/${VERSION}/my-oss-browser.dmg 文件
 ```
 * 此命令需要在 make mac 或者 make all 命令后执行。
 * 可以指定 NAME, CUSTOM 和 VERSION 变量。
 
 
+## 5. 自动更新
 
-## 5. 发布(可选)
-
-custom/index.js中的这2个变量如果不配置，则build出来的应用没有自动检测升级功能：
-```
-//release notes目录后缀，里面有 ${version}.md, 如 1.0.0.md
-release_notes_url: 'https://raw.githubusercontent.com/aliyun/oss-browser/master/release-notes/',
-
-//升级检测链接
-upgrade_url: "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
-```
-
-
-### 如何配置:
-
-我们可以将安装包上传到oss的某个目录下（如：oss-browser-publish），将这个目录设置为公共读。
-
-> 升级检测原理:
-
-custom/index.js 的 upgrade_url 配置 upgrade.json 的 https 地址, 客户端启动后会请求这个链接进行升级检测。
-
-upgrade.json 样例:
-
-```json
-{
-  "version": "1.3.0",
-  "package_url": "http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/"
-}
-```
-
-* version 表示可升级的最新版本，如果这个版本比本地客户端的版本大，则可以升级。
-
-* package_url：安装包下载地址前缀。可以修改根据实际情况修改。
-
-
-oss-browser-publish 目录结构:
-```
-.../oss-browser-publish/
-      |-- 1.3.0
-            |-- oss-browser-linux-x64.zip    # linux 64位
-            |-- oss-browser-win32-ia32.zip   # windows 32位
-            |-- oss-browser-win32-x64.zip    # windows 64位
-            |-- oss-browser-darwin-x64.zip   # mac 64位
-            |-- oss-browser.dmg         # 如果在mac下build过： make dmg
-      |-- 1.2.5
-      |-- ...
-```
-
-
-将build好的安装包，上传到 oss-browser-publish 的版本目录下。
-
-文件上传完成后，修改upgrade.json中的version，旧版本的客户端即可查询到有版本更新。
-
-
-> release note 更新
-
-在 ./release-notes/ 目录下对于的版本号文件，请使用markdown编写release notes。
+后续的bug fix，功能更新，都是自动的。无需关心。

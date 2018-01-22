@@ -5,9 +5,14 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title>OSS Browser</title>
     <script>
+    const path= require('path');
+    const os = require('os');
+    const fs = require('fs');
+    const request = require('request');
+
     var custom= {};
     try{
-      custom = require('./custom')
+      custom = require(path.join(__dirname,'../custom/index.js'));
     }catch(e){
       console.log('没有自定义模块')
     };
@@ -22,7 +27,18 @@
     <!-- <div ng-include="'main/_/loading.html'"></div>  -->
     <toast-list></toast-list>
 
-    <div ui-view=""></div>
+    <div ui-view="">
+      <!-- loading -->
+       <section style="text-align:center;display:block;width:128px;margin:250px auto 0">
+         <div class="loadEffect">
+    		        <div><span></span></div>
+    		        <div><span></span></div>
+    		        <div><span></span></div>
+    		        <div><span></span></div>
+    		</div>
+
+       </section>
+    </div>
 
     <!-- Insert this line above script imports  -->
     <script>
@@ -38,19 +54,31 @@
       if (window.module)  module = window.module;
     </script>
 
+    <script src="ali-oss.min.js"></script>
     <script src="aliyun-sdk-oss.js"></script>
     <script src="templates.js"></script>
     <script>
       const {ipcRenderer,shell} = require('electron');
-      const path= require('path');
+      var isDev = process.env.NODE_ENV=='development';
 
-      ipcRenderer.on('asynchronous-reply', (event, arg) => {
-        Global.staticServerPort = arg;
-        console.log(arg);
+      ipcRenderer.on('asynchronous-reply', (event, data) => {
+        switch(data.key){
+          case 'getStaticServerPort':
+            Global.staticServerPort = data.port;
+            break;
+        }
       });
       setTimeout(function(){
-        ipcRenderer.send('asynchronous-message', 'getStaticServerPort');
+        ipcRenderer.send('asynchronous', {key: 'getStaticServerPort' });
       },1000);
+
+      //自动升级
+      // setTimeout(function(){
+      //   ipcRenderer.send('asynchronous-message', 'checkUpgrade');
+      // },2000);
+      // setInterval(function(){
+      //   ipcRenderer.send('asynchronous-message', 'checkUpgrade');
+      // },60000);
 
 
       function openExternal(url){
@@ -59,7 +87,13 @@
       }
 
       function openDevTools(){
-        ipcRenderer.send('asynchronous-message', 'openDevTools');
+        ipcRenderer.send('asynchronous', {key: 'openDevTools'});
+      }
+      function gInstallAndRestart(version){
+        ipcRenderer.send('asynchronous', {key:'installRestart', version: version});
+        // setTimeout(function(){
+        //   process.exit(0);
+        // },1);
       }
 
 
@@ -79,11 +113,13 @@
         },
         i18n: require('./node/i18n'),
 
-        //release notes目录后缀，里面有 ${version}.md, 如 1.0.0.md
-        release_notes_url: custom.release_notes_url,// || 'https://raw.githubusercontent.com/aliyun/oss-browser/master/release-notes/',
+        config_path: path.join(os.homedir(), '.oss-browser'),
 
-        //升级检测链接
-        upgrade_url: custom.upgrade_url,// ||  "https://raw.githubusercontent.com/aliyun/oss-browser/master/upgrade.json",
+        //release notes目录后缀，里面有 ${version}.md, 如 1.0.0.md
+        release_notes_url:  `https://raw.githubusercontent.com/aliyun/oss-browser/${isDev?'dev':'master'}/release-notes/`,
+
+        // //升级检测链接
+        upgrade_url:  `https://raw.githubusercontent.com/aliyun/oss-browser/${isDev?'dev':'master'}/upgrade.json`,
 
         about_html: custom.about_html
       };
@@ -91,10 +127,9 @@
         if(custom.appName)
           for(var k in custom.appName){
             if(Global.i18n[k])
-               Global.i18n[k].content['app.name']=custom.appName[k];
+               Global.i18n[k].content['app.name']=custom.appName[k]||'OSS Browser';
           }
       })();
-
 
 
       $(function(){

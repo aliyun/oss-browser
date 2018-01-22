@@ -37,6 +37,11 @@ module.exports = {
   'auth.eptpl.popup.msg1': 'パブリッククラウドの場合は、デフォルト設定をそのまま使用できます',
   'auth.eptpl.popup.msg2': 'プライベートクラウドの場合は、次のようなカスタムエンドポイントを入力してください。:',
 
+  'auth.presetOssPath.popup.msg1': '大きな特権アカウントのログイン：現在使用されているAKには、すべてのバケットのアクセス許可に「デフォルトのOSSパス」を設定する必要はありません。',
+  'auth.presetOssPath.popup.msg2': '小さなパーミッションのサブアカウントのログイン：現在のAKのみの使用バケットまたはバケットのパス権限では、 「デフォルトのOSSパス」を設定する必要があります',
+
+  'auth.remember.popup.msg1': 'AKキーを保存するには、 「覚えている」ボタンをチェックします。ログインするときは、AK Historyをクリックしてログインするキーを選択します.AKを手動で入力する必要はありません。 一時的な使用のためにコンピュータをチェックしないでください！',
+
   'region': 'リージョン',
   'auth.region.placeholder': 'リージョン',
   'auth.description': '説明',
@@ -171,6 +176,8 @@ module.exports = {
   'settings.WhetherShowThumbnail': '画像のサムネイルを表示するかどうか',
   'settings.WhetherShowThumbnail.msg': 'ファイル一覧にサムネイルを表示すると一定量のトラフィックが消費されます',
   'settings.success': '正常に保存',
+  'settings.autoUpgrade': '自動更新',
+  'settings.autoUpgrade.msg': '自動ダウンロードパッケージ',
 
   //bookmark
   'bookmarks.title': 'ブックマーク',
@@ -408,4 +415,14 @@ module.exports = {
   'logining': 'ログイン中...',
   'login.successfully': '成功したログイン、ジャンプ中...',
   'login.endpoint.error': 'エンドポイントが正しいことを確認してください',
+
+  'upgrade.start': '更新を開始',
+  'upgrade.downloading': 'ダウンロード',
+  'upgrade.download.field': '自動更新に失敗しました。インストールパッケージを手動でダウンロードしてください。',
+  'upgrade.download.success': 'ダウンロード、インストール、再起動',
+
+  'Insufficient disk space': 'ディスク容量不足',
+
+  'grant.email.title': 'OSSブラウザ認証',
+  'grant.email.body.title': 'OSSブラウザは現在2つのログイン方法をサポートしていますが、いずれかを選択できます:',
 }

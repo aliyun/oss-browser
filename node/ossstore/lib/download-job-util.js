@@ -1,8 +1,9 @@
 var fs = require('fs');
 var crypto = require('crypto');
 var util = require('./util');
-
-
+var os = require('os')
+var path = require('path')
+var cp = require('child_process')
 
 module.exports = {
   getSensibleChunkSize: getSensibleChunkSize,
@@ -12,8 +13,102 @@ module.exports = {
 
   headObject: headObject,
   computeMaxConcurrency: computeMaxConcurrency,
-  checkFileHash : util.checkFileHash
+  checkFileHash : util.checkFileHash,
+
+  getPartProgress: getPartProgress,
+
+  getFreeDiskSize: getFreeDiskSize
 };
+
+
+function getFreeDiskSize(p, fn){
+
+  if(os.platform()=='win32'){
+    //windows
+
+    try{
+      var driver = path.parse(p).root.substring(0,2);
+    }catch(e){
+      fn(new Error('Failed to get free disk size, path='+p))
+    }
+
+    cp.exec(driver+' && cd / && dir', function(err, stdout, stderr){
+      var num;
+      try{
+        var arr = stdout.trim().split('\n');
+        var lastLine = arr.slice(arr.length-1);
+        lastLine = (lastLine+'').trim();
+
+        num = lastLine.match(/\s+([\d,]+)\s+/)[1];
+        num = parseInt(num.replace(/,/g,''))
+      }catch(e){
+
+      }
+      if(num!=null)fn(null, num)
+      else fn(new Error('Failed to get free disk size, path='+p))
+    });
+  }else{
+    //linux or mac
+    cp.exec('df -hl', function(err, stdout, stderr){
+      var size;
+      try{
+        var arr = stdout.trim().split('\n');
+        arr.splice(0,1)
+
+        var t=[];
+        for(var n of arr){
+          var arr2= n.split(/\s+/);
+          t.push({
+            pre: arr2[arr2.length-1],
+            freeSize: arr2[3],
+            deep:arr2[arr2.length-1].split('/').length
+          });
+        }
+
+        t.sort((a,b)=>{
+          if(a.deep < b.deep) return 1;
+          else return -1;
+        });
+
+        for(var n of t){
+          if(p.startsWith(n.pre)){
+            size = parseSize(n.freeSize);
+            break;
+          }
+        }
+      }catch(e){}
+
+      if(size!=null)fn(null, size);
+      else fn(new Error('Failed to get free disk size, path='+p))
+    });
+  }
+}
+function parseSize(s){
+  var arr = s.match(/([\d.]+)(\D?).*/);
+  return parseFloat(arr[1]) * parseSizeUnit(arr[2])
+}
+function parseSizeUnit(g){
+  switch(g.toLowerCase()){
+    default: return 1;
+    case 'k': return 1024;
+    case 'm': return Math.pow(1024,2);
+    case 'g': return Math.pow(1024,3);
+    case 't': return Math.pow(1024,4);
+    case 'p': return Math.pow(1024,5);
+  }
+}
+function getPartProgress(parts){
+  var c = 0;
+  var len = 0
+  for(var k in parts){
+    len++;
+    if(parts[k].done) c++;
+  }
+  return {
+    done: c, total: len
+  }
+
+}
 
 function headObject(self, objOpt, fn){
   var retryTimes = 0;
@@ -62,36 +157,24 @@ function getSensibleChunkSize(size) {
     chunkSize = 30 * 1024 * 1024; //30MB
   }
   else if(size < 5* 1024 * 1024*1024){
-    chunkSize = 50 * 1024 * 1024; //50MB
-  }
-  else if(size < 10* 1024 * 1024*1024){
-    chunkSize = 60 * 1024 * 1024; //60MB
+    chunkSize = 40 * 1024 * 1024; //40MB
   }
   else{
-    chunkSize = 80 * 1024 * 1024; //80MB
+    chunkSize = 50 * 1024 * 1024; //50MB
   }
 
-  var c = Math.ceil(size/5000);
+  var c = Math.ceil(size/9000);
   return Math.max(c, chunkSize);
 }
 
 //根据网速调整下载并发量
-function computeMaxConcurrency(speed, chunkSize){
-  //console.log('---',speed, chunkSize)
-  if(speed > chunkSize){
-    return Math.ceil(speed / chunkSize) * 3;
-  }
-  else if(speed > chunkSize/2){
-    return 6;
-  }else{
-    return 3;
-  }
+function computeMaxConcurrency(speed, chunkSize, lastConcurrency){
+  lastConcurrency = lastConcurrency || 5;
+  if(speed > chunkSize * lastConcurrency * 0.9){
+    return lastConcurrency + 5;
 
-  // if(speed > 11*1024*1024) return 13;
-  // else if(speed > 8*1024*1024) return 10;
-  // else if(speed > 5*1024*1024) return 7;
-  // else if(speed > 2*1024*1024) return 5;
-  // else if(speed > 1024*1024) return 3;
-  // else if(speed > 100*1024) return 2;
-  // else return 1;
+  }else{
+    if(lastConcurrency > 5) return lastConcurrency-3;
+    return 5;
+  }
 }

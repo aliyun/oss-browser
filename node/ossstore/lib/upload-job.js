@@ -62,7 +62,7 @@ class UploadJob extends Base {
     this.crc64Str = this._config.crc64Str;
 
     //console.log('created upload job');
-    this.maxConcurrency = 3;
+    this.maxConcurrency = 5;
   }
 }
 
@@ -181,6 +181,7 @@ UploadJob.prototype.startSpeedCounter = function(){
   var self = this;
 
   self.lastLoaded = self.prog.loaded||0;
+  self.lastSpeed = 0;
 
   var tick = 0;
   clearInterval(self.speedTid);
@@ -192,6 +193,8 @@ UploadJob.prototype.startSpeedCounter = function(){
       return;
     }
     self.speed = self.prog.loaded - self.lastLoaded;
+    if(self.lastSpeed != self.speed) self.emit('speedChange',self.speed);
+    self.lastSpeed = self.speed;
     self.lastLoaded=self.prog.loaded;
 
     //推测耗时
@@ -201,7 +204,7 @@ UploadJob.prototype.startSpeedCounter = function(){
     tick++;
     if(tick>5){
       tick=0;
-      self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.checkPoints.chunkSize);
+      self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.checkPoints.chunkSize, self.maxConcurrency);
       if(isDebug) console.info('set max concurrency:', self.maxConcurrency, self.from.path);
     }
 
@@ -305,6 +308,8 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
   var retries = {}; //重试次数 [partNumber]
   var concurrency = 0; //并发块数
 
+  var _log_opt = {};
+
   var uploadNumArr = util.genUploadNumArr(checkPoints);
   if(isDebug) console.log('upload part nums:',uploadNumArr.join(','), self.from.path);
   //var totalParts = checkPoints.chunks.length;
@@ -351,10 +356,11 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
         return;
       }
       //self.keepFd = keepFd = fd;
+      var progressInfo = util.getPartProgress(checkPoints)
 
-      self.emit('partcomplete', util.getPartProgress(checkPoints), JSON.parse(JSON.stringify(checkPoints)));
+      self.emit('partcomplete', progressInfo, JSON.parse(JSON.stringify(checkPoints)));
 
-      if (util.checkAllPartCompleted(checkPoints)) {
+      if (progressInfo.done==progressInfo.total) {
         //util.closeFD(fd);
         complete();
       }
@@ -445,7 +451,9 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
   //上传块
   function doUpload(partParams){
     var partNumber = partParams.PartNumber; // start from 1
-
+    _log_opt[partNumber] = {
+      start: Date.now()
+    };
 
     if (self.stopFlag) {
       //util.closeFD(keepFd);
@@ -478,7 +486,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
           self.message='上传分片失败: #'+partNumber;
           checkPoints.Parts[partNumber].loaded = 0;
           self.stop();
-          self.emit('error', multiErr);
+          //self.emit('error', multiErr);
           concurrency--;
         }
         else if(multiErr.message.indexOf('The specified upload does not exist')!=-1) {
@@ -512,11 +520,13 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
       concurrency--;
 
       //console.log("Completed part", partNumber, totalParts, mData.ETag);
+      _log_opt[partNumber].end = Date.now();
+      var progressInfo = util.getPartProgress(checkPoints);
+      self.emit('partcomplete', progressInfo, JSON.parse(JSON.stringify(checkPoints)));
 
-      self.emit('partcomplete', util.getPartProgress(checkPoints), JSON.parse(JSON.stringify(checkPoints)));
-
-      if (util.checkAllPartCompleted(checkPoints)) {
+      if (progressInfo.done==progressInfo.total) {
         //util.closeFD(keepFd);
+        if(isDebug) util.printPartTimeLine(_log_opt);
         complete();
       }
       else {
@@ -592,8 +602,10 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     // if(!self._mm[doneParams.UploadId]) self._mm[doneParams.UploadId]=1;
     // else console.error(doneParams.UploadId, '已经complete过一次了');
     //
-    // console.log('-->completeMultipartUpload', doneParams.UploadId)
+    console.log('-->completeMultipartUpload sending...', doneParams.UploadId)
+    console.time('completeMultipartUpload:'+doneParams.UploadId)
     util.completeMultipartUpload(self, doneParams, function(err, data){
+      console.timeEnd('completeMultipartUpload:'+doneParams.UploadId)
       console.log('[completeMultipartUpload] returns:',err, JSON.stringify(data))
       if (err) {
         console.error('['+doneParams.UploadId+']', err, doneParams);

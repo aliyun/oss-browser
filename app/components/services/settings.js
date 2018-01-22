@@ -2,6 +2,14 @@ angular.module('web')
 .factory('settingsSvs', [function(){
 
   return {
+    autoUpgrade: {
+      get: function(){
+        return parseInt(localStorage.getItem('autoUpgrade')||1);
+      },
+      set: function(v){
+        return localStorage.setItem('autoUpgrade',v);
+      }
+    },
     maxUploadJobCount: {
       get: function(){
         return parseInt(localStorage.getItem('maxUploadJobCount')||3);

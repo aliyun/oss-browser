@@ -64,6 +64,9 @@ angular.module('web')
         //save
         saveProg();
       });
+      job.on('speedChange', function(){
+        safeApply($scope);
+      })
 
       job.on('complete', function () {
         concurrency--;
