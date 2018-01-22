@@ -37,6 +37,11 @@ module.exports = {
   'auth.eptpl.popup.msg1': 'For Public Cloud, you can directly use the default settings',
   'auth.eptpl.popup.msg2': 'For Private Cloud, Please enter a custom Endpoint, such as:',
 
+  'auth.presetOssPath.popup.msg1': 'The current AK that has all Bucket rights does not need to set the "Preset OSS Path"',
+  'auth.presetOssPath.popup.msg2': 'The current AK only has the permissions of a Bucket or a certain path under a Bucket, you need to set the "Preset OSS Path"',
+
+  'auth.remember.popup.msg1': 'Check "Remember" to save the AK. When you login again, click AK History to select the key to log in. You do not need to enter AK manually. Please do not check it on a temporary computer!',
+
   'region': 'Region',
   'auth.region.placeholder': 'Optional',
   'auth.description': 'Description',
@@ -171,6 +176,8 @@ module.exports = {
   'settings.WhetherShowThumbnail': 'Whether to show the image thumbnail',
   'settings.WhetherShowThumbnail.msg': 'Displaying thumbnails in the list of files will consume a certain amount of traffic',
   'settings.success': 'Saved successfully',
+  'settings.autoUpgrade': 'Auto update',
+  'settings.autoUpgrade.msg': 'Download update package automatically',
 
   //bookmark
   'bookmarks.title': 'Bookmarks',
@@ -407,4 +414,14 @@ module.exports = {
   'logining': 'Logging in ...',
   'login.successfully': 'Login successful, jumping ...',
   'login.endpoint.error': 'Please make sure Endpoint is correct',
+
+  'upgrade.start': 'Upgrade',
+  'upgrade.downloading': 'Start download...',
+  'upgrade.download.field': 'Automatic update failed, please manually download the installation package.',
+  'upgrade.download.success': 'Download successfully, install and restart',
+
+  'Insufficient disk space': 'Insufficient disk space',
+
+  'grant.email.title': 'OSS Browser Authorization',
+  'grant.email.body.title': 'OSS Browser currently supports 2 ways to login, you can choose any one:',
 }

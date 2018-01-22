@@ -472,7 +472,7 @@ angular.module('web')
         else{
           angular.forEach(result, function (n) {
             if (!n.isFolder && fileSvs.getFileType(n).type == 'picture') {
-              n.pic_url = ossSvs2.signatureUrl(info.region, info.bucket, n.path, 3600);
+              n.pic_url = ossSvs2.signatureUrl2(info.region, info.bucket, n.path, 3600, 'image/resize,w_48');
             }
           });
         }

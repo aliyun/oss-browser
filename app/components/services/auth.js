@@ -18,6 +18,8 @@ angular.module('web')
           var info = ossSvs2.parseOSSPath(data.osspath);
           data.bucket = info.bucket;
 
+          console.log(data)
+
           ossSvs2.getClient(data).listObjects({Bucket: info.bucket, Prefix: info.key, Marker:'',MaxKeys:1}, function(err, result){
 
             if(err){

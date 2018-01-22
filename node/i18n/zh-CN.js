@@ -37,6 +37,11 @@ module.exports = {
   'auth.eptpl.popup.msg1': '公有云直接使用默认即可',
   'auth.eptpl.popup.msg2': '专有云请输入自定义Endpoint,如:',
 
+  'auth.presetOssPath.popup.msg1': '大权限子账号登录: 当前使用的AK已拥有所有Bucket的权限，不需要设置"预设OSS路径"',
+  'auth.presetOssPath.popup.msg2': '小权限子账号登录: 当前使用的AK只有某个Bucket或者Bucket下某个路径的权限，需要设置"预设OSS路径"',
+
+  'auth.remember.popup.msg1': '勾选"记住秘钥"可保存AK秘钥，再次登录时，单击AK历史，可选择该秘钥登录，不需要手动输入AK。请不要再临时使用的电脑上勾选！',
+
   'region': '区域',
   'auth.region.placeholder': '可选',
   'auth.description': '备注',
@@ -171,6 +176,8 @@ module.exports = {
   'settings.WhetherShowThumbnail': '是否显示图片缩略',
   'settings.WhetherShowThumbnail.msg': '在文件列表中显示图片缩略, 会消耗一定的流量',
   'settings.success': '已经保存设置',
+  'settings.autoUpgrade': '自动更新',
+  'settings.autoUpgrade.msg': '自动下载更新包',
 
   //bookmark
   'bookmarks.title': '书签管理',
@@ -408,5 +415,14 @@ module.exports = {
   'login.successfully': '登录成功，正在跳转...',
   'login.endpoint.error': '请确定Endpoint是否正确',
 
+  'upgrade.start': '开始更新',
+  'upgrade.downloading': '正在下载...',
+  'upgrade.download.field': '自动更新失败, 请手动下载安装包。',
+  'upgrade.download.success': '已经下载成功, 现在安装并重启应用',
+
+  'Insufficient disk space': '磁盘空间不足',
+
+  'grant.email.title': 'OSS Browser 授权',
+  'grant.email.body.title': 'OSS Browser 目前支持2种方式登录, 您可以选择任意一种:',
 
 }

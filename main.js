@@ -7,7 +7,8 @@ const {
   BrowserWindow
 } = electron;
 
-
+const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const nativeImage = require('electron').nativeImage;
 
@@ -25,17 +26,13 @@ for(var port of PORTS){
     console.log(e);
   }
 }
-//监听web page里发出的message
-ipcMain.on('asynchronous-message', (event, arg) => {
-  //在main process里向web page发出message
-  event.sender.send('asynchronous-reply', port);
-});
+
 ///*****************************************
 
 
 var custom={};
 try{
-  custom = require('./custom')
+  custom = require(path.join(__dirname,'../custom'));
 }catch(e){
   console.log('没有自定义模块')
 }
@@ -101,9 +98,43 @@ function createWindow() {
   }
 
 }
-ipcMain.on('asynchronous-message', (event, msg) => {
-   if(msg=='openDevTools') win.webContents.openDevTools();
+
+
+
+//监听web page里发出的message
+ipcMain.on('asynchronous', (event, data) => {
+  switch (data.key) {
+    case 'getStaticServerPort':
+      //在main process里向web page发出message
+      event.sender.send('asynchronous-reply', {key:data.key, port: port });
+      break;
+    case 'openDevTools':
+       win.webContents.openDevTools();
+      break;
+    case 'installRestart':
+
+      var version = data.version;
+      //Copy
+      //var from = path.join(os.homedir(), '.oss-browser', version+'-app.asar');
+      var from = path.join(path.dirname(__dirname), version+'-app.asar');
+      var to = path.join(path.dirname(__dirname), 'app.asar');
+
+      // fs.writeFileSync(path.join(os.homedir(), '.oss-browser','a.txt'),'copy:'+from+','+to);
+
+
+      setTimeout(function(){
+        fs.rename(from ,to, function(e){
+          if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
+          app.relaunch();
+          app.exit(0);
+        });
+      },1000);
+
+      break;
+  }
+
 });
+
 
 //singleton
 const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
@@ -128,9 +159,9 @@ app.on('ready', createWindow);
 app.on('window-all-closed', () => {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
+  //if (process.platform !== 'darwin') {
     app.quit();
-  }
+  //}
 });
 
 app.on('activate', () => {

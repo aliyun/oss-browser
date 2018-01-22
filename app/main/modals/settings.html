@@ -32,7 +32,7 @@
           <input type="number" name="maxDownloadJobCount" ng-model="set.maxDownloadJobCount" ng-change="setChange(form1,'maxDownloadJobCount')" max="10" min="1" required class=" form-control" />
         </div>
       </div>
- 
+
     </fieldset>
 
     <!-- <div class="form-group">
@@ -45,6 +45,25 @@
 
     <fieldset>
       <legend><h5 class="text-primary">{{'settings.subtitle.sys'|translate}}</h5></legend>
+
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+        <!-- 自动更新: -->
+        {{'settings.autoUpgrade'|translate}}:
+      </label>
+        <div class="col-sm-7">
+          <div class="checkbox">
+            <label>
+          <input type="checkbox" name="autoUpgrade"
+          ng-model="set.autoUpgrade"
+          ng-change="setChange(form1,'autoUpgrade')"
+          ng-true-value="1" ng-false-value="0" />
+          <!-- (自动下载更新包) -->
+          ({{'settings.autoUpgrade.msg'|translate}})
+        </label>
+          </div>
+        </div>
+      </div>
 
       <div class="form-group">
         <label class="col-sm-4 control-label">

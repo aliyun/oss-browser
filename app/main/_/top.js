@@ -1,8 +1,8 @@
 
 
 angular.module('web')
-  .controller('topCtrl', ['$scope', '$rootScope','$uibModal', '$location', '$translate', '$timeout','Dialog','Auth','Const', 'AuthInfo','upgradeSvs','safeApply',
-    function ($scope, $rootScope, $modal, $location, $translate, $timeout,Dialog,Auth, Const, AuthInfo, upgradeSvs, safeApply) {
+  .controller('topCtrl', ['$scope', '$rootScope','$uibModal', '$location', '$translate', '$timeout','Dialog','Auth','Const', 'AuthInfo','settingsSvs','autoUpgradeSvs','safeApply',
+    function ($scope, $rootScope, $modal, $location, $translate, $timeout,Dialog,Auth, Const, AuthInfo, settingsSvs, autoUpgradeSvs, safeApply) {
 
       var fs = require('fs');
       var path = require('path');
@@ -13,9 +13,6 @@ angular.module('web')
         showFavList: showFavList,
         showAbout: showAbout,
         showReleaseNote: showReleaseNote,
-        upgradeInfo: {
-          isLastVersion: true
-        },
         click10: click10
       });
 
@@ -41,19 +38,19 @@ angular.module('web')
       $scope.authInfo = AuthInfo.get();
       $scope.authInfo.expirationStr = moment(new Date($scope.authInfo.expiration)).format('YYYY-MM-DD HH:mm:ss');
 
-      $timeout(init, 2000);
 
-      function init(){
-        $scope.isLoading=true;
-        //检查更新
-        upgradeSvs.load(function(info){
-          $scope.isLoading=false;
+      $scope.$watch('upgradeInfo.isLastVersion', function(v){
+        if(false===v){
+          if(1==settingsSvs.autoUpgrade.get()) autoUpgradeSvs.start()
+          else $scope.showAbout();
 
-          angular.extend($scope.upgradeInfo, info);
-          safeApply($scope); 
-
-        });
-      }
+        }
+      });
+      $scope.$watch('upgradeInfo.upgradeJob.status', function(s){
+        if('failed'==s || 'finished'==s){
+           $scope.showAbout();
+        }
+      });
 
 
       $rootScope.showSettings = function(fn){
@@ -107,7 +104,12 @@ angular.module('web')
         $modal.open({
           templateUrl: 'main/modals/about.html',
           controller: 'aboutCtrl',
-          size: 'md'
+          size: 'md',
+          resolve: {
+            pscope: function(){
+              return $scope
+            }
+          }
         });
       }
 

@@ -1,12 +1,14 @@
 'use strict';
 
 angular.module('web')
-  .controller('aboutCtrl', ['$scope', '$state', '$uibModalInstance',
-    'upgradeSvs', 'safeApply', 'Toast',
-    function($scope, $state, $modalInstance, upgradeSvs, safeApply, Toast) {
+  .controller('aboutCtrl', ['$scope', '$state', '$uibModalInstance', '$interval',
+    'autoUpgradeSvs', 'safeApply', 'Toast', 'pscope',
+    function($scope, $state, $modalInstance, $interval, autoUpgradeSvs, safeApply, Toast, pscope) {
 
       angular.extend($scope, {
         cancel: cancel,
+        startUpgrade: startUpgrade,
+        installAndRestart: installAndRestart,
         open: open,
         app_logo: Global.app.logo,
         info: {
@@ -15,32 +17,32 @@ angular.module('web')
         custom_about_html: Global.about_html
       });
 
+      $interval(function(){
+        Object.assign($scope.info, pscope.upgradeInfo);
+      },1000);
+
+
+      function installAndRestart(){
+        gInstallAndRestart($scope.info.lastVersion);
+      }
+
       init();
+      function init(){
+        $scope.info = pscope.upgradeInfo;
 
-      function init() {
+        if(!$scope.info.isLastVersion){
+          var converter = new showdown.Converter();
+          autoUpgradeSvs.getLastestReleaseNote($scope.info.lastVersion, function(text) {
+            text = text + '';
+            var html = converter.makeHtml(text);
+            $scope.info.lastReleaseNote = html;
+            //safeApply($scope);
+          })
+        }
+      }
 
-        $scope.isLoading = true;
-        upgradeSvs.load(function(info) {
-          $scope.isLoading = false;
-
-          angular.extend($scope.info, info);
-
-          safeApply($scope);
-
-          //不是最新版本，获取最新版本的releaseNote
-          if (!$scope.info.isLastVersion) {
-            var converter = new showdown.Converter();
-            upgradeSvs.getLastestReleaseNote($scope.info.lastVersion,
-              function(text) {
-
-                text = text + '';
-                var html = converter.makeHtml(text);
-                $scope.info.lastReleaseNote = html;
-
-                safeApply($scope);
-              })
-          }
-        });
+      function startUpgrade(){
+        autoUpgradeSvs.start()
       }
 
       function open(a) {
