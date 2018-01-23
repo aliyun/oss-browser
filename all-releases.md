@@ -1,7 +1,9 @@
-All Releases for [ OSS Browser ]
+# All Releases for [ OSS Browser ]
 
-  ||Windows ia32|Windows x64| Mac(dmg) | Mac(zip) |Linux ia32|Linux x64|Release note|
-  |-----|-----|-----|-----|----|--------|--------|---|
+## Download from China(Hangzhou)
+
+||Windows ia32|Windows x64| Mac(dmg) | Mac(zip) |Linux ia32|Linux x64|Release note|
+|-----|-----|-----|-----|----|--------|--------|---|
 |1.5.0|[Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.5.0/oss-browser-win32-ia32.zip) |[Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.5.0/oss-browser-win32-x64.zip) | - | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.5.0/oss-browser-darwin-x64.zip) | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.5.0/oss-browser-linux-ia32.zip) | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.5.0/oss-browser-linux-x64.zip)|[1.5.0.md](release-notes/1.5.0.md)|
 |1.4.5|[Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.4.5/oss-browser-win32-ia32.zip) |[Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.4.5/oss-browser-win32-x64.zip) | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.4.5/oss-browser.dmg) | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.4.5/oss-browser-darwin-x64.zip) | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.4.5/oss-browser-linux-ia32.zip) | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.4.5/oss-browser-linux-x64.zip)|[1.4.5.md](release-notes/1.4.5.md)|
 |1.4.4|[Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.4.4/oss-browser-win32-ia32.zip) |[Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.4.4/oss-browser-win32-x64.zip) | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.4.4/oss-browser.dmg) | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.4.4/oss-browser-darwin-x64.zip) | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.4.4/oss-browser-linux-ia32.zip) | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/1.4.4/oss-browser-linux-x64.zip)|[1.4.4.md](release-notes/1.4.4.md)|
@@ -27,3 +29,10 @@ All Releases for [ OSS Browser ]
 |0.10.0||[Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.10.0/oss-browser-win32-x64.zip) | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.10.0/oss-browser.dmg) | | | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.10.0/oss-browser-linux-x64.zip) |[0.10.0.md](release-notes/0.10.0.md)|
 |0.9.1||[Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.1/oss-browser-win32-x64.zip) | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.1/oss-browser.dmg) | | | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.1/oss-browser-linux-x64.zip) |[0.9.1.md](release-notes/0.9.1.md)|
 |0.9.0||[Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.0/oss-browser-win32-x64.zip) | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.0/oss-browser.dmg) | | | [Download](https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/0.9.0/oss-browser-linux-x64.zip) |[0.9.0.md](release-notes/0.9.0.md)|
+
+
+## Download from Hongkong
+
+||Windows ia32|Windows x64| Mac(dmg) | Mac(zip) |Linux ia32|Linux x64|Release note|
+|-----|-----|-----|-----|----|--------|--------|---|
+|1.5.0|[Download](https://client-publish-hongkong.oss-cn-hongkong.aliyuncs.com/oss-browser-publish/1.5.0/oss-browser-win32-ia32.zip) |[Download](https://client-publish-hongkong.oss-cn-hongkong.aliyuncs.com/oss-browser-publish/1.5.0/oss-browser-win32-x64.zip) | - | [Download](https://client-publish-hongkong.oss-cn-hongkong.aliyuncs.com/oss-browser-publish/1.5.0/oss-browser-darwin-x64.zip) | [Download](https://client-publish-hongkong.oss-cn-hongkong.aliyuncs.com/oss-browser-publish/1.5.0/oss-browser-linux-ia32.zip) | [Download](https://client-publish-hongkong.oss-cn-hongkong.aliyuncs.com/oss-browser-publish/1.5.0/oss-browser-linux-x64.zip)|[1.5.0.md](release-notes/1.5.0.md)|
