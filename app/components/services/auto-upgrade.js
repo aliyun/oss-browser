@@ -179,16 +179,6 @@ angular.module('web')
     };
 
     function load(fn) {
-      if (!upgrade_url) {
-        fn({
-          currentVersion: Global.app.version,
-          isLastVersion: true,
-          lastVersion: Global.app.version,
-          fileName: '',
-          link: ''
-        });
-        return;
-      }
 
 
       $.getJSON(upgrade_url, function(data) {
@@ -199,10 +189,12 @@ angular.module('web')
         upgradeOpt.isLastVersion = isLastVersion;
         upgradeOpt.lastVersion = lastVersion;
 
+        var fileName = NAME + '-' + process.platform + '-' + process.arch +
+          '.zip';
+
         if(isLastVersion){
           //无需更新
-          var fileName = NAME + '-' + process.platform + '-' + process.arch +
-            '.zip';
+
           var link = data['package_url'].replace(/(\/*$)/g, '') +
             '/' + data['version'] + '/' + fileName;
 
@@ -219,7 +211,7 @@ angular.module('web')
           return;
         }
 
-        getFasterUrl(data['package_urls'], function(linkPre){
+        getFasterUrl(data['package_urls'], lastVersion, function(linkPre){
 
           if(data.files){
 
@@ -228,7 +220,7 @@ angular.module('web')
 
             var jobs = [];
 
-            var fileName = NAME + '-' + process.platform + '-' + process.arch + '.zip';
+            //var fileName = NAME + '-' + process.platform + '-' + process.arch + '.zip';
 
             var pkgLink = linkPre+'/'+ process.platform+'-' + process.arch+'/'+data.file;
 
@@ -264,7 +256,7 @@ angular.module('web')
           // var fileName = NAME + '-' + process.platform + '-' + process.arch + '.zip';
           // var link = data['package_url'].replace(/(\/*$)/g, '') + '/' + lastVersion + '/' + fileName;
 
-          var link = linkPre+'/'+fileName
+          var link = linkPre+'/'+fileName;
           console.log("download url:", link);
 
           fn({
@@ -281,7 +273,7 @@ angular.module('web')
       });
     }
 
-    function getFasterUrl(arr, fn){
+    function getFasterUrl(arr, lastVersion, fn){
 
       var fileName = NAME + '-' + process.platform + '-' + process.arch + '.zip';
       var c=0;
@@ -289,28 +281,36 @@ angular.module('web')
       _dig();
       function _dig(){
         var t1=Date.now();
-        var linkPre = arr[c].replace(/(\/*$)/g, '') + '/' + lastVersion
+        var linkPre = arr[c].replace(/(\/*$)/g, '') + '/' + lastVersion;
         $.ajax({
+          timeout: 5000,
           url: linkPre+'/'+fileName,
           headers: {
-            Range: 'bytes=0-100'
+            Range: 'bytes=30-210'
           }
         }).then(function(data){
           var t2=Date.now();
           t.push({time: t2-t1, linkPre: linkPre});
+
+          c++;
           if(c>=arr.length)callback()
-          else _dig()
+          else  _dig()
+
         },function(err){
           var t2=Date.now();
           t.push({time: t2, linkPre: linkPre});
-          console.log(n, err)
+          console.log(arr[c], err)
+
+          c++;
           if(c>=arr.length)callback()
           else _dig()
+
+
         });
       }
       function callback(){
         t.sort(function(a,b){
-          return a.time < b.time ? 1 : -1
+          return a.time > b.time ? 1 : -1
         });
         console.log('getFasterUrl:',JSON.stringify(t,' ',2));
         fn(t[0].linkPre);
