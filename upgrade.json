@@ -1,5 +1,10 @@
 {
-  "version": "1.5.0",
-  "package_url": "http://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/",
+  "version": "1.5.1",
+  "package_url": "https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/",
+  "package_urls": [
+    "https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/",
+    "https://client-publish-hongkong.oss-cn-hongkong.aliyuncs.com/oss-browser-publish/",
+    "https://client-publish-useast1.oss-us-east-1.aliyuncs.com/oss-browser-publish/"
+  ],
   "files": ["app.asar"]
 }
