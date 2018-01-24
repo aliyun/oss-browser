@@ -63,7 +63,13 @@ dmg:
 	#cp dist/icons/background.tiff build/$(NAME)-darwin-x64/.background
 	rm -f releases/$(VERSION)/$(NAME).dmg || continue
 	hdiutil create -size 250M -format UDZO -srcfolder build/$(NAME)-darwin-x64 -o releases/$(VERSION)/$(NAME).dmg
-all:win32 win64 linux32 linux64 mac
+all:win32 win64 linux32 linux64 mac asar
 	@echo 'Done'
+asar:
+	mkdir -p releases/$(VERSION)/darwin-x64 && cp build/$(NAME)-darwin-x64/$(NAME).app/Contents/Resources/app.asar releases/$(VERSION)/darwin-x64
+	mkdir -p releases/$(VERSION)/win32-x64 && cp build/$(NAME)-win32-x64/resources/app.asar releases/$(VERSION)/win32-x64
+	mkdir -p releases/$(VERSION)/win32-ia32 && cp build/$(NAME)-win32-ia32/resources/app.asar releases/$(VERSION)/win32-ia32
+	mkdir -p releases/$(VERSION)/linux-x64 && cp build/$(NAME)-linux-x64/resources/app.asar releases/$(VERSION)/linux-x64
+	mkdir -p releases/$(VERSION)/linux-ia32 && cp build/$(NAME)-linux-ia32/resources/app.asar releases/$(VERSION)/linux-ia32
 
 .PHONY:build
