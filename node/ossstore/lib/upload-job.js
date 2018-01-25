@@ -473,10 +473,23 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
         return;
       }
 
+      //console.log(mData)
+
       if (multiErr ) {
+
+        try {
+          req.abort();
+        } catch (e) {
+          console.log(e.stack);
+        }
+        checkPoints.Parts[partNumber].ETag=null;
+        checkPoints.Parts[partNumber].loaded = 0;
+
+
 
         if(multiErr.code=='RequestAbortedError'){
           //用户取消
+          console.warn('用户取消');
           return;
         }
 
@@ -484,7 +497,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
 
         if (retries[partNumber] >= maxRetries){
           self.message='上传分片失败: #'+partNumber;
-          checkPoints.Parts[partNumber].loaded = 0;
+
           self.stop();
           //self.emit('error', multiErr);
           concurrency--;
@@ -501,7 +514,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
           //multiErr, upload part error: Error: Missing required key 'UploadId' in params
         }
         else {
-          checkPoints.Parts[partNumber].loaded = 0;
+
           retries[partNumber]++;
 
           console.warn('将要重新上传分片: #', partNumber, ', 还可以重试'+(maxRetries-retries[partNumber])+'次');
@@ -542,7 +555,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     req.httpRequest._abortCallback = function(){};
 
     req.on('httpUploadProgress', function (p) {
-
+      checkPoints.Parts[partNumber].ETag = null;
       if (self.stopFlag) {
         try {
           req.abort();
