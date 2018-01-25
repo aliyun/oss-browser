@@ -27,7 +27,7 @@ angular.module('web')
     function isFav(addr){
       return Fav.has(addr);
     }
- 
+
     function toggleFav(addr){
       if(isFav(addr)){
         Fav.remove(addr);
@@ -129,9 +129,14 @@ angular.module('web')
     });
 
     function goHome(){
-      $scope.address = getDefaultAddress();
-
-      go(true);
+      var defaultAddress =getDefaultAddress();
+      if($scope.address!=defaultAddress){
+        $scope.address=defaultAddress
+        go(true);
+      }
+      else{
+        go();
+      }
     }
 
     //保存默认地址
