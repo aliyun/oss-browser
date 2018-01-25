@@ -1,5 +1,6 @@
 const cp = require('child_process');
 const path = require('path');
+const fs = require('fs');
 
 console.log(`run on: platform=${process.platform},arch=${process.arch}`);
 
@@ -15,10 +16,26 @@ try{
 }
 
 
+// obj.crc64FileProcess = function(p, fn){
+//   var proc = cp.fork(path.join(__dirname, 'fork.js'), [p])
+//   proc.on('message', function(data){
+//      fn(data.error, data.data)
+//   });
+// }
+
 obj.crc64FileProcess = function(p, fn){
-  var proc = cp.fork(path.join(__dirname, 'fork.js'), [p])
-  proc.on('message', function(data){
-     fn(data.error, data.data)
+  fs.stat(p, function(err, data){
+    if(err)fn(err);
+    else{
+      if(data.size > 100 * 1024){
+        var proc = cp.fork(path.join(__dirname, 'fork.js'), [p])
+        proc.on('message', function(data){
+           fn(data.error, data.data)
+        });
+      }else{
+        obj.crc64File(p,fn);
+      }
+    }
   });
 }
 
