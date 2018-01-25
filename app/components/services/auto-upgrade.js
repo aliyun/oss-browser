@@ -179,16 +179,6 @@ angular.module('web')
     };
 
     function load(fn) {
-      if (!upgrade_url) {
-        fn({
-          currentVersion: Global.app.version,
-          isLastVersion: true,
-          lastVersion: Global.app.version,
-          fileName: '',
-          link: ''
-        });
-        return;
-      }
 
 
       $.getJSON(upgrade_url, function(data) {
@@ -199,70 +189,133 @@ angular.module('web')
         upgradeOpt.isLastVersion = isLastVersion;
         upgradeOpt.lastVersion = lastVersion;
 
+        var fileName = NAME + '-' + process.platform + '-' + process.arch +
+          '.zip';
 
-        if(!isLastVersion && data.files){
+        if(isLastVersion){
+          //无需更新
 
-          //暂时只支持1个文件更新
-          data.file = data.files.length>0?data.files[0]:null;
+          var link = data['package_url'].replace(/(\/*$)/g, '') +
+            '/' + data['version'] + '/' + fileName;
 
+          console.log("download url:", link);
 
-          var jobs = [];
-
-          var fileName = NAME + '-' + process.platform + '-' + process.arch +
-            '.zip';
-
-          var linkPre = data['package_url'].replace(/(\/*$)/g, '') +
-            '/' +  lastVersion;
-
-            var pkgLink =
-              linkPre+'/'+ process.platform+'-' + process.arch+'/'+data.file;
-
-          upgradeOpt.fileName = fileName;
-          upgradeOpt.link = linkPre+'/'+fileName;
-          upgradeOpt.upgradeJob.status = 'waiting';
-          upgradeOpt.upgradeJob.progress = 0;
-          upgradeOpt.upgradeJob.pkgLink = pkgLink;
-
-          var jobsFinishedCount = 0;
-
-          var to = path.join(__dirname, '..', lastVersion+'-'+data.file);
-
-          job = new FlatDownloadJob(data.file,
-            pkgLink,
-            to
-          );
-
-          job.onStatusChange(function(status){
-            upgradeOpt.upgradeJob.status = status
+          fn({
+            currentVersion: gVersion,
+            isLastVersion: isLastVersion,
+            lastVersion: lastVersion,
+            fileName: fileName,
+            link: link
           });
-          job.onProgressChange(function(progress){
-            upgradeOpt.upgradeJob.progress = progress;
-          });
-          job.precheck();
 
-
-          //增量更新
-          fn(upgradeOpt);
           return;
         }
 
-        //全量更新
-        var fileName = NAME + '-' + process.platform + '-' + process.arch +
-          '.zip';
-        var link = data['package_url'].replace(/(\/*$)/g, '') +
-          '/' + data['version'] + '/' + fileName;
+        getFasterUrl(data['package_urls'], lastVersion, function(linkPre){
 
-        console.log("download url:", link);
+          if(data.files){
 
-        fn({
-          currentVersion: gVersion,
-          isLastVersion: isLastVersion,
-          lastVersion: lastVersion,
-          fileName: fileName,
-          link: link
-        });
+            //暂时只支持1个文件更新
+            data.file = data.files.length>0?data.files[0]:null;
+
+            var jobs = [];
+
+            //var fileName = NAME + '-' + process.platform + '-' + process.arch + '.zip';
+
+            var pkgLink = linkPre+'/'+ process.platform+'-' + process.arch+'/'+data.file;
+
+            upgradeOpt.fileName = fileName;
+            upgradeOpt.link = linkPre+'/'+fileName;
+            upgradeOpt.upgradeJob.status = 'waiting';
+            upgradeOpt.upgradeJob.progress = 0;
+            upgradeOpt.upgradeJob.pkgLink = pkgLink;
+
+            var jobsFinishedCount = 0;
+
+            var to = path.join(__dirname, '..', lastVersion+'-'+data.file);
+
+            job = new FlatDownloadJob(data.file,
+              pkgLink,
+              to
+            );
+
+            job.onStatusChange(function(status){
+              upgradeOpt.upgradeJob.status = status
+            });
+            job.onProgressChange(function(progress){
+              upgradeOpt.upgradeJob.progress = progress;
+            });
+            job.precheck();
+
+            //增量更新
+            fn(upgradeOpt);
+            return;
+          }
+
+          //全量更新
+          // var fileName = NAME + '-' + process.platform + '-' + process.arch + '.zip';
+          // var link = data['package_url'].replace(/(\/*$)/g, '') + '/' + lastVersion + '/' + fileName;
+
+          var link = linkPre+'/'+fileName;
+          console.log("download url:", link);
+
+          fn({
+            currentVersion: gVersion,
+            isLastVersion: isLastVersion,
+            lastVersion: lastVersion,
+            fileName: fileName,
+            link: link
+          });
+
+
+        })// end getFasterUrl
 
       });
+    }
+
+    function getFasterUrl(arr, lastVersion, fn){
+
+      var fileName = NAME + '-' + process.platform + '-' + process.arch + '.zip';
+      var c=0;
+      var t=[];
+      _dig();
+      function _dig(){
+        var t1=Date.now();
+        var linkPre = arr[c].replace(/(\/*$)/g, '') + '/' + lastVersion;
+        $.ajax({
+          timeout: 5000,
+          url: linkPre+'/'+fileName,
+          headers: {
+            Range: 'bytes=30-210'
+          }
+        }).then(function(data){
+          var t2=Date.now();
+          t.push({time: t2-t1, linkPre: linkPre});
+
+          c++;
+          if(c>=arr.length)callback()
+          else  _dig()
+
+        },function(err){
+          var t2=Date.now();
+          t.push({time: t2, linkPre: linkPre});
+          console.log(arr[c], err)
+
+          c++;
+          if(c>=arr.length)callback()
+          else _dig()
+
+
+        });
+      }
+      function callback(){
+        t.sort(function(a,b){
+          return a.time > b.time ? 1 : -1
+        });
+        console.log('getFasterUrl:',JSON.stringify(t,' ',2));
+        fn(t[0].linkPre);
+      }
+
     }
 
     function compareVersion(curV, lastV) {
