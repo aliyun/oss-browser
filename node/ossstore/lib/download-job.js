@@ -343,7 +343,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             return;
           }
         }
-        
+
         downloadPart(getNextPart());
       });
     });
@@ -410,7 +410,19 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
           return;
         }
 
+
+
+
         if (err) {
+
+          try {
+            req.abort();
+          } catch (e) {
+            console.log(e.stack);
+          }
+          checkPoints.Parts[partNumber].loaded = 0;
+          checkPoints.Parts[partNumber].done = false;
+
           //console.log(err);
           if (err.code == 'RequestAbortedError') {
             //用户取消
@@ -418,8 +430,9 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             return;
           }
 
+
+
           if(retryCount >= maxRetries){
-            checkPoints.Parts[partNumber].loaded = 0;
             self.message = `failed to download part [${n}]: ${err.message}`;
             //console.error(self.message);
             console.error(self.message, self.to.path);
@@ -429,7 +442,6 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             //util.closeFD(keepFd);
           }
           else if(err.code=='InvalidObjectState' ){
-            checkPoints.Parts[partNumber].loaded = 0;
             self.message = `failed to download part [${n}]: ${err.message}`;
             //console.error(self.message);
             console.error(self.message, self.to.path);
@@ -440,14 +452,30 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
           else{
             retryCount++;
             console.log(`retry download part [${n}] error:${err}, ${self.to.path}`);
-            checkPoints.Parts[partNumber].loaded = 0;
             setTimeout(function(){
               doDownload(n);
             },2000);
           }
           return;
         }
+        else if(data.Body.length!=parseInt(data.ContentLength)){
+          //下载不完整，重试， 这里应该判断crc，但是考虑效率，先不做
 
+          try {
+            req.abort();
+          } catch (e) {
+            console.log(e.stack);
+          }
+          checkPoints.Parts[partNumber].loaded = 0;
+          checkPoints.Parts[partNumber].done = false;
+
+          retryCount++;
+          console.warn(`retry download part [${n}] error: missing data, ${self.to.path}`);
+          setTimeout(function(){
+            doDownload(n);
+          },2000);
+          return;
+        }
 
         //console.log(n, end - start, start, end, data.Body.length);
         writeFileRange(tmpName, data.Body, start, function (err) {
@@ -474,6 +502,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
           //self.prog.loaded += (end-start);
 
           checkPoints.Parts[partNumber].done = true;
+          //checkPoints.Parts[partNumber].loaded = data.ContentLength;
 
           //var progCp = JSON.parse(JSON.stringify(self.prog));
 
@@ -576,7 +605,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     file.on('error', (err) => {
       fn(err);
     });
-    file.on('close', () => {
+    file.on('finish', () => {
       fn(null);
     });
   }

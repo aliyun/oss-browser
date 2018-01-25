@@ -2,7 +2,7 @@
 'use strict';
 var ALYD = require('aliyun-sdk');
 require('events').EventEmitter.prototype._maxListeners = 1000;
-var TIMEOUT = 60000; //60秒
+var TIMEOUT = 30000; //30秒
 //fix
 ALYD.util.isBrowser = function(){
   return false;
@@ -51,6 +51,7 @@ function OssStore(config) {
       securityToken: this._config.stsToken.Credentials.SecurityToken,
       endpoint: this._config.endpoint,
       apiVersion: '2013-10-15',
+      maxRetries: 0,
       httpOptions: {
         timeout: TIMEOUT
       }
@@ -62,6 +63,7 @@ function OssStore(config) {
       secretAccessKey: this._config.aliyunCredential.secretAccessKey,
       endpoint: this._config.endpoint,
       apiVersion: '2013-10-15',
+      maxRetries: 0,
       httpOptions: {
         timeout: TIMEOUT
       }
@@ -88,6 +90,7 @@ OssStore.prototype.setStsToken = function(stsToken){
     securityToken: this._config.stsToken.Credentials.SecurityToken,
     endpoint: this._config.endpoint,
     apiVersion: '2013-10-15',
+    maxRetries: 0,
     httpOptions: {
       timeout: TIMEOUT
     }
