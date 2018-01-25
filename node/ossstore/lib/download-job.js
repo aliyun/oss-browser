@@ -410,24 +410,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
           return;
         }
 
-        if(data.Body.length!=parseInt(data.ContentLength)){
-          //下载不完整，重试， 这里应该判断crc，但是考虑效率，先不做
 
-          try {
-            req.abort();
-          } catch (e) {
-            console.log(e.stack);
-          }
-          checkPoints.Parts[partNumber].loaded = 0;
-          checkPoints.Parts[partNumber].done = false;
-
-          retryCount++;
-          console.warn(`retry download part [${n}] error: missing data, ${self.to.path}`);
-          setTimeout(function(){
-            doDownload(n);
-          },2000);
-          return;
-        }
 
 
         if (err) {
@@ -475,7 +458,24 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
           }
           return;
         }
+        else if(data.Body.length!=parseInt(data.ContentLength)){
+          //下载不完整，重试， 这里应该判断crc，但是考虑效率，先不做
 
+          try {
+            req.abort();
+          } catch (e) {
+            console.log(e.stack);
+          }
+          checkPoints.Parts[partNumber].loaded = 0;
+          checkPoints.Parts[partNumber].done = false;
+
+          retryCount++;
+          console.warn(`retry download part [${n}] error: missing data, ${self.to.path}`);
+          setTimeout(function(){
+            doDownload(n);
+          },2000);
+          return;
+        }
 
         //console.log(n, end - start, start, end, data.Body.length);
         writeFileRange(tmpName, data.Body, start, function (err) {
