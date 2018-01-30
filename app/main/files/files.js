@@ -461,12 +461,14 @@ angular.module('web')
         var authInfo = AuthInfo.get();
         if(authInfo.id.indexOf('STS.')==0){
           angular.forEach(result, function (n) {
-            ossSvs2.getImageBase64Url(info.region, info.bucket, n.path).then(function(data){
-              if(data.ContentType.indexOf('image/')==0){
-                var base64str = new Buffer(data.Body).toString('base64');
-                n.pic_url = 'data:'+data.ContentType+';base64,'+base64str;
-              }
-            })
+            if (!n.isFolder && fileSvs.getFileType(n).type == 'picture') {
+              ossSvs2.getImageBase64Url(info.region, info.bucket, n.path).then(function(data){
+                if(data.ContentType.indexOf('image/')==0){
+                  var base64str = new Buffer(data.Body).toString('base64');
+                  n.pic_url = 'data:'+data.ContentType+';base64,'+base64str;
+                }
+              })
+            }
           });
         }
         else{
