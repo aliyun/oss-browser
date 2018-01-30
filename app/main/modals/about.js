@@ -32,7 +32,7 @@ angular.module('web')
 
         if(!$scope.info.isLastVersion){
           var converter = new showdown.Converter();
-          autoUpgradeSvs.getLastestReleaseNote($scope.info.lastVersion, function(text) {
+          autoUpgradeSvs.getLastestReleaseNote($scope.info.lastVersion, $scope.langSettings.lang, function(text) {
             text = text + '';
             var html = converter.makeHtml(text);
             $scope.info.lastReleaseNote = html;
