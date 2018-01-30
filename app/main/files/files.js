@@ -96,30 +96,54 @@ angular.module('web')
 
 
       });
-      $scope.fileSpacerMenuOptions = [
-        [function(){
-          return '<i class="glyphicon glyphicon-cloud-upload text-info"></i> ' + T('upload')
-        }, function ($itemScope, $event) {
-          showUploadDialog()
-        }, function(){
-          return $scope.currentAuthInfo.privilege!='readOnly'
-        }],
-        [function(){
-          return '<i class="glyphicon glyphicon-plus text-success"></i> ' + T('folder.create')
-        }, function ($itemScope, $event) {
-          showAddFolder()
-        }, function(){
-          return $scope.currentAuthInfo.privilege!='readOnly'
-        }],
 
-        [function(){
-          return '<i class="fa fa-paste text-primary"></i> ' + T('paste') + ($scope.keepMoveOptions?'('+$scope.keepMoveOptions.items.length+')':'')
-        }, function ($itemScope, $event) {
-          showPaste()
-        }, function(){
-          return $scope.keepMoveOptions
-        }]
-      ];
+      if($scope.isMac){
+        $scope.fileSpacerMenuOptions = [
+          [function(){
+            return '<i class="fa fa-upload text-info"></i> ' + T('upload')
+          }, function ($itemScope, $event) {
+            showUploadDialog()
+          }, function(){
+            return $scope.currentAuthInfo.privilege!='readOnly'
+          }]
+        ]
+      }
+      else{
+        $scope.fileSpacerMenuOptions = [
+          [function(){
+            return '<i class="fa fa-upload text-info"></i> ' + T('file')
+          }, function ($itemScope, $event) {
+            showUploadDialog()
+          }, function(){
+            return $scope.currentAuthInfo.privilege!='readOnly'
+          }],
+
+          [function(){
+            return '<i class="fa fa-upload text-info"></i> ' + T('folder')
+          }, function ($itemScope, $event) {
+            showUploadDialog(true)
+          }, function(){
+            return $scope.currentAuthInfo.privilege!='readOnly'
+          }]
+        ]
+      }
+      $scope.fileSpacerMenuOptions = $scope.fileSpacerMenuOptions.concat([
+        [ function(){
+             return '<i class="glyphicon glyphicon-plus text-success"></i> ' + T('folder.create')
+          }, function ($itemScope, $event) {
+            showAddFolder()
+          }, function(){
+            return $scope.currentAuthInfo.privilege!='readOnly'
+          }],
+
+          [function(){
+            return '<i class="fa fa-paste text-primary"></i> ' + T('paste') + ($scope.keepMoveOptions?'('+$scope.keepMoveOptions.items.length+')':'')
+          }, function ($itemScope, $event) {
+            showPaste()
+          }, function(){
+            return $scope.keepMoveOptions
+          }]
+    ]);
 
       $scope.fileMenuOptions = function(item, $index){
         if($scope.sel.x['i_'+$index]){
@@ -137,7 +161,7 @@ angular.module('web')
         return [
           [function(){
             //download
-            return '<i class="glyphicon glyphicon-cloud-download text-primary"></i> ' + T('download')
+            return '<i class="fa fa-download text-primary"></i> ' + T('download')
           }, function ($itemScope, $event) {
             showDownloadDialog()
           }, function(){

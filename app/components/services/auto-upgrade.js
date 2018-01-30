@@ -114,7 +114,7 @@ angular.module('web')
         that._changeStatus('running');
 
         request
-          .head(from)
+          .head({url:from,timeout:10000})
           .on('error', function(err) {
             console.log(err)
             this._changeStatus('failed', err);
