@@ -80,7 +80,12 @@ angular.module('web')
 
       function showReleaseNote(){
         var converter = new showdown.Converter();
-        fs.readFile(path.join(__dirname, 'release-notes', Global.app.version+'.md'), function(err, text){
+
+        var url = autoUpgradeSvs.compareVersion(Global.app.version,'1.5.1')<=0
+        ? path.join(__dirname, 'release-notes', Global.app.version+'.md')
+        :path.join(__dirname, 'release-notes', Global.app.version+'.'+$scope.langSettings.lang+'.md');
+
+        fs.readFile(url, function(err, text){
             if(err){
               console.error(err);
               return;

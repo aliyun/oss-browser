@@ -191,7 +191,7 @@ module.exports = {
 
   //files
   'upload': 'アップロード',
-  'folder.create': 'ディレクトリ',
+  'folder.create': '新しいディレクトリ',
   'folder.create.success': 'ディレクトリが正常に作成されました',
   'folder.name': "名前",
 

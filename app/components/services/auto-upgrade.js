@@ -1,5 +1,5 @@
 angular.module('web')
-  .factory('autoUpgradeSvs', [function() {
+  .factory('autoUpgradeSvs', ['settingsSvs',function(settingsSvs) {
 
     var util = require('./node/ossstore/lib/util')
     var NAME = 'oss-browser';
@@ -43,13 +43,19 @@ angular.module('web')
 
 
 
-    function getReleaseNote(version, fn) {
-      $.get('release-notes/' + version + '.md', fn);
+    function getReleaseNote(version, lang, fn) {
+      if(compareVersion(version, '1.5.1')<=0)
+         $.get('../release-notes/' + version + '.md', fn);
+      else
+         $.get('../release-notes/' + version +'.'+lang+ '.md', fn);
     }
 
     //获取最新releaseNote
-    function getLastestReleaseNote(version, fn) {
-      $.get(release_notes_url + version + '.md', fn);
+    function getLastestReleaseNote(version, lang, fn) {
+      if(compareVersion(version, '1.5.1')<=0)
+         $.get(release_notes_url + version + '.md', fn);
+      else
+         $.get(release_notes_url + version +'.'+lang+ '.md', fn);
     }
 
 
@@ -108,7 +114,7 @@ angular.module('web')
         that._changeStatus('running');
 
         request
-          .head(from)
+          .head({url:from,timeout:10000})
           .on('error', function(err) {
             console.log(err)
             this._changeStatus('failed', err);
