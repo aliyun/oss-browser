@@ -10,8 +10,14 @@
     <div class="btn-group" role="group" ng-if="!copy.pwd">
 
       <button ng-disabled="currentAuthInfo.privilege=='readOnly'" type="button" class="btn btn-default btn-sm" ng-click="showUploadDialog()">
-        <i class="glyphicon glyphicon-cloud-upload text-info"></i>
-        {{'upload'|translate}}
+        <i class="fa fa-upload text-info"></i>
+        <span ng-if="isMac">{{'upload'|translate}}</span>
+        <span ng-if="!isMac">{{'files'|translate}}</span>
+        <!-- 上传 -->
+      </button>
+      <button ng-if="!isMac" ng-disabled="currentAuthInfo.privilege=='readOnly'" type="button" class="btn btn-default btn-sm" ng-click="showUploadDialog(true)">
+        <i class="fa fa-upload text-info"></i>
+        {{'folder'|translate}}
         <!-- 上传 -->
       </button>
       <button ng-disabled="currentAuthInfo.privilege=='readOnly'" type="button" class="btn btn-default btn-sm" ng-click="showAddFolder()">

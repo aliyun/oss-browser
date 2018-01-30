@@ -12,12 +12,14 @@ angular.module('web')
       showDownloadDialog: showDownloadDialog
     };
 
-    function showUploadDialog(fn){
+    function showUploadDialog(fn, isFolder){
       var isMac = navigator.userAgent.indexOf('Macintosh')!=-1;
+      var selopt=['openFile', 'multiSelections'];
+      if(isFolder) selopt.push('openDirectory');
 
       dialog.showOpenDialog({
         title: 'Upload',
-        properties: isMac ? ['openFile', 'openDirectory', 'multiSelections']: ['openFile', 'multiSelections']
+        properties: isMac ? ['openFile', 'openDirectory', 'multiSelections']:  selopt
       }, function(filePaths){
         if(typeof(fn)=='function')fn(filePaths);
       });
