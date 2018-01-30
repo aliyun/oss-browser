@@ -10,6 +10,7 @@ angular.module('web')
         },
 
         keepMoveOptions: null,
+        isMac: os.platform()=='darwin',
 
         sch: {
           bucketName: '',
@@ -825,7 +826,7 @@ angular.module('web')
         Dialog.showUploadDialog(function (filePaths) {
           if (!filePaths || filePaths.length == 0) return;
           $scope.handlers.uploadFilesHandler(filePaths, $scope.currentInfo);
-        });
+        },true);
       }
 
       function showDownloadDialog() {
