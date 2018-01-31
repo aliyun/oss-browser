@@ -68,7 +68,9 @@
       </div>
 
       <div ng-if="info.upgradeJob.status=='finished'" class="text-center">
-        <a href="" ng-click="installAndRestart()" class="btn btn-success btn-sm">{{'upgrade.download.success'|translate}}</a>
+        <button type="button" ng-disabled="disUpdateBtn"
+         ng-click="installAndRestart();disUpdateBtn=true"
+          class="btn btn-success btn-sm">{{'upgrade.download.success'|translate}}</button>
       </div>
 
       <h5 class="clearfix">
