@@ -122,8 +122,14 @@ ipcMain.on('asynchronous', (event, data) => {
       //fs.writeFileSync(path.join(os.homedir(), '.oss-browser','a.txt'),'copy:'+from+','+to);
 
       setTimeout(function(){
-        if (process.platform == 'win32' && process.arch=='x64') {
-          process.noAsar = true;
+        process.noAsar = true;
+        // copyFile(from, to, function(e){
+        //   if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
+        //   app.relaunch();
+        //   app.exit(0);
+        // })
+
+        if (process.platform == 'win32' && process.arch =='x64' ) {
           fs.createReadStream(from).pipe(fs.createWriteStream(to)).on('error', function(e){
             if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
           }).on('close',function(){
@@ -146,6 +152,29 @@ ipcMain.on('asynchronous', (event, data) => {
 
 });
 
+function copyFile(from, to, fn){
+  var readStream = fs.createReadStream(from);
+  var writeStream = fs.createWriteStream(to);
+
+  readStream.on('data', function(chunk) {
+      if (writeStream.write(chunk) === false) {
+          readStream.pause();
+      }
+  });
+  readStream.on('error', function(err) {
+    fn(err)
+  });
+  readStream.on('end', function() {
+      writeStream.end();
+  });
+
+  writeStream.on('drain', function() {
+      readStream.resume();
+  });
+  writeStream.on('error', function(err) {
+      fn(err)
+  });
+}
 
 //singleton
 const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
