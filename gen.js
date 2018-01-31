@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 var start_version = '1.5.0';
-
+var start_i18n_version = '1.5.2';
 const PRES = [
   {title: 'China(Hangzhou)', url: 'https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/'},
   {title: 'Hongkong', url: 'https://client-publish-hongkong.oss-cn-hongkong.aliyuncs.com/oss-browser-publish/'},
@@ -16,8 +16,8 @@ var vs = [];
 var arr = fs.readdirSync('./release-notes');
 arr.forEach(n => {
   var version = n.substring(0, n.length - path.extname(n).length);
-  if(compareVersion(version, start_version)<=0)
-  vs.push(version);
+  try{ version = version.match(/^(\d+\.\d+\.\d+)/)[0] }catch(e){}
+  if(vs.indexOf(version)==-1 && compareVersion(version, start_version)<=0) vs.push(version);
 });
 
 //sort by version
@@ -30,7 +30,9 @@ PRES.forEach(n=>{
   |-----|-----|-----|-----|--------|--------|---|`)
   vs.forEach(version => {
     var str = `|${version}|[Download](${n.url}${version}/oss-browser-win32-ia32.zip) |[Download](${n.url}${version}/oss-browser-win32-x64.zip) |  [Download](${n.url}${version}/oss-browser-darwin-x64.zip) | [Download](${n.url}${version}/oss-browser-linux-ia32.zip) | [Download](${n.url}${version}/oss-browser-linux-x64.zip)|`;
-    str += '[' + version + '.md](release-notes/' + version + '.md)|'
+    if(compareVersion(version, start_i18n_version)>=0)
+       str += '[' + version + '.md](release-notes/' + version + '.md)|'
+    else str += '[' + version + '.md](release-notes/' + version+'.en-US.md)|'
     t.push(str);
   });
   t.push('')

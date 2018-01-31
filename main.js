@@ -48,7 +48,7 @@ if (process.platform == 'darwin') {
 
 function createWindow() {
   var opt = {
-    width: 1050,
+    width: 1200,
     height: 700,
     minWidth: 1020,
     minHeight: 660,
