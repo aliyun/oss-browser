@@ -14,8 +14,7 @@ angular.module('web')
 
     function showUploadDialog(fn, isFolder){
       var isMac = navigator.userAgent.indexOf('Macintosh')!=-1;
-      var selopt=['openFile', 'multiSelections'];
-      if(isFolder) selopt.push('openDirectory');
+      var selopt= isFolder?['openDirectory','multiSelections']:['openFile', 'multiSelections'];
 
       dialog.showOpenDialog({
         title: 'Upload',
