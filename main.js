@@ -48,7 +48,7 @@ if (process.platform == 'darwin') {
 
 function createWindow() {
   var opt = {
-    width: 1220,
+    width: 1221,
     height: 700,
     minWidth: 1020,
     minHeight: 660,
@@ -122,13 +122,23 @@ ipcMain.on('asynchronous', (event, data) => {
       //fs.writeFileSync(path.join(os.homedir(), '.oss-browser','a.txt'),'copy:'+from+','+to);
 
       setTimeout(function(){
-        process.noAsar = true;
-        fs.createReadStream(from).pipe(fs.createWriteStream(to)).on('error', function(e){
-          if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
-        }).on('close',function(){
-          app.relaunch();
-          app.exit(0);
-        });
+        if (process.platform == 'win32' && process.arch=='x64') {
+          process.noAsar = true;
+          fs.createReadStream(from).pipe(fs.createWriteStream(to)).on('error', function(e){
+            if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
+          }).on('close',function(){
+            app.relaunch();
+            app.exit(0);
+          });
+        }
+        else{
+          fs.rename(from, to, function(e){
+            if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
+            app.relaunch();
+            app.exit(0);
+          });
+        }
+
       },100);
 
       break;
