@@ -120,7 +120,7 @@ ipcMain.on('asynchronous', (event, data) => {
 
       process.noAsar = true;
 
-      copyFile(from, to, function(e){
+      moveFile(from, to, function(e){
         if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
         app.relaunch();
         app.exit(0);
@@ -131,7 +131,7 @@ ipcMain.on('asynchronous', (event, data) => {
 
 });
 
-function copyFile(from, to, fn){
+function moveFile(from, to, fn){
   if (process.platform != 'win32') {
     fs.rename(from, to, fn);
     return;
@@ -150,7 +150,11 @@ function copyFile(from, to, fn){
   });
   readStream.on('end', function() {
       writeStream.end();
-      fn();
+      setTimeout(function(){
+        fs.unlinkSync(from);
+        fn();
+      },200)
+
   });
 
   writeStream.on('drain', function() {
