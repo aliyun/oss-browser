@@ -48,7 +48,7 @@ if (process.platform == 'darwin') {
 
 function createWindow() {
   var opt = {
-    width: 1200,
+    width: 1221,
     height: 700,
     minWidth: 1020,
     minHeight: 660,
@@ -59,14 +59,13 @@ function createWindow() {
   if(process.platform=='linux'){
     opt.icon = custom.logo_png || path.join(__dirname, 'icons', 'icon.png');
   }
+
+
   // Create the browser window.   http://electron.atom.io/docs/api/browser-window/
   win = new BrowserWindow(opt);
 
   win.setTitle(custom.title || "OSS Browser");
-
-  // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/index.html`);
-
 
   win.setMenuBarVisibility(false);
 
@@ -119,22 +118,52 @@ ipcMain.on('asynchronous', (event, data) => {
       var from = path.join(path.dirname(__dirname), version+'-app.asar');
       var to = path.join(path.dirname(__dirname), 'app.asar');
 
-      // fs.writeFileSync(path.join(os.homedir(), '.oss-browser','a.txt'),'copy:'+from+','+to);
+      process.noAsar = true;
 
-
-      setTimeout(function(){
-        fs.rename(from ,to, function(e){
-          if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
-          app.relaunch();
-          app.exit(0);
-        });
-      },1000);
+      moveFile(from, to, function(e){
+        if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
+        app.relaunch();
+        app.exit(0);
+      });
 
       break;
   }
 
 });
 
+function moveFile(from, to, fn){
+  if (process.platform != 'win32') {
+    fs.rename(from, to, fn);
+    return;
+  }
+
+  var readStream = fs.createReadStream(from);
+  var writeStream = fs.createWriteStream(to);
+
+  readStream.on('data', function(chunk) {
+      if (writeStream.write(chunk) === false) {
+          readStream.pause();
+      }
+  });
+  readStream.on('error', function(err) {
+    fn(err)
+  });
+  readStream.on('end', function() {
+      writeStream.end();
+      setTimeout(function(){
+        fs.unlinkSync(from);
+        fn();
+      },200)
+
+  });
+
+  writeStream.on('drain', function() {
+      readStream.resume();
+  });
+  writeStream.on('error', function(err) {
+      fn(err)
+  });
+}
 
 //singleton
 const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {

@@ -5,6 +5,8 @@ angular.module('web')
 
       angular.extend($scope, {
         upgradeInfo: {
+          files: false,
+          currentVersion: Global.app.version,
           isLastVersion: true
         }
       });

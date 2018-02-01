@@ -266,6 +266,7 @@ angular.module('web')
           console.log("download url:", link);
 
           fn({
+            files: data.files,
             currentVersion: gVersion,
             isLastVersion: isLastVersion,
             lastVersion: lastVersion,

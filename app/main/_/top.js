@@ -44,7 +44,12 @@ angular.module('web')
           if(1==settingsSvs.autoUpgrade.get()) autoUpgradeSvs.start()
           else $scope.showAbout();
 
+          if(!$scope.upgradeInfo.files){
+            $scope.showAbout();
+          }
         }
+
+
       });
       $scope.$watch('upgradeInfo.upgradeJob.status', function(s){
         if('failed'==s || 'finished'==s){
