@@ -840,7 +840,7 @@ angular.module('web')
       //上传下载
       var oudtid, oddtid;
 
-      function showUploadDialog() {
+      function showUploadDialog(isFolder) {
         if (oudtid) return;
         oudtid = true;
         $timeout(function () {
@@ -850,7 +850,7 @@ angular.module('web')
         Dialog.showUploadDialog(function (filePaths) {
           if (!filePaths || filePaths.length == 0) return;
           $scope.handlers.uploadFilesHandler(filePaths, $scope.currentInfo);
-        },true);
+        },isFolder);
       }
 
       function showDownloadDialog() {
