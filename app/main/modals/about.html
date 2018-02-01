@@ -37,10 +37,12 @@
         <!-- 发现新版本： -->
         v {{info.lastVersion}}
            &nbsp;&nbsp;&nbsp;&nbsp;
-           <!-- ng-click="open(info.link)" -->
-           <a ng-if="!info.upgradeJob||info.upgradeJob.status=='waiting'" href="" ng-click="startUpgrade()" class="btn btn-sm btn-success">
+           <a href="" ng-if="!info.files" ng-click="open(info.link)" class="btn btn-sm btn-success">
+             <i class="fa fa-download"></i>
+             {{'clickToDownload'|translate}}</a>
+
+           <a ng-if="info.files && (!info.upgradeJob||info.upgradeJob.status=='waiting')" href="" ng-click="startUpgrade()" class="btn btn-sm btn-success">
                <i class="fa fa-download"></i>
-               <!-- {{'clickToDownload'|translate}} -->
                {{'upgrade.start'|translate}}
              </a>
       </span>
