@@ -5,5 +5,6 @@
     "https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/",
     "https://client-publish-hongkong.oss-cn-hongkong.aliyuncs.com/oss-browser-publish/",
     "https://client-publish-useast1.oss-us-east-1.aliyuncs.com/oss-browser-publish/"
-  ]
+  ],
+  "files": ["app.asar"]
 }
