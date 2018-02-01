@@ -37,7 +37,7 @@
         <!-- 发现新版本： -->
         v {{info.lastVersion}}
            &nbsp;&nbsp;&nbsp;&nbsp;
-           <a href="" ng-if="!info.files" ng-click="open(info.link)" class="btn btn-sm btn-success">
+           <a href="" ng-if="!info.files && !info.upgradeJob" ng-click="open(info.link)" class="btn btn-sm btn-success">
              <i class="fa fa-download"></i>
              {{'clickToDownload'|translate}}</a>
 
