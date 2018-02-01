@@ -17,7 +17,7 @@ i:
 clean:
 	rm -rf dist node_modules build releases node/crc64/cpp-addon/node_modules node/ossstore/node_modules
 dev:
-	NODE_ENV=development electron .
+	NODE_ENV=development electron . --inspect=5858
 
 run:
 	custom=$(CUSTOM) npm run dev

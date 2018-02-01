@@ -59,14 +59,13 @@ function createWindow() {
   if(process.platform=='linux'){
     opt.icon = custom.logo_png || path.join(__dirname, 'icons', 'icon.png');
   }
+
+
   // Create the browser window.   http://electron.atom.io/docs/api/browser-window/
   win = new BrowserWindow(opt);
 
   win.setTitle(custom.title || "OSS Browser");
-
-  // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/index.html`);
-
 
   win.setMenuBarVisibility(false);
 
@@ -119,33 +118,13 @@ ipcMain.on('asynchronous', (event, data) => {
       var from = path.join(path.dirname(__dirname), version+'-app.asar');
       var to = path.join(path.dirname(__dirname), 'app.asar');
 
-      //fs.writeFileSync(path.join(os.homedir(), '.oss-browser','a.txt'),'copy:'+from+','+to);
+      process.noAsar = true;
 
-      setTimeout(function(){
-        process.noAsar = true;
-        // copyFile(from, to, function(e){
-        //   if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
-        //   app.relaunch();
-        //   app.exit(0);
-        // })
-
-        if (process.platform == 'win32' && process.arch =='x64' ) {
-          fs.createReadStream(from).pipe(fs.createWriteStream(to)).on('error', function(e){
-            if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
-          }).on('close',function(){
-            app.relaunch();
-            app.exit(0);
-          });
-        }
-        else{
-          fs.rename(from, to, function(e){
-            if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
-            app.relaunch();
-            app.exit(0);
-          });
-        }
-
-      },100);
+      copyFile(from, to, function(e){
+        if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
+        app.relaunch();
+        app.exit(0);
+      });
 
       break;
   }
@@ -153,6 +132,11 @@ ipcMain.on('asynchronous', (event, data) => {
 });
 
 function copyFile(from, to, fn){
+  if (process.platform != 'win32') {
+    fs.rename(from, to, fn);
+    return;
+  }
+
   var readStream = fs.createReadStream(from);
   var writeStream = fs.createWriteStream(to);
 
@@ -166,6 +150,7 @@ function copyFile(from, to, fn){
   });
   readStream.on('end', function() {
       writeStream.end();
+      fn();
   });
 
   writeStream.on('drain', function() {
