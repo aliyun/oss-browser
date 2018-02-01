@@ -37,7 +37,7 @@ angular.module('web')
             var html = converter.makeHtml(text);
             $scope.info.lastReleaseNote = html;
             //safeApply($scope);
-          })
+          });
         }
       }
 
