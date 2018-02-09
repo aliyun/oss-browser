@@ -31,6 +31,7 @@ module.exports = {
   'auth.presetOssPath.placeholder': '可选,格式如: oss://bucket/key/',
   'auth.id.placeholder': '请输入AccessKeyId',
   'auth.secret.placeholder': '请输入AccessKeySecret',
+  'auth.stoken.placeholder': '请输入STS Token',
   'auth.eptpl': 'Endpoint模板',
   'auth.eptpl.placeholder': '默认: http://{region}.aliyuncs.com',
 

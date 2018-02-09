@@ -31,6 +31,7 @@ module.exports = {
   'auth.presetOssPath.placeholder': 'オプション, フォーマット: oss://bucket/key/',
   'auth.id.placeholder': 'AccessKeyId',
   'auth.secret.placeholder': 'AccessKeySecret',
+  'auth.stoken.placeholder': 'STS Token',
   'auth.eptpl': 'エンドポイントテンプレート',
   'auth.eptpl.placeholder': 'デフォルト: http://{region}.aliyuncs.com',
 

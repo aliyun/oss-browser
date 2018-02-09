@@ -62,7 +62,7 @@ angular.module('web')
         getClient2: getClient2,
         signatureUrl2: signatureUrl2
       };
- 
+
 
       function getClient2(opt){
         var options = prepaireOptions(opt)
@@ -1354,20 +1354,18 @@ angular.module('web')
       }
 
       function getOssEndpoint(region, bucket, eptpl) {
+       
+        //通过bucket获取endpoint
+        if (bucket && $rootScope.bucketMap && $rootScope.bucketMap[bucket]) {
+          var endpoint = $rootScope.bucketMap[bucket][$rootScope.internalSupported?'intranetEndpoint':'extranetEndpoint'];
+          if (endpoint) return 'http://' + endpoint;
+        }
         eptpl = eptpl || AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com';
-
         eptpl = eptpl.replace('{region}',region);
-        //console.log('-->',eptpl)
+
+
         return eptpl;
 
-        //-------------------------
-
-        // var isHttps = Global.ossEndpointProtocol == 'https:';
-        // //通过bucket获取endpoint
-        // if (bucket && $rootScope.bucketMap && $rootScope.bucketMap[bucket]) {
-        //   var endpoint = $rootScope.bucketMap[bucket][$rootScope.internalSupported?'intranetEndpoint':'extranetEndpoint'];
-        //   if (endpoint) return isHttps ? ('https://' + endpoint + ':443') : ('http://' + endpoint);
-        // }
         //
         // //region是domain
         // if (region && region.indexOf('.') != -1) {
