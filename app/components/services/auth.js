@@ -13,12 +13,14 @@ angular.module('web')
         var df = $q.defer();
         data.httpOptions={timeout:15000};
 
+        if(data.id.indexOf('STS.')!=0){
+          delete data.stoken;
+        }
+
         if (data.osspath) {
 
           var info = ossSvs2.parseOSSPath(data.osspath);
           data.bucket = info.bucket;
-
-          console.log(data)
 
           ossSvs2.getClient(data).listObjects({Bucket: info.bucket, Prefix: info.key, Marker:'',MaxKeys:1}, function(err, result){
 
