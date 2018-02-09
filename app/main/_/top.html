@@ -41,7 +41,7 @@
         </a>
       </li>
       <li>
-        <a ng-if="authInfo.id.indexOf('STS.')==0" uib-tooltip="{{'auth.authToken.info.validUntil'|translate:{expiration:authInfo.expirationStr} }}" tooltip-placement="bottom" tooltip-append-to-body="true">
+        <a ng-if="authInfo.expiration" uib-tooltip="{{'auth.authToken.info.validUntil'|translate:{expiration:authInfo.expirationStr} }}" tooltip-placement="bottom" tooltip-append-to-body="true">
           <span ng-if="!authInfo.desc">
             {{'tempCert'|translate}}:
             <!-- 临时凭证: -->
@@ -50,7 +50,7 @@
             <span my-timer expiration="authInfo.expiration"></span>
           </span>
         </a>
-        <a ng-if="authInfo.id.indexOf('STS.')!=0">
+        <a ng-if="!authInfo.expiration">
           <i class="fa fa-user"></i>
           <span ng-if="authInfo.desc">{{authInfo.desc|sub:10}} ({{authInfo.id.substring(0,3)+'..'}})</span>
           <span ng-if="!authInfo.desc">{{authInfo.id}}</span>
