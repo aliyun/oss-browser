@@ -49,7 +49,7 @@ angular.module('web')
 
       function eptplChange(t){
         $scope.eptplType=t;
-        console.log(t);
+        //console.log(t);
         if(t=='default'){
            $scope.item.eptpl = DEF_EP_TPL;
         }else{
@@ -179,6 +179,10 @@ angular.module('web')
 
         delete data.authToken;
         delete data.securityToken;
+
+        if(data.id.indexOf('STS.')!=0){
+          delete data.stoken;
+        }
 
         if($scope.flags.remember=='YES'){
           AuthInfo.remember(data);

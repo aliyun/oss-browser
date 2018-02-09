@@ -31,6 +31,7 @@ module.exports = {
   'auth.presetOssPath.placeholder': 'Optional, format: oss://bucket/key/',
   'auth.id.placeholder': 'AccessKeyId',
   'auth.secret.placeholder': 'AccessKeySecret',
+  'auth.stoken.placeholder': 'STS Token',
   'auth.eptpl': 'Endpoint Template',
   'auth.eptpl.placeholder': 'Default: http://{region}.aliyuncs.com',
 
