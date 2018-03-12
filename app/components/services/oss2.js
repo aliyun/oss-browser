@@ -1267,7 +1267,7 @@ angular.module('web')
       function getClient(opt) {
 
         var options = prepaireOptions(opt)
-        // console.log(options)
+
         var client = new ALY.OSS(options);
         return client;
       }
@@ -1286,6 +1286,7 @@ angular.module('web')
         }
 
         var endpoint = getOssEndpoint(authInfo.region || 'oss-cn-beijing', bucket, authInfo.eptpl);
+        console.log("[endpoint]:", endpoint)
 
         var options = {
           //region: authInfo.region,
@@ -1324,45 +1325,45 @@ angular.module('web')
 
 
       function getOssUrl(region, bucket, key){
-        //eptpl = eptpl || AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com';
 
-        var isHttps = Global.ossEndpointProtocol == 'https:';
+        var eptpl = AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com';
+
+        var protocol = eptpl.indexOf('https:')==0 ? 'https:': "http:";// Global.ossEndpointProtocol == 'https:';
 
 
         if (bucket && $rootScope.bucketMap && $rootScope.bucketMap[bucket]) {
-          var endpoint = $rootScope.bucketMap[bucket].extranetEndpoint;
+          var endpoint = $rootScope.bucketMap[bucket][$rootScope.internalSupported?'intranetEndpoint':'extranetEndpoint'];
+
           if (endpoint){
-            return isHttps ? ('https://'+ bucket+'.'+ endpoint + ':443' +'/' + key) : ('http://'+ bucket+'.' + endpoint + '/' + key);
+            //return 'http://'+ endpoint + '/' + key;
+            return protocol+'//'+ bucket+'.'+endpoint  +'/' + key;
+            //return isHttps ? (protocol+'//'+ bucket+'.'+ endpoint  +'/' + key) : ('http://'+ endpoint + '/' + key);
           }
         }
 
         //region是domain
         if (region && region.indexOf('.') != -1) {
           if (region.indexOf('http') != 0) {
-            region = Global.ossEndpointProtocol == 'https:' ? ('https://'+ bucket+'.' + region + ':443'+'/' + key) : ('http://' + bucket+'.'+ region+'/' + key);
+            region = protocol + '//' + bucket+'.'+ region+'/' + key;
           }
           return region;
         }
 
 
         //region
-        if (Global.ossEndpointProtocol == 'https:') {
-          return 'https://' + bucket+'.'+ region + '.aliyuncs.com:443'+'/' + key;
-        }
-        return 'http://' + bucket+'.'+ region + '.aliyuncs.com'+'/' + key;
+        return protocol+ '//' + bucket+'.'+ region + '.aliyuncs.com'+'/' + key;
 
       }
 
       function getOssEndpoint(region, bucket, eptpl) {
-       
+
+        eptpl = eptpl || AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com';
         //通过bucket获取endpoint
         if (bucket && $rootScope.bucketMap && $rootScope.bucketMap[bucket]) {
           var endpoint = $rootScope.bucketMap[bucket][$rootScope.internalSupported?'intranetEndpoint':'extranetEndpoint'];
-          if (endpoint) return 'http://' + endpoint;
+          if (endpoint) return eptpl.indexOf('https://')==0? 'https://'+ endpoint :  'http://' + endpoint;
         }
-        eptpl = eptpl || AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com';
         eptpl = eptpl.replace('{region}',region);
-
 
         return eptpl;
 

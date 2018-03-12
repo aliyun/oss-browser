@@ -17,16 +17,15 @@ angular.module('web')
         })
       },2000)
 
-      // var isInit = false;
-      //
-      // $scope.$on('$stateChangeSuccess', function(){
-      //   var name = $state.current.name;
-      //   if(name!='login' && !isInit){
-      //     init();
-      //   }
-      // });
-      // $rootScope.internalSupported  = false;
-      // $scope.netInit = init;
+
+      $scope.$on('$stateChangeSuccess', function(){
+        var name = $state.current.name;
+        if(name!='login'){
+          $rootScope.internalSupported = (AuthInfo.get().eptpl||'').indexOf('-internal')!=-1;
+        }
+      });
+
+
       //
       // function init(){
       //   var df = $q.defer();
