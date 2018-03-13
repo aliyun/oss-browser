@@ -1,6 +1,6 @@
 angular.module('web')
-  .factory('Auth', ['$q', '$location','$translate', 'ossSvs2', 'AuthInfo', 'Const', 'Cipher',
-    function($q, $location, $translate, ossSvs2, AuthInfo, Const, Cipher) {
+  .factory('Auth', ['$q','$rootScope', '$location','$translate', 'ossSvs2', 'AuthInfo', 'Const', 'Cipher',
+    function($q, $rootScope, $location, $translate, ossSvs2, AuthInfo, Const, Cipher) {
       var T = $translate.instant;
       return {
         login: login,
@@ -16,6 +16,9 @@ angular.module('web')
         if(data.id.indexOf('STS.')!=0){
           delete data.stoken;
         }
+        
+
+        $rootScope.internalSupported = data.eptpl ? data.eptpl.indexOf('-internal'): false;
 
         if (data.osspath) {
 
