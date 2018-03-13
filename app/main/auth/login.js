@@ -3,7 +3,7 @@ angular.module('web')
   .controller('loginCtrl', ['$scope', '$rootScope', '$translate','Auth','AuthInfo','$timeout','$location','Const','Dialog','Toast','Cipher',
     function ($scope, $rootScope, $translate, Auth, AuthInfo,$timeout, $location, Const, Dialog, Toast, Cipher) {
 
-      var DEF_EP_TPL = 'https://{region}.aliyuncs.com';
+      var DEF_EP_TPL = 'http://{region}.aliyuncs.com';
 
       var KEY_REMEMBER = Const.KEY_REMEMBER;
       var SHOW_HIS = Const.SHOW_HIS;
