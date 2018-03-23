@@ -16,9 +16,9 @@ angular.module('web')
         if(data.id.indexOf('STS.')!=0){
           delete data.stoken;
         }
-        
 
-        $rootScope.internalSupported = data.eptpl ? data.eptpl.indexOf('-internal'): false;
+
+        $rootScope.internalSupported = data.eptpl ? data.eptpl.indexOf('-internal')!=-1 : false;
 
         if (data.osspath) {
 
