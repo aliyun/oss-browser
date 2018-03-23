@@ -17,6 +17,7 @@ angular.module('web')
         })
       },2000)
 
+      $rootScope.internalSupported = false;
 
       $scope.$on('$stateChangeSuccess', function(){
         var name = $state.current.name;
