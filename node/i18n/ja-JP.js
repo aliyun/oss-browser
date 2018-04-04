@@ -426,4 +426,6 @@ module.exports = {
 
   'grant.email.title': 'OSSブラウザ認証',
   'grant.email.body.title': 'OSSブラウザは現在2つのログイン方法をサポートしていますが、いずれかを選択できます:',
+
+  'goto.create.role': '役割を作成する',
 }

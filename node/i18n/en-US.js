@@ -425,4 +425,7 @@ module.exports = {
 
   'grant.email.title': 'OSS Browser Authorization',
   'grant.email.body.title': 'OSS Browser currently supports 2 ways to login, you can choose any one:',
+
+  'goto.create.role': 'Go to create a role',
+
 }
