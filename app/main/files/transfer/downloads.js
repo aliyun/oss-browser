@@ -11,6 +11,10 @@ angular.module('web')
         stopAll: stopAll,
         startAll: startAll,
         checkStartJob: checkStartJob,
+        openLocaleFolder: function(item){
+          var suffix = item.status=='finished'?'':'.download';
+          openLocaleFolder(item.to.path+suffix)
+        },
 
         sch: {
           downname: null,

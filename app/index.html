@@ -85,6 +85,9 @@
         // Open a URL in the default way
         shell.openExternal(url);
       }
+      function openLocaleFolder(p){
+        shell.showItemInFolder(p)
+      }
 
       function openDevTools(){
         ipcRenderer.send('asynchronous', {key: 'openDevTools'});
