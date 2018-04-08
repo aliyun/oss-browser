@@ -119,7 +119,7 @@ module.exports = {
   'creationTime': '创建时间',
 
   'multipart.management': 'Multipart管理',
-  'multipart.description': '管理通过Mutipart（分块）方式上传过程中产生的事件与碎片。',
+  'multipart.description': '管理通过Multipart（分块）方式上传过程中产生的事件与碎片。',
   'multipart.description.tooltip': '即已经被初始化的Multipart Upload但是未被Complete或者Abort的Multipart Upload事件',
 
   'select.all': "全选",
@@ -426,4 +426,5 @@ module.exports = {
   'grant.email.title': 'OSS Browser 授权',
   'grant.email.body.title': 'OSS Browser 目前支持2种方式登录, 您可以选择任意一种:',
 
+  'goto.create.role': '去创建角色',
 }

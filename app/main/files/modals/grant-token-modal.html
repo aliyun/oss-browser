@@ -95,8 +95,9 @@
           ng-disabled="!roles || roles.length==0"
           ng-model="grant.roleArn" required
           ng-options="role.Arn as role.RoleName for role in roles">
-            <option value=''>{{!roles||roles.length==0?('nodata'|translate):('chooseone'|translate)}}</option>
+            <option value=''>{{(!roles||roles.length==0)?('nodata'|translate):('chooseone'|translate)}}</option>
           </select>
+          <small><a ng-if="!roles||roles.length==0" href="" ng-click="openExternal('https://ram.console.aliyun.com/#/role/list')">{{'goto.create.role'|translate}}</a></small>
       </div>
 
       <div class="clearfix"></div>

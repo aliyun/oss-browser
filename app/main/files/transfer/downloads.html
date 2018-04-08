@@ -77,22 +77,25 @@
                 </div>
 
 
-                <div class="col-sm-2 text-right">
+                <div class="col-sm-2 text-right" style="padding:0">
                     <a ng-if="item.status=='running' || item.status=='waiting'|| item.status=='verifying'" href="" ng-click="item.stop()"
                        class="btn btn-default btn-xs">
                         <i class="glyphicon glyphicon-pause text-warning"></i>
                     </a>
-
 
                     <a ng-if="item.status=='stopped' || item.status=='failed' || item.status=='finished'" href=""
                        ng-click="showRemoveItem(item)" class="btn btn-default btn-xs">
                         <i class="glyphicon glyphicon-remove text-danger "></i>
                     </a>
 
-
                     <a ng-if="item.status=='stopped' || item.status=='failed'" href="" ng-click="checkStartJob(item)"
                        class="btn btn-default btn-xs">
                         <i class="glyphicon glyphicon-play text-success "></i>
+                    </a>
+
+                    <a href="" ng-click="openLocaleFolder(item)"
+                       class="btn btn-default btn-xs">
+                        <i class="fa fa-folder-open text-info"></i>
                     </a>
 
                 </div>
