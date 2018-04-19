@@ -207,13 +207,18 @@ app.on('activate', () => {
 // code. You can also put them in separate files and require them here.
 
 function getMenuTemplate() {
+  const name = app.getName();
   return [{
-    label: "Application",
+    label: name,
     submenu: [{
-      label: "About Application",
-      selector: "orderFrontStandardAboutPanel:"
+      label: `About ${name}`,
+      role: 'about'
     }, {
       type: "separator"
+    }, {
+      label: `Hide ${name}`,
+      accelerator: 'CmdOrCtrl+H',
+      role: 'hide'
     }, {
       label: "Quit",
       accelerator: "Command+Q",
