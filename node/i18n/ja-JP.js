@@ -11,12 +11,16 @@ module.exports = {
   'region.oss-cn-qingdao': '青島 (中国北部 1)',
   'region.oss-cn-beijing': '北京 (中国北部 2)',
   'region.oss-cn-zhangjiakou': '張家口 (中国北部 3)',
+  'region.oss-cn-huhehaote': 'フフホト (中国北部 5)',
   'region.oss-cn-shenzhen': '深セン (中国南部 1)',
   'region.oss-cn-hongkong': '香港',
 
   'region.oss-ap-southeast-1': 'シンガポール',
   'region.oss-ap-southeast-2': 'シドニー (オーストラリア)',
+  'region.oss-ap-southeast-3': 'クアラルンプール',
+  'region.oss-ap-southeast-5': 'ジャカルタ',
   'region.oss-ap-northeast-1': '東京 (日本)',
+  'region.oss-ap-south-1': 'ムンバイ',
 
   'region.oss-us-west-1': 'シリコンバレー (米国西部 1)',
   'region.oss-us-east-1': 'バージニア (米国東部 1)',
