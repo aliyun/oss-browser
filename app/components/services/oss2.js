@@ -766,7 +766,8 @@ angular.module('web')
           });
           client.getObject({
             Bucket: bucket,
-            Key: key
+            Key: key,
+            ResponseCacheControl: 'No-cache'
           }, function (err, data) {
             if (err) {
               handleError(err);
