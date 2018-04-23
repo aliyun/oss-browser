@@ -58,7 +58,7 @@ angular.module('web')
         if(!form1.$valid)return;
 
         var v = $scope.info.sec;
-        var url = ossSvs2.signatureUrl(currentInfo.region, currentInfo.bucket, item.path, v);
+        var url = ossSvs2.signatureUrl2(currentInfo.region, currentInfo.bucket, item.path, v);
         $scope.info.url = url;
       }
 

@@ -72,7 +72,9 @@ angular.module('web')
           accessKeySecret: options.secretAccessKey,
           endpoint: options.endpoint,
           bucket: opt.bucket,
+          stsToken: options.securityToken,
         });
+        console.log(OSS.version);
         return client;
       }
 
