@@ -193,6 +193,15 @@ angular.module('web')
 
 
         Auth.login(data).then(function(){
+          if (!data.region && data.eptpl.indexOf('{region}') === -1) {
+            var regExp = /https?:\/\/(\S*)\.aliyuncs\.com/;
+            var res = data.eptpl.match(regExp);
+
+            if (res) {
+              data.region = res[1].replace('-internal', '');
+              AuthInfo.save(data);
+            }
+          }
           if($scope.flags.remember=='YES') AuthInfo.addToHistories(data);
           Toast.success(T('login.successfully'), 1000);
           $location.url('/');
