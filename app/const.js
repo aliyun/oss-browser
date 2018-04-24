@@ -39,12 +39,16 @@ angular.module('web')
       {id: 'oss-cn-qingdao', label: '华北1(青岛)', storageClasses: getStorageClasses(3)},
       {id: 'oss-cn-beijing', label: '华北2(北京)', storageClasses: getStorageClasses(3)},
       {id: 'oss-cn-zhangjiakou', label: '华北3(张家口)', storageClasses: getStorageClasses(3)},
+      {id: 'oss-cn-huhehaote', label: '华北5(呼和浩特)', storageClasses: getStorageClasses(3)},
       {id: 'oss-cn-shenzhen', label: '华南1(深圳)', storageClasses: getStorageClasses(3)},
       {id: 'oss-cn-hongkong', label: '香港', storageClasses: getStorageClasses(3)},
 
       {id: 'oss-ap-southeast-1', label: '亚太东南1(新加坡)', storageClasses: getStorageClasses(3)},
       {id: 'oss-ap-southeast-2', label: '亚太东南2(悉尼)', storageClasses: getStorageClasses(3)},
+      {id: 'oss-ap-southeast-3', label: '亚太东南3(吉隆坡)', storageClasses: getStorageClasses(3)},
+      {id: 'oss-ap-southeast-5', label: '亚太东南5(雅加达)', storageClasses: getStorageClasses(3)},
       {id: 'oss-ap-northeast-1', label: '亚太东北1(东京)', storageClasses: getStorageClasses(3)},
+      {id: 'oss-ap-south-1', label: '亚太南部(孟买)', storageClasses: getStorageClasses(3)},
 
       {id: 'oss-us-west-1', label: '美国西部1(硅谷)', storageClasses: getStorageClasses(3)},
       {id: 'oss-us-east-1', label: '美国东部1(弗吉尼亚)',storageClasses: getStorageClasses(3)},
