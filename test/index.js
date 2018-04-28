@@ -1,8 +1,8 @@
 import test from 'ava';
 import {Application} from 'spectron';
 
-const BUCKET = 'diku-debug-shanghai';
-const FOLDER = 'folder123'
+const BUCKET = 'sdlcdhch-oss-electron';
+const FOLDER = 'test'
 
 function getAppPath(){
   var key = process.platform+'-'+process.arch;

@@ -1,11 +1,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crc64_ecma182", "crc64_ecma182.vcxproj", "{CE30EFBA-2F53-8603-90DF-CD202AA15B01}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crc64_ecma182", "crc64_ecma182.vcxproj", "{373A2B21-A948-36F0-E6F5-90D48AD17633}"
 	ProjectSection(ProjectDependencies) = postProject
-		{B99490CA-947E-B188-D56F-161404FF4413} = {B99490CA-947E-B188-D56F-161404FF4413}
+		{B2E6E83F-8C46-B113-6D04-E43C252BAC3F} = {B2E6E83F-8C46-B113-6D04-E43C252BAC3F}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crc64_ecma182_base", "crc64_ecma182_base.vcxproj", "{B99490CA-947E-B188-D56F-161404FF4413}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crc64_ecma182_base", "crc64_ecma182_base.vcxproj", "{B2E6E83F-8C46-B113-6D04-E43C252BAC3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B99490CA-947E-B188-D56F-161404FF4413}.Debug|x64.ActiveCfg = Debug|x64
-		{B99490CA-947E-B188-D56F-161404FF4413}.Debug|x64.Build.0 = Debug|x64
-		{B99490CA-947E-B188-D56F-161404FF4413}.Release|x64.ActiveCfg = Release|x64
-		{B99490CA-947E-B188-D56F-161404FF4413}.Release|x64.Build.0 = Release|x64
-		{CE30EFBA-2F53-8603-90DF-CD202AA15B01}.Debug|x64.ActiveCfg = Debug|x64
-		{CE30EFBA-2F53-8603-90DF-CD202AA15B01}.Debug|x64.Build.0 = Debug|x64
-		{CE30EFBA-2F53-8603-90DF-CD202AA15B01}.Release|x64.ActiveCfg = Release|x64
-		{CE30EFBA-2F53-8603-90DF-CD202AA15B01}.Release|x64.Build.0 = Release|x64
+		{373A2B21-A948-36F0-E6F5-90D48AD17633}.Debug|x64.ActiveCfg = Debug|x64
+		{373A2B21-A948-36F0-E6F5-90D48AD17633}.Debug|x64.Build.0 = Debug|x64
+		{373A2B21-A948-36F0-E6F5-90D48AD17633}.Release|x64.ActiveCfg = Release|x64
+		{373A2B21-A948-36F0-E6F5-90D48AD17633}.Release|x64.Build.0 = Release|x64
+		{B2E6E83F-8C46-B113-6D04-E43C252BAC3F}.Debug|x64.ActiveCfg = Debug|x64
+		{B2E6E83F-8C46-B113-6D04-E43C252BAC3F}.Debug|x64.Build.0 = Debug|x64
+		{B2E6E83F-8C46-B113-6D04-E43C252BAC3F}.Release|x64.ActiveCfg = Release|x64
+		{B2E6E83F-8C46-B113-6D04-E43C252BAC3F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

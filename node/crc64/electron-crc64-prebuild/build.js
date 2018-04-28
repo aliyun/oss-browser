@@ -1,6 +1,6 @@
 const shell = require('shelljs');
 const path = require('path');
-const VERSION = '1.6.5';
+const VERSION = '1.8.4';
 const ELECTRON_ERROR='https://npm.taobao.org/mirrors/electron'
 
 shell.rm('-rf', 'build')
