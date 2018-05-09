@@ -1,0 +1,1 @@
+cmd_Release/obj.target/crc64_ecma182_base.a := rm -f Release/obj.target/crc64_ecma182_base.a && ar crs Release/obj.target/crc64_ecma182_base.a Release/obj.target/crc64_ecma182_base/src/crc64_ecma_182.o
