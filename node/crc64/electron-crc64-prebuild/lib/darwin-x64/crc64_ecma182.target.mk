@@ -12,7 +12,8 @@ DEFS_Debug := \
 	'-D_FILE_OFFSET_BITS=64' \
 	'-DBUILDING_NODE_EXTENSION' \
 	'-DDEBUG' \
-	'-D_DEBUG'
+	'-D_DEBUG' \
+	'-DV8_ENABLE_CHECKS'
 
 # Flags passed to all source files.
 CFLAGS_Debug := \
@@ -45,11 +46,11 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/include/node \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/src \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/deps/uv/include \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/deps/v8/include \
-	-I$(srcdir)/node_modules/_nan@2.8.0@nan
+	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/include/node \
+	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/src \
+	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/deps/uv/include \
+	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/deps/v8/include \
+	-I$(srcdir)/node_modules/_nan@2.10.0@nan
 
 DEFS_Release := \
 	'-DNODE_GYP_MODULE_NAME=crc64_ecma182' \
@@ -92,11 +93,11 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/include/node \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/src \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/deps/uv/include \
-	-I/Users/zu/.electron-gyp/.node-gyp/iojs-1.6.5/deps/v8/include \
-	-I$(srcdir)/node_modules/_nan@2.8.0@nan
+	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/include/node \
+	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/src \
+	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/deps/uv/include \
+	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/deps/v8/include \
+	-I$(srcdir)/node_modules/_nan@2.10.0@nan
 
 OBJS := \
 	$(obj).target/$(TARGET)/src/node_crc64_ecma_182.o
