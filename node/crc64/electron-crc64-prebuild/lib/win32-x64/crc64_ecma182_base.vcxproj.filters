@@ -10,25 +10,46 @@
     <Filter Include="C:">
       <UniqueIdentifier>{7B735499-E5DD-1C2B-6C26-70023832A1CF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Program Files">
-      <UniqueIdentifier>{92EF4BA8-6BC2-65D1-451F-28EBD4AE726A}</UniqueIdentifier>
+    <Filter Include="C:\Users">
+      <UniqueIdentifier>{E9F714C1-DA89-54E2-60CF-39FEB20BF756}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Program Files\nodejs">
-      <UniqueIdentifier>{A3C8E949-BCF6-0C67-6656-340A2A097708}</UniqueIdentifier>
+    <Filter Include="C:\Users\huaixu">
+      <UniqueIdentifier>{16CC3D15-EFDD-BC14-61BA-D0FB19D57571}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Program Files\nodejs\node_modules">
-      <UniqueIdentifier>{56DF7A98-063D-FB9D-485C-089023B4C16A}</UniqueIdentifier>
+    <Filter Include="C:\Users\huaixu\AppData">
+      <UniqueIdentifier>{F852EB63-437C-846A-220F-8D9ED6DAEC1D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Program Files\nodejs\node_modules\npm">
+    <Filter Include="C:\Users\huaixu\AppData\Roaming">
+      <UniqueIdentifier>{D51E5808-912B-5C70-4BB7-475D1DBFA067}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\huaixu\AppData\Roaming\npm">
       <UniqueIdentifier>{741E0E76-39B2-B1AB-9FA1-F1A20B16F295}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Program Files\nodejs\node_modules\npm\node_modules">
+    <Filter Include="C:\Users\huaixu\AppData\Roaming\npm\node_modules">
       <UniqueIdentifier>{56DF7A98-063D-FB9D-485C-089023B4C16A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Program Files\nodejs\node_modules\npm\node_modules\node-gyp">
+    <Filter Include="C:\Users\huaixu\AppData\Roaming\npm\node_modules\cnpm">
+      <UniqueIdentifier>{A9C32190-F80B-6B3B-9982-A5E1D455EE2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\huaixu\AppData\Roaming\npm\node_modules\cnpm\node_modules">
+      <UniqueIdentifier>{56DF7A98-063D-FB9D-485C-089023B4C16A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\huaixu\AppData\Roaming\npm\node_modules\cnpm\node_modules\npm">
+      <UniqueIdentifier>{741E0E76-39B2-B1AB-9FA1-F1A20B16F295}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\huaixu\AppData\Roaming\npm\node_modules\cnpm\node_modules\npm\node_modules">
+      <UniqueIdentifier>{56DF7A98-063D-FB9D-485C-089023B4C16A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\huaixu\AppData\Roaming\npm\node_modules\cnpm\node_modules\npm\node_modules\npm-lifecycle">
+      <UniqueIdentifier>{ADDA22BA-D4E9-C066-6614-0F6F33DE8B5B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\huaixu\AppData\Roaming\npm\node_modules\cnpm\node_modules\npm\node_modules\npm-lifecycle\node_modules">
+      <UniqueIdentifier>{56DF7A98-063D-FB9D-485C-089023B4C16A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="C:\Users\huaixu\AppData\Roaming\npm\node_modules\cnpm\node_modules\npm\node_modules\npm-lifecycle\node_modules\node-gyp">
       <UniqueIdentifier>{77348C0E-2034-7791-74D5-63C077DF5A3B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Program Files\nodejs\node_modules\npm\node_modules\node-gyp\src">
+    <Filter Include="C:\Users\huaixu\AppData\Roaming\npm\node_modules\cnpm\node_modules\npm\node_modules\npm-lifecycle\node_modules\node-gyp\src">
       <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
     </Filter>
     <Filter Include="..">
@@ -39,8 +60,8 @@
     <ClCompile Include="..\src\crc64_ecma_182.cc">
       <Filter>..\src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Program Files\nodejs\node_modules\npm\node_modules\node-gyp\src\win_delay_load_hook.cc">
-      <Filter>C:\Program Files\nodejs\node_modules\npm\node_modules\node-gyp\src</Filter>
+    <ClCompile Include="C:\Users\huaixu\AppData\Roaming\npm\node_modules\cnpm\node_modules\npm\node_modules\npm-lifecycle\node_modules\node-gyp\src\win_delay_load_hook.cc">
+      <Filter>C:\Users\huaixu\AppData\Roaming\npm\node_modules\cnpm\node_modules\npm\node_modules\npm-lifecycle\node_modules\node-gyp\src</Filter>
     </ClCompile>
     <None Include="..\binding.gyp">
       <Filter>..</Filter>
