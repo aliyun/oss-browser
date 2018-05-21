@@ -1,6 +1,6 @@
 {
   "name": "oss-browser",
-  "version": "1.6.4",
+  "version": "1.7.0",
   "main": "dist/main.js",
   "scripts": {
     "test": "ava test",
@@ -12,7 +12,7 @@
     "build": "./node_modules/.bin/gulp build --custom=$custom"
   },
   "engines": {
-    "node": "7.9.0"
+    "node": "8.2.1"
   },
   "devDependencies": {
     "angular": "1.5.8",
@@ -30,7 +30,7 @@
     "codemirror": "^5.19.0",
     "commander": "~2.9.0",
     "cross-env": "^3.1.4",
-    "electron": "1.6.5",
+    "electron": "1.8.4",
     "electron-packager": "7.1.0",
     "font-awesome": "^4.7.0",
     "gulp": "~3.5.5",
