@@ -1,0 +1,1 @@
+cmd_Release/obj.target/crc64_ecma182.node := g++ -shared -pthread -rdynamic -m32  -Wl,-soname=crc64_ecma182.node -o Release/obj.target/crc64_ecma182.node -Wl,--start-group Release/obj.target/crc64_ecma182/src/node_crc64_ecma_182.o Release/obj.target/crc64_ecma182_base.a -Wl,--end-group 
