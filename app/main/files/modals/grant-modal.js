@@ -230,15 +230,25 @@ angular.module('web')
         }else{
           var userName = $scope.create.UserName;
           var comments = [];
+          var region = '';
           angular.forEach($scope.items, function(n){
-             comments.push('oss://'+currentInfo.bucket + "/" + n.path);
+            if (n.itemType == 'bucket') {
+              comments.push('oss://' + n.name);
+              region = n.region;
+            } else if (n.itemType == 'folder') {
+              region = currentInfo.region;
+              comments.push('oss://' + currentInfo.bucket + '/' + n.path + '/');
+            } else {
+              region = currentInfo.region;
+              comments.push('oss://' + currentInfo.bucket + '/' + n.path);
+            }
+             
           });
           ramSvs.createUser({
             UserName: userName,
             Email: $scope.create.Email,
             Comments: ($scope.grant.privType+','+comments.join(',')).substring(0,100)
           }).then(function(){
-
             ramSvs.createAccessKey(userName).then(function(result){
               //AccessKeyId
               //console.log(result.AccessKey);
@@ -250,7 +260,7 @@ angular.module('web')
                 UserName: userName
               });
 
-              var sendInfo = getSendInfo(id,secret,userName, currentInfo.region, comments,$scope.create.Email, $scope.grant.privType);
+              var sendInfo = getSendInfo(id,secret,userName, region, comments,$scope.create.Email, $scope.grant.privType);
               fn(userName, sendInfo);
             });
 
