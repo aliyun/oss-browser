@@ -1,10 +1,7 @@
 {
-  "version": "1.6.4",
-  "package_url": "https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/",
+  "version": "1.7.0",
+  "package_url": "https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/",
   "package_urls": [
-    "https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/",
-    "https://client-publish-hongkong.oss-cn-hongkong.aliyuncs.com/oss-browser-publish/",
-    "https://client-publish-useast1.oss-us-east-1.aliyuncs.com/oss-browser-publish/"
-  ],
-  "files": ["app.asar"]
+    "https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/"
+  ]
 }

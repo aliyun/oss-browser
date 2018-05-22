@@ -1,12 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
-var start_version = '1.5.0';
+var start_version = '1.7.0';
 var start_i18n_version = '1.5.2';
 const PRES = [
-  {title: 'China(Hangzhou)', url: 'https://luogc.oss-cn-hangzhou.aliyuncs.com/oss-browser-publish/'},
-  {title: 'Hongkong', url: 'https://client-publish-hongkong.oss-cn-hongkong.aliyuncs.com/oss-browser-publish/'},
-  {title: 'Eastern US', url: 'https://client-publish-useast1.oss-us-east-1.aliyuncs.com/oss-browser-publish/'},
+  {title: 'download', url: 'https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/'}
 ]
 
 var t = [`# All Releases for [ OSS Browser ]\n`];

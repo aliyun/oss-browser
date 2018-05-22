@@ -34,7 +34,7 @@ var custom={};
 try{
   custom = require(path.join(__dirname,'../custom'));
 }catch(e){
-  console.log('没有自定义模块')
+  console.log('没有自定义模块');
 }
 //let logo = nativeImage.createFromPath('icons/logo.ico');
 
@@ -121,7 +121,7 @@ ipcMain.on('asynchronous', (event, data) => {
       process.noAsar = true;
 
       moveFile(from, to, function(e){
-        if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e))
+        if(e)fs.writeFileSync(path.join(os.homedir(), '.oss-browser','upgrade-error.txt'), JSON.stringify(e));
         app.relaunch();
         app.exit(0);
       });
@@ -146,14 +146,14 @@ function moveFile(from, to, fn){
       }
   });
   readStream.on('error', function(err) {
-    fn(err)
+    fn(err);
   });
   readStream.on('end', function() {
       writeStream.end();
       setTimeout(function(){
         fs.unlinkSync(from);
         fn();
-      },200)
+      },200);
 
   });
 
@@ -161,7 +161,7 @@ function moveFile(from, to, fn){
       readStream.resume();
   });
   writeStream.on('error', function(err) {
-      fn(err)
+      fn(err);
   });
 }
 
@@ -207,13 +207,18 @@ app.on('activate', () => {
 // code. You can also put them in separate files and require them here.
 
 function getMenuTemplate() {
+  const name = app.getName();
   return [{
-    label: "Application",
+    label: name,
     submenu: [{
-      label: "About Application",
-      selector: "orderFrontStandardAboutPanel:"
+      label: `About ${name}`,
+      role: 'about'
     }, {
       type: "separator"
+    }, {
+      label: `Hide ${name}`,
+      accelerator: 'CmdOrCtrl+H',
+      role: 'hide'
     }, {
       label: "Quit",
       accelerator: "Command+Q",
