@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3CB3ABD6-027F-8ECA-3AEC-7139AE36FD18}</ProjectGuid>
+    <ProjectGuid>{31C9C5B1-7DF6-F536-1458-58C229F20232}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>crc64_ecma182</RootNamespace>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
@@ -46,18 +46,18 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Administrator\.node-gyp\iojs-1.6.5\include\node;C:\Users\Administrator\.node-gyp\iojs-1.6.5\src;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\uv\include;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\v8\include;..\node_modules\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\include\node;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\src;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\deps\uv\include;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\deps\v8\include;..\node_modules\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4351;4355;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4267;4351;4355;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <MinimalRebuild>false</MinimalRebuild>
       <OmitFramePointers>false</OmitFramePointers>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=crc64_ecma182;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_NODE_EXTENSION;DEBUG;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=crc64_ecma182;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_NODE_EXTENSION;DEBUG;_DEBUG;V8_ENABLE_CHECKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <StringPooling>true</StringPooling>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -65,7 +65,7 @@
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\Administrator\.node-gyp\iojs-1.6.5\ia32\iojs.lib&quot;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\ia32\iojs.lib&quot;</AdditionalDependencies>
       <AdditionalOptions>/ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <AllowIsolation>true</AllowIsolation>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -80,18 +80,18 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>C:\Users\Administrator\.node-gyp\iojs-1.6.5\include\node;C:\Users\Administrator\.node-gyp\iojs-1.6.5\src;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\uv\include;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\v8\include;..\node_modules\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=crc64_ecma182;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_NODE_EXTENSION;DEBUG;_DEBUG;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\include\node;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\src;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\deps\uv\include;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\deps\v8\include;..\node_modules\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=crc64_ecma182;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_NODE_EXTENSION;DEBUG;_DEBUG;V8_ENABLE_CHECKS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Administrator\.node-gyp\iojs-1.6.5\include\node;C:\Users\Administrator\.node-gyp\iojs-1.6.5\src;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\uv\include;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\v8\include;..\node_modules\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\include\node;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\src;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\deps\uv\include;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\deps\v8\include;..\node_modules\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4351;4355;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4267;4351;4355;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -113,7 +113,7 @@
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\Administrator\.node-gyp\iojs-1.6.5\ia32\iojs.lib&quot;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\ia32\iojs.lib&quot;</AdditionalDependencies>
       <AdditionalOptions>/ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <AllowIsolation>true</AllowIsolation>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -131,7 +131,7 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>C:\Users\Administrator\.node-gyp\iojs-1.6.5\include\node;C:\Users\Administrator\.node-gyp\iojs-1.6.5\src;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\uv\include;C:\Users\Administrator\.node-gyp\iojs-1.6.5\deps\v8\include;..\node_modules\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\include\node;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\src;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\deps\uv\include;C:\Users\duanhongchun\.node-gyp\iojs-1.8.4\deps\v8\include;..\node_modules\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=crc64_ecma182;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_NODE_EXTENSION;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
@@ -140,11 +140,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\node_crc64_ecma_182.cc"/>
-    <ClCompile Include="C:\Program Files\nodejs\node_modules\npm\node_modules\node-gyp\src\win_delay_load_hook.cc"/>
+    <ClCompile Include="C:\Users\duanhongchun\AppData\Roaming\npm\node_modules\cnpm\node_modules\npm\node_modules\npm-lifecycle\node_modules\node-gyp\src\win_delay_load_hook.cc"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="crc64_ecma182_base.vcxproj">
-      <Project>{4F5261D2-F9A5-CE7F-7E35-C3350B1D0FB1}</Project>
+      <Project>{2FC18B03-95A9-0275-5BD6-C09C425D8772}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>

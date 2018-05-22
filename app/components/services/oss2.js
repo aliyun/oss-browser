@@ -72,7 +72,9 @@ angular.module('web')
           accessKeySecret: options.secretAccessKey,
           endpoint: options.endpoint,
           bucket: opt.bucket,
+          stsToken: options.securityToken,
         });
+        console.log(OSS.version);
         return client;
       }
 
@@ -140,7 +142,7 @@ angular.module('web')
 
         var df = $q.defer();
 
-        var client = getClient({region:region, bucket:bucket});
+        var client = getClient2({region:region, bucket:bucket});
         var progress={current:0,total:0, errorCount:0};
 
         progress.total += items.length;
@@ -160,9 +162,11 @@ angular.module('web')
           var c = 0;
           var len = arr.length;
           var terr = [];
+          var objectsCount = 0;
+          var foldersCount = 0;
+          var itemsToDelete = [];
           dig();
           function dig(){
-
             if(c>=len){
               if(progCb) progCb(progress);
               $timeout(function(){
@@ -176,12 +180,10 @@ angular.module('web')
               return;
             }
 
-
-            if(progCb) progCb(progress);
-
-            var item = arr[c];
+            var item = arr[objectsCount + foldersCount];
 
             if(item.isFolder){
+              foldersCount++;
               listAllFiles(region, bucket, item.path).then(function(arr2){
 
                 progress.total += arr2.length;
@@ -202,9 +204,27 @@ angular.module('web')
                 delFile(item);
               });
             }
-            else{
+            else if (itemsToDelete.length < 500 && objectsCount + foldersCount < len){
               //删除文件
-              delFile(item);
+              itemsToDelete.push(item.path);
+              objectsCount++;
+
+              if (itemsToDelete.length == 500 || (objectsCount!=0 && objectsCount + foldersCount == len)) {
+                client.deleteMulti(itemsToDelete).then(function (res) {
+                  c += itemsToDelete.length;
+                  progress.current += itemsToDelete.length;
+                  itemsToDelete.splice(0, itemsToDelete.length);
+                  $timeout(dig,NEXT_TICK);
+                }).catch(function (err) {
+                  terr.push({item:item, error:err});
+                  progress.errorCount += itemsToDelete.length;
+                  c += itemsToDelete.length;
+                  itemsToDelete.splice(0, itemsToDelete.length);
+                  $timeout(dig,NEXT_TICK);
+                });
+              } else {
+                $timeout(dig,NEXT_TICK);
+              }
             }
 
             function delFile(item){
@@ -213,28 +233,18 @@ angular.module('web')
                 return;
               }
 
-              // c++;
-              // setTimeout(function(){
-              //   progress.current++;
-              //   dig();
-              // },1000)
-
-              client.deleteObject({Bucket:bucket, Key: item.path}, function(err){
-                if(err){
+              client.delete(item.path).then(function (res) {
+                c++;
+                progress.current++;
+                $timeout(dig,NEXT_TICK);
+              }).catch(function (err) {
                   terr.push({item:item, error:err});
                   progress.errorCount++;
                   c++;
                   $timeout(dig,NEXT_TICK);
-                }
-                else{
-                  c++;
-                  progress.current++;
-                  $timeout(dig,NEXT_TICK);
-                }
-              });
+                });
             }
           }
-          //end dig();
         }
       }
 

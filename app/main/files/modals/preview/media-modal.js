@@ -30,7 +30,7 @@ angular.module('web')
       }
 
       function genURL() {
-        var url = ossSvs2.signatureUrl(bucketInfo.region, bucketInfo.bucket, objectInfo.path, 3600);
+        var url = ossSvs2.signatureUrl2(bucketInfo.region, bucketInfo.bucket, objectInfo.path, 3600);
         $timeout(function () {
 
           $scope.src_origin = url;
