@@ -75,12 +75,10 @@ angular.module('web')
 
         var actions = [];
         if(privType=='readOnly'){
-          actions = ['oss:GetObject',
-            'oss:HeadObject',
-            "oss:GetObjectMeta",
-            "oss:GetObjectACL",
-            'oss:ListObjects',
-            'oss:GetSymlink'
+          actions = [
+            'oss:Head*',
+            'oss:Get*',
+            'oss:List*'
           ];
         }
         else{
@@ -100,7 +98,6 @@ angular.module('web')
               ]
             });
 
-
             t.push({
               "Effect": "Allow",
               "Action": [
@@ -115,14 +112,29 @@ angular.module('web')
                 }
               }
             });
-
           } else {
             //文件所有权限
             t.push({
               "Effect": "Allow",
+              "Action": [
+                "oss:ListObjects"
+              ],
+              "Resource": [
+                "acs:oss:*:*:" + currentInfo.bucket,
+                "acs:oss:*:*:" + currentInfo.bucket + '/*'
+              ],
+              "Condition": {
+                "StringLike": {
+                  "oss:Prefix": item.path
+                }
+              }
+            });
+
+            t.push({
+              "Effect": "Allow",
               "Action": actions,
               "Resource": [
-                "acs:oss:*:*:" + currentInfo.bucket + "/" + item.path
+                "acs:oss:*:*:" + currentInfo.bucket + '/' + item.path
               ]
             });
           }
@@ -233,16 +245,12 @@ angular.module('web')
           var region = '';
           angular.forEach($scope.items, function(n){
             if (n.itemType == 'bucket') {
-              comments.push('oss://' + n.name);
               region = n.region;
-            } else if (n.itemType == 'folder') {
-              region = currentInfo.region;
-              comments.push('oss://' + currentInfo.bucket + '/' + n.path + '/');
+              comments.push('oss://' + n.name + '/');
             } else {
               region = currentInfo.region;
               comments.push('oss://' + currentInfo.bucket + '/' + n.path);
             }
-             
           });
           ramSvs.createUser({
             UserName: userName,
