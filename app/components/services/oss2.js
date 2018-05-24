@@ -1353,17 +1353,26 @@ angular.module('web')
         }
 
         //region是domain
-        if (region && region.indexOf('.') != -1) {
-          if (region.indexOf('http') != 0) {
-            region = protocol + '//' + bucket+'.'+ region+'/' + key;
+        if (region) {
+          if (region.indexOf('.') != -1) {
+            if (region.indexOf('http') == -1) {
+              region = protocol + '//' + bucket+'.'+ region+'/' + key;
+            }
+            return region;
           }
-          return region;
+          return protocol + '//' + bucket + '.' + region + '.aliyuncs.com' + '/' + key;
+        } else {
+          if (eptpl.indexOf('https://') == 0) {
+            var domain = eptpl.substring(8, eptpl.length);
+            domain.replace(/\/$/, '');
+            return protocol + '//' + bucket + '.' + domain + '/' + key;
+          } else if (eptpl.indexOf('http://') == 0) {
+            var domain = eptpl.substring(7, eptpl.length);
+            domain.replace(/\/$/, '');
+            return protocol + '//' + bucket + '.' + domain + '/' + key;
+          }
+          return protocol + '//' + bucket + '.' + region + '.aliyuncs.com' + '/' + key;
         }
-
-
-        //region
-        return protocol+ '//' + bucket+'.'+ region + '.aliyuncs.com'+'/' + key;
-
       }
 
       function getOssEndpoint(region, bucket, eptpl) {
