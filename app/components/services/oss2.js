@@ -80,7 +80,7 @@ angular.module('web')
 
       function signatureUrl2(region ,bucket, key, expires, xprocess){
         var client = getClient2({region:region, bucket: bucket});
-        return client.signatureUrl(key, {expires: 3600, process: xprocess});
+        return client.signatureUrl(key, {expires: expires, process: xprocess});
       }
 
 
