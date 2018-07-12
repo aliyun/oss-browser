@@ -27,6 +27,7 @@ for(var port of PORTS){
   }
 }
 
+app.commandLine.appendSwitch('ignore-certificate-errors')
 ///*****************************************
 
 
