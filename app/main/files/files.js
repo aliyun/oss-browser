@@ -528,8 +528,8 @@ angular.module('web')
 
           clearObjectsList();
 
-          $scope.buckets = [];
-          $rootScope.bucketMap = {};
+          // $scope.buckets = [];
+          // $rootScope.bucketMap = {};
 
           safeApply($scope);
 
