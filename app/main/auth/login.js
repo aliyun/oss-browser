@@ -132,9 +132,7 @@ angular.module('web')
 
       function useHis(h){
         angular.extend($scope.item, h);
-        // $scope.item.id=h.id;
-        // $scope.item.secret = h.secret;
-        // $scope.item.desc = h.desc;
+        $scope.item.desc = h.desc || '';
       }
 
       function showRemoveHis(h){

@@ -75,12 +75,10 @@ angular.module('web')
 
         var actions = [];
         if(privType=='readOnly'){
-          actions = ['oss:GetObject',
-            'oss:HeadObject',
-            "oss:GetObjectMeta",
-            "oss:GetObjectACL",
-            'oss:ListObjects',
-            'oss:GetSymlink'
+          actions = [
+            'oss:Head*',
+            'oss:Get*',
+            'oss:List*'
           ];
         }
         else{
@@ -100,7 +98,6 @@ angular.module('web')
               ]
             });
 
-
             t.push({
               "Effect": "Allow",
               "Action": [
@@ -115,14 +112,29 @@ angular.module('web')
                 }
               }
             });
-
           } else {
             //文件所有权限
             t.push({
               "Effect": "Allow",
+              "Action": [
+                "oss:ListObjects"
+              ],
+              "Resource": [
+                "acs:oss:*:*:" + currentInfo.bucket,
+                "acs:oss:*:*:" + currentInfo.bucket + '/*'
+              ],
+              "Condition": {
+                "StringLike": {
+                  "oss:Prefix": item.path
+                }
+              }
+            });
+
+            t.push({
+              "Effect": "Allow",
               "Action": actions,
               "Resource": [
-                "acs:oss:*:*:" + currentInfo.bucket + "/" + item.path
+                "acs:oss:*:*:" + currentInfo.bucket + '/' + item.path
               ]
             });
           }
@@ -230,15 +242,21 @@ angular.module('web')
         }else{
           var userName = $scope.create.UserName;
           var comments = [];
+          var region = '';
           angular.forEach($scope.items, function(n){
-             comments.push('oss://'+currentInfo.bucket + "/" + n.path);
+            if (n.itemType == 'bucket') {
+              region = n.region;
+              comments.push('oss://' + n.name + '/');
+            } else {
+              region = currentInfo.region;
+              comments.push('oss://' + currentInfo.bucket + '/' + n.path);
+            }
           });
           ramSvs.createUser({
             UserName: userName,
             Email: $scope.create.Email,
             Comments: ($scope.grant.privType+','+comments.join(',')).substring(0,100)
           }).then(function(){
-
             ramSvs.createAccessKey(userName).then(function(result){
               //AccessKeyId
               //console.log(result.AccessKey);
@@ -250,7 +268,7 @@ angular.module('web')
                 UserName: userName
               });
 
-              var sendInfo = getSendInfo(id,secret,userName, currentInfo.region, comments,$scope.create.Email, $scope.grant.privType);
+              var sendInfo = getSendInfo(id,secret,userName, region, comments,$scope.create.Email, $scope.grant.privType);
               fn(userName, sendInfo);
             });
 
