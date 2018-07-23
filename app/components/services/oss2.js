@@ -1065,7 +1065,7 @@ angular.module('web')
                   n.storageClass = n.StorageClass;
                   n.type = n.Type;
                   n.lastModified = n.LastModified;
-                  n.url =  getOssUrl(region, opt.Bucket, n.Key);
+                  n.url =  getOssUrl(region, opt.Bucket, encodeURIComponent(n.Key));
 
                   t.push(n);
                 }
