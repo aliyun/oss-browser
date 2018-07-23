@@ -38,7 +38,7 @@ angular.module('web')
               $scope.err = null;
               $scope.step=1;
 
-              $scope.item.url = encodeURI($scope.item.url);
+              // $scope.item.url = encodeURI($scope.item.url);
               $scope.info.url = $scope.item.url;
               safeApply($scope);
             }
