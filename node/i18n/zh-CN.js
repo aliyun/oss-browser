@@ -154,7 +154,7 @@ module.exports = {
   'simplePolicy.lb1.2': '的权限',
   'privilege.readonly': '只读',
   'privilege.readwrite': '读写',
-  'privilege.all': '读写',
+  'privilege.all': '完全控制',
   'simplePolicy.lb3.1': '查看Policy',
   'simplePolicy.lb3.2': '隐藏Policy',
   'simplePolicy.lb4': '创建为policy，命名为',

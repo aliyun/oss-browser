@@ -154,7 +154,7 @@ module.exports = {
   'simplePolicy.lb1.2': 'Privileges',
   'privilege.readonly': 'ReadOnly',
   'privilege.readwrite': 'ReadWrite',
-  'privilege.all': 'ReadWrite',
+  'privilege.all': 'Master',
   'simplePolicy.lb3.1': 'View Policy',
   'simplePolicy.lb3.2': 'Collapse',
   'simplePolicy.lb4': 'Create policy, named',
