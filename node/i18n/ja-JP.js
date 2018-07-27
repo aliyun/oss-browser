@@ -154,7 +154,7 @@ module.exports = {
   'simplePolicy.lb1.2': '権限',
   'privilege.readonly': '読み取り',
   'privilege.readwrite': '読み書き',
-  'privilege.all': '読み書き',
+  'privilege.all': 'フルコントロール',
   'simplePolicy.lb3.1': 'ポリシーの表示',
   'simplePolicy.lb3.2': '圧縮',
   'simplePolicy.lb4': '名前付きポリシーの作成',

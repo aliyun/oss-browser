@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('grantModalCtrl', ['$scope', '$q', '$uibModalInstance','$translate', 'items', 'currentInfo','ramSvs','settingsSvs','subUserAKSvs','Mailer','Const','Toast','AuthInfo', 'safeApply',
-    function ($scope, $q, $modalInstance, $translate, items, currentInfo,ramSvs, settingsSvs, subUserAKSvs, Mailer, Const, Toast, AuthInfo, safeApply) {
+  .controller('grantModalCtrl', ['$scope', '$q', '$uibModalInstance','$translate', 'items', 'currentInfo','ramSvs','ossSvs2','settingsSvs','subUserAKSvs','Mailer','Const','Toast','AuthInfo', 'safeApply',
+    function ($scope, $q, $modalInstance, $translate, items, currentInfo,ramSvs, ossSvs2, settingsSvs, subUserAKSvs, Mailer, Const, Toast, AuthInfo, safeApply) {
       var T = $translate.instant;
       angular.extend($scope, {
         cancel: cancel,
@@ -76,28 +76,25 @@ angular.module('web')
         var actions = [];
         if(privType=='readOnly'){
           actions = [
-            'oss:Head*',
             'oss:Get*',
             'oss:List*'
           ];
-        }
-        else{
+        } else if (privType=='readWrite') {
+          actions = [
+            'oss:Get*',
+            'oss:List*',
+            'oss:Put*',
+            'oss:AbortMultipartUpload',
+          ];
+        } else if (privType=='all') {
           actions = ['oss:*'];
         }
 
         angular.forEach($scope.items, function (item) {
           if (item.region || item.isFolder) {
-
-            var bucket = item.region?item.name: currentInfo.bucket;
+            var bucket = item.region ? item.name : currentInfo.bucket;
             var key = item.path||'';
-            t.push({
-              "Effect": "Allow",
-              "Action": actions,
-              "Resource": [
-                "acs:oss:*:*:" + bucket + "/" + key + "*"
-              ]
-            });
-
+            
             t.push({
               "Effect": "Allow",
               "Action": [
@@ -112,6 +109,14 @@ angular.module('web')
                 }
               }
             });
+
+            t.push({
+              "Effect": "Allow",
+              "Action": actions,
+              "Resource": [
+                "acs:oss:*:*:" + bucket + "/" + key + "*"
+              ]
+            });
           } else {
             //文件所有权限
             t.push({
@@ -121,7 +126,6 @@ angular.module('web')
               ],
               "Resource": [
                 "acs:oss:*:*:" + currentInfo.bucket,
-                "acs:oss:*:*:" + currentInfo.bucket + '/*'
               ],
               "Condition": {
                 "StringLike": {
@@ -243,12 +247,15 @@ angular.module('web')
           var userName = $scope.create.UserName;
           var comments = [];
           var region = '';
+          var bucket = '';
           angular.forEach($scope.items, function(n){
             if (n.itemType == 'bucket') {
               region = n.region;
+              bucket = n.name;
               comments.push('oss://' + n.name + '/');
             } else {
               region = currentInfo.region;
+              bucket = currentInfo.bucket;
               comments.push('oss://' + currentInfo.bucket + '/' + n.path);
             }
           });
@@ -268,7 +275,7 @@ angular.module('web')
                 UserName: userName
               });
 
-              var sendInfo = getSendInfo(id,secret,userName, region, comments,$scope.create.Email, $scope.grant.privType);
+              var sendInfo = getSendInfo(id, secret, userName, bucket, region, comments, $scope.create.Email, $scope.grant.privType);
               fn(userName, sendInfo);
             });
 
@@ -277,14 +284,15 @@ angular.module('web')
       }
 
 
-      function getSendInfo(id, secret, userName, region, comments, toEmail, privType){
+      function getSendInfo(id, secret, userName, bucket, region, comments, toEmail, privType){
+        var eptpl = ossSvs2.getOssEndpoint(region, bucket, AuthInfo.get().eptpl);
         var opt = {
           id: id,
           secret: secret,
           desc: userName,
           region:  region,
           osspath: comments[0],
-          eptpl: AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com'
+          eptpl: eptpl
         };
 
         var tokenStr = new Buffer(JSON.stringify(opt)).toString('base64');
