@@ -25,7 +25,7 @@ angular.module('web')
           var info = ossSvs2.parseOSSPath(data.osspath);
           data.bucket = info.bucket;
 
-          ossSvs2.getClient(data).listObjects({Bucket: info.bucket, Prefix: info.key, Marker:'',MaxKeys:1}, function(err, result){
+          ossSvs2.getClient(data).listObjects({Bucket: info.bucket, Prefix: info.key, Marker:'',MaxKeys:1, Delimiter:'/'}, function(err, result){
 
             if(err){
               df.reject(err);
