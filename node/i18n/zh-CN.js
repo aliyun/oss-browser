@@ -407,6 +407,7 @@ module.exports = {
   'send.email': '发送邮件',
   'send.now': '立即发送',
   'file.download.address': '文件下载地址',
+  'file.download.warning': '如果您设置了Referer 白名单且Referer不允许为空，则通过浏览器直接访问该URL会失败',
 
   'copy.successfully': '已复制到剪贴板',
   'click.download': '点此下载',
