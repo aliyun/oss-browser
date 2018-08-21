@@ -1337,8 +1337,12 @@ angular.module('web')
 
 
       function getOssUrl(region, bucket, key){
-
         var eptpl = AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com';
+        
+        var hostname = require('url').parse(eptpl).hostname;
+        if(ipv4Regex.test(hostname) || ipv6Regex.test(hostname)){
+          return eptpl.replace(/\/$/, '') +  "/" + bucket + "/" + key;
+        }
 
         var protocol = eptpl.indexOf('https:')==0 ? 'https:': "http:";// Global.ossEndpointProtocol == 'https:';
 
