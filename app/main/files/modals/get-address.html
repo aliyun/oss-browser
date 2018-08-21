@@ -83,11 +83,11 @@
 
     </div>
 
-
     <div class="form-group" ng-if="step==3">
-      <code>{{err}}</code>
+      <div class="alert alert-danger text-center">{{err}}</div>
     </div>
 
+    <div class="alert alert-warning" ng-if="info.url">{{'file.download.warning'|translate}}</div>
     <div ng-if="info.url" class="text-center" id="addr-qrcode-wrap">
       <qrcode  text="info.url" width="300" height="300">
         <!-- 扫码下载 -->
@@ -113,7 +113,6 @@
 
       </div>
     </div>
-
 
     <div class="clearfix"></div>
   </div>
