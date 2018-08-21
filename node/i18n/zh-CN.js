@@ -4,7 +4,7 @@ module.exports = {
   'name': "名称",
   'type': '类型',
   'customize': '自定义',
-  'public.cloud': '公有云',
+  'public.cloud': '公共云',
 
   'region.oss-cn-hangzhou': '华东1(杭州)',
   'region.oss-cn-shanghai': '华东2(上海)',
@@ -39,7 +39,7 @@ module.exports = {
   'auth.eptpl': 'Endpoint模板',
   'auth.eptpl.placeholder': '默认: http://{region}.aliyuncs.com',
 
-  'auth.eptpl.popup.msg1': '公有云直接使用默认即可',
+  'auth.eptpl.popup.msg1': '公共云直接使用默认即可',
   'auth.eptpl.popup.msg2': '专有云请输入自定义Endpoint,如:',
 
   'auth.presetOssPath.popup.msg1': '大权限子账号登录: 当前使用的AK已拥有所有Bucket的权限，不需要设置"预设OSS路径"',
