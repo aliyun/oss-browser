@@ -210,18 +210,33 @@ angular.module('web')
               objectsCount++;
 
               if (itemsToDelete.length == 500 || (objectsCount!=0 && objectsCount + foldersCount == len)) {
-                client.deleteMulti(itemsToDelete).then(function (res) {
-                  c += itemsToDelete.length;
-                  progress.current += itemsToDelete.length;
-                  itemsToDelete.splice(0, itemsToDelete.length);
-                  $timeout(dig,NEXT_TICK);
-                }).catch(function (err) {
-                  terr.push({item:item, error:err});
-                  progress.errorCount += itemsToDelete.length;
-                  c += itemsToDelete.length;
-                  itemsToDelete.splice(0, itemsToDelete.length);
-                  $timeout(dig,NEXT_TICK);
-                });
+                if (itemsToDelete.length > 1) {
+                  client.deleteMulti(itemsToDelete).then(function (res) {
+                    c += itemsToDelete.length;
+                    progress.current += itemsToDelete.length;
+                    itemsToDelete.splice(0, itemsToDelete.length);
+                    $timeout(dig,NEXT_TICK);
+                  }).catch(function (err) {
+                    terr.push({item:item, error:err});
+                    progress.errorCount += itemsToDelete.length;
+                    c += itemsToDelete.length;
+                    itemsToDelete.splice(0, itemsToDelete.length);
+                    $timeout(dig,NEXT_TICK);
+                  });
+                } else {
+                  client.delete(itemsToDelete[0]).then(function (res) {
+                    c += itemsToDelete.length;
+                    progress.current += itemsToDelete.length;
+                    itemsToDelete.splice(0, itemsToDelete.length);
+                    $timeout(dig,NEXT_TICK);
+                  }).catch(function (err) {
+                    terr.push({item:item, error:err});
+                    progress.errorCount += itemsToDelete.length;
+                    c += itemsToDelete.length;
+                    itemsToDelete.splice(0, itemsToDelete.length);
+                    $timeout(dig,NEXT_TICK);
+                  });
+                }
               } else {
                 $timeout(dig,NEXT_TICK);
               }
