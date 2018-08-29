@@ -26,32 +26,40 @@ angular.module('web')
       init();
       function init(){
         $scope.isLoading = true;
-        $scope.step=2;
+        $scope.step = 2;
         var ignoreError = true;
 
-        //console.log(item, currentInfo)
-        $.ajax({url: item.url,
-          headers: {'Range':'bytes=0-1','x-random':Math.random(),'Cache-Control':"no-cache"},
-          complete: function(xhr){
-            $scope.isLoading = false;
-            if(xhr.status < 300){
-              $scope.err = null;
-              $scope.step=1;
-
-              // $scope.item.url = encodeURI($scope.item.url);
-              $scope.info.url = $scope.item.url;
-              safeApply($scope);
-            }
-            else if(xhr.status==403){
-              $scope.step = 2;
-            }
-            else{
-              $scope.step = 3;
-            }
+        ossSvs2.getACL(currentInfo.region, currentInfo.bucket,item.path).then(function(res){
+          $scope.isLoading = false;
+          if (res.acl == 'public-read' || res.acl == 'public-read-write') {
+            $scope.err = null;
+            $scope.info.url = $scope.item.url;
+            $scope.step = 1;
             safeApply($scope);
+          } else {
+            ossSvs2.getBucketACL(currentInfo.region, currentInfo.bucket).then(function(result){
+              $scope.isLoading = false;
+              if (res.acl == 'public-read' || res.acl == 'public-read-write') {
+                $scope.err = null;
+                $scope.info.url = $scope.item.url;
+                $scope.step = 1;
+              } else {
+                $scope.err = null;
+                $scope.step = 2;
+              }
+              safeApply($scope);
+            }, function(error) {
+              $scope.err = error;
+              $scope.step = 3;
+              safeApply($scope);
+            });
           }
+        }, function(error) {
+          $scope.isLoading = false;
+          $scope.err = error;
+          $scope.step = 3;
+          safeApply($scope);
         });
-
       }
 
       function onSubmit(form1){

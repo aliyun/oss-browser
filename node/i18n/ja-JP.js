@@ -407,6 +407,7 @@ module.exports = {
   'send.email': 'メールする',
   'send.now': '送信',
   'file.download.address': 'ファイルダウンロードアドレス',
+  'file.download.warning': 'OSS バケットのリファラリストを設定する際、ノーリファラを選択しなかった場合、ブラウザから直接 URL にアクセスすることはできません。',
 
   'copy.successfully': 'クリップボードにコピー済みです',
   'click.download': 'クリックしてダウンロード',
