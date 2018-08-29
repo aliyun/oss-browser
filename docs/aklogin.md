@@ -14,7 +14,7 @@
 
 ![](../preview/genToken1.png)
 
-#### (1) 公有云登录样例:
+#### (1) 公共云登录样例:
 
 ![](../preview/login.png)
 
