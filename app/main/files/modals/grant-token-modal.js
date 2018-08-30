@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('grantTokenModalCtrl', ['$scope', '$q', '$uibModalInstance','$translate', 'item', 'currentInfo','ramSvs','stsSvs','Toast', 'safeApply',
-    function ($scope, $q, $modalInstance, $translate, item, currentInfo,ramSvs, stsSvs, Toast, safeApply) {
+  .controller('grantTokenModalCtrl', ['$scope', '$q', '$uibModalInstance','$translate', 'item', 'currentInfo','ramSvs','ossSvs2','AuthInfo','stsSvs','Toast', 'safeApply',
+    function ($scope, $q, $modalInstance, $translate, item, currentInfo, ramSvs, ossSvs2, AuthInfo, stsSvs, Toast, safeApply) {
       var T = $translate.instant;
       angular.extend($scope, {
         cancel: cancel,
@@ -55,15 +55,19 @@ angular.module('web')
 
         var actions = [];
         if(privType=='readOnly'){
-          actions = ['oss:GetObject',
-            'oss:HeadObject',
-            "oss:GetObjectMeta",
-            "oss:GetObjectACL",
-            'oss:ListObjects',
-            'oss:GetSymlink'
+          actions = [
+            'oss:Get*',
+            'oss:List*'
           ];
-        }
-        else{
+        } else if (privType=='readWrite') {
+          actions = [
+            'oss:Get*',
+            'oss:List*',
+            'oss:Put*',
+            'oss:DeleteObject',
+            'oss:AbortMultipartUpload',
+          ];
+        } else if (privType=='all') {
           actions = ['oss:*'];
         }
 
@@ -71,19 +75,9 @@ angular.module('web')
         var item = angular.copy($scope.item);
 
         if (item.region || item.isFolder) {
-          //bucket or folder
-          var bucket = item.region? item.name: currentInfo.bucket;
+          var bucket = item.region ? item.name : currentInfo.bucket;
           var key = item.path||'';
-
-          t.push({
-            "Effect": "Allow",
-            "Action": actions,
-            "Resource": [
-              "acs:oss:*:*:" + bucket + "/" + key + "*"
-            ]
-          });
-
-
+          
           t.push({
             "Effect": "Allow",
             "Action": [
@@ -99,13 +93,35 @@ angular.module('web')
             }
           });
 
-        } else {
-          //文件所有权限
           t.push({
             "Effect": "Allow",
             "Action": actions,
             "Resource": [
-              "acs:oss:*:*:" + currentInfo.bucket + "/" + item.path
+              "acs:oss:*:*:" + bucket + "/" + key + "*"
+            ]
+          });
+        } else {
+          //文件所有权限
+          t.push({
+            "Effect": "Allow",
+            "Action": [
+              "oss:ListObjects"
+            ],
+            "Resource": [
+              "acs:oss:*:*:" + currentInfo.bucket,
+            ],
+            "Condition": {
+              "StringLike": {
+                "oss:Prefix": item.path
+              }
+            }
+          });
+
+          t.push({
+            "Effect": "Allow",
+            "Action": actions,
+            "Resource": [
+              "acs:oss:*:*:" + currentInfo.bucket + '/' + item.path
             ]
           });
         }
@@ -135,6 +151,7 @@ angular.module('web')
         var region = item.region || currentInfo.region;
         var bucket = item.region? item.name: currentInfo.bucket;
         var key = item.path||'';
+        var eptpl = ossSvs2.getOssEndpoint(region, bucket, AuthInfo.get().eptpl);
 
         //console.log(info)
 
@@ -153,6 +170,7 @@ angular.module('web')
             region: region,
             osspath: 'oss://' + bucket + '/'+ key,
             privilege: info.privType,
+            eptpl: eptpl
           }
 
           $scope.token = Buffer.from(JSON.stringify(tokenInfo)).toString('base64');
