@@ -154,7 +154,7 @@ module.exports = {
   'simplePolicy.lb1.2': 'Privileges',
   'privilege.readonly': 'ReadOnly',
   'privilege.readwrite': 'ReadWrite',
-  'privilege.all': 'ReadWrite',
+  'privilege.all': 'Master',
   'simplePolicy.lb3.1': 'View Policy',
   'simplePolicy.lb3.2': 'Collapse',
   'simplePolicy.lb4': 'Create policy, named',
@@ -407,6 +407,7 @@ module.exports = {
   'send.email': 'Mail it',
   'send.now': 'Send',
   'file.download.address': 'file download address',
+  'file.download.warning': 'If you have enabled the Referer whitelist for OSS Buckets and the Referer field cannot be left empty, you will not be able to access this URL directly through a browser.',
 
   'copy.successfully': 'It has been copied to the clipboard',
   'click.download': 'click to download',

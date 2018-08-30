@@ -32,9 +32,14 @@
           <!-- 只读权限 -->
         </label>
         <label class="radio-inline">
-          <input type="radio" name="ptype" ng-click="policyChange()" ng-model="grant.privType" id="inlineRadio2" value="all">
+          <input type="radio" name="ptype" ng-click="policyChange()" ng-model="grant.privType" id="inlineRadio2" value="readWrite">
           <!-- 读写权限 -->
           {{'privilege.readwrite'|translate}}
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="ptype" ng-click="policyChange()" ng-model="grant.privType" id="inlineRadio3" value="all">
+          <!-- 完全控制 -->
+          {{'privilege.all'|translate}}
         </label>
       </div>
     </div>
