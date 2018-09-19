@@ -14,6 +14,9 @@
     <div class="form-group" ng-class="{'has-error':!form1.name.$valid}">
       <label class="col-sm-2 control-label" for="name">
         {{'name'|translate}}:
+        <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}" tooltip-append-to-body="true"
+          ng-click="openURL('https://help.aliyun.com/document_detail/31827.html')">
+          <i class="fa fa-question-circle"></i></a> :
         <!-- 名称: -->
       </label>
       <div class="col-sm-8">
@@ -26,6 +29,9 @@
     <div class="form-group">
       <label class="col-sm-2 control-label" for="region">
         {{'region'|translate}}:
+        <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}" tooltip-append-to-body="true"
+          ng-click="openURL('https://help.aliyun.com/document_detail/31837.html')">
+          <i class="fa fa-question-circle"></i></a> :
         <!-- 区域: -->
       </label>
       <div class="col-sm-8">

@@ -121,6 +121,7 @@ module.exports = {
   'more': '更多',
   'bucket.name': 'Bucket名称',
   'creationTime': '创建时间',
+  'bucket.add.name.invalid': '您输入的Bucket名称无效',
 
   'multipart.management': 'Multipart管理',
   'multipart.description': '管理通过Multipart（分块）方式上传过程中产生的事件与碎片。',

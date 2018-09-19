@@ -30,37 +30,29 @@ angular.module('web')
         $scope.step = 2;
         var ignoreError = true;
 
-        ossSvs2.getACL(currentInfo.region, currentInfo.bucket, item.path).then(function (res) {
-          $scope.isLoading = false;
-          if (res.acl == 'public-read' || res.acl == 'public-read-write') {
+        $.ajax({
+          url: item.url,
+          headers: {
+            'Range': 'bytes=0-1',
+            'x-random': Math.random(),
+            'Cache-Control': "no-cache"
+          },
+          complete: function (xhr) {
+            $scope.isLoading = false;
             $scope.err = null;
-            $scope.info.url = $scope.item.url;
-            $scope.step = 1;
-            safeApply($scope);
-          } else {
-            ossSvs2.getBucketACL(currentInfo.region, currentInfo.bucket).then(function (result) {
-              $scope.isLoading = false;
-              if (result.acl == 'public-read' || result.acl == 'public-read-write') {
-                $scope.err = null;
-                $scope.info.url = $scope.item.url;
-                $scope.step = 1;
-              } else {
-                $scope.err = null;
-                $scope.step = 2;
-              }
-              safeApply($scope);
-            }, function (error) {
-              $scope.err = error;
+            if (xhr.status >= 200 && xhr.status <= 300) {
+              $scope.info.url = $scope.item.url;
+              $scope.step = 1;
+            } else if (xhr.status == 403) {
+              $scope.step = 2;
+            } else {
+              $scope.err = xhr.responseText;
               $scope.step = 3;
-              safeApply($scope);
-            });
+            }
+            safeApply($scope);
           }
-        }, function (error) {
-          $scope.isLoading = false;
-          $scope.err = error;
-          $scope.step = 3;
-          safeApply($scope);
         });
+
       }
 
       function onSubmit(form1) {
@@ -68,7 +60,28 @@ angular.module('web')
 
         var v = $scope.info.sec;
         var url = ossSvs2.signatureUrl2(currentInfo.region, currentInfo.bucket, item.path, v);
-        $scope.info.url = url;
+
+        $scope.isLoading = true;
+        $.ajax({
+          url: url,
+          headers: {
+            'Range': 'bytes=0-1',
+            'x-random': Math.random(),
+            'Cache-Control': "no-cache"
+          },
+          complete: function (xhr) {
+            $scope.isLoading = false;
+            if (xhr.status >= 200 && xhr.status <= 300) {
+              $scope.err = null;
+              $scope.info.url = url;
+            } else {
+              $scope.err = xhr.responseText;
+              $scope.step = 3;
+            }
+            safeApply($scope);
+          }
+        });
+        safeApply($scope);
       }
 
       function sendTo(form1) {

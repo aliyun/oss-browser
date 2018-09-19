@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('addBucketModalCtrl', ['$scope', '$uibModalInstance', '$translate', 'callback', 'ossSvs2', 'Const',
-    function ($scope, $modalInstance, $translate, callback, ossSvs2, Const) {
+  .controller('addBucketModalCtrl', ['$scope', '$uibModalInstance', '$translate', 'callback', 'ossSvs2', 'Const', 'Toast',
+    function ($scope, $modalInstance, $translate, callback, ossSvs2, Const, Toast) {
       var T = $translate.instant;
 
       var bucketACL = angular.copy(Const.bucketACL);
@@ -73,6 +73,10 @@ angular.module('web')
       }
 
       function onSubmit(form) {
+        if (!form.name.$valid) {
+          Toast.error(T('bucket.add.name.invalid')); //'bucket名称无效'
+          return;
+        }
         if (!form.$valid) return;
         var item = angular.copy($scope.item);
 
