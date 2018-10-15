@@ -16,17 +16,17 @@ var nativeImage = require('electron').nativeImage;
 var PORTS = [7123,7124,7125,7126];
 
 for(var port of PORTS){
-  try{
+  try {
     //var subp = require('child_process').fork('./server.js',[port]);
     require('./server.js').listen(port);
     console.log('listening on port ' + port);
     break;
-  }catch(e){
+  } catch(e) {
     console.log(e);
   }
 }
 
-app.commandLine.appendSwitch('ignore-certificate-errors')
+app.commandLine.appendSwitch('ignore-certificate-errors');
 ///*****************************************
 
 var custom = {};
@@ -56,7 +56,7 @@ function createWindow() {
     icon: custom.logo_ico || path.join(__dirname, 'icons', 'icon.ico')
   };
 
-  if(process.platform=='linux'){
+  if(process.platform == 'linux'){
     opt.icon = custom.logo_png || path.join(__dirname, 'icons', 'icon.png');
   }
 
@@ -80,7 +80,7 @@ function createWindow() {
 
 
   // drawin 就是 MacOS
-  if(process.env.NODE_ENV=='development'){
+  if(process.env.NODE_ENV == 'development'){
     console.log('开发模式');
 
     // Open the DevTools.
@@ -115,7 +115,7 @@ ipcMain.on('asynchronous', (event, data) => {
       var version = data.version;
       //Copy
       //var from = path.join(os.homedir(), '.oss-browser', version+'-app.asar');
-      var from = path.join(path.dirname(__dirname), version+'-app.asar');
+      var from = path.join(path.dirname(__dirname), version + '-app.asar');
       var to = path.join(path.dirname(__dirname), 'app.asar');
 
       process.noAsar = true;
@@ -150,7 +150,7 @@ function moveFile(from, to, fn){
   });
   readStream.on('end', function() {
       writeStream.end();
-      setTimeout(function(){
+      setTimeout(function() {
         fs.unlinkSync(from);
         fn();
       },200);
