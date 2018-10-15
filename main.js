@@ -29,11 +29,11 @@ for(var port of PORTS){
 app.commandLine.appendSwitch('ignore-certificate-errors')
 ///*****************************************
 
-var custom={};
+var custom = {};
 
-try{
+try {
   custom = require(path.join(__dirname,'../custom'));
-}catch(e){
+} catch(e) {
   console.log('没有自定义模块');
 }
 //let logo = nativeImage.createFromPath('icons/logo.ico');
