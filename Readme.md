@@ -162,6 +162,11 @@ oss-browser/
 
 - 暂不接受代码贡献，如有建议或发现 bug，请直接开 issue。
 
-## 7. 开源 LICENSE
+## 7. 注意事项
+- OSS Browser使用过程中，如果遇到问题可打开调试面板进行问题初步排查，可通过单击OSS Browser工具左上角图标连续10次弹出调试面板,针对每个操作OSS Browser埋的都有关键操作信息，同时控制台会实时同步错误信息,如果用户无法理解错误日志信息。请issue截图反馈@luozhang002进行排查
+- OSS Browser工具使用过程中尽量不要开本地代理或者VPN相关
+- 开发者如果是通过本地编译github仓库生产的oss browser工具，想要进行主进程和渲染进程相关代码的调试可以参考文档[debug](debug.md)
+
+## 8. 开源 LICENSE
 
 [Apache License 2.0](LICENSE)
