@@ -1,7 +1,7 @@
 angular.module('web')
   .controller('pictureModalCtrl', ['$scope', '$uibModalInstance', '$timeout', '$uibModal', 'ossSvs2', 'safeApply', 'showFn', 'bucketInfo', 'objectInfo','AuthInfo', 'fileType',
     function ($scope, $modalInstance, $timeout, $modal, ossSvs2, safeApply, showFn, bucketInfo, objectInfo, AuthInfo, fileType) {
-
+      
       angular.extend($scope, {
         bucketInfo: bucketInfo,
         objectInfo: objectInfo,
@@ -22,9 +22,7 @@ angular.module('web')
 
       function afterCheckSuccess() {
         $scope.previewBarVisible = true;
-        if (objectInfo.size < $scope.MAX_SIZE) {
-          getContent();
-        }
+        getContent();
       }
 
       function cancel() {
@@ -33,6 +31,7 @@ angular.module('web')
 
       function getContent() {
         var info  = AuthInfo.get();
+        console.log(info)  
         if(info.id.indexOf('STS.')==0){
           ossSvs2.getImageBase64Url(bucketInfo.region, bucketInfo.bucket, objectInfo.path).then(function(data){
             if(data.ContentType.indexOf('image/')==0){
@@ -41,14 +40,19 @@ angular.module('web')
             }
           })
         }
-        else{
+        else {
+          var process = "image/quality,q_10";
           var url = ossSvs2.signatureUrl(bucketInfo.region, bucketInfo.bucket, objectInfo.path);
+          var url5M = ossSvs2.signatureUrl2(bucketInfo.region, bucketInfo.bucket, objectInfo.path, 3600, process);
           $timeout(function () {
-            $scope.imgsrc = url;
+            if (objectInfo.size < $scope.MAX_SIZE) {
+              $scope.imgsrc = url;
+            } else {
+             $scope.imgsrc = url5M;
+            }
           }, 300);
         }
 
       }
-
     }
   ]);
