@@ -16,24 +16,7 @@
   <restore-checker bucket-info="bucketInfo" object-info='objectInfo' file-type="fileType"
   after-check-success="afterCheckSuccess()" after-restore-submit="afterRestoreSubmit()">
 
-    <div ng-if="objectInfo.size > MAX_SIZE" style="margin:40px auto 0" class="text-center">
-      {{'filesize'|translate}}
-      <!-- 文件大小:  -->
-      <code>{{objectInfo.size|sizeFormat}} > {{MAX_SIZE|sizeFormat}}</code>,
-      {{'codepreview.notsupport'|translate}}
-      <!-- 不支持直接打开，请下载到本地后打开。 -->
-      <div class="clearfix">&nbsp;</div>
-      <div class="pd4 text-center">
-        <button class="btn btn-default" type="button" ng-click="showFn.download();cancel()"><i class="fa fa-download text-success"></i>
-          <!-- 下载文件 -->
-          {{'download.file'|translate}}
-        </button>
-      </div>
-
-      <div class="clearfix">&nbsp;</div>
-    </div>
-
-    <div ng-if="objectInfo.size <= MAX_SIZE" style="overflow:auto;min-height:100px;" class="text-center">
+    <div style="overflow:auto;min-height:100px;" class="text-center">
       <div ng-if="!imgsrc" is-loading></div>
       <img ng-if="imgsrc" ng-src="{{imgsrc}}" alt="{{'cannot.preview'|translate}}" style="max-width:600px;max-height:400px;" />
     </div>
