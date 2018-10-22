@@ -145,6 +145,11 @@ angular.module('web')
           label: '中东东部1(迪拜)',
           storageClasses: getStorageClasses(3)
         },
+        {
+          id: 'oss-eu-west-1',
+          label: '英国（伦敦）',
+          storageClasses: getStorageClasses(3)
+        }
       ],
 
       countryNum: [{
