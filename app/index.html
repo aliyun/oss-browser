@@ -9,7 +9,7 @@
     var os = require('os');
     var fs = require('fs');
     var request = require('request');
-    var OSS = require('ali-oss');
+    // var OSS = require('ali-oss');
     var custom = {};
     try {
       custom = require(path.join(__dirname,'../custom/index.js'));
@@ -54,7 +54,7 @@
       if (window.module)  module = window.module;
     </script>
 
-    <!--<script src="ali-oss.min.js"></script>!-->
+    <script src="ali-oss.min.js"></script>!
     <script src="aliyun-sdk-oss.js"></script>
     <script src="templates.js"></script>
     <script>
@@ -80,7 +80,6 @@
       //   ipcRenderer.send('asynchronous-message', 'checkUpgrade');
       // },60000);
 
-
       function openExternal(url){
         // Open a URL in the default way
         shell.openExternal(url);
@@ -93,7 +92,7 @@
         ipcRenderer.send('asynchronous', {key: 'openDevTools'});
       }
       function gInstallAndRestart(version){
-        ipcRenderer.send('asynchronous', {key:'installRestart', version: version});
+        ipcRenderer.send('m', {key:'installRestart', version: version});
         // setTimeout(function(){
         //   process.exit(0);
         // },1);

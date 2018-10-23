@@ -55,7 +55,6 @@
     "spectron": "^3.7.2"
   },
   "dependencies": {
-    "ali-oss": "^6.0.1",
     "aliyun-sdk": "^1.10.19",
     "clipboard": "^1.7.1",
     "koa": "^2.3.0",
