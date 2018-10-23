@@ -31,7 +31,6 @@ angular.module('web')
 
       function getContent() {
         var info  = AuthInfo.get();
-        console.log(info)  
         if(info.id.indexOf('STS.')==0){
           ossSvs2.getImageBase64Url(bucketInfo.region, bucketInfo.bucket, objectInfo.path).then(function(data){
             if(data.ContentType.indexOf('image/')==0){
