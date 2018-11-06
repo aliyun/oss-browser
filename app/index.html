@@ -92,7 +92,7 @@
         ipcRenderer.send('asynchronous', {key: 'openDevTools'});
       }
       function gInstallAndRestart(version){
-        ipcRenderer.send('m', {key:'installRestart', version: version});
+        ipcRenderer.send('asynchronous', {key:'installRestart', version: version});
         // setTimeout(function(){
         //   process.exit(0);
         // },1);
