@@ -1,5 +1,5 @@
 
-VERSION=1.7.3
+VERSION=1.7.4
 NAME=oss-browser
 CUSTOM=./custom
 
@@ -10,14 +10,16 @@ ZIP=node ../zip.js
 ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/
 ELECTRON_VERSION=1.8.4
 BUILD=ELECTRON_MIRROR=$(ELECTRON_MIRROR) $(PKGER) ./dist $(NAME) --asar --overwrite --out=build --version $(ELECTRON_VERSION) --app-version $(VERSION)
-
+ELECTON=./node_modules/.bin/electron
 
 i:
 	cnpm i
 clean:
 	rm -rf dist node_modules build releases node/crc64/cpp-addon/node_modules node/crc64/electron-crc64-prebuild/node_modules node/ossstore/node_modules
 dev:
-	NODE_ENV=development electron . --inspect=5858
+	NODE_ENV=development ${ELECTON} . --inspect=5858
+debug:
+	NODE_ENV=development ${ELECTON} . --inspect-brk=5858
 
 run:
 	custom=$(CUSTOM) npm run dev

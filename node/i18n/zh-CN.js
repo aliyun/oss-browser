@@ -26,6 +26,8 @@ module.exports = {
   'region.oss-us-east-1': '美国东部1(弗吉尼亚)',
   'region.oss-eu-central-1': '欧洲中部1(法兰克福)',
   'region.oss-me-east-1': '中东东部1(迪拜)',
+  'region.oss-eu-west-1': '英国 (伦敦)',
+
 
   'optional': '可选',
   'default': '默认',
