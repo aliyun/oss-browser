@@ -14,3 +14,7 @@ _up0.sh
 .ossutil_checkpoint
 ossutil_output
 app.asar
+
+
+#tool
+.vscode/

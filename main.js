@@ -1,47 +1,46 @@
-const electron = require('electron');
+var electron = require('electron');
 // Module to control application life.
-const {
-  app,
-  Menu,
-  ipcMain,
-  BrowserWindow
-} = electron;
 
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const nativeImage = require('electron').nativeImage;
+var app = electron.app;
+var Menu = electron.Menu;
+var ipcMain = electron.ipcMain;
+var BrowserWindow = electron.BrowserWindow;
+
+var fs = require('fs');
+var os = require('os');
+var path = require('path');
+var nativeImage = require('electron').nativeImage;
 
 ///*****************************************
 //静态服务
-const PORTS = [7123,7124,7125,7126];
+var PORTS = [7123,7124,7125,7126];
 
 for(var port of PORTS){
-  try{
+  try {
     //var subp = require('child_process').fork('./server.js',[port]);
     require('./server.js').listen(port);
     console.log('listening on port ' + port);
     break;
-  }catch(e){
+  } catch(e) {
     console.log(e);
   }
 }
 
-app.commandLine.appendSwitch('ignore-certificate-errors')
+app.commandLine.appendSwitch('ignore-certificate-errors');
 ///*****************************************
 
+var custom = {};
 
-var custom={};
-try{
+try {
   custom = require(path.join(__dirname,'../custom'));
-}catch(e){
+} catch(e) {
   console.log('没有自定义模块');
 }
 //let logo = nativeImage.createFromPath('icons/logo.ico');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win;
+var win;
 
 if (process.platform == 'darwin') {
   app.dock.setIcon(custom.logo_png || path.join(__dirname, 'icons', 'icon.png'));
@@ -57,7 +56,7 @@ function createWindow() {
     icon: custom.logo_ico || path.join(__dirname, 'icons', 'icon.ico')
   };
 
-  if(process.platform=='linux'){
+  if(process.platform == 'linux'){
     opt.icon = custom.logo_png || path.join(__dirname, 'icons', 'icon.png');
   }
 
@@ -81,7 +80,7 @@ function createWindow() {
 
 
   // drawin 就是 MacOS
-  if(process.env.NODE_ENV=='development'){
+  if(process.env.NODE_ENV == 'development'){
     console.log('开发模式');
 
     // Open the DevTools.
@@ -91,7 +90,7 @@ function createWindow() {
 
     if (process.platform === 'darwin') {
       // Create the Application's main menu
-      let template = getMenuTemplate();
+      var template = getMenuTemplate();
       //注册菜单, 打包后可以复制, 但是不能打开 devTools
       Menu.setApplicationMenu(Menu.buildFromTemplate(template));
     }
@@ -116,7 +115,7 @@ ipcMain.on('asynchronous', (event, data) => {
       var version = data.version;
       //Copy
       //var from = path.join(os.homedir(), '.oss-browser', version+'-app.asar');
-      var from = path.join(path.dirname(__dirname), version+'-app.asar');
+      var from = path.join(path.dirname(__dirname), version + '-app.asar');
       var to = path.join(path.dirname(__dirname), 'app.asar');
 
       process.noAsar = true;
@@ -151,7 +150,7 @@ function moveFile(from, to, fn){
   });
   readStream.on('end', function() {
       writeStream.end();
-      setTimeout(function(){
+      setTimeout(function() {
         fs.unlinkSync(from);
         fn();
       },200);
@@ -167,7 +166,7 @@ function moveFile(from, to, fn){
 }
 
 //singleton
-const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+var shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
   // Someone tried to run a second instance, we should focus our window.
   if (win) {
     if (win.isMinimized()) win.restore();
@@ -208,7 +207,7 @@ app.on('activate', () => {
 // code. You can also put them in separate files and require them here.
 
 function getMenuTemplate() {
-  const name = app.getName();
+  var name = app.getName();
   return [{
     label: name,
     submenu: [{
