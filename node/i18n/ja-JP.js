@@ -26,6 +26,7 @@ module.exports = {
   'region.oss-us-east-1': 'バージニア (米国東部 1)',
   'region.oss-eu-central-1': 'フランクフルト (ドイツ)',
   'region.oss-me-east-1': 'ドバイ (UAE)',
+  'region.oss-eu-west-1': 'イングランド (ロンドン)',
 
   'optional': 'オプション',
   'default': 'デフォルト',
