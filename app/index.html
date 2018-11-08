@@ -5,15 +5,15 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title>OSS Browser</title>
     <script>
-    const path= require('path');
-    const os = require('os');
-    const fs = require('fs');
-    const request = require('request');
-
-    var custom= {};
-    try{
+    var path = require('path');
+    var os = require('os');
+    var fs = require('fs');
+    var request = require('request');
+    // var OSS = require('ali-oss');
+    var custom = {};
+    try {
       custom = require(path.join(__dirname,'../custom/index.js'));
-    }catch(e){
+    } catch(e) {
       console.log('没有自定义模块')
     };
     document.title = custom.title || 'OSS Browser';
@@ -79,7 +79,6 @@
       // setInterval(function(){
       //   ipcRenderer.send('asynchronous-message', 'checkUpgrade');
       // },60000);
-
 
       function openExternal(url){
         // Open a URL in the default way

@@ -26,6 +26,8 @@ module.exports = {
   'region.oss-us-east-1': 'Eastern US 1(Virginia)',
   'region.oss-eu-central-1': 'Central Europe 1(Frankfurt)',
   'region.oss-me-east-1': 'Middle East East 1(Dubai)',
+  'region.oss-eu-west-1': 'England (LonDon)',
+
 
   'optional': 'Optional',
   'default': 'Default',

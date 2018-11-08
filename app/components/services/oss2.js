@@ -63,7 +63,7 @@ angular.module('web')
       function getClient2(opt) {
         var options = prepaireOptions(opt)
         // console.log(options)
-        var client = new OSS.Wrapper({
+        var client = new OSS({
           accessKeyId: options.accessKeyId,
           accessKeySecret: options.secretAccessKey,
           endpoint: options.endpoint,
