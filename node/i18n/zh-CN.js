@@ -186,6 +186,12 @@ module.exports = {
   'settings.success': '已经保存设置',
   'settings.autoUpgrade': '自动更新',
   'settings.autoUpgrade.msg': '自动下载更新包',
+  'settings.console': '调试面板',
+  'settings.console.msg': '开启调试',
+  'settings.file': "本地日志文件",
+  'settings.file.msg': "日志文件存储到系统本地",
+  'settings.file.info': "本地info日志文件",
+  'settings.file.info.msg': "是否把info级别的日志存到本地",
 
   //bookmark
   'bookmarks.title': '书签管理',

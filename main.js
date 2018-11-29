@@ -11,6 +11,11 @@ var os = require('os');
 var path = require('path');
 var nativeImage = require('electron').nativeImage;
 
+// electron-log收集和引入
+var log = require('electron-log');
+log.transports.file.level = false;
+log.transports.console.level = false;
+
 ///*****************************************
 //静态服务
 var PORTS = [7123,7124,7125,7126];
@@ -110,6 +115,10 @@ ipcMain.on('asynchronous', (event, data) => {
     case 'openDevTools':
        win.webContents.openDevTools();
       break;
+
+    case 'refreshPage':
+      win.reload();
+      break
     case 'installRestart':
 
       var version = data.version;

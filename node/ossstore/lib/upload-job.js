@@ -7,6 +7,14 @@ var util = require('./upload-job-util');
 var isDebug = process.env.NODE_ENV=='development';
 var mime = require('mime');
 
+// isLog==1 open else close
+var isLog = localStorage.getItem('logFile') || 0;
+var isLogInfo = localStorage.getItem('logFileInfo')|| 0;
+//本地日志收集模块
+var log = require('electron-log');
+
+var { ipcRenderer} = require('electron');
+
 class UploadJob extends Base {
 
   /**
@@ -80,6 +88,11 @@ UploadJob.prototype.start = function () {
 
   if(isDebug) console.log('-----start', self.from.path);
 
+  if(isLog == 1 && isLogInfo == 1) {
+    log.transports.file.level = 'info';
+    log.info(`----start ${self.from.path}`);
+  }
+
   self.message='';
   this.startTime = new Date().getTime();
   this.endTime = null;
@@ -105,6 +118,11 @@ UploadJob.prototype.stop = function () {
 
   if(isDebug) console.log('-----stop', this.from.path);
 
+  if(isLog == 1 && isLogInfo == 1) {
+    log.transports.file.level = 'info';
+    log.info(`-----stop ${this.from.path}`);
+  }
+
   return this;
 };
 UploadJob.prototype.wait = function () {
@@ -113,6 +131,11 @@ UploadJob.prototype.wait = function () {
   this.stopFlag = true;
 
   if(isDebug) console.log('-----wait', this.from.path);
+
+  if(isLog == 1 && isLogInfo == 1) {
+    log.transports.file.level = 'info';
+    log.info(`-----wait ${this.from.path}`);
+  }
 
   return this;
 };
@@ -153,6 +176,12 @@ UploadJob.prototype.startUpload = function () {
   var self = this;
 
   if(isDebug) console.log('prepareChunks',self.from.path)
+
+  if(isLog == 1 && isLogInfo == 1) {
+    log.transports.file.level = 'info';
+    log.info(`prepareChunks ${self.from.path}`);
+  }
+
   util.prepareChunks(self.from.path, self.checkPoints, function (err, checkPoints) {
 
     if (err) {
@@ -167,10 +196,23 @@ UploadJob.prototype.startUpload = function () {
 
     //console.log('chunks.length:',checkPoints.chunks.length)
     if (checkPoints.chunks.length == 1 && checkPoints.chunks[0].start==0) {
+
       if(isDebug) console.log('uploadSingle', self.from.path)
+
+      if(isLog == 1 && isLogInfo == 1) {
+        log.transports.file.level = 'info';
+        log.info(`uploadSingle ${self.from.path}`);
+      }
+
       self.uploadSingle();
     } else {
       if(isDebug) console.log('uploadMultipart',self.from.path)
+
+      if(isLog == 1 && isLogInfo == 1) {
+        log.transports.file.level = 'info';
+        log.info(`uploadMultipart ${self.from.pathh}`);
+      }
+
       self.uploadMultipart(checkPoints);
     }
   });
@@ -206,6 +248,11 @@ UploadJob.prototype.startSpeedCounter = function(){
       tick=0;
       self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.checkPoints.chunkSize, self.maxConcurrency);
       if(isDebug) console.info('set max concurrency:', self.maxConcurrency, self.from.path);
+
+      if(isLog == 1 && isLogInfo == 1) {
+        log.transports.file.level = 'info';
+        log.info(`set max concurrency: ${self.maxConcurrency} ${self.from.path}`);
+      }
     }
 
   },1000);
@@ -312,6 +359,12 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
 
   var uploadNumArr = util.genUploadNumArr(checkPoints);
   if(isDebug) console.log('upload part nums:',uploadNumArr.join(','), self.from.path);
+
+  if(isLog == 1 && isLogInfo == 1) {
+    log.transports.file.level = 'info';
+    log.info(`upload part nums: ${uploadNumArr.join(',')} ${self.from.path}`);
+  }
+
   //var totalParts = checkPoints.chunks.length;
 
   var params = {
@@ -344,6 +397,11 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     }
 
     if(isDebug) console.info("Got upload ID", err, uploadId, self.from.path);
+
+    if(isLog == 1 && isLogInfo == 1) {
+      log.transports.file.level = 'info';
+      log.info(`Got upload ID: ${err} ${uploadId} ${self.from.path}`);
+    }
 
     fs.open(checkPoints.file.path, 'r', function (err, fd) {
       fs.closeSync(fd);
@@ -405,6 +463,11 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     }
 
     if(isDebug)console.log('doUploadPart:', partNum, ', stopFlag:',self.stopFlag, self.from.path)
+
+    if(isLog == 1 && isLogInfo == 1) {
+      log.transports.file.level = 'info';
+      log.info(`doUploadPart: ${partNum}  stopFlag: ${self.stopFlag} ${self.from.path}`);
+    }
 
     retries[partNum+1] = 0; //重试次数
 
@@ -540,6 +603,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
       if (progressInfo.done==progressInfo.total) {
         //util.closeFD(keepFd);
         if(isDebug) util.printPartTimeLine(_log_opt);
+
         complete();
       }
       else {

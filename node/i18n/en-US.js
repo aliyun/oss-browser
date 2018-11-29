@@ -99,6 +99,12 @@ module.exports = {
   'main.upgration': 'Release Notes',
   'tempCert': 'Temp Cert',
   'setup.success': 'Set up successfully',
+  'settings.console': 'Debug panel',
+  'settings.console.msg': 'Open debug',
+  'settings.file': "Local log",
+  'settings.file.msg': "Log in local storage",
+  'settings.file.info': "local info file log ",
+  'settings.file.info.msg': "put info log file in local ?",
 
   //address bar
   'backward': 'Backward',
