@@ -71,7 +71,7 @@ angular.module('web')
     },
     connectTimeout: {
       get: function() {
-        return parseInt(localStorage.getItem('connectTimeout')||30000);
+        return parseInt(localStorage.getItem('connectTimeout')||60000);
       },
       set: function(v){
         return localStorage.setItem('connectTimeout',v);
@@ -79,7 +79,7 @@ angular.module('web')
     },
     uploadPartSize: {
       get: function() {
-        return parseInt(localStorage.getItem('uploadPartSize')|| 5);
+        return parseInt(localStorage.getItem('uploadPartSize')|| 10);
       },
       set: function(v){
         return localStorage.setItem('uploadPartSize',v);

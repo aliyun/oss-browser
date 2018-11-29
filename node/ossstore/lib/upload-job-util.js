@@ -231,9 +231,9 @@ function prepareChunks(filePath, checkPoints, fn){
  */
 function getSensibleChunkSize(size) {
 
-  console.warn(`localStorage uploadPartSize: " ${localStorage.getItem('uploadPartSize')||5}M`)
+  console.warn(`localStorage uploadPartSize: " ${localStorage.getItem('uploadPartSize')|| 10 }M`)
 
-  var chunkSize = parseInt(localStorage.getItem('uploadPartSize') || 5 ) * 1024 * 1024;
+  var chunkSize = parseInt(localStorage.getItem('uploadPartSize') || 10 ) * 1024 * 1024;
 
   if(size < chunkSize){
       return size;
