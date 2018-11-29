@@ -52,6 +52,22 @@ angular.module('web')
       set: function(v){
         return localStorage.setItem('mailSender',JSON.stringify(v));
       }
-    }
+    },
+    logFile: {
+      get: function(){
+        return parseInt(localStorage.getItem('logFile')|| 0);
+      },
+      set: function(v){
+        return localStorage.setItem('logFile',v);
+      }
+    },
+    logFileInfo: {
+      get: function(){
+        return parseInt(localStorage.getItem('logFileInfo')|| 0);
+      },
+      set: function(v){
+        return localStorage.setItem('logFileInfo',v);
+      }
+    },
   };
 }]);

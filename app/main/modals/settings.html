@@ -159,6 +159,59 @@
       </div>
   </fieldset>
 
+    <fieldset>
+      <legend><h5 class="text-primary">{{'settings.log'|translate}}</h5></legend>
+
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+          <!-- console面板: -->
+          {{'settings.console'|translate}}:
+        </label>
+        <div class="col-sm-7">
+          <button type="button" ng-click="openDebug()">
+            {{'settings.console.msg'|translate}}
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+          <!-- 本地日志: -->
+          {{'settings.file'|translate}}:
+        </label>
+        <div class="col-sm-7">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="logFile"
+                 ng-model="set.logFile"
+                 ng-change="setChange(form1,'logFile')"
+                 ng-true-value="1" ng-false-value="0" />
+              ({{'settings.file.msg'|translate}})
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+          <!-- 自动更新: -->
+          {{'settings.file.info'|translate}}:
+        </label>
+        <div class="col-sm-7">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="logFileInfo"
+                     ng-model="set.logFileInfo"
+                     ng-change="setChange(form1,'logFileInfo')"
+                     ng-true-value="1" ng-false-value="0" />
+              ({{'settings.file.info.msg'|translate}})
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </fieldset>
+
 
   </div>
   <div class="modal-footer">

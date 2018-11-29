@@ -185,6 +185,13 @@ module.exports = {
   'settings.success': '保存を完了しました',
   'settings.autoUpgrade': '自動更新',
   'settings.autoUpgrade.msg': 'アップデートパッケージを自動的にダウンロードします',
+  'settings.console': '試用パネル',
+  'settings.console.msg': '調査を開く',
+  'settings.file': "ローカルログファイル",
+  'settings.file.msg': "ログファイルをシステムローカルに保存",
+  'settings.file.info': "ローカルinfoログファイル",
+  'settings.file.info.msg': "infoレベルのログを地元に預かるかどうか",
+
 
   //bookmark
   'bookmarks.title': 'ブックマーク',
