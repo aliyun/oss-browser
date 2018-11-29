@@ -105,8 +105,10 @@ module.exports = {
   'settings.file.msg': "Log in local storage",
   'settings.file.info': "local info file log ",
   'settings.file.info.msg': "put info log file in local ?",
+  'settings.connectTimeout':'overtime',
+  'settings.uploadPartSize':'uploadpart size',
 
-  //address bar
+    //address bar
   'backward': 'Backward',
   'forward': 'Forward',
   'goUp': 'Go up',

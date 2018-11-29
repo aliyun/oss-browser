@@ -231,36 +231,16 @@ function prepareChunks(filePath, checkPoints, fn){
  */
 function getSensibleChunkSize(size) {
 
-  var chunkSize = 5 * 1024 * 1024; //5MB
+  console.warn(`localStorage uploadPartSize: " ${localStorage.getItem('uploadPartSize')||5}M`)
+
+  var chunkSize = parseInt(localStorage.getItem('uploadPartSize') || 5 ) * 1024 * 1024;
 
   if(size < chunkSize){
-    return size;
+      return size;
   }
-  else if(size < 100 * 1024*1024){
-    chunkSize = 10 * 1024 * 1024; //10MB
-  }
-  else if(size < 500 * 1024*1024){
-    chunkSize = 20 * 1024 * 1024; //20MB
-  }
-  else if(size < 1024 * 1024*1024){
-    chunkSize = 30 * 1024 * 1024; //30MB
-  }
-  else if(size < 5* 1024 * 1024*1024){
-    chunkSize = 40 * 1024 * 1024; //40MB
-  }
-  else{
-    chunkSize = 50 * 1024 * 1024; //50MB
-  }
-
 
   var c = Math.ceil(size/10000);
   return Math.max(c, chunkSize);
-
-  // var parts = Math.ceil(size / chunkSize);
-  // if (parts > 10000) {
-  //   return Math.ceil(size / 10000);
-  // }
-  // return chunkSize;
 }
 
 

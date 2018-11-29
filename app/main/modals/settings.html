@@ -33,6 +33,26 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+          <!-- 默认超时时间设置 -->
+          {{'settings.connectTimeout'|translate}}:
+        </label>
+        <div class="col-sm-7">
+          <input type="string" name="connectTimeout" ng-model="set.connectTimeout" ng-change="setChange(form1,'connectTimeout')"  required class=" form-control" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+          <!-- 分片大小设置 -->
+          {{'settings.uploadPartSize'|translate}}:
+        </label>
+        <div class="col-sm-7">
+          <input type="number" name="uploadPartSize" ng-model="set.uploadPartSize" ng-change="setChange(form1,'uploadPartSize')" max="100" min="5" required class=" form-control" />
+        </div>
+      </div>
+
     </fieldset>
 
     <!-- <div class="form-group">

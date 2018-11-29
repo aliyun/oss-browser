@@ -350,7 +350,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
 
   var self = this;
 
-  var maxRetries = 100;
+  var maxRetries = 10;
 
   var retries = {}; //重试次数 [partNumber]
   var concurrency = 0; //并发块数

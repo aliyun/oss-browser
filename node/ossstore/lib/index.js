@@ -2,7 +2,9 @@
 'use strict';
 var ALYD = require('aliyun-sdk');
 require('events').EventEmitter.prototype._maxListeners = 1000;
-var TIMEOUT = 30000; //30秒
+// var TIMEOUT = 30000; //30秒
+var TIMEOUT = parseInt(localStorage.getItem('connectTimeout')||30000); //30秒
+console.log("TIMEOUT: "+ TIMEOUT)
 //fix
 ALYD.util.isBrowser = function(){
   return false;
