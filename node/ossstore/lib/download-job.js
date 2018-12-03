@@ -108,10 +108,10 @@ DownloadJob.prototype.wait = function () {
   return self;
 };
 
-DownloadJob.prototype._changeStatus = function (status) {
+DownloadJob.prototype._changeStatus = function (status, retryTimes) {
   var self = this;
   self.status = status;
-  self.emit('statuschange', self.status);
+  self.emit('statuschange', self.status, retryTimes);
 
   if (status == 'failed' || status == 'stopped' || status == 'finished') {
     self.endTime = new Date().getTime();

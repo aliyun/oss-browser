@@ -129,6 +129,7 @@ function headObject(self, objOpt, fn){
           fn(err);
         }else{
           retryTimes++;
+          self._changeStatus('retrying', retryTimes);
           console.warn('headObject error', err, ', ----- retrying...', `${retryTimes}/${RETRYTIMES}`);
           setTimeout(function(){
             if(!self.stopFlag) _dig();

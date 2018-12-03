@@ -340,6 +340,8 @@ module.exports = {
   'status.failed': 'Failed',
   'status.finished': 'Finished',
   'status.waiting': 'Waiting',
+  'status.retrying': 'Retrying',
+  'status.retrytimes': 'Times',
   'status.verifying': 'Verifying',
 
   'users': 'Sub Users',

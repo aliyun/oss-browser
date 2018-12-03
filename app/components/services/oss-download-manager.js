@@ -27,6 +27,7 @@ angular.module('web')
       $scope = scope;
       concurrency = 0;
       $scope.lists.downloadJobList = [];
+      $scope.retryTimes = 0;
       var arr = loadProg();
 
       //console.log('----load saving download jobs:' + arr.length);
@@ -55,11 +56,16 @@ angular.module('web')
         saveProg($scope);
       });
 
-      job.on('statuschange', function (status) {
+      job.on('statuschange', function (status, retryTimes) {
         if (status == 'stopped') {
           concurrency--;
           checkStart();
         }
+
+        if(status == 'retrying') {
+          $scope.retryTimes = retryTimes;
+        }
+
         safeApply($scope);
         //save
         saveProg();

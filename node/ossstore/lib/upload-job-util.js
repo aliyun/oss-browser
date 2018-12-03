@@ -105,6 +105,7 @@ function completeMultipartUpload(self, doneParams ,fn){
           fn(err);
         }else{
           retryTimes++;
+          self._changeStatus('retrying', retryTimes);
           console.error('completeMultipartUpload error', err, ', ----- retrying...', `${retryTimes}/${RETRYTIMES}`);
           setTimeout(function(){
             if(!self.stopFlag) _dig();
@@ -137,6 +138,7 @@ function getUploadId(checkPoints, self, params, fn){
         }else{
 
           retryTimes++;
+          self._changeStatus('retrying', retryTimes);
           console.warn('createMultipartUpload error', err, ', ----- retrying...', `${retryTimes}/${RETRYTIMES}`);
           setTimeout(function(){
             if(!self.stopFlag)_dig();
