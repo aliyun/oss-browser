@@ -16,7 +16,8 @@ module.exports = {
   getFileCrc64: getFileCrc64,
   getBigFileMd5: getBigFileMd5,
   checkFileHash: checkFileHash,
-  printPartTimeLine: printPartTimeLine
+  printPartTimeLine: printPartTimeLine,
+  getRetryTimes: getRetryTimes
 };
 
 function printPartTimeLine(opt){
@@ -168,4 +169,8 @@ function parseOssPath(osspath) {
     bucket: bucket,
     key: key
   };
+}
+
+function getRetryTimes() {
+  return localStorage.getItem('uploadAndDownloadRetryTimes') || 10
 }

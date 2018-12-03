@@ -194,6 +194,7 @@ module.exports = {
   'settings.file.info.msg': "是否把info级别的日志存到本地",
   'settings.connectTimeout':'超时时间',
   'settings.uploadPartSize':'分片大小',
+  'settings.uploadAndDownloadRetryTimes': '重试次数',
     //bookmark
   'bookmarks.title': '书签管理',
   'time': '时间',

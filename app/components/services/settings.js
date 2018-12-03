@@ -84,6 +84,14 @@ angular.module('web')
       set: function(v){
         return localStorage.setItem('uploadPartSize',v);
       }
+    },
+    uploadAndDownloadRetryTimes: {
+      get: function() {
+        return parseInt(localStorage.getItem('uploadAndDownloadRetryTimes')|| 10);
+      },
+      set: function(v){
+        return localStorage.setItem('uploadAndDownloadRetryTimes',v);
+      }
     }
   };
 }]);

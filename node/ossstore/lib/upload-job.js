@@ -6,6 +6,8 @@ var path = require('path');
 var util = require('./upload-job-util');
 var isDebug = process.env.NODE_ENV=='development';
 var mime = require('mime');
+var commonUtil = require('./util');
+var RETRYTIMES = commonUtil.getRetryTimes();
 
 // isLog==1 open else close
 var isLog = localStorage.getItem('logFile') || 0;
@@ -293,13 +295,13 @@ UploadJob.prototype.uploadSingle = function () {
 
           if(err.message.indexOf('Access denied')!=-1
           || err.message.indexOf('You have no right to access')!=-1
-          || retryTimes>10 ){
+          || retryTimes> RETRYTIMES ){
             self.message=err.message;
             self._changeStatus('failed');
             self.emit('error', err);
           }else{
             retryTimes++;
-            console.warn('put object error:', err, ', -------retrying...', retryTimes+'/10');
+            console.warn('put object error:', err, ', -------retrying...', `${retryTimes}/${RETRYTIMES}'`);
             setTimeout(function(){
               _dig();
             },2000);
@@ -350,7 +352,7 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
 
   var self = this;
 
-  var maxRetries = 10;
+  var maxRetries = RETRYTIMES;
 
   var retries = {}; //重试次数 [partNumber]
   var concurrency = 0; //并发块数
