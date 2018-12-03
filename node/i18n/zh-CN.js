@@ -339,6 +339,8 @@ module.exports = {
   'status.failed': '失败',
   'status.finished': '完成',
   'status.waiting': '等待',
+  'status.retrying': '重试中',
+  'status.retrytimes': '次',
   'status.verifying': '正在校验',
 
   'users': '子用户',

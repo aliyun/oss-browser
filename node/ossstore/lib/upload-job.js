@@ -153,10 +153,10 @@ UploadJob.prototype.deleteOssFile = function(){
 
 
 
-UploadJob.prototype._changeStatus = function(status){
+UploadJob.prototype._changeStatus = function(status, retryTimes){
   var self= this;
   self.status=status;
-  self.emit('statuschange',self.status);
+  self.emit('statuschange',self.status, retryTimes);
 
   if(status=='failed' || status=='stopped' || status=='finished'){
     self.endTime = new Date().getTime();
@@ -301,7 +301,14 @@ UploadJob.prototype.uploadSingle = function () {
             self.emit('error', err);
           }else{
             retryTimes++;
+            self._changeStatus('retrying', retryTimes);
             console.warn('put object error:', err, ', -------retrying...', `${retryTimes}/${RETRYTIMES}'`);
+            
+            if(isLog == 1) {
+              log.transports.file.level = 'info';
+              log.error(`put object error: ${err} -------retrying...${retryTimes}/${RETRYTIMES}`);
+            }
+            
             setTimeout(function(){
               _dig();
             },2000);

@@ -28,6 +28,7 @@ angular.module('web')
         $scope = scope;
         concurrency = 0;
         $scope.lists.uploadJobList = [];
+        $scope.retryTimes = 0;
 
         var arr = loadProg();
         var authInfo = AuthInfo.get();
@@ -55,11 +56,15 @@ angular.module('web')
           saveProg();
         });
 
-        job.on('statuschange', function (status) {
+        job.on('statuschange', function (status, retryTimes) {
 
           if (status == 'stopped') {
             concurrency--;
             $timeout(checkStart,100);
+          }
+
+          if(status == 'retrying') {
+            $scope.retryTimes = retryTimes;
           }
 
           safeApply($scope);

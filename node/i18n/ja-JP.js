@@ -339,6 +339,8 @@ module.exports = {
   'status.failed': '失敗',
   'status.finished': '完了',
   'status.waiting': '待機中',
+  'status.retrying': 'やり直してみる',
+  'status.retrytimes': '次',
   'status.verifying': '検証中',
 
   'users': 'サブユーザー',
