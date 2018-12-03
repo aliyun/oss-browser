@@ -16,7 +16,8 @@ angular.module('web')
         logFile: settingsSvs.logFile.get(),
         logFileInfo: settingsSvs.logFileInfo.get(),
         connectTimeout: settingsSvs.connectTimeout.get(),
-        uploadPartSize: settingsSvs.uploadPartSize.get()
+        uploadPartSize: settingsSvs.uploadPartSize.get(),
+        uploadAndDownloadRetryTimes: settingsSvs.uploadAndDownloadRetryTimes.get()
       },
       reg: {
         email: Const.REG.EMAIL
@@ -35,7 +36,7 @@ angular.module('web')
         if(!form1.$valid)return;
         settingsSvs[key].set( $scope.set[key] );
         Toast.success(T('settings.success')); //已经保存设置
-        if (key == 'logFile' || key == "logFileInfo" || "connectTimeout" || "uploadPartSize" ) {
+        if (key == 'logFile' || key == "logFileInfo" || key == "connectTimeout" || key == "uploadPartSize" || key == "uploadAndDownloadRetryTimes" ) {
           ipcRenderer.send('asynchronous', {key: 'refreshPage'});
         }
       },ttl||100);

@@ -193,8 +193,7 @@ module.exports = {
   'settings.file.info.msg': "infoレベルのログを地元に預かるかどうか",
   'settings.connectTimeout':'タイムアウト',
   'settings.uploadPartSize':'スライスサイズ',
-
-
+  'settings.uploadAndDownloadRetryTimes': '再試行回数',
 
     //bookmark
   'bookmarks.title': 'ブックマーク',

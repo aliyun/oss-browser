@@ -107,6 +107,7 @@ module.exports = {
   'settings.file.info.msg': "put info log file in local ?",
   'settings.connectTimeout':'overtime',
   'settings.uploadPartSize':'uploadpart size',
+  'settings.uploadAndDownloadRetryTimes': 'retry times',
 
     //address bar
   'backward': 'Backward',

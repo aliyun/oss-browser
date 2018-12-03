@@ -4,6 +4,9 @@
 var fs = require('fs');
 var path = require('path');
 var util = require('./util');
+var commonUtil = require('./util');
+var RETRYTIMES = commonUtil.getRetryTimes();
+
 
 module.exports = {
   genUploadNumArr: genUploadNumArr,
@@ -41,7 +44,7 @@ function getFileCrc64_2(self, p, fn){
    function _dig(){
      util.getFileCrc64(p,function(err,data){
        if(err){
-         if(retryTimes>5){
+         if(retryTimes> RETRYTIMES ){
            fn(err);
          }else{
            retryTimes ++;
@@ -98,11 +101,11 @@ function completeMultipartUpload(self, doneParams ,fn){
           return;
         }
 
-        if(retryTimes > 10){
+        if(retryTimes > RETRYTIMES){
           fn(err);
         }else{
           retryTimes++;
-          console.error('completeMultipartUpload error', err, ', ----- retrying...', retryTimes+'/'+10);
+          console.error('completeMultipartUpload error', err, ', ----- retrying...', `${retryTimes}/${RETRYTIMES}`);
           setTimeout(function(){
             if(!self.stopFlag) _dig();
           },2000);
@@ -129,12 +132,12 @@ function getUploadId(checkPoints, self, params, fn){
 
       //console.log(err, res, '<========')
       if (err) {
-        if(err.message.indexOf('You have no right to access')!=-1 || retryTimes > 10){
+        if(err.message.indexOf('You have no right to access')!=-1 || retryTimes > RETRYTIMES){
           fn(err);
         }else{
 
           retryTimes++;
-          console.warn('createMultipartUpload error', err, ', ----- retrying...', retryTimes+'/'+10);
+          console.warn('createMultipartUpload error', err, ', ----- retrying...', `${retryTimes}/${RETRYTIMES}`);
           setTimeout(function(){
             if(!self.stopFlag)_dig();
           },2000);

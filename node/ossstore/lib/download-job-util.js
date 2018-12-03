@@ -4,6 +4,8 @@ var util = require('./util');
 var os = require('os')
 var path = require('path')
 var cp = require('child_process')
+var commonUtil = require('./util');
+var RETRYTIMES = commonUtil.getRetryTimes();
 
 module.exports = {
   getSensibleChunkSize: getSensibleChunkSize,
@@ -123,11 +125,11 @@ function headObject(self, objOpt, fn){
           return;
         }
 
-        if(retryTimes > 10){
+        if(retryTimes > RETRYTIMES){
           fn(err);
         }else{
           retryTimes++;
-          console.warn('headObject error', err, ', ----- retrying...', retryTimes+'/'+10);
+          console.warn('headObject error', err, ', ----- retrying...', `${retryTimes}/${RETRYTIMES}`);
           setTimeout(function(){
             if(!self.stopFlag) _dig();
           },2000);

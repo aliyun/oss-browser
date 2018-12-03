@@ -4,6 +4,8 @@ var Base = require('./base');
 var fs = require('fs');
 var path = require('path');
 var util = require('./download-job-util');
+var commonUtil = require('./util');
+var RETRYTIMES = commonUtil.getRetryTimes();
 
 class DownloadJob extends Base {
 
@@ -180,7 +182,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
   var chunks = [];
 
 
-  var maxRetries = 100;
+  var maxRetries = RETRYTIMES;
 
   var concurrency = 0;
 
