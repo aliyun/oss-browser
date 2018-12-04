@@ -588,7 +588,8 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
         else {
 
           retries[partNumber]++;
-
+          // 分片重试次数
+          self._changeStatus('retrying',retries[partNumber]);
           console.warn('将要重新上传分片: #', partNumber, ', 还可以重试'+(maxRetries-retries[partNumber])+'次');
           setTimeout(function(){
             console.warn('重新上传分片: #', partNumber);
