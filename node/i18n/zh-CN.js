@@ -192,8 +192,8 @@ module.exports = {
   'settings.file.msg': "日志文件存储到系统本地",
   'settings.file.info': "本地info日志文件",
   'settings.file.info.msg': "是否把info级别的日志存到本地",
-  'settings.connectTimeout':'超时时间',
-  'settings.uploadPartSize':'分片大小',
+  'settings.connectTimeout':'超时时间(ms)',
+  'settings.uploadPartSize':'分片大小(M)',
   'settings.uploadAndDownloadRetryTimes': '重试次数',
     //bookmark
   'bookmarks.title': '书签管理',
