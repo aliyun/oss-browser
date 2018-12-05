@@ -36,7 +36,7 @@ angular.module('web')
         if(!form1.$valid)return;
         settingsSvs[key].set( $scope.set[key] );
         Toast.success(T('settings.success')); //已经保存设置
-        if (key == 'logFile' || key == "logFileInfo" || key == "connectTimeout" || key == "uploadPartSize" || key == "uploadAndDownloadRetryTimes" ) {
+        if (key == 'logFile' || key == "logFileInfo" || key == "uploadPartSize" || key == "uploadAndDownloadRetryTimes" ) {
           ipcRenderer.send('asynchronous', {key: 'refreshPage'});
         }
       },ttl||100);

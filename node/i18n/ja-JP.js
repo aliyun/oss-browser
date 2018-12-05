@@ -191,8 +191,8 @@ module.exports = {
   'settings.file.msg': "ログファイルをシステムローカルに保存",
   'settings.file.info': "ローカルinfoログファイル",
   'settings.file.info.msg': "infoレベルのログを地元に預かるかどうか",
-  'settings.connectTimeout':'タイムアウト',
-  'settings.uploadPartSize':'スライスサイズ',
+  'settings.connectTimeout':'タイムアウト(ms)',
+  'settings.uploadPartSize':'スライスサイズ(M)',
   'settings.uploadAndDownloadRetryTimes': '再試行回数',
 
     //bookmark
