@@ -300,6 +300,7 @@ module.exports = {
   'cannot.preview': '无法预览',
   'cannot.preview.this.file': '该文件类型无法预览。',
   'tryto.open.as.textfile': '尝试作为文本文件打开',
+  'preview.in.web.browser': '在浏览器中预览',
 
   'save': '保存',
   'size': '大小',

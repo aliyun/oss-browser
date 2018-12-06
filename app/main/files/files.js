@@ -659,7 +659,7 @@ angular.module('web')
 
         var fileType = fileSvs.getFileType(item);
         fileType.type = type || fileType.type;
-        //console.log(fileType);
+        // console.log(fileType);
 
         //type: [picture|code|others|doc]
 
@@ -684,10 +684,10 @@ angular.module('web')
           templateUrl = 'main/files/modals/preview/media-modal.html';
           controller = 'mediaModalCtrl';
         }
-        // else if(fileType.type=='doc'){
-        //   templateUrl= 'main/files/modals/preview/doc-modal.html';
-        //   controller= 'docModalCtrl';
-        // }
+        else if(fileType.type=='doc'){
+          templateUrl= 'main/files/modals/preview/doc-modal.html';
+          controller= 'docModalCtrl';
+        }
 
         $modal.open({
           templateUrl: templateUrl,
