@@ -300,6 +300,7 @@ module.exports = {
   'cannot.preview': 'プレビューできません',
   'cannot.preview.this.file': 'このファイルをプレビューできません。',
   'tryto.open.as.textfile': 'テキストファイルとしてオープン',
+  'preview.in.web.browser': 'ブラウザでプレビュー',
 
   'save': '保存',
   'size': 'サイズ',

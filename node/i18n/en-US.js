@@ -301,6 +301,7 @@ module.exports = {
   'cannot.preview': 'Can not preview',
   'cannot.preview.this.file': 'Can not preview this file.',
   'tryto.open.as.textfile': 'Try to open as a text file',
+  'preview.in.web.browser': 'Preview in web browser',
 
   'save': 'Save',
   'size': 'Size',
