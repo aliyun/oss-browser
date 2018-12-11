@@ -185,8 +185,17 @@ module.exports = {
   'settings.success': '保存を完了しました',
   'settings.autoUpgrade': '自動更新',
   'settings.autoUpgrade.msg': 'アップデートパッケージを自動的にダウンロードします',
+  'settings.console': '試用パネル',
+  'settings.console.msg': '調査を開く',
+  'settings.file': "ローカルログファイル",
+  'settings.file.msg': "ログファイルをシステムローカルに保存",
+  'settings.file.info': "ローカルinfoログファイル",
+  'settings.file.info.msg': "infoレベルのログを地元に預かるかどうか",
+  'settings.connectTimeout':'タイムアウト(ms)',
+  'settings.uploadPartSize':'スライスサイズ(M)',
+  'settings.uploadAndDownloadRetryTimes': '再試行回数',
 
-  //bookmark
+    //bookmark
   'bookmarks.title': 'ブックマーク',
   'time': '時間',
   'bookmarks.delete.success': 'ブックマークを削除しました',
@@ -291,6 +300,7 @@ module.exports = {
   'cannot.preview': 'プレビューできません',
   'cannot.preview.this.file': 'このファイルをプレビューできません。',
   'tryto.open.as.textfile': 'テキストファイルとしてオープン',
+  'preview.in.web.browser': 'ブラウザでプレビュー',
 
   'save': '保存',
   'size': 'サイズ',
@@ -330,6 +340,8 @@ module.exports = {
   'status.failed': '失敗',
   'status.finished': '完了',
   'status.waiting': '待機中',
+  'status.retrying': 'やり直してみる',
+  'status.retrytimes': '次',
   'status.verifying': '検証中',
 
   'users': 'サブユーザー',

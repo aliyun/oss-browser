@@ -89,7 +89,7 @@ angular.module('web')
             var arr = $scope.lists.downloadJobList;
             for (var i = 0; i < arr.length; i++) {
               var n = arr[i];
-              if (n.status == 'running' || n.status == 'waiting'|| n.status == 'verifying') n.stop();
+              if (n.status == 'running' || n.status == 'waiting'|| n.status == 'verifying' || n.status == 'retrying') n.stop();
               arr.splice(i, 1);
               i--;
             }
@@ -112,7 +112,7 @@ angular.module('web')
           $scope.allActionBtnDisabled = true;
 
           angular.forEach(arr, function (n) {
-            if (n.status == 'running' || n.status == 'waiting'|| n.status == 'verifying') n.stop();
+            if (n.status == 'running' || n.status == 'waiting'|| n.status == 'verifying' || n.status == 'retrying') n.stop();
           });
           Toast.success(T('pause.success')); //'暂停成功'
 

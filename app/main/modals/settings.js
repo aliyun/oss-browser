@@ -12,7 +12,12 @@ angular.module('web')
         maxDownloadJobCount: settingsSvs.maxDownloadJobCount.get(),
         showImageSnapshot: settingsSvs.showImageSnapshot.get(),
         historiesLength : settingsSvs.historiesLength.get(),
-        mailSmtp : settingsSvs.mailSmtp.get()
+        mailSmtp : settingsSvs.mailSmtp.get(),
+        logFile: settingsSvs.logFile.get(),
+        logFileInfo: settingsSvs.logFileInfo.get(),
+        connectTimeout: settingsSvs.connectTimeout.get(),
+        uploadPartSize: settingsSvs.uploadPartSize.get(),
+        uploadAndDownloadRetryTimes: settingsSvs.uploadAndDownloadRetryTimes.get()
       },
       reg: {
         email: Const.REG.EMAIL
@@ -20,17 +25,20 @@ angular.module('web')
       setChange: setChange,
       cancel: cancel,
 
-      testMail: testMail
+      testMail: testMail,
+      openDebug: openDebug
     });
-
     var tid;
+    var { ipcRenderer} = require('electron');
     function setChange(form1, key, ttl){
       $timeout.cancel(tid);
       tid=$timeout(function(){
         if(!form1.$valid)return;
         settingsSvs[key].set( $scope.set[key] );
         Toast.success(T('settings.success')); //已经保存设置
-
+        if (key == 'logFile' || key == "logFileInfo" || key == "uploadPartSize" || key == "uploadAndDownloadRetryTimes" ) {
+          ipcRenderer.send('asynchronous', {key: 'refreshPage'});
+        }
       },ttl||100);
 
     }
@@ -58,6 +66,10 @@ angular.module('web')
           Toast.error(err);
         });
       });
+    }
+
+    function openDebug () {
+      ipcRenderer.send('asynchronous', {key: 'openDevTools'});
     }
 
   }])

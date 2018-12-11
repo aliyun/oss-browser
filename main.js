@@ -11,6 +11,11 @@ var os = require('os');
 var path = require('path');
 var nativeImage = require('electron').nativeImage;
 
+// electron-log收集和引入
+var log = require('electron-log');
+log.transports.file.level = false;
+log.transports.console.level = false;
+
 ///*****************************************
 //静态服务
 var PORTS = [7123,7124,7125,7126];
@@ -53,7 +58,11 @@ function createWindow() {
     minWidth: 1020,
     minHeight: 660,
     title: custom.title || "OSS Browser",
-    icon: custom.logo_ico || path.join(__dirname, 'icons', 'icon.ico')
+    icon: custom.logo_ico || path.join(__dirname, 'icons', 'icon.ico'),
+
+    webPreferences: {
+      plugins: true
+    }
   };
 
   if(process.platform == 'linux'){
@@ -110,6 +119,10 @@ ipcMain.on('asynchronous', (event, data) => {
     case 'openDevTools':
        win.webContents.openDevTools();
       break;
+
+    case 'refreshPage':
+      win.reload();
+      break
     case 'installRestart':
 
       var version = data.version;
