@@ -4,6 +4,9 @@
 var fs = require('fs');
 var path = require('path');
 var util = require('./util');
+var commonUtil = require('./util');
+var RETRYTIMES = commonUtil.getRetryTimes();
+
 
 module.exports = {
   genUploadNumArr: genUploadNumArr,
@@ -41,7 +44,7 @@ function getFileCrc64_2(self, p, fn){
    function _dig(){
      util.getFileCrc64(p,function(err,data){
        if(err){
-         if(retryTimes>5){
+         if(retryTimes> RETRYTIMES ){
            fn(err);
          }else{
            retryTimes ++;
@@ -98,11 +101,12 @@ function completeMultipartUpload(self, doneParams ,fn){
           return;
         }
 
-        if(retryTimes > 10){
+        if(retryTimes > RETRYTIMES){
           fn(err);
         }else{
           retryTimes++;
-          console.error('completeMultipartUpload error', err, ', ----- retrying...', retryTimes+'/'+10);
+          self._changeStatus('retrying', retryTimes);
+          console.error('completeMultipartUpload error', err, ', ----- retrying...', `${retryTimes}/${RETRYTIMES}`);
           setTimeout(function(){
             if(!self.stopFlag) _dig();
           },2000);
@@ -129,12 +133,13 @@ function getUploadId(checkPoints, self, params, fn){
 
       //console.log(err, res, '<========')
       if (err) {
-        if(err.message.indexOf('You have no right to access')!=-1 || retryTimes > 10){
+        if(err.message.indexOf('You have no right to access')!=-1 || retryTimes > RETRYTIMES){
           fn(err);
         }else{
 
           retryTimes++;
-          console.warn('createMultipartUpload error', err, ', ----- retrying...', retryTimes+'/'+10);
+          self._changeStatus('retrying', retryTimes);
+          console.warn('createMultipartUpload error', err, ', ----- retrying...', `${retryTimes}/${RETRYTIMES}`);
           setTimeout(function(){
             if(!self.stopFlag)_dig();
           },2000);
@@ -231,36 +236,16 @@ function prepareChunks(filePath, checkPoints, fn){
  */
 function getSensibleChunkSize(size) {
 
-  var chunkSize = 5 * 1024 * 1024; //5MB
+  console.warn(`localStorage uploadPartSize: " ${localStorage.getItem('uploadPartSize')|| 10 }M`)
+
+  var chunkSize = parseInt(localStorage.getItem('uploadPartSize') || 10 ) * 1024 * 1024;
 
   if(size < chunkSize){
-    return size;
+      return size;
   }
-  else if(size < 100 * 1024*1024){
-    chunkSize = 10 * 1024 * 1024; //10MB
-  }
-  else if(size < 500 * 1024*1024){
-    chunkSize = 20 * 1024 * 1024; //20MB
-  }
-  else if(size < 1024 * 1024*1024){
-    chunkSize = 30 * 1024 * 1024; //30MB
-  }
-  else if(size < 5* 1024 * 1024*1024){
-    chunkSize = 40 * 1024 * 1024; //40MB
-  }
-  else{
-    chunkSize = 50 * 1024 * 1024; //50MB
-  }
-
 
   var c = Math.ceil(size/10000);
   return Math.max(c, chunkSize);
-
-  // var parts = Math.ceil(size / chunkSize);
-  // if (parts > 10000) {
-  //   return Math.ceil(size / 10000);
-  // }
-  // return chunkSize;
 }
 
 

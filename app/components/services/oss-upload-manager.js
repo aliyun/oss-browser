@@ -28,6 +28,7 @@ angular.module('web')
         $scope = scope;
         concurrency = 0;
         $scope.lists.uploadJobList = [];
+        $scope.retryTimes = 0;
 
         var arr = loadProg();
         var authInfo = AuthInfo.get();
@@ -35,7 +36,7 @@ angular.module('web')
         angular.forEach(arr, function (n) {
           //console.log(n,'<=====');
           var job = createJob(authInfo, n);
-          if(job.status=='waiting' || job.status=='running'|| job.status=='verifying') job.stop();
+          if(job.status=='waiting' || job.status=='running'|| job.status=='verifying' || job.status=='retrying') job.stop();
           addEvents(job);
         });
       }
@@ -55,11 +56,15 @@ angular.module('web')
           saveProg();
         });
 
-        job.on('statuschange', function (status) {
+        job.on('statuschange', function (status, retryTimes) {
 
           if (status == 'stopped') {
             concurrency--;
             $timeout(checkStart,100);
+          }
+
+          if(status == 'retrying') {
+            $scope.retryTimes = retryTimes;
           }
 
           safeApply($scope);

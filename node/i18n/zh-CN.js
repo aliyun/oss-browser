@@ -186,8 +186,16 @@ module.exports = {
   'settings.success': '已经保存设置',
   'settings.autoUpgrade': '自动更新',
   'settings.autoUpgrade.msg': '自动下载更新包',
-
-  //bookmark
+  'settings.console': '调试面板',
+  'settings.console.msg': '开启调试',
+  'settings.file': "本地日志文件",
+  'settings.file.msg': "日志文件存储到系统本地",
+  'settings.file.info': "本地info日志文件",
+  'settings.file.info.msg': "是否把info级别的日志存到本地",
+  'settings.connectTimeout':'超时时间(ms)',
+  'settings.uploadPartSize':'分片大小(M)',
+  'settings.uploadAndDownloadRetryTimes': '重试次数',
+    //bookmark
   'bookmarks.title': '书签管理',
   'time': '时间',
   'bookmarks.delete.success': '删除书签成功',
@@ -292,6 +300,7 @@ module.exports = {
   'cannot.preview': '无法预览',
   'cannot.preview.this.file': '该文件类型无法预览。',
   'tryto.open.as.textfile': '尝试作为文本文件打开',
+  'preview.in.web.browser': '在浏览器中预览',
 
   'save': '保存',
   'size': '大小',
@@ -331,6 +340,8 @@ module.exports = {
   'status.failed': '失败',
   'status.finished': '完成',
   'status.waiting': '等待',
+  'status.retrying': '重试中',
+  'status.retrytimes': '次',
   'status.verifying': '正在校验',
 
   'users': '子用户',
