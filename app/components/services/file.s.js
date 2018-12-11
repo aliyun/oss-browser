@@ -1,6 +1,6 @@
 
 angular.module('web')
-  .factory('fileSvs', ['$q', function($q){
+  .factory('fileSvs', ['$q','Const',function($q,Const){
 
 
 
@@ -16,15 +16,20 @@ angular.module('web')
              ? item.name.toLowerCase().substring(item.name.lastIndexOf('.')+1)
              : '';
 
+         if(Const.IMM_DOC_TYPES.indexOf(ext)!=-1){
+            //IMM预览支持的文档类型
+            return {type: 'doc', ext: [ext]};
+         }
+
          switch(ext){
            case 'png':
            case 'jpg':
            case 'jpeg':
            case 'gif': return {type: 'picture', ext: [ext]};
 
-           case 'doc':
-           case 'docx':
-           case 'pdf': return {type: 'doc', ext: [ext]};
+          //  case 'doc':
+          //  case 'docx':
+          //  case 'pdf': return {type: 'doc', ext: [ext]};
 
            case 'mp4': return {type:'video', ext: [ext], mineType: 'video/mp4'};
            case 'webm': return {type:'video', ext: [ext], mineType: 'video/webm'};

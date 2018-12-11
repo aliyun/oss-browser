@@ -7,13 +7,39 @@
       <i style="color:orange" class="fa fa-folder"></i>
       <!-- 预览 -->
       {{'preview'|translate}}
+      <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span>
     </h4>
   </div>
-  <div class="modal-body">
+  <div class="modal-body pd0">
 
+  <header class="pd4 bg-success">oss://{{bucketInfo.bucket}}/{{objectInfo.path}}
+
+    <a ng-if="prevUrl" href="" style="float:right" ng-click="openURL(prevUrl)">{{'preview.in.web.browser'|translate}}</a>
+  </header>
+
+  <restore-checker bucket-info="bucketInfo" object-info='objectInfo' file-type="fileType"
+  after-check-success="afterCheckSuccess()" after-restore-submit="afterRestoreSubmit()">
+
+    <div style="overflow:auto;min-height:100px;" class="text-center"> 
+      <div ng-if="!prevUrl">
+          <div ng-if="!error" is-loading></div>
+          <div ng-if="error" class="alert alert-danger text-left">
+            <div>{{'cannot.preview'|translate}}</div>
+            {{error}}</div>
+          <button ng-if="doc_link" class="btn btn-warning btn-sm" ng-click="openURL(doc_link)">{{'auth.authToken.tooltip'|translate}}</button>
+          <div>&nbsp;</div>
+      </div> 
+      <iframe ng-if="prevUrl" ng-src="{{prevUrl|trustAsResourceUrl}}" style="width:100%;height:500px;margin-bottom:-5px" frameborder="0">
+          <div>{{'cannot.preview'|translate}}</div>
+      </iframe>
+    </div>
+  </restore-checker>
+  
 
   </div>
   <div class="modal-footer">
+    <span ng-if="previewBarVisible" ng-include="'main/files/modals/preview/preview-bar.html'"></span>
+
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
       <!-- 关闭 -->

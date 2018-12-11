@@ -99,8 +99,17 @@ module.exports = {
   'main.upgration': 'Release Notes',
   'tempCert': 'Temp Cert',
   'setup.success': 'Set up successfully',
+  'settings.console': 'Debug panel',
+  'settings.console.msg': 'Open debug',
+  'settings.file': "Local log",
+  'settings.file.msg': "Log in local storage",
+  'settings.file.info': "local info file log ",
+  'settings.file.info.msg': "put info log file in local ?",
+  'settings.connectTimeout':'overtime(ms)',
+  'settings.uploadPartSize':'uploadpart size(M)',
+  'settings.uploadAndDownloadRetryTimes': 'retry times',
 
-  //address bar
+    //address bar
   'backward': 'Backward',
   'forward': 'Forward',
   'goUp': 'Go up',
@@ -292,6 +301,7 @@ module.exports = {
   'cannot.preview': 'Can not preview',
   'cannot.preview.this.file': 'Can not preview this file.',
   'tryto.open.as.textfile': 'Try to open as a text file',
+  'preview.in.web.browser': 'Preview in web browser',
 
   'save': 'Save',
   'size': 'Size',
@@ -331,6 +341,8 @@ module.exports = {
   'status.failed': 'Failed',
   'status.finished': 'Finished',
   'status.waiting': 'Waiting',
+  'status.retrying': 'Retrying',
+  'status.retrytimes': 'Times',
   'status.verifying': 'Verifying',
 
   'users': 'Sub Users',

@@ -4,13 +4,20 @@ var crypto = require('crypto');
 
 var CRC64 = require('../../crc64/index.js');
 
+// isLog==1 open else close
+var isLog = localStorage.getItem('logFile') || 0;
+var isLogInfo = localStorage.getItem('logFileInfo')|| 0;
+//本地日志收集模块
+var log = require('electron-log');
+
 module.exports = {
   parseLocalPath: parseLocalPath,
   parseOssPath: parseOssPath,
   getFileCrc64: getFileCrc64,
   getBigFileMd5: getBigFileMd5,
   checkFileHash: checkFileHash,
-  printPartTimeLine: printPartTimeLine
+  printPartTimeLine: printPartTimeLine,
+  getRetryTimes: getRetryTimes
 };
 
 function printPartTimeLine(opt){
@@ -46,14 +53,36 @@ function printPartTimeLine(opt){
 function checkFileHash(filePath, hashCrc64ecma,fileMd5, fn) {
   //console.log(filePath, ',,,,,,,,,,,,,,,,,')
   if(hashCrc64ecma){
+      var startTime = new Date();
       console.time(`check crc64 ${filePath}`);
     getFileCrc64(filePath, function(err, crc64Str){
+      var endTime = new Date();
       console.timeEnd(`check crc64 ${filePath}`);
+
+      if(isLog == 1 && isLogInfo == 1) {
+        log.transports.file.level = 'info';
+        log.info(`check crc64 ${filePath}: ${endTime-startTime}ms`);
+      }
+
       if (err) {
+        if (isLog == 1) {
+          log.error(`Checking file[ ${filePath} ] crc64 hash failed: ${err.message}`)
+        }
         fn(new Error('Checking file['+filePath+'] crc64 hash failed: ' + err.message));
       } else if (crc64Str!=null && crc64Str != hashCrc64ecma) {
+
+        if (isLog == 1) {
+          log.error(`HashCrc64ecma mismatch, file[ ${filePath} ] crc64 hash should be: ${hashCrc64ecma} + but we got: ${crc64Str}`)
+        }
+
         fn(new Error('HashCrc64ecma mismatch, file['+filePath+'] crc64 hash should be:'+hashCrc64ecma+', but we got:'+crc64Str));
       } else{
+
+        if(isLog == 1 && isLogInfo == 1) {
+          log.transports.file.level = 'info';
+          log.info(`check crc success: file[${filePath}], ${crc64Str}`);
+        }
+
         console.info('check crc success: file['+filePath+'],'+crc64Str)
         fn(null);
       }
@@ -100,9 +129,17 @@ function getBigFileMd5(p, fn){
 
 function getFileCrc64(p, fn){
   console.time('get crc64 hash for ['+p+']');
+  var startTime = new Date()
   CRC64.crc64FileProcess(p, function(err, data){
+    var endTime = new Date();
     console.timeEnd('get crc64 hash for ['+p+']');
     console.log(data);
+
+    if(isLog == 1 && isLogInfo == 1) {
+      log.transports.file.level = 'info';
+      log.info(`get crc64 hash for [ ${p} ]: ${endTime-startTime} ms`);
+      log.info(data);
+    }
     fn(err, data);
   });
 };
@@ -132,4 +169,8 @@ function parseOssPath(osspath) {
     bucket: bucket,
     key: key
   };
+}
+
+function getRetryTimes() {
+  return localStorage.getItem('uploadAndDownloadRetryTimes') || 10
 }
