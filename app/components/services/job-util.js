@@ -14,6 +14,7 @@ angular.module('web')
           case 'failed': return 'danger';
           case 'finished': return 'success';
           case 'stopped': return 'warning';
+          case 'retrying': return 'warning';
           default : return 'default';
         }
       }
@@ -26,6 +27,7 @@ angular.module('web')
           case 'finished': return T('status.finished');// '完成';
           case 'stopped': return T('status.stopped');//'暂停';
           case 'verifying': return T('status.verifying');//'';
+          case 'retrying': return T('status.retrying');
           default : return T('status.waiting');//'等待';
         }
       }

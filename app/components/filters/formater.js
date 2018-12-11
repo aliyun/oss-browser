@@ -1,6 +1,11 @@
 'use strict';
 
 angular.module('web')
+  .filter('trustAsResourceUrl', ['$sce', function($sce) {
+    return function(val) {
+        return $sce.trustAsResourceUrl(val);
+    };
+  }])
   .filter('sub', function(){
     return function(s, len){
       if(s.length < len) return s;
