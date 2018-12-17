@@ -37,11 +37,11 @@ angular.module('web')
       IMM_DOC_PREVIEW_LINK: 'https://help.aliyun.com',
       IMM_DOC_TYPES: [
         //演示文件：
-        'pptx','ppt','pot','potx','pps','ppsx','dps','dpt','pptm','potm','ppsm',
-        //表格文件：
-        'xls','xlt','et','ett','xlsx','xltx','csv','xlsb','xlsm','xltm',
-        //文字文件：
-        'doc','dot','wps','wpt','docx','dotx','docm','dotm',
+        // 'pptx','ppt','pot','potx','pps','ppsx','dps','dpt','pptm','potm','ppsm',
+        // //表格文件：
+        // 'xls','xlt','et','ett','xlsx','xltx','csv','xlsb','xlsm','xltm',
+        // //文字文件：
+        // 'doc','dot','wps','wpt','docx','dotx','docm','dotm',
         //其他格式文件： 
         'pdf',
         //'lrc','c','cpp','h','asm','s','java','asp','bat','bas','prg','cmd','rtf','txt','log','xml','htm','html',
