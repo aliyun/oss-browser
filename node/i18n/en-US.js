@@ -11,9 +11,9 @@ module.exports = {
   'region.oss-cn-qingdao': 'North China 1(Qingdao)',
   'region.oss-cn-beijing': 'North China 2(Beijing)',
   'region.oss-cn-zhangjiakou': 'North China 3(Zhangjiakou)',
-  'region.oss-cn-huhehaote': 'North China 5(Huhehaote)',
+  'region.oss-cn-huhehaote': 'North China 5(Hohhot)',
   'region.oss-cn-shenzhen': 'South China 1(Shenzhen)',
-  'region.oss-cn-hongkong': 'Hongkong',
+  'region.oss-cn-hongkong': 'Hong Kong',
 
   'region.oss-ap-southeast-1': 'Asia Pacific Southeast 1(Singapore)',
   'region.oss-ap-southeast-2': 'Asia Pacific Southeast 2(Sydney)',
@@ -26,7 +26,7 @@ module.exports = {
   'region.oss-us-east-1': 'Eastern US 1(Virginia)',
   'region.oss-eu-central-1': 'Central Europe 1(Frankfurt)',
   'region.oss-me-east-1': 'Middle East East 1(Dubai)',
-  'region.oss-eu-west-1': 'England (LonDon)',
+  'region.oss-eu-west-1': 'England (London)',
 
 
   'optional': 'Optional',
