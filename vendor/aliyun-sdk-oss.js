@@ -806,7 +806,7 @@ ALY.Config = ALY.util.inherit({
     computeChecksums: true,
     securityToken: '',
     cname: false,
-    isRequestPayer:false
+    isRequestPayer: false
   }
 });
 
@@ -890,7 +890,6 @@ ALY.EventListeners = {
         var signer = new SignerClass(req.httpRequest, req.service.api.signingName);
 
         // add new authorization
-
         var isRequestPayer = req.service.config.isRequestPayer;
         signer.addAuthorization(credentials, date, isRequestPayer);
       } catch (e) {
@@ -3851,7 +3850,8 @@ ALY.OSS = ALY.Service.defineService('oss', ['2013-10-15'], {
   populateURI: function populateURI(req) {
     var httpRequest = req.httpRequest;
     var b = req.params.Bucket;
-
+  
+    if (b) {
       // support cname
       var cname = req.service.config.cname || false
       if (cname) {
@@ -3864,8 +3864,7 @@ ALY.OSS = ALY.Service.defineService('oss', ['2013-10-15'], {
         }
         return
       }
-      
-      if (b) {
+
       // is IP
       if(!req.service.hostIsIP(httpRequest.endpoint.hostname)){
         // 确保 host 只被 set 一次，因为 endpoint 只在 service 唯一
@@ -4575,11 +4574,12 @@ ALY.Signers.OSS = inherit(ALY.Signers.RequestSigner, {
   },
 
   addAuthorization: function addAuthorization(credentials, date, isRequestPayer) {
-      if(isRequestPayer) {
-        this.request.headers['x-oss-request-payer'] = 'requester';
-      }
 
-      if (!this.request.headers['presigned-expires']) {
+    if(isRequestPayer) {
+      this.request.headers['x-oss-request-payer'] = 'requester';
+    }
+
+    if (!this.request.headers['presigned-expires']) {
       // 在浏览器中不能设置 date header
       if (ALY.util.isBrowser()) {
         this.request.headers['x-oss-date'] = ALY.util.date.rfc822(date);

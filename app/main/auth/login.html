@@ -26,7 +26,7 @@
 
 <script type="text/ng-template" id="auth-requestpay-popup.html">
   <div>
-    {{'requestpay.popup.msg'|translate}}(<a href="https://help.aliyun.com/document_detail/91337.html">{{'requestpay.link'
+    {{'requestpay.popup.msg'|translate}}(<a ng-click="openURL('https://help.aliyun.com/document_detail/91337.html')">{{'requestpay.link'
     | translate }}</a>)
   </div>
 </script>
@@ -145,7 +145,7 @@
                   <!-- 记住秘钥 -->
 
                   <span uib-popover-template="'auth-requestpay-popup.html'"
-                        popover-trigger="'mouseenter'" popover-append-to-body="true">
+                        popover-trigger="'click'" popover-append-to-body="true">
                                              <i class="fa fa-question-circle"></i>
                                            </span>
                 </label>
