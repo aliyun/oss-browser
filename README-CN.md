@@ -6,7 +6,11 @@ OSS Browser 提供类似 windows 资源管理器功能。用户可以很方便�
 
 > Electron 框架可以让你使用 JavaScript，HTML 和 CSS 构建跨平台的桌面应用程序。它是基于 node.js 和 Chromium 开源项目。Electron 可以打包出跨平台的程序，运行在 Mac，Windows 和 Linux 上。
 
-## 1. 客户端下载：
+## 1. 支持平台
+
+Windows7 above, Linux and Mac,不建议使用windows XP平台和windows Server平台
+
+## 2. 客户端下载：
 
 最新版本`1.9.0`，下载地址如下，解压即可使用。
 
@@ -24,7 +28,7 @@ OSS Browser 提供类似 windows 资源管理器功能。用户可以很方便�
 
 > [所有版本下载](all-releases.md)
 
-## 2. 功能介绍:
+## 3. 功能介绍:
 
 ```
 功能Map
@@ -83,7 +87,7 @@ OSS Browser 提供类似 windows 资源管理器功能。用户可以很方便�
 
 ![requestPay](preview/requestpay.png)
 
-## 3. 开发环境搭建
+## 4. 开发环境搭建
 
 > 如果你要在此基础上开发，请按照以下步骤进行。
 
@@ -145,7 +149,7 @@ make build  # build前端代码到dist目录
 make win64  # 打包win64程序， 可选: mac, linux64,linux32,win32,win64,all.
 ```
 
-## 4. 代码结构
+## 5. 代码结构
 
 ```
 oss-browser/
@@ -164,19 +168,19 @@ oss-browser/
  |-- main.js              # 程序入口
 ```
 
-## 5. 自定义 build
+## 6. 自定义 build
 
 请看这里: [自定义 build](custom/)
 
-## 6. 关于贡献
+## 7. 关于贡献
 
 - 如有建议或发现 bug，请直接开 issue或者提PR，PR必须merge请求到dev分支,我们会统一把dev分支合并到master并发布，感谢广大开发者参与。
 
-## 7. 注意事项
+## 8. 注意事项
 - OSS Browser使用过程中，如果遇到问题可打开调试面板进行问题初步排查，可通过单击OSS Browser工具左上角图标连续10次弹出调试面板,针对每个操作OSS Browser埋的都有关键操作信息，同时控制台会实时同步错误信息,如果用户无法理解错误日志信息。请issue截图反馈@luozhang002进行排查
 - OSS Browser工具使用过程中尽量不要开本地代理或者VPN相关
 - 开发者如果是通过本地编译github仓库生产的oss browser工具，想要进行主进程和渲染进程相关代码的调试可以参考文档[debug](debug.md)
 
-## 8. 开源 LICENSE
+## 9. 开源 LICENSE
 
 [Apache License 2.0](LICENSE)
