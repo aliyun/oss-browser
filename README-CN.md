@@ -73,6 +73,16 @@ OSS Browser 提供类似 windows 资源管理器功能。用户可以很方便�
 
 - 归档 bucket 下所有文件均为 Archive 存储类型, 需要恢复才能访问。
 
+### (7) 支持自定义域名（cname方式）访问（1.9.0版本开始支持）
+
+![cname模式](preview/cname.png)
+
+- cname模式需要用户在oss控制台上进行域名和bucket的绑定，使用cname模式ossbrowser上所有object的操作都会走自定义域名方式
+
+### (7) 支持请求付费者模式访问（1.9.0版本开始支持）
+
+![requestPay](preview/requestpay.png)
+
 ## 3. 开发环境搭建
 
 > 如果你要在此基础上开发，请按照以下步骤进行。
