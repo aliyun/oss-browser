@@ -50,6 +50,8 @@ module.exports = {
   'auth.remember.popup.msg1': '勾选"记住秘钥"可保存AK秘钥，再次登录时，单击AK历史，可选择该秘钥登录，不需要手动输入AK。请不要再临时使用的电脑上勾选！',
 
   'region': '区域',
+  'requestPay':"请求者付费模式",
+  'requestpay.popup.msg':'如您获得授权的Bucket开启了请求付费者模式，且您不是该Bucket的拥有者，则需勾选`请求付费者模式`,其中，您访问该Bucket产生的流量、请求次数等费用, 将由您支付，详情参考帮助文档',
   'auth.region.placeholder': '可选',
   'auth.description': '备注',
   'auth.description.placeholder': '可以为空，最多30个字',

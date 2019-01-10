@@ -69,6 +69,8 @@ angular.module('web')
           endpoint: options.endpoint,
           bucket: opt.bucket,
           stsToken: options.securityToken,
+          cname: options.cname,
+          isRequestPay: options.isRequestPayer
         });
         console.log(OSS.version);
         return client;
@@ -229,7 +231,7 @@ angular.module('web')
 
               if (itemsToDelete.length == 500 || (objectsCount != 0 && objectsCount + foldersCount == len)) {
                 if (itemsToDelete.length > 1) {
-                  client.deleteMulti(itemsToDelete).then(function (res) {
+                  client.deleteMulti(itemsToDelete, {isRequestPay: true}).then(function (res) {
                     c += itemsToDelete.length;
                     progress.current += itemsToDelete.length;
                     itemsToDelete.splice(0, itemsToDelete.length);
@@ -245,7 +247,7 @@ angular.module('web')
                     $timeout(dig, NEXT_TICK);
                   });
                 } else {
-                  client.delete(itemsToDelete[0]).then(function (res) {
+                  client.delete(itemsToDelete[0], {isRequestPay: true}).then(function (res) {
                     c += itemsToDelete.length;
                     progress.current += itemsToDelete.length;
                     itemsToDelete.splice(0, itemsToDelete.length);
@@ -275,7 +277,7 @@ angular.module('web')
                 return;
               }
 
-              client.delete(item.path).then(function (res) {
+              client.delete(item.path, {isRequestPay: true}).then(function (res) {
                 c++;
                 progress.current++;
                 $timeout(dig, NEXT_TICK);
@@ -298,6 +300,7 @@ angular.module('web')
       function stopCopyFiles() {
         stopCopyFilesFlag = true;
       }
+
       /**
        * 批量复制或移动文件
        * @param retion {string} 要求相同region
@@ -403,7 +406,8 @@ angular.module('web')
                 progress.errorCount++;
                 if (progFn) try {
                   progFn(progress);
-                } catch (e) {}
+                } catch (e) {
+                }
                 t.push({
                   item: item,
                   error: err
@@ -412,13 +416,15 @@ angular.module('web')
               progress.current++;
               if (progFn) try {
                 progFn(progress);
-              } catch (e) {}
+              } catch (e) {
+              }
               c++;
 
               //fix ubuntu
               $timeout(_dig, NEXT_TICK);
             });
           }
+
           _dig();
         }
 
@@ -545,7 +551,8 @@ angular.module('web')
           progress.total += len;
           if (progFn) try {
             progFn(progress);
-          } catch (e) {}
+          } catch (e) {
+          }
 
           function _() {
 
@@ -582,7 +589,8 @@ angular.module('web')
                   progress.errorCount++;
                   if (progFn) try {
                     progFn(progress);
-                  } catch (e) {}
+                  } catch (e) {
+                  }
                   terr.push({
                     item: items[c],
                     error: err
@@ -591,7 +599,8 @@ angular.module('web')
                 progress.current++;
                 if (progFn) try {
                   progFn(progress);
-                } catch (e) {}
+                } catch (e) {
+                }
                 $timeout(_, NEXT_TICK);
               });
             } else {
@@ -602,11 +611,13 @@ angular.module('web')
                 progress.current++;
                 if (progFn) try {
                   progFn(progress);
-                } catch (e) {}
+                } catch (e) {
+                }
                 $timeout(_, NEXT_TICK);
               });
             }
           }
+
           _();
         }
       }
@@ -622,7 +633,7 @@ angular.module('web')
           Bucket: bucket,
           Key: newKey,
           CopySource: '/' + bucket + '/' + encodeURIComponent(oldKey),
-          MetadataDirective: 'REPLACE' // 'REPLACE' 表示覆盖 meta 信息，'COPY' 表示不覆盖，只拷贝
+          MetadataDirective: 'REPLACE' // 'REPLACE' 表示覆盖 meta 信息，'COPY' 表示不覆盖，只拷贝,
         }, function (err) {
           if (err) {
             df.reject(err);
@@ -691,6 +702,7 @@ angular.module('web')
             }
           });
         }
+
         dig({});
         return df.promise;
       }
@@ -721,6 +733,7 @@ angular.module('web')
             }
           });
         }
+
         dig();
         return df.promise;
       }
@@ -949,7 +962,6 @@ angular.module('web')
                 'ContentEncoding': '',
                 'Expires': result.Expires,
                 'Metadata': result.Metadata
-
               }, function (err) {
                 if (err) {
                   handleError(err);
@@ -1039,7 +1051,7 @@ angular.module('web')
             ContentDisposition: headers['ContentDisposition'],
             ContentEncoding: '', //headers['ContentEncoding'],
             ContentLanguage: headers['ContentLanguage'],
-            Expires: headers['Expires'],
+            Expires: headers['Expires']
           };
           client.copyObject(opt, function (err, data) {
 
@@ -1417,10 +1429,9 @@ angular.module('web')
             bucket = opt.bucket;
           }
         }
-
-        var endpoint = getOssEndpoint(authInfo.region || 'oss-cn-beijing', bucket, authInfo.eptpl);
+        var endpointname = authInfo.cname ? authInfo.eptplcname : authInfo.eptpl;
+        var endpoint = getOssEndpoint(authInfo.region || 'oss-cn-beijing', bucket, endpointname);
         console.log("[endpoint]:", endpoint)
-
         var options = {
           //region: authInfo.region,
           accessKeyId: authInfo.id || 'a',
@@ -1430,7 +1441,9 @@ angular.module('web')
           httpOptions: {
             timeout: authInfo.httpOptions ? authInfo.httpOptions.timeout : 0
           },
-          maxRetries: 50
+          maxRetries: 50,
+          cname: authInfo.cname || false,
+          isRequestPayer: authInfo.requestpaystatus == 'NO' ? false : true
         };
 
         if (authInfo.id && authInfo.id.indexOf('STS.') == 0) {

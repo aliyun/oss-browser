@@ -1,12 +1,11 @@
-
 'use strict';
 var ALYD = require('aliyun-sdk');
 require('events').EventEmitter.prototype._maxListeners = 1000;
 // var TIMEOUT = 30000; //30秒
-var TIMEOUT = parseInt(localStorage.getItem('connectTimeout')||60000); //30秒
-console.log("TIMEOUT: "+ TIMEOUT)
+var TIMEOUT = parseInt(localStorage.getItem('connectTimeout') || 60000); //30秒
+console.log("TIMEOUT: " + TIMEOUT)
 //fix
-ALYD.util.isBrowser = function(){
+ALYD.util.isBrowser = function () {
   return false;
 };
 
@@ -45,7 +44,6 @@ function OssStore(config) {
   }
 
 
-
   if (this._config.stsToken) {
     this.oss = new ALYD.OSS({
       accessKeyId: this._config.stsToken.Credentials.AccessKeyId,
@@ -56,7 +54,9 @@ function OssStore(config) {
       maxRetries: 0,
       httpOptions: {
         timeout: TIMEOUT
-      }
+      },
+      cname: this._config.cname,
+      isRequestPayer: localStorage.getItem("show-request-pay") === 'YES' ? true : false
     });
   }
   else {
@@ -68,7 +68,9 @@ function OssStore(config) {
       maxRetries: 0,
       httpOptions: {
         timeout: TIMEOUT
-      }
+      },
+      cname: this._config.cname,
+      isRequestPayer: localStorage.getItem("show-request-pay") === 'YES' ? true : false
     });
   }
 
@@ -83,7 +85,7 @@ function OssStore(config) {
   };
 }
 
-OssStore.prototype.setStsToken = function(stsToken){
+OssStore.prototype.setStsToken = function (stsToken) {
   this._config.stsToken = stsToken;
 
   this.oss = new ALYD.OSS({
@@ -95,7 +97,9 @@ OssStore.prototype.setStsToken = function(stsToken){
     maxRetries: 0,
     httpOptions: {
       timeout: TIMEOUT
-    }
+    },
+    cname: this._config.cname,
+    isRequestPayer: localStorage.getItem("show-request-pay") === 'YES' ? true : false
   });
 };
 
