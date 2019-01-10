@@ -50,6 +50,8 @@ module.exports = {
   'auth.remember.popup.msg1': 'Check "Remember" to save the AK. When you login again, click AK History to select the key to log in. You do not need to enter AK manually. Please do not check it on a temporary computer!',
 
   'region': 'Region',
+  'requestPay':"request payer",
+  'requestpay.popup.msg':'If your authorized bucket opens the request payer mode and you are not the owner of the bucket, you should check the \'Request Payer Mode\'. The amount of traffic, requests, etc. that you generate when you visit the bucket will be paid by you. For details, please refer to the help documentation.',
   'auth.region.placeholder': 'Optional',
   'auth.description': 'Description',
   'auth.description.placeholder': 'Optional, Up to 30 words',

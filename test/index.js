@@ -117,7 +117,7 @@ test(async t => {
   .waitForVisible('.btn=关闭').click('.btn=关闭')
 
   console.log('上传文件')
-  await browser.setValue('[ng-model="mock.uploads"]', __dirname+'/Readme.md')
+  await browser.setValue('[ng-model="mock.uploads"]', __dirname+'/README.md')
 
   console.log('待续')
 

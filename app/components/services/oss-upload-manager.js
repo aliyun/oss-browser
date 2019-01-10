@@ -1,5 +1,5 @@
 angular.module('web')
-  .factory('ossUploadManager', ['$q', '$state','$timeout', 'ossSvs2', 'AuthInfo', 'Toast', 'Const', 'DelayDone', 'safeApply', 'settingsSvs',
+  .factory('ossUploadManager', ['$q', '$state', '$timeout', 'ossSvs2', 'AuthInfo', 'Toast', 'Const', 'DelayDone', 'safeApply', 'settingsSvs',
     function ($q, $state, $timeout, ossSvs2, AuthInfo, Toast, Const, DelayDone, safeApply, settingsSvs) {
 
       var OssStore = require('./node/ossstore');
@@ -19,7 +19,7 @@ angular.module('web')
         checkStart: checkStart,
         saveProg: saveProg,
 
-        stopCreatingJobs: function(){
+        stopCreatingJobs: function () {
           stopCreatingFlag = true;
         }
       };
@@ -36,7 +36,7 @@ angular.module('web')
         angular.forEach(arr, function (n) {
           //console.log(n,'<=====');
           var job = createJob(authInfo, n);
-          if(job.status=='waiting' || job.status=='running'|| job.status=='verifying' || job.status=='retrying') job.stop();
+          if (job.status == 'waiting' || job.status == 'running' || job.status == 'verifying' || job.status == 'retrying') job.stop();
           addEvents(job);
         });
       }
@@ -60,10 +60,10 @@ angular.module('web')
 
           if (status == 'stopped') {
             concurrency--;
-            $timeout(checkStart,100);
+            $timeout(checkStart, 100);
           }
 
-          if(status == 'retrying') {
+          if (status == 'retrying') {
             $scope.retryTimes = retryTimes;
           }
 
@@ -71,7 +71,7 @@ angular.module('web')
           //save
           saveProg();
         });
-        job.on('speedChange', function(){
+        job.on('speedChange', function () {
           safeApply($scope);
         })
 
@@ -92,7 +92,7 @@ angular.module('web')
         //流控, 同时只能有 n 个上传任务.
         var maxConcurrency = settingsSvs.maxUploadJobCount.get();
         //console.log(concurrency , maxConcurrency);
-        concurrency = Math.max(0,concurrency);
+        concurrency = Math.max(0, concurrency);
         if (concurrency < maxConcurrency) {
           var arr = $scope.lists.uploadJobList;
           for (var i = 0; i < arr.length; i++) {
@@ -108,15 +108,15 @@ angular.module('web')
         }
       }
 
-      function checkNeedRefreshFileList(bucket, key){
+      function checkNeedRefreshFileList(bucket, key) {
 
-        if($scope.currentInfo.bucket == bucket){
+        if ($scope.currentInfo.bucket == bucket) {
 
           var p = path.dirname(key) + '/';
           p = (p == './') ? '' : p;
 
-          if($scope.currentInfo.key == p){
-             $scope.$emit('needrefreshfilelists');
+          if ($scope.currentInfo.key == p) {
+            $scope.$emit('needrefreshfilelists');
           }
         }
       }
@@ -134,8 +134,8 @@ angular.module('web')
 
         var authInfo = AuthInfo.get();
 
-        digArr(filePaths, function(){
-          if(jobsAddingFn)jobsAddingFn();
+        digArr(filePaths, function () {
+          if (jobsAddingFn) jobsAddingFn();
         });
         return;
 
@@ -148,40 +148,41 @@ angular.module('web')
             var n = filePaths[c];
             var dirPath = path.dirname(n);
 
-            if(stopCreatingFlag)return;
+            if (stopCreatingFlag) return;
 
             dig(filePaths[c], dirPath, function (jobs) {
               t = t.concat(jobs);
               c++;
 
-              if (c >= len){
+              if (c >= len) {
                 fn(t);
               }
-              else{
+              else {
                 _dig();
               }
             });
           }
+
           _dig();
         }
 
-        function loop(parentPath, dirPath,  arr, callFn) {
+        function loop(parentPath, dirPath, arr, callFn) {
           var t = [];
           var len = arr.length;
           var c = 0;
-          if(len==0) callFn([]);
+          if (len == 0) callFn([]);
           else inDig();
 
           //串行
           function inDig() {
-            dig(path.join(parentPath, arr[c]), dirPath,  function (jobs) {
+            dig(path.join(parentPath, arr[c]), dirPath, function (jobs) {
               t = t.concat(jobs);
               c++;
               //console.log(c,'/',len);
               if (c >= len) callFn(t);
-              else{
+              else {
 
-                if(stopCreatingFlag){
+                if (stopCreatingFlag) {
                   return;
                 }
 
@@ -191,9 +192,9 @@ angular.module('web')
           }
         }
 
-        function dig(absPath, dirPath,  callFn) {
+        function dig(absPath, dirPath, callFn) {
 
-          if(stopCreatingFlag){
+          if (stopCreatingFlag) {
             return;
           }
 
@@ -201,20 +202,20 @@ angular.module('web')
 
           var filePath = path.relative(dirPath, absPath);
 
-          if(path.sep!='/'){
+          if (path.sep != '/') {
             //修复window下 \ 问题
             filePath = filePath.replace(/\\/g, '/')
           }
 
           //修复window下 \ 问题
-          filePath = bucketInfo.key ? (bucketInfo.key.replace(/(\/*$)/g, '') +'/'+ filePath ) : filePath;
+          filePath = bucketInfo.key ? (bucketInfo.key.replace(/(\/*$)/g, '') + '/' + filePath) : filePath;
 
 
           if (fs.statSync(absPath).isDirectory()) {
             //创建目录
-            ossSvs2.createFolder(bucketInfo.region, bucketInfo.bucket, filePath+ '/').then(function(){
+            ossSvs2.createFolder(bucketInfo.region, bucketInfo.bucket, filePath + '/').then(function () {
               //判断是否刷新文件列表
-              checkNeedRefreshFileList(bucketInfo.bucket, filePath+ '/');
+              checkNeedRefreshFileList(bucketInfo.bucket, filePath + '/');
             });
 
             //递归遍历目录
@@ -231,11 +232,11 @@ angular.module('web')
                 console.log(err.stack);
               } else {
 
-                loop(absPath, dirPath,  arr, function (jobs) {
+                loop(absPath, dirPath, arr, function (jobs) {
 
-                  $timeout(function(){
+                  $timeout(function () {
                     callFn(jobs);
-                  },1);
+                  }, 1);
 
                 });
               }
@@ -257,28 +258,31 @@ angular.module('web')
 
             addEvents(job);
 
-            $timeout(function(){
+            $timeout(function () {
               callFn([job]);
-            },1);
+            }, 1);
 
           }
         }
       }
 
       /**
-      * 创建单个job
-      * @param  auth { id, secret}
-      * @param  opt   { region, from, to, progress, checkPoints, ...}
-      * @param  opt.from {name, path}
-      * @param  opt.to   {bucket, key}
-      ...
-      * @return job  { start(), stop(), status, progress }
-              job.events: statuschange, progress
-      */
+       * 创建单个job
+       * @param  auth { id, secret}
+       * @param  opt   { region, from, to, progress, checkPoints, ...}
+       * @param  opt.from {name, path}
+       * @param  opt.to   {bucket, key}
+       ...
+       * @return job  { start(), stop(), status, progress }
+       job.events: statuschange, progress
+       */
       function createJob(auth, opt) {
 
+        var cname = AuthInfo.get().cname || false
+        var endpointname = cname ? auth.eptplcname : auth.eptpl
+
         //stsToken
-        if(auth.stoken && auth.id.indexOf('STS.')==0){
+        if (auth.stoken && auth.id.indexOf('STS.') == 0) {
           var store = new OssStore({
             stsToken: {
               Credentials: {
@@ -287,16 +291,18 @@ angular.module('web')
                 SecurityToken: auth.stoken
               }
             },
-            endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket, auth.eptpl)
+            endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket, endpointname),
+            cname: cname
           });
         }
-        else{
+        else {
           var store = new OssStore({
             aliyunCredential: {
               accessKeyId: auth.id,
               secretAccessKey: auth.secret
             },
-            endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket, auth.eptpl)
+            endpoint: ossSvs2.getOssEndpoint(opt.region, opt.to.bucket, endpointname),
+            cname: cname
           });
         }
         return store.createUploadJob(opt);
@@ -358,8 +364,8 @@ angular.module('web')
       //上传进度保存路径
       function getUpProgFilePath() {
         var folder = path.join(os.homedir(), '.oss-browser');
-        if(!fs.existsSync(folder)){
-           fs.mkdirSync(folder);
+        if (!fs.existsSync(folder)) {
+          fs.mkdirSync(folder);
         }
 
         var username = AuthInfo.get().id || '';

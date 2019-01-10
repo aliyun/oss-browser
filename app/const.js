@@ -33,6 +33,7 @@ angular.module('web')
       AUTH_KEEP: 'auth-keep',
       KEY_REMEMBER: 'auth-remember',
       SHOW_HIS: 'show-his',
+      SHOW_REQUEST_PAY: 'show-request-pay',
 
       IMM_DOC_PREVIEW_LINK: 'https://help.aliyun.com',
       IMM_DOC_TYPES: [
