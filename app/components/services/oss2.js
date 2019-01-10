@@ -1432,7 +1432,6 @@ angular.module('web')
         var endpointname = authInfo.cname ? authInfo.eptplcname : authInfo.eptpl;
         var endpoint = getOssEndpoint(authInfo.region || 'oss-cn-beijing', bucket, endpointname);
         console.log("[endpoint]:", endpoint)
-        console.log(authInfo)
         var options = {
           //region: authInfo.region,
           accessKeyId: authInfo.id || 'a',
