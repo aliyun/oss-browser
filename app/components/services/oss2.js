@@ -633,7 +633,7 @@ angular.module('web')
           Bucket: bucket,
           Key: newKey,
           CopySource: '/' + bucket + '/' + encodeURIComponent(oldKey),
-          MetadataDirective: 'REPLACE' // 'REPLACE' 表示覆盖 meta 信息，'COPY' 表示不覆盖，只拷贝,
+          MetadataDirective: 'COPY' // 'REPLACE' 表示覆盖 meta 信息，'COPY' 表示不覆盖，只拷贝,
         }, function (err) {
           if (err) {
             df.reject(err);
