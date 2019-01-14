@@ -1049,7 +1049,7 @@ angular.module('web')
             ContentType: headers['ContentType'],
             CacheControl: headers['CacheControl'],
             ContentDisposition: headers['ContentDisposition'],
-            ContentEncoding: '', //headers['ContentEncoding'],
+            ContentEncoding: headers['ContentEncoding'],
             ContentLanguage: headers['ContentLanguage'],
             Expires: headers['Expires']
           };
