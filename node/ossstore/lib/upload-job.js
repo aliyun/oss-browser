@@ -328,6 +328,17 @@ UploadJob.prototype.uploadSingle = function () {
                self.emit('complete');
                console.log('upload: '+self.from.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
 
+               // 拼凑图片URL
+               var eptpl = self.oss.config.endpoint;
+               var protocol = eptpl.indexOf('https:') === 0 ? 'https:' : "http:";
+               var endpoint = eptpl.substr(8); // https://
+               var link = protocol + '//' + self.to.bucket + '.' + endpoint + '/' + encodeURI(self.to.key);
+               console.log(link);
+
+               // 自动复制到剪贴板
+               console.log('路径复制到剪贴板');
+               clipboard.writeText(link);
+
              }
           });
         }
