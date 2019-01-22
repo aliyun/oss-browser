@@ -58,7 +58,7 @@
     <script src="aliyun-sdk-oss.js"></script>
     <script src="templates.js"></script>
     <script>
-      const {ipcRenderer,shell,clipboard} = require('electron');
+      const {ipcRenderer,shell} = require('electron');
       var isDev = process.env.NODE_ENV=='development';
 
       ipcRenderer.on('asynchronous-reply', (event, data) => {

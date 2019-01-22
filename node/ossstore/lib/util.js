@@ -17,7 +17,8 @@ module.exports = {
   getBigFileMd5: getBigFileMd5,
   checkFileHash: checkFileHash,
   printPartTimeLine: printPartTimeLine,
-  getRetryTimes: getRetryTimes
+  getRetryTimes: getRetryTimes,
+  isAutoCopyURL: isAutoCopyURL
 };
 
 function printPartTimeLine(opt){
@@ -173,4 +174,8 @@ function parseOssPath(osspath) {
 
 function getRetryTimes() {
   return localStorage.getItem('uploadAndDownloadRetryTimes') || 10
+}
+
+function isAutoCopyURL() {
+  return parseInt(localStorage.getItem('autoCopyURL') || 0);
 }

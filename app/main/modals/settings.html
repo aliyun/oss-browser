@@ -122,6 +122,24 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+          <!-- 自动复制文件上传URL到剪贴板: -->
+          {{'settings.autoCopyURL'|translate}}:
+        </label>
+        <div class="col-sm-7">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="autoCopyURL"
+                     ng-model="set.autoCopyURL"
+                     ng-change="setChange(form1,'autoCopyURL')"
+                     ng-true-value="1" ng-false-value="0" />
+              <!-- (自动下载更新包) -->
+              ({{'settings.autoCopyURL.msg'|translate}})
+            </label>
+          </div>
+        </div>
+      </div>
     </fieldset>
 
     <fieldset>

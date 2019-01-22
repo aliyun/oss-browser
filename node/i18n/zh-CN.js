@@ -188,6 +188,8 @@ module.exports = {
   'settings.success': '已经保存设置',
   'settings.autoUpgrade': '自动更新',
   'settings.autoUpgrade.msg': '自动下载更新包',
+  'settings.autoCopyURL': '剪贴板',
+  'settings.autoCopyURL.msg': '自动复制文件上传URL到剪贴板',
   'settings.console': '调试面板',
   'settings.console.msg': '开启调试',
   'settings.file': "本地日志文件",

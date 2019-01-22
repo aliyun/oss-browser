@@ -8,6 +8,7 @@ angular.module('web')
       showTab: 3,
       set: {
         autoUpgrade: settingsSvs.autoUpgrade.get(),
+        autoCopyURL: settingsSvs.autoCopyURL.get(),
         maxUploadJobCount: settingsSvs.maxUploadJobCount.get(),
         maxDownloadJobCount: settingsSvs.maxDownloadJobCount.get(),
         showImageSnapshot: settingsSvs.showImageSnapshot.get(),
