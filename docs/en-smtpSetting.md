@@ -6,6 +6,8 @@
 
 #### 1. QQ Mail:
 
+`Note`: For the `535` error that occurs during the QQ login process, the user needs to log in to the QQ mailbox settings page to enable the smtp service and set the authorization code. Remember that the password for sending the mailbox is not the password for registration, but the authorization code.
+
 ```
 "host": "smtp.qq.com",
 "port": 465,
