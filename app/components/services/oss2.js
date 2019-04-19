@@ -57,7 +57,9 @@ angular.module('web')
         signatureUrl: signatureUrl,
 
         getClient2: getClient2,
-        signatureUrl2: signatureUrl2
+        signatureUrl2: signatureUrl2,
+
+        getFolderLastModifyied: getFolderLastModifyied
       };
 
       function getClient2(opt) {
@@ -1240,6 +1242,30 @@ angular.module('web')
             b(err)
           });
         });
+      }
+
+      function getFolderLastModifyied(region, bucket, item) {
+
+        var client = getClient({
+          bucket: bucket,
+          region: region,
+        });
+
+        return new Promise(function(a,b) {
+          client.headObject({
+              Bucket: bucket,
+              Key: item,
+            },
+            function (err, data) {
+              if (err) {
+                b(err);
+                console.log('error:', err);
+                return;
+              }
+              a(data);
+              // console.log('success:', data);
+            });
+        })
       }
 
       function DeepListJob(region, bucket, key, folderOnly, succFn, errFn) {

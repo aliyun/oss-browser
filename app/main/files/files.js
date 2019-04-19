@@ -452,11 +452,26 @@ angular.module('web')
         ossSvs2.listFiles(info.region, info.bucket, info.key, marker || '').then(function (result) {
 
           var arr = result.data;
+          console.log(arr)
           settingsSvs.showImageSnapshot.get() == 1 ? signPicURL(info, arr) : null
 
           $scope.objects = $scope.objects.concat(arr);
-          $scope.nextObjectsMarker = result.marker || null;
 
+          // 调用SDK获取时间，然后晒进去
+          function addLastModified() {
+            for( let i = 0;i< $scope.objects.length;i++) {
+              if ($scope.objects[i].isFolder) {
+                ossSvs2.getFolderLastModifyied(info.region, info.bucket, $scope.objects[i].path).then(function (temp_result) {
+                  $scope.objects[i].lastModified = temp_result.LastModified;
+                  $scope.nextObjectsMarker = result.marker || null;
+                  safeApply($scope);
+                  if (fn) fn(null);
+                })
+              }
+            }
+          }
+          addLastModified();
+          $scope.nextObjectsMarker = result.marker || null;
           safeApply($scope);
           if (fn) fn(null);
 
