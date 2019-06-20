@@ -297,6 +297,7 @@ module.exports = {
   'restore.days': 'Days',
   'restore.message2': 'The expiration time',
   'restore.title': 'Restore',
+  'restore.msg': 'Select the files to restore',
   'restore': 'Restore',
 
   'preview': 'Preview',

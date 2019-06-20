@@ -296,6 +296,7 @@ module.exports = {
   'restore.days': '日数',
   'restore.message2': '有効期限',
   'restore.title': 'リストア',
+  'restore.msg': '選択必要リストアのファイル',
   'restore': 'リストア',
 
   'preview': 'プレビュー',
