@@ -135,6 +135,7 @@ module.exports = {
   'bucket.name': 'Bucket Name',
   'creationTime': 'Creation Time',
   'bucket.add.name.invalid': 'The Bucket name is invalid!',
+  'bucket.add.name.illegal': 'The bucket name cannot contain uppercase letters',
 
   'multipart.management': 'Multipart',
   'multipart.description': 'Manage events and fragments that are generated during the multipipart (upload) process.',
@@ -297,6 +298,7 @@ module.exports = {
   'restore.days': 'Days',
   'restore.message2': 'The expiration time',
   'restore.title': 'Restore',
+  'restore.msg': 'Select the files that need to be restored',
   'restore': 'Restore',
 
   'preview': 'Preview',

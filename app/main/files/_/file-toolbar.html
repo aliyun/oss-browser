@@ -127,6 +127,14 @@
         </li>
 
         <li>
+          <a href="" ng-if="sel.has && !sel.has[0].isFolder" ng-click="showRestoreBatch()">
+            <i class="fa fa-hourglass-2"></i>
+            <!-- 恢复 -->
+            {{'restore'|translate}}
+          </a>
+        </li>
+
+        <li>
           <a href="" class="" ng-if="sel.has && currentAuthInfo.privilege!='readOnly'" ng-click="showDeleteFilesSelected()">
             <i class="fa fa-remove text-danger"></i>
             {{'delete'|translate}}
