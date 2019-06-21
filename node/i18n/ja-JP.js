@@ -125,7 +125,6 @@ module.exports = {
   'bucket.name': 'バケット名',
   'creationTime': '作成日時',
   'bucket.add.name.invalid': 'バケット名が無効です!',
-  'bucket.add.name.illegal': 'バケット名には英大文字を使用できません',
 
   'multipart.management': 'マルチパート',
   'multipart.description': 'マルチパート (アップロード) プロセス中に生成されたイベントやフラグメントを管理します',

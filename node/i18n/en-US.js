@@ -135,7 +135,6 @@ module.exports = {
   'bucket.name': 'Bucket Name',
   'creationTime': 'Creation Time',
   'bucket.add.name.invalid': 'The Bucket name is invalid!',
-  'bucket.add.name.illegal': 'The bucket name cannot contain uppercase letters',
 
   'multipart.management': 'Multipart',
   'multipart.description': 'Manage events and fragments that are generated during the multipipart (upload) process.',
