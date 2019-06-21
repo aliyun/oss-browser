@@ -29,6 +29,7 @@ angular.module('web')
         //object 相关
         showAddFolder: showAddFolder,
         showDeleteFiles: showDeleteFiles,
+        showRestoreBatch: showRestoreBatch,
         showDeleteFilesSelected: showDeleteFilesSelected,
         showRename: showRename,
         showMove: showMove,
@@ -1112,6 +1113,45 @@ angular.module('web')
             }
           }
         });
+      }
+
+      function showRestoreBatch() {
+        let selectObjects = $scope.sel.has;
+        let SelRestore = [];
+        if (selectObjects && selectObjects.length > 0) {
+          for (let i in selectObjects) {
+            if (selectObjects[i].storageStatus !== 3 && selectObjects[i].StorageClass === 'Archive') {
+              SelRestore.push(selectObjects[i]);
+            } 
+          }
+          if (!SelRestore.length) {
+            Toast.info(T('restore.msg'));
+          } else {
+            showSelrestores(SelRestore);
+          }
+        }
+      }
+
+      function showSelrestores(items) {
+        $modal.open({
+          templateUrl: 'main/files/modals/batch-restore-modal.html',
+          controller: 'batchRestoreModalCtrl',
+          resolve: {
+            item: function () {
+              return angular.copy(items);
+            },
+            currentInfo: function () {
+              return angular.copy($scope.currentInfo);
+            },
+            callback: function () {
+              return function () {
+                $timeout(function () {
+                  ossSvs2.loadStorageStatus($scope.currentInfo.region, $scope.currentInfo.bucket, items);
+                },300);
+              }
+            }
+          }
+        })
       }
 
       function showRestore(item) {

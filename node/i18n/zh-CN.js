@@ -126,6 +126,7 @@ module.exports = {
   'bucket.name': 'Bucket名称',
   'creationTime': '创建时间',
   'bucket.add.name.invalid': '您输入的Bucket名称无效',
+  'bucket.add.name.illegal': 'Bucket名称不能包含大写英文',
 
   'multipart.management': 'Multipart管理',
   'multipart.description': '管理通过Multipart（分块）方式上传过程中产生的事件与碎片。',
@@ -296,6 +297,7 @@ module.exports = {
   'restore.days': '恢复天数',
   'restore.message2': '可读截止时间',
   'restore.title': '恢复',
+  'restore.msg': '选择需要恢复的文件',
   'restore': '恢复',
 
   'preview': '预览',

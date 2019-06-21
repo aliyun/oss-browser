@@ -1,7 +1,7 @@
 angular.module('web')
-  .factory('ossSvs2', ['$q', '$rootScope', '$timeout', '$state', 'Toast', 'Const', 'AuthInfo',
-    function ($q, $rootScope, $timeout, $state, Toast, Const, AuthInfo) {
-
+  .factory('ossSvs2', ['$q', '$rootScope', '$timeout', '$state', 'Toast', 'Const', 'AuthInfo','$translate',
+    function ($q, $rootScope, $timeout, $state, Toast, Const, AuthInfo,$translate) {
+      var T = $translate.instant;
       var NEXT_TICK = 1;
 
       var DEF_ADDR = 'oss://';
@@ -1403,6 +1403,8 @@ angular.module('web')
           }
           if (err.code == 'NetworkingError' && err.message.indexOf('ENOTFOUND') != -1) {
             console.error(err);
+          } else if (err.code == 'SignatureDoesNotMatch') {
+            Toast.error(T('bucket.add.name.illegal'));
           } else Toast.error(err.code + ': ' + err.message);
         }
       }
