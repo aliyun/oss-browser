@@ -21,7 +21,7 @@ angular.module('web')
           region: regions[0].id,
           storageClass: 'Standard'
         },
-        reg: /^[a-z0-9][a-z0-9\-]{1,61}[a-z0-9]$/i,
+        reg: /^[a-z0-9][a-z0-9\-]{1,61}[a-z0-9]$/,
         onRegionChanged: onRegionChanged,
         openURL: function(v){
           openExternal(v)
