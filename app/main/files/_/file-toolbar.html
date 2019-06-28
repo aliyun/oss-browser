@@ -66,7 +66,7 @@
       </button>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="" class="" ng-if="sel.has && currentAuthInfo.privilege!='readOnly'" ng-click="showMove(sel.has)">
+          <a href="" class="" ng-if="(sel.has.length ==1) && currentAuthInfo.privilege!='readOnly'" ng-click="showMove(sel.has)">
             <i class="fa fa-cut text-primary"></i>
             <!-- 移动 -->
             {{'move'|translate}}
