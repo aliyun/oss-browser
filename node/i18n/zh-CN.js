@@ -296,6 +296,7 @@ module.exports = {
   'restore.days': '恢复天数',
   'restore.message2': '可读截止时间',
   'restore.title': '恢复',
+  'restore.msg': '选择需要恢复的文件',
   'restore': '恢复',
 
   'preview': '预览',
