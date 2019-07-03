@@ -34,7 +34,7 @@ the debug mode,you can click the left icon ten times ,after 1.8.0 version you al
 
 ## Qr code
 
-![oss-browser](preview/oss-browser.jpg)
+![oss-browser](<img src="preview/oss-browser.jpg" height="400" width="300">)
 
 ## Links
 [ossbrowser](https://www.alibabacloud.com/help/doc-detail/61872.htm)
