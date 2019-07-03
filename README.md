@@ -31,6 +31,11 @@ the debug mode,you can click the left icon ten times ,after 1.8.0 version you al
 ![left-icon](preview/left-icon.png)
 
 ![setting-page](preview/setting-debug.png)
+
+## Qr code
+
+![oss-browser](preview/oss-browser.jpg)
+
 ## Links
 [ossbrowser](https://www.alibabacloud.com/help/doc-detail/61872.htm)
 
