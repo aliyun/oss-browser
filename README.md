@@ -35,6 +35,7 @@ the debug mode,you can click the left icon ten times ,after 1.8.0 version you al
 ## Qr code
 
 <img src="preview/oss-browser.jpg" height="400" title="oss-browser" width="300">
+1. Group number:21985509
 
 ## Links
 [ossbrowser](https://www.alibabacloud.com/help/doc-detail/61872.htm)
