@@ -13,6 +13,7 @@ module.exports = {
   'region.oss-cn-zhangjiakou': '华北3(张家口)',
   'region.oss-cn-huhehaote': '华北5(呼和浩特)',
   'region.oss-cn-shenzhen': '华南1(深圳)',
+  'region.oss-cn-chengdu': '西南1(成都)',
   'region.oss-cn-hongkong': '香港',
 
   'region.oss-ap-southeast-1': '亚太东南1(新加坡)',
@@ -101,6 +102,7 @@ module.exports = {
   'main.upgration': '主要更新',
   'tempCert': '临时凭证',
   'setup.success': '已经设置成功',
+  'forbidden': '不支持在当前路径或者跨Bucket移动',
 
   //address bar
   'backward': '后退',
