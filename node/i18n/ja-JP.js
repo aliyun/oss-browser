@@ -101,7 +101,7 @@ module.exports = {
   'main.upgration': 'リリースノート',
   'tempCert': '一時認証',
   'setup.success': 'セットアップを完了しました',
-  'forbidden': '現在のカタログでの移動やBucketでの移動はサポートしない',
+  'forbidden': '選択したオブジェクトを現在のフォルダーまたはバケット間で移動することはできません',
 
   //address bar
   'backward': '戻る',
