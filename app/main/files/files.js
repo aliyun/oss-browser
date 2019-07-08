@@ -1015,46 +1015,49 @@ angular.module('web')
            return;
 
         }
+        if ($scope.keepMoveOptions.currentInfo.key === $scope.currentInfo.key && keyword !== T('copy')) {
+          Toast.warn(T('forbidden'));
+        } else {
+          var msg = T('paste.message1', {name: $scope.keepMoveOptions.items[0].name, action: keyword});
 
-        var msg = T('paste.message1', {name: $scope.keepMoveOptions.items[0].name, action: keyword});
+          //  '将 <span class="text-info">'+
+          //     + '等</span> ' + keyword+' 到这个目录下面（如有相同的文件或目录则覆盖）？';
 
-        //  '将 <span class="text-info">'+
-        //     + '等</span> ' + keyword+' 到这个目录下面（如有相同的文件或目录则覆盖）？';
-
-        Dialog.confirm(keyword, msg, function(b){
-          if(b){
-             $modal.open({
-               templateUrl: 'main/files/modals/move-modal.html',
-               controller: 'moveModalCtrl',
-               backdrop: 'static',
-               resolve: {
-                 items: function () {
-                   return angular.copy($scope.keepMoveOptions.items);
-                 },
-                 moveTo: function(){
-                   return angular.copy($scope.currentInfo);
-                 },
-                 isCopy: function () {
-                   return $scope.keepMoveOptions.isCopy;
-                 },
-                 renamePath: function(){
-                   return ''
-                 },
-                 fromInfo: function () {
-                   return angular.copy($scope.keepMoveOptions.currentInfo);
-                 },
-                 callback: function () {
-                   return function () {
-                     $scope.keepMoveOptions = null;
-                     $timeout(function(){
-                       listFiles();
-                     },100);
-                   };
-                 }
-               }
-             });
-           }
-        });
+          Dialog.confirm(keyword, msg, function(b){
+            if(b){
+              $modal.open({
+                templateUrl: 'main/files/modals/move-modal.html',
+                controller: 'moveModalCtrl',
+                backdrop: 'static',
+                resolve: {
+                  items: function () {
+                    return angular.copy($scope.keepMoveOptions.items);
+                  },
+                  moveTo: function(){
+                    return angular.copy($scope.currentInfo);
+                  },
+                  isCopy: function () {
+                    return $scope.keepMoveOptions.isCopy;
+                  },
+                  renamePath: function(){
+                    return ''
+                  },
+                  fromInfo: function () {
+                    return angular.copy($scope.keepMoveOptions.currentInfo);
+                  },
+                  callback: function () {
+                    return function () {
+                      $scope.keepMoveOptions = null;
+                      $timeout(function(){
+                        listFiles();
+                      },100);
+                    };
+                  }
+                }
+              });
+            }
+          });
+        }
       }
 
       //移动

@@ -68,6 +68,11 @@
 
   <form class="navbar-form navbar-right" ng-if="hideTopNav">
     <div class="form-inline form-group">
+      <a href="" ng-click="showSettings()" style="text-decoration:none;font-weight:bold;color:#ccc;">
+        <i class="fa fa-cog"></i>
+        {{'settings'|translate}}
+       <!-- 设置 -->
+      </a>
       <a href="" ng-click="showAbout()" style="text-decoration:none;font-weight:bold;color:#ccc;">
         <i class="fa fa-about"></i> {{'about'|translate}}
         <!-- 关于 -->
