@@ -13,6 +13,7 @@ module.exports = {
   'region.oss-cn-zhangjiakou': '張家口 (中国北部 3)',
   'region.oss-cn-huhehaote': 'フフホト (中国北部 5)',
   'region.oss-cn-shenzhen': '深セン (中国南部 1)',
+  'region.oss-cn-chengdu': '成都(中国西部 1)',
   'region.oss-cn-hongkong': '香港',
 
   'region.oss-ap-southeast-1': 'アジア東南 1 (シンガポール)',
@@ -100,6 +101,7 @@ module.exports = {
   'main.upgration': 'リリースノート',
   'tempCert': '一時認証',
   'setup.success': 'セットアップを完了しました',
+  'forbidden': '選択したオブジェクトを現在のフォルダーまたはバケット間で移動することはできません',
 
   //address bar
   'backward': '戻る',
