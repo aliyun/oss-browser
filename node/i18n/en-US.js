@@ -13,6 +13,7 @@ module.exports = {
   'region.oss-cn-zhangjiakou': 'North China 3(Zhangjiakou)',
   'region.oss-cn-huhehaote': 'North China 5(Huhehaote)',
   'region.oss-cn-shenzhen': 'South China 1(Shenzhen)',
+  'region.oss-cn-chengdu': 'Southwest China 1(Chengdu)',
   'region.oss-cn-hongkong': 'Hongkong',
 
   'region.oss-ap-southeast-1': 'Asia Pacific Southeast 1(Singapore)',
@@ -101,6 +102,7 @@ module.exports = {
   'main.upgration': 'Release Notes',
   'tempCert': 'Temp Cert',
   'setup.success': 'Set up successfully',
+  'forbidden': 'You cannot move the selected objects to the current path or across buckets',
   'settings.console': 'Debug panel',
   'settings.console.msg': 'Open debug',
   'settings.file': "Local log",

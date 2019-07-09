@@ -103,6 +103,11 @@ angular.module('web')
           storageClasses: getStorageClasses(3)
         },
         {
+          id: 'oss-cn-chengdu',
+          label: '西南1(成都)',
+          storageClasses: getStorageClasses(3)
+        },
+        {
           id: 'oss-cn-hongkong',
           label: '香港',
           storageClasses: getStorageClasses(3)
