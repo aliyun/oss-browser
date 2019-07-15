@@ -10,6 +10,14 @@ angular.module('web')
           return localStorage.setItem('autoUpgrade', v);
         }
       },
+      autoCopyURL: {
+        get: function () {
+          return parseInt(localStorage.getItem('autoCopyURL') || 0);
+        },
+        set: function (v) {
+          return localStorage.setItem('autoCopyURL', v);
+        }
+      },
       isCame: {
         get: function () {
           return parseInt(localStorage.getItem('isCame') || 0);

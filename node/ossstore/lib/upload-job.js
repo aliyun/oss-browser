@@ -15,7 +15,7 @@ var isLogInfo = localStorage.getItem('logFileInfo')|| 0;
 //本地日志收集模块
 var log = require('electron-log');
 
-var { ipcRenderer} = require('electron');
+var { ipcRenderer, clipboard} = require('electron');
 
 class UploadJob extends Base {
 
@@ -327,6 +327,27 @@ UploadJob.prototype.uploadSingle = function () {
                self._changeStatus('finished');
                self.emit('complete');
                console.log('upload: '+self.from.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
+
+               if (commonUtil.isAutoCopyURL() === 1) {
+                 // 拼凑图片URL
+                 var eptpl = self.oss.config.endpoint;
+                 var idx = 8;
+                 var protocol = 'https:';
+                 if (eptpl.indexOf('https:') === 0) {
+                   protocol = 'https:';
+                   idx = 8;
+                 } else {
+                   protocol = 'http:';
+                   idx = 7;
+                 }
+                 var endpoint = eptpl.substr(idx); // https:// 8    http:// 7
+                 var link = protocol + '//' + self.to.bucket + '.' + endpoint + '/' + encodeURI(self.to.key);
+                 console.log(link);
+
+                 // 自动复制到剪贴板
+                 // console.log('路径已复制到剪贴板');
+                 clipboard.writeText(link);
+               }
 
              }
           });

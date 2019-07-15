@@ -199,6 +199,8 @@ module.exports = {
   'settings.success': 'Saved successfully',
   'settings.autoUpgrade': 'Auto update',
   'settings.autoUpgrade.msg': 'Download update package automatically',
+  'settings.autoCopyURL': 'Clipboard',
+  'settings.autoCopyURL.msg': 'Automatically copy file uploaded URL to clipboard',
 
   //bookmark
   'bookmarks.title': 'Bookmarks',
