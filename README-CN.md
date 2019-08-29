@@ -12,17 +12,17 @@ Windows7 above, Linux and Mac,不建议使用windows XP平台和windows Server�
 
 ## 2. 客户端下载：
 
-最新版本`1.9.4`，下载地址如下，解压即可使用。
+最新版本`1.9.5`，下载地址如下，解压即可使用。
 
-> [<h4>Window x32 版下载</h4>](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.9.4/oss-browser-win32-ia32.zip)
+> [<h4>Window x32 版下载</h4>](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.9.5/oss-browser-win32-ia32.zip)
 
-> [<h4>Window x64 版下载</h4>](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.9.4/oss-browser-win32-x64.zip)
+> [<h4>Window x64 版下载</h4>](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.9.5/oss-browser-win32-x64.zip)
 
-> [<h4>Mac zip 版下载</h4>](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.9.4/oss-browser-darwin-x64.zip)
+> [<h4>Mac zip 版下载</h4>](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.9.5/oss-browser-darwin-x64.zip)
 
-> [<h4>Ubuntu x64 版</h4>](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.9.4/oss-browser-linux-x64.zip)
+> [<h4>Ubuntu x64 版</h4>](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.9.5/oss-browser-linux-x64.zip)
 
-> [<h4>Ubuntu x32 版</h4>](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.9.4/oss-browser-linux-ia32.zip)
+> [<h4>Ubuntu x32 版</h4>](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.9.5/oss-browser-linux-ia32.zip)
 
 其他版本暂不提供，可以自行 build。
 

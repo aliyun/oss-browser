@@ -102,7 +102,8 @@ module.exports = {
   'main.upgration': 'Release Notes',
   'tempCert': 'Temp Cert',
   'setup.success': 'Set up successfully',
-  'forbidden': 'You cannot move the selected objects to the current path or across buckets',
+  'forbidden': 'You cannot move the selected objects to the current path or across region',
+  'settings.log': 'Log Settings',
   'settings.console': 'Debug panel',
   'settings.console.msg': 'Open debug',
   'settings.file': "Local log",
@@ -324,6 +325,7 @@ module.exports = {
   'upload.addtolist.success': 'All added',
 
   'transframe.search.placeholder': 'Filter by name or status',
+  'ram.search.placeholder': 'Search by name or modified time',
 
   'start.all': 'Start All',
   'pause.all': 'Stop All',
