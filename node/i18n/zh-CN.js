@@ -102,7 +102,7 @@ module.exports = {
   'main.upgration': '主要更新',
   'tempCert': '临时凭证',
   'setup.success': '已经设置成功',
-  'forbidden': '不支持在当前路径或者跨Bucket移动',
+  'forbidden': '不支持在当前路径或者跨Region移动',
 
   //address bar
   'backward': '后退',
@@ -190,6 +190,7 @@ module.exports = {
   'settings.success': '已经保存设置',
   'settings.autoUpgrade': '自动更新',
   'settings.autoUpgrade.msg': '自动下载更新包',
+  'settings.log': '日志设置',
   'settings.console': '调试面板',
   'settings.console.msg': '开启调试',
   'settings.file': "本地日志文件",
@@ -323,6 +324,7 @@ module.exports = {
   'upload.addtolist.success': '已全部添加到上传队列',
 
   'transframe.search.placeholder': '根据名称或状态搜索',
+  'ram.search.placeholder': '根据名称或修改时间搜索',
 
   'start.all': '启动全部',
   'pause.all': '暂停全部',
