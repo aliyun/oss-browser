@@ -101,7 +101,7 @@ module.exports = {
   'main.upgration': 'リリースノート',
   'tempCert': '一時認証',
   'setup.success': 'セットアップを完了しました',
-  'forbidden': '選択したオブジェクトを現在のフォルダーまたはバケット間で移動することはできません',
+  'forbidden': '選択したオブジェクトを現在のフォルダーまたは Region 間で移動することはできません',
 
   //address bar
   'backward': '戻る',
@@ -189,6 +189,7 @@ module.exports = {
   'settings.success': '保存を完了しました',
   'settings.autoUpgrade': '自動更新',
   'settings.autoUpgrade.msg': 'アップデートパッケージを自動的にダウンロードします',
+  'settings.log': 'ログ設定',
   'settings.console': '試用パネル',
   'settings.console.msg': '調査を開く',
   'settings.file': "ローカルログファイル",
@@ -323,6 +324,7 @@ module.exports = {
   'upload.addtolist.success': 'すべて追加されました',
 
   'transframe.search.placeholder': '名前またはステータスによるフィルタリング',
+  'ram.search.placeholder': '名前や修正時間によって検索する',
 
   'start.all': 'すべて開始',
   'pause.all': 'すべて停止',

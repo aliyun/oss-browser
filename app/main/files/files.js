@@ -982,6 +982,8 @@ angular.module('web')
         //   return;
         // }
         var keyword = $scope.keepMoveOptions.isCopy ? T('copy'): T('move');
+        var keepmove = $scope.keepMoveOptions.currentInfo;
+        var current = $scope.currentInfo;
 
         if($scope.keepMoveOptions.items.length==1 && $scope.currentInfo.bucket==$scope.keepMoveOptions.currentInfo.bucket){
            //1个支持重命名
@@ -1015,7 +1017,7 @@ angular.module('web')
            return;
 
         }
-        if ($scope.keepMoveOptions.currentInfo.key === $scope.currentInfo.key && keyword !== T('copy')) {
+        if (current.key === keepmove.key && keyword === T('move') && current.bucket === keepmove.bucket) {
           Toast.warn(T('forbidden'));
         } else {
           var msg = T('paste.message1', {name: $scope.keepMoveOptions.items[0].name, action: keyword});
