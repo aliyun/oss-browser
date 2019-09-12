@@ -19,7 +19,9 @@ module.exports = {
 
   getPartProgress: getPartProgress,
 
-  getFreeDiskSize: getFreeDiskSize
+  getFreeDiskSize: getFreeDiskSize,
+  printPartTimeLine: util.printPartTimeLine
+
 };
 
 
@@ -172,12 +174,5 @@ function getSensibleChunkSize(size) {
 
 //根据网速调整下载并发量
 function computeMaxConcurrency(speed, chunkSize, lastConcurrency){
-  lastConcurrency = lastConcurrency || 5;
-  if(speed > chunkSize * lastConcurrency * 0.9){
-    return lastConcurrency + 5;
-
-  }else{
-    if(lastConcurrency > 5) return lastConcurrency-3;
-    return 5;
-  }
+  return 15
 }

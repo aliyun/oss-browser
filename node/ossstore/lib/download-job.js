@@ -4,6 +4,7 @@ var Base = require('./base');
 var fs = require('fs');
 var path = require('path');
 var util = require('./download-job-util');
+var isDebug = process.env.NODE_ENV=='development';
 var commonUtil = require('./util');
 var RETRYTIMES = commonUtil.getRetryTimes();
 
@@ -55,7 +56,7 @@ class DownloadJob extends Base {
 
     //console.log('created download job');
 
-    this.maxConcurrency = 5;
+    this.maxConcurrency = 15;
   }
 }
 
@@ -141,6 +142,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
     }
 
     self.speed = self.prog.loaded - self.lastLoaded;
+    console.log("self.speed.........." + self.speed)
     if(self.lastSpeed != self.speed) self.emit('speedChange',self.speed);
     self.lastSpeed = self.speed;
     self.lastLoaded = self.prog.loaded;
@@ -175,6 +177,8 @@ DownloadJob.prototype.startSpeedCounter = function () {
  */
 DownloadJob.prototype.startDownload = function (checkPoints) {
   var self = this;
+
+  var _log_opt = {}
 
   var chunkNum = 0;
   var chunkSize = 0;
@@ -391,13 +395,19 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     concurrency++;
     doDownload(n);
 
-    if (hasNextPart() && concurrency < self.maxConcurrency) {
-      concurrency++;
-      downloadPart(getNextPart());
+    while (hasNextPart() && concurrency < self.maxConcurrency) {
+        concurrency++;
+        downloadPart(getNextPart());
     }
 
     function doDownload(n) {
       if (n == null) return;
+
+
+      _log_opt[partNumber] = {
+        start: Date.now()
+      };
+
 
       if (self.stopFlag) {
         //util.closeFD(keepFd);
@@ -499,7 +509,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
 
           concurrency--;
 
-
+          _log_opt[partNumber].end = Date.now();
 
           //self.prog.loaded += (end-start);
 
@@ -537,6 +547,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
                   self._changeStatus('finished');
                   //self.emit('progress', progCp);
                   self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
+                  if(isDebug) util.printPartTimeLine(_log_opt);
                   self.emit('complete');
                   console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
                 }
