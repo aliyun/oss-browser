@@ -182,7 +182,9 @@ gulp.task('copy-index', function () {
   './main.js',
   './server.js',
   './vendor/*.js',
-  './release-notes.md'])
+  './release-notes.md',
+  './tools/.yarnclean'
+  ])
     .pipe(gulp.dest(DIST));
 });
 
@@ -206,7 +208,8 @@ gulp.task('gen-package', function () {
 
     try{ fs.statSync(DIST); }catch(e){ fs.mkdirSync(DIST); }
     fs.writeFileSync(DIST+'/package.json', JSON.stringify(info,' ',2));
-    exec('cd dist && cnpm i');
+    exec('cd dist && yarn install --production=true && yarn autoclean --force');
+    // exec('cd dist && cnpm i');
   });
 });
 
