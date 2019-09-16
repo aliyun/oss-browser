@@ -101,6 +101,14 @@ angular.module('web')
           return localStorage.setItem('uploadPartSize', v);
         }
       },
+      downloadConcurrecyPartSize: {
+        get: function () {
+          return parseInt(localStorage.getItem('downloadConcurrecyPartSize') || 15);
+        },
+        set: function (v) {
+          return localStorage.setItem('downloadConcurrecyPartSize', v);
+        }
+      },
       uploadAndDownloadRetryTimes: {
         get: function () {
           return parseInt(localStorage.getItem('uploadAndDownloadRetryTimes') || 10);

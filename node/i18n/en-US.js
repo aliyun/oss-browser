@@ -112,6 +112,7 @@ module.exports = {
   'settings.file.info.msg': "put info log file in local ?",
   'settings.connectTimeout':'overtime(ms)',
   'settings.uploadPartSize':'uploadpart size(M)',
+  'settings.downloadConcurrecyPartSize':'download concurrency part number',
   'settings.uploadAndDownloadRetryTimes': 'retry times',
 
     //address bar

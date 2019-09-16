@@ -56,7 +56,7 @@ class DownloadJob extends Base {
 
     //console.log('created download job');
 
-    this.maxConcurrency = 15;
+    this.maxConcurrency = parseInt(localStorage.getItem('downloadConcurrecyPartSize') || 15 )
   }
 }
 
@@ -395,8 +395,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     concurrency++;
     doDownload(n);
 
-    while (hasNextPart() && concurrency < self.maxConcurrency) {
-        concurrency++;
+    if (hasNextPart() && concurrency < self.maxConcurrency) {
         downloadPart(getNextPart());
     }
 
@@ -547,7 +546,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
                   self._changeStatus('finished');
                   //self.emit('progress', progCp);
                   self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
-                  if(isDebug) util.printPartTimeLine(_log_opt);
+                  util.printPartTimeLine(_log_opt);
                   self.emit('complete');
                   console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
                 }
