@@ -55,7 +55,7 @@
     "spectron": "^3.7.2"
   },
   "dependencies": {
-    "aliyun-sdk": "git://github.com/PeterRao/aliyun-sdk-js.git#4718fae7ea930cc40e38384590f3a8eef4051799",
+    "aliyun-sdk": "git://github.com/PeterRao/aliyun-sdk-js.git#0593381881cab82d17feebf71ab9ac0397104552",
     "clipboard": "^1.7.1",
     "electron-log": "1.3.0",
     "koa": "^2.3.0",
