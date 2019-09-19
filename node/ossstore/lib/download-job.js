@@ -289,9 +289,11 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     if (chunks.length == 0) {
       //done
 
+      var loaded1 = 0;
       for (var k in checkPoints.Parts) {
-        self.prog.loaded += checkPoints.Parts[k].loaded;
+        loaded1 += checkPoints.Parts[k].loaded;
       }
+      self.prog.loaded = loaded1;
       self._changeStatus('verifying');
       util.checkFileHash(tmpName,  hashCrc64ecma , fileMd5,  function (err) {
         if (err) {
