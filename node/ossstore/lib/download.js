@@ -1,18 +1,28 @@
 var fs = require('fs');
-module.exports = {
-  download: downlad
-}
+var OSS = require('ali-oss');
 
-function d(self, p, fn) {
-  var fileStream = fs.createWriteStream(tmpName, {
-    start: start,
+process.on('message', function (m) {
+  /**
+   * oss, tmpName, object, opt
+   * @type {WriteStream}
+   */
+    // process.send(m)
+
+  var store = new OSS(m.options);
+  var fileStream = fs.createWriteStream(m.tmpName, {
+    start: m.start,
     flags: 'a+',
     autoClose: true,
   });
-  self.aliOSS.get(objOpt.Key, fileStream, {
-    headers: {
-      Range: `bytes=${start}-${end - 1}`
+  store.get(m.object, fileStream, {
+      headers: {
+        Range: `bytes=${m.start}-${m.end - 1}`
+      }
     }
-  }).then(() => {
+  ).then(() => {
+    console.log('true', m.start);
+    process.send({
+      success: true
+    })
   });
-}
+})

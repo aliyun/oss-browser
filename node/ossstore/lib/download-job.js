@@ -7,6 +7,7 @@ var util = require('./download-job-util');
 var isDebug = process.env.NODE_ENV=='development';
 var commonUtil = require('./util');
 var RETRYTIMES = commonUtil.getRetryTimes();
+var cp = require('child_process');
 
 class DownloadJob extends Base {
 
@@ -268,7 +269,8 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
 
     // chunkSize = checkPoints.chunkSize || self._config.chunkSize || util.getSensibleChunkSize(self.prog.total);
 
-    chunkSize = 40 * 1024 * 1024;
+    // chunkSize = 40 * 1024 * 1024;
+    chunkSize = 4 * 1024;
     self.chunkSize=chunkSize;
 
     console.log('chunkSize:',chunkSize);
@@ -419,16 +421,9 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
         //util.closeFD(keepFd);
         return;
       }
-      var fileStream = fs.createWriteStream(tmpName, {
-        start: start,
-        flags: 'a+',
-        autoClose: true,
-      });
-      self.aliOSS.get(objOpt.Key, fileStream, {
-        headers: {
-          Range: `bytes=${start}-${end - 1}`
-        }
-      }).then(() => {
+      var n = cp.fork(path.join(__dirname, 'download.js'));
+      n.on('message',function(m){
+        n.kill('SIGHUP');
         concurrency--;
 
         _log_opt[partNumber].end = Date.now();
@@ -481,7 +476,14 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
           self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
           downloadPart(getNextPart());
         }
+      })
 
+      n.send({
+        options: self.aliOSS.options,
+        tmpName: tmpName,
+        object: objOpt.Key,
+        start: start,
+        end: end,
       });
       //console.log('doDownload('+n+')')
       // var req = self.oss.getObject(obj, (err, data) => {
