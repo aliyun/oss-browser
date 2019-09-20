@@ -1,5 +1,6 @@
 'use strict';
 var ALYD = require('aliyun-sdk');
+var OSS = require('ali-oss');
 require('events').EventEmitter.prototype._maxListeners = 1000;
 // var TIMEOUT = 30000; //30秒
 var TIMEOUT = parseInt(localStorage.getItem('connectTimeout') || 60000); //30秒
@@ -58,6 +59,14 @@ function OssStore(config) {
       cname: this._config.cname,
       isRequestPayer: localStorage.getItem("show-request-pay") === 'YES' ? true : false
     });
+    this.aliOSS = new OSS({
+      accessKeyId: this._config.stsToken.Credentials.AccessKeyId,
+      accessKeySecret: this._config.stsToken.Credentials.AccessKeySecret,
+      endpoint: this._config.endpoint,
+      cname: this._config.cname,
+      timeout: TIMEOUT,
+      secure: true
+    });
   }
   else {
     this.oss = new ALYD.OSS({
@@ -71,6 +80,14 @@ function OssStore(config) {
       },
       cname: this._config.cname,
       isRequestPayer: localStorage.getItem("show-request-pay") === 'YES' ? true : false
+    });
+    this.aliOSS = new OSS({
+      accessKeyId: this._config.aliyunCredential.accessKeyId,
+      accessKeySecret: this._config.aliyunCredential.secretAccessKey,
+      endpoint: this._config.endpoint,
+      cname: this._config.cname,
+      timeout: TIMEOUT,
+      secure: true
     });
   }
 
@@ -170,7 +187,7 @@ OssStore.prototype.createDownloadJob = function createDownloadJob(options) {
 
   var self = this;
 
-  var job = new DownloadJob(self.oss, options);
+  var job = new DownloadJob(self.oss, options, self.aliOSS);
 
   //默认是 waiting 状态
 
