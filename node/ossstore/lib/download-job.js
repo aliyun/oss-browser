@@ -267,10 +267,10 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     }
 
 
-    // chunkSize = checkPoints.chunkSize || self._config.chunkSize || util.getSensibleChunkSize(self.prog.total);
+    chunkSize = checkPoints.chunkSize || self._config.chunkSize || util.getSensibleChunkSize(self.prog.total);
 
     // chunkSize = 40 * 1024 * 1024;
-    chunkSize = 4 * 1024;
+    // chunkSize = 4 * 1024;
     self.chunkSize=chunkSize;
 
     console.log('chunkSize:',chunkSize);
@@ -372,7 +372,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     }
   }
 
-  function downloadPart(n) {
+  function downloadPart(n, process) {
     if (n == null) return;
 
     var partNumber = n + 1;
@@ -405,7 +405,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     doDownload(n);
 
     if (hasNextPart() && concurrency < self.maxConcurrency) {
-        downloadPart(getNextPart());
+        downloadPart(getNextPart(), process);
     }
 
     function doDownload(n) {
@@ -421,64 +421,66 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
         //util.closeFD(keepFd);
         return;
       }
-      var n = cp.fork(path.join(__dirname, 'download.js'));
-      n.on('message',function(m){
-        n.kill('SIGHUP');
-        concurrency--;
+      if (!process) {
+        var process = cp.fork(path.join(__dirname, 'download.js'));
+        process.on('message',function(m){
+          //n.kill('SIGHUP');
+          concurrency--;
 
-        _log_opt[partNumber].end = Date.now();
+          _log_opt[partNumber].end = Date.now();
 
-        //self.prog.loaded += (end-start);
+          //self.prog.loaded += (end-start);
 
-        checkPoints.Parts[partNumber].done = true;
-        //checkPoints.Parts[partNumber].loaded = data.ContentLength;
+          checkPoints.Parts[partNumber].done = true;
+          //checkPoints.Parts[partNumber].loaded = data.ContentLength;
 
-        //var progCp = JSON.parse(JSON.stringify(self.prog));
+          //var progCp = JSON.parse(JSON.stringify(self.prog));
 
-        console.log(`complete part [${n}] ${self.to.path}`);
+          console.log(`complete part [${n}] ${self.to.path}`);
 
-        //console.log(JSON.stringify(checkPoints.Parts,' ',2))
+          //console.log(JSON.stringify(checkPoints.Parts,' ',2))
 
-        var progInfo = util.getPartProgress(checkPoints.Parts)
+          var progInfo = util.getPartProgress(checkPoints.Parts)
 
-        if (progInfo.done==progInfo.total) {
-          //下载完成
-          //util.closeFD(keepFd);
-          //检验MD5
-          self._changeStatus('verifying');
-          util.checkFileHash(tmpName,  hashCrc64ecma, fileMd5, function (err) {
-            if (err) {
-              self.message = (err.message||err);
-              console.error(self.message, self.to.path);
-              self._changeStatus('failed');
-              self.emit('error', err);
-              return;
-            }
-
-            //临时文件重命名为正式文件
-            fs.rename(tmpName, self.to.path, function (err) {
+          if (progInfo.done==progInfo.total) {
+            //下载完成
+            //util.closeFD(keepFd);
+            //检验MD5
+            self._changeStatus('verifying');
+            util.checkFileHash(tmpName,  hashCrc64ecma, fileMd5, function (err) {
               if (err) {
-                console.error(err, self.to.path);
-              } else {
-
-                self._changeStatus('finished');
-                //self.emit('progress', progCp);
-                self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
-                util.printPartTimeLine(_log_opt);
-                self.emit('complete');
-                console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
+                self.message = (err.message||err);
+                console.error(self.message, self.to.path);
+                self._changeStatus('failed');
+                self.emit('error', err);
+                return;
               }
 
-            });
-          });
-        } else {
-          //self.emit('progress', progCp);
-          self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
-          downloadPart(getNextPart());
-        }
-      })
+              //临时文件重命名为正式文件
+              fs.rename(tmpName, self.to.path, function (err) {
+                if (err) {
+                  console.error(err, self.to.path);
+                } else {
 
-      n.send({
+                  self._changeStatus('finished');
+                  //self.emit('progress', progCp);
+                  self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
+                  util.printPartTimeLine(_log_opt);
+                  self.emit('complete');
+                  console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
+                }
+
+              });
+            });
+          } else {
+            //self.emit('progress', progCp);
+            self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
+            downloadPart(getNextPart(), n);
+          }
+        })
+      }
+
+      process.send({
         options: self.aliOSS.options,
         tmpName: tmpName,
         object: objOpt.Key,
