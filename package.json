@@ -59,6 +59,7 @@
     "aliyun-sdk": "git://github.com/PeterRao/aliyun-sdk-js.git#0593381881cab82d17feebf71ab9ac0397104552",
     "clipboard": "^1.7.1",
     "electron-log": "1.3.0",
+    "fd-slicer": "^1.1.0",
     "koa": "^2.3.0",
     "koa-convert": "^1.2.0",
     "koa-static-server": "^1.2.1",

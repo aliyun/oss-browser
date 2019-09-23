@@ -7,7 +7,8 @@ var util = require('./download-job-util');
 var isDebug = process.env.NODE_ENV=='development';
 var commonUtil = require('./util');
 var RETRYTIMES = commonUtil.getRetryTimes();
-var cp = require('child_process');
+var fdSlicer = require('fd-slicer');
+
 
 class DownloadJob extends Base {
 
@@ -269,7 +270,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
 
     chunkSize = checkPoints.chunkSize || self._config.chunkSize || util.getSensibleChunkSize(self.prog.total);
 
-    // chunkSize = 40 * 1024 * 1024;
+    chunkSize = 40 * 1024 * 1024;
     // chunkSize = 4 * 1024;
     self.chunkSize=chunkSize;
 
@@ -289,7 +290,6 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
         };
       }
     }
-
 
     //之前每个part都已经全部下载完成，状态还没改成完成的, 这种情况出现几率极少。
     if (chunks.length == 0) {
@@ -345,6 +345,8 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
         //util.closeFD(fd);
         return;
       }
+      var fd = fs.openSync(tmpName, 'a+');
+      self.slicer = fdSlicer.createFromFd(fd);
 
       util.getFreeDiskSize(tmpName, function(err, freeDiskSize){
         console.log('got free disk size:',freeDiskSize, contentLength, freeDiskSize - contentLength)
@@ -421,71 +423,65 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
         //util.closeFD(keepFd);
         return;
       }
-      if (!process) {
-        var process = cp.fork(path.join(__dirname, 'download.js'));
-        process.on('message',function(m){
-          //n.kill('SIGHUP');
-          concurrency--;
+      var fileStream = self.slicer.createWriteStream({ start: start});
+      console.log(fileStream, 'fileStream');
+      self.aliOSS.get(objOpt.Key, fileStream,  {
+        headers: {
+          Range: `bytes=${start}-${end - 1}`
+        }
+      }).then(() => {
+        concurrency--;
 
-          _log_opt[partNumber].end = Date.now();
+        _log_opt[partNumber].end = Date.now();
 
-          //self.prog.loaded += (end-start);
+        //self.prog.loaded += (end-start);
 
-          checkPoints.Parts[partNumber].done = true;
-          //checkPoints.Parts[partNumber].loaded = data.ContentLength;
+        checkPoints.Parts[partNumber].done = true;
+        //checkPoints.Parts[partNumber].loaded = data.ContentLength;
 
-          //var progCp = JSON.parse(JSON.stringify(self.prog));
+        //var progCp = JSON.parse(JSON.stringify(self.prog));
 
-          console.log(`complete part [${n}] ${self.to.path}`);
+        console.log(`complete part [${n}] ${self.to.path}`);
 
-          //console.log(JSON.stringify(checkPoints.Parts,' ',2))
+        //console.log(JSON.stringify(checkPoints.Parts,' ',2))
 
-          var progInfo = util.getPartProgress(checkPoints.Parts)
+        var progInfo = util.getPartProgress(checkPoints.Parts)
 
-          if (progInfo.done==progInfo.total) {
-            //下载完成
-            //util.closeFD(keepFd);
-            //检验MD5
-            self._changeStatus('verifying');
-            util.checkFileHash(tmpName,  hashCrc64ecma, fileMd5, function (err) {
+        if (progInfo.done==progInfo.total) {
+          //下载完成
+          //util.closeFD(keepFd);
+          //检验MD5
+          self._changeStatus('verifying');
+          util.checkFileHash(tmpName,  hashCrc64ecma, fileMd5, function (err) {
+            if (err) {
+              self.message = (err.message||err);
+              console.error(self.message, self.to.path);
+              self._changeStatus('failed');
+              self.emit('error', err);
+              return;
+            }
+
+            //临时文件重命名为正式文件
+            fs.rename(tmpName, self.to.path, function (err) {
               if (err) {
-                self.message = (err.message||err);
-                console.error(self.message, self.to.path);
-                self._changeStatus('failed');
-                self.emit('error', err);
-                return;
+                console.error(err, self.to.path);
+              } else {
+
+                self._changeStatus('finished');
+                //self.emit('progress', progCp);
+                self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
+                util.printPartTimeLine(_log_opt);
+                self.emit('complete');
+                console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
               }
 
-              //临时文件重命名为正式文件
-              fs.rename(tmpName, self.to.path, function (err) {
-                if (err) {
-                  console.error(err, self.to.path);
-                } else {
-
-                  self._changeStatus('finished');
-                  //self.emit('progress', progCp);
-                  self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
-                  util.printPartTimeLine(_log_opt);
-                  self.emit('complete');
-                  console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
-                }
-
-              });
             });
-          } else {
-            //self.emit('progress', progCp);
-            self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
-            downloadPart(getNextPart(), n);
-          }
-        })
-      }
-
-      process.send({
-        options: self.aliOSS.options,
-        tmpName: tmpName,
-        object: objOpt.Key,
-        start: start,
-        end: end,
+          });
+        } else {
+          //self.emit('progress', progCp);
+          self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
+          downloadPart(getNextPart());
+        }
       });
       //console.log('doDownload('+n+')')
       // var req = self.oss.getObject(obj, (err, data) => {
