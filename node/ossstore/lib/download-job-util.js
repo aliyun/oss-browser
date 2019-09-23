@@ -20,8 +20,9 @@ module.exports = {
   getPartProgress: getPartProgress,
 
   getFreeDiskSize: getFreeDiskSize,
-  printPartTimeLine: util.printPartTimeLine
+  printPartTimeLine: util.printPartTimeLine,
 
+  closeFD: util.closeFD,
 };
 
 

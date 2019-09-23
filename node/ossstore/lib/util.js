@@ -17,7 +17,8 @@ module.exports = {
   getBigFileMd5: getBigFileMd5,
   checkFileHash: checkFileHash,
   printPartTimeLine: printPartTimeLine,
-  getRetryTimes: getRetryTimes
+  getRetryTimes: getRetryTimes,
+  closeFD: closeFD
 };
 
 function printPartTimeLine(opt){
@@ -173,4 +174,12 @@ function parseOssPath(osspath) {
 
 function getRetryTimes() {
   return localStorage.getItem('uploadAndDownloadRetryTimes') || 10
+}
+
+function closeFD(fd) {
+  fs.close(fd, (err) => {
+    if (err) {
+      console.error('Close file error');
+    }
+  });
 }
