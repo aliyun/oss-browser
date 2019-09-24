@@ -303,12 +303,12 @@ UploadJob.prototype.uploadSingle = function () {
             retryTimes++;
             self._changeStatus('retrying', retryTimes);
             console.warn('put object error:', err, ', -------retrying...', `${retryTimes}/${RETRYTIMES}'`);
-            
+
             if(isLog == 1) {
               log.transports.file.level = 'info';
               log.error(`put object error: ${err} -------retrying...${retryTimes}/${RETRYTIMES}`);
             }
-            
+
             setTimeout(function(){
               _dig();
             },2000);

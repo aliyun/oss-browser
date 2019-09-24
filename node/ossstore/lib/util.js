@@ -14,10 +14,13 @@ module.exports = {
   parseLocalPath: parseLocalPath,
   parseOssPath: parseOssPath,
   getFileCrc64: getFileCrc64,
+  getStreamCrc64: getStreamCrc64,
   getBigFileMd5: getBigFileMd5,
   checkFileHash: checkFileHash,
   printPartTimeLine: printPartTimeLine,
-  getRetryTimes: getRetryTimes
+  getRetryTimes: getRetryTimes,
+  combileCrc64: combileCrc64,
+  getBufferCrc64: getBufferCrc64,
 };
 
 function printPartTimeLine(opt){
@@ -89,7 +92,6 @@ function checkFileHash(filePath, hashCrc64ecma,fileMd5, fn) {
     });
   }
   else if(fileMd5){
-
     //检验MD5
     getBigFileMd5(filePath, function (err, md5str) {
       if (err) {
@@ -144,7 +146,6 @@ function getFileCrc64(p, fn){
   });
 };
 
-
 function parseLocalPath(p) {
   if (typeof(p) != 'string') {
     return p;
@@ -172,5 +173,52 @@ function parseOssPath(osspath) {
 }
 
 function getRetryTimes() {
-  return localStorage.getItem('uploadAndDownloadRetryTimes') || 10
+  return 10
+}
+
+/**
+ * 获取流的crc64
+ * @param p
+ * @param fn
+ */
+function getStreamCrc64(p, fn){
+  console.time('get crc64 hash for ['+p+']');
+  var startTime = new Date()
+  CRC64.crc64StreamProcess(p, function(err, data){
+    var endTime = new Date();
+    console.timeEnd('get crc64 hash for ['+p+']');
+    console.log(data);
+
+    if(isLog == 1 && isLogInfo == 1) {
+      log.transports.file.level = 'info';
+      log.info(`get crc64 hash for [ ${p} ]: ${endTime-startTime} ms`);
+      log.info(data);
+    }
+    fn(err, data);
+  });
+};
+
+/**
+ * crc 64合并
+ * @param str1
+ * @param str2
+ * @param len2
+ * @param fn
+ */
+function combileCrc64(str1, str2, len2, fn) {
+  console.log("combile crc64")
+  CRC64.combileCrc64(str1, str2, len2, function(err, data) {
+    fn(err, data)
+  })
+}
+
+/**
+ * 获取buffer的crc 64
+ * @param buffer
+ * @param fn
+ */
+function getBufferCrc64 (buffer, fn) {
+  CRC64.crc64Buffer(buffer, function(err ,data) {
+    fn(err, data)
+  })
 }
