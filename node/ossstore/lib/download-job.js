@@ -274,7 +274,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     // chunkSize = 4 * 1024;
     self.chunkSize=chunkSize;
 
-    console.log('chunkSize:',chunkSize);
+    // console.log('chunkSize:',chunkSize);
 
     chunkNum = Math.ceil(self.prog.total / chunkSize);
 
@@ -345,7 +345,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
         util.closeFD(self.fd);
         return;
       }
-      var fd = fs.openSync(tmpName, 'r+');
+      var fd = fs.openSync(tmpName, 'a+');
       self.slicer = fdSlicer.createFromFd(fd);
       self.fd = fd;
 
@@ -399,16 +399,15 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     function doDownload(n) {
       if (n == null) return;
 
+      if (self.stopFlag) {
+        util.closeFD(keepFd);
+        return;
+      }
 
       _log_opt[partNumber] = {
         start: Date.now()
       };
 
-
-      if (self.stopFlag) {
-        util.closeFD(keepFd);
-        return;
-      }
       self.aliOSS.getStream(objOpt.Key,  {
         headers: {
           Range: `bytes=${start}-${end - 1}`
@@ -416,7 +415,6 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
       }).then((res) => {
         var fileStream = self.slicer.createWriteStream({ start: start});
         res.stream.on('data', function(chunk) {
-          // console.log(`接收到 ${chunk.length} 个字节的数据`);
           checkPoints.Parts[partNumber].done = false;
           checkPoints.Parts[partNumber].loaded = checkPoints.Parts[partNumber].loaded + chunk.length;
 
@@ -430,11 +428,6 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
 
         })
         res.stream.pipe(fileStream).on('finish', function() {
-          if (self.stopFlag) {
-            util.closeFD(keepFd);
-            return;
-          }
-
           concurrency--;
 
           _log_opt[partNumber].end = Date.now();
@@ -492,6 +485,10 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
           } else {
             //self.emit('progress', progCp);
             self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
+            if (self.stopFlag) {
+              util.closeFD(self.fd);
+              return;
+            }
             downloadPart(getNextPart());
           }
         })
