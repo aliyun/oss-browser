@@ -75,6 +75,9 @@ void crc64_init();
  */
 uint64_t crc64(uint64_t crc, void* buf, size_t len);
 
+
+uint64_t crc64_combine(uint64_t crc1, uint64_t crc2, uintmax_t len2);
+
 }
 
 #endif

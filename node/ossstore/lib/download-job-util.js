@@ -7,6 +7,13 @@ var cp = require('child_process')
 var commonUtil = require('./util');
 var RETRYTIMES = commonUtil.getRetryTimes();
 
+function runPromiseByQueue(myPromises) {
+  myPromises.reduce(
+    (previousPromise, nextPromise) => previousPromise.then(() => nextPromise()),
+    Promise.resolve()
+  );
+}
+
 module.exports = {
   getSensibleChunkSize: getSensibleChunkSize,
 
@@ -23,6 +30,37 @@ module.exports = {
   printPartTimeLine: util.printPartTimeLine,
 
   closeFD: util.closeFD,
+  getBufferCrc64: buffer => {
+    return new Promise((resolve, reject) => {
+      util.getBufferCrc64(buffer, (err, data) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(data)
+        }
+      });
+    })
+  },
+  combineCrc64: async (list) => {
+    let str = '';
+    for (let i = 0; i < list.length; i ++) {
+      const item = list[i];
+      if (i === 0) {
+        str = item.crc64
+      } else {
+        str = await new Promise((resolve, reject) => {
+          util.combileCrc64(str,  item.crc64, item.len, (err, data) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(data)
+            }
+          });
+        })
+      }
+    }
+    return str;
+  }
 };
 
 

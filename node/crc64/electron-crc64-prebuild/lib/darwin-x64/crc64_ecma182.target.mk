@@ -46,11 +46,14 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/include/node \
-	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/src \
-	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/deps/uv/include \
-	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/deps/v8/include \
-	-I$(srcdir)/node_modules/_nan@2.10.0@nan
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/include/node \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/src \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/openssl/config \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/openssl/openssl/include \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/uv/include \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/zlib \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/v8/include \
+	-I$(srcdir)/node_modules/nan
 
 DEFS_Release := \
 	'-DNODE_GYP_MODULE_NAME=crc64_ecma182' \
@@ -93,11 +96,14 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/include/node \
-	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/src \
-	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/deps/uv/include \
-	-I/Users/huaixu/.electron-gyp/.node-gyp/iojs-1.8.4/deps/v8/include \
-	-I$(srcdir)/node_modules/_nan@2.10.0@nan
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/include/node \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/src \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/openssl/config \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/openssl/openssl/include \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/uv/include \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/zlib \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/v8/include \
+	-I$(srcdir)/node_modules/nan
 
 OBJS := \
 	$(obj).target/$(TARGET)/src/node_crc64_ecma_182.o

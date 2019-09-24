@@ -8,7 +8,7 @@ var isDebug = process.env.NODE_ENV=='development';
 var commonUtil = require('./util');
 var RETRYTIMES = commonUtil.getRetryTimes();
 var fdSlicer = require('fd-slicer');
-var progress = require('progress-stream');
+
 
 
 class DownloadJob extends Base {
@@ -61,6 +61,9 @@ class DownloadJob extends Base {
     //console.log('created download job');
 
     this.maxConcurrency = parseInt(localStorage.getItem('downloadConcurrecyPartSize') || 15 )
+
+    this.crc64List = [];
+    this.crc64Promise = [];
   }
 }
 
@@ -160,7 +163,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
     if(tick>5){
       tick=0;
       self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.chunkSize,self.maxConcurrency);
-      console.log('max concurrency:', self.maxConcurrency);
+      // console.log('max concurrency:', self.maxConcurrency);
     }
   }, 1000);
 
@@ -272,7 +275,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
 
     // chunkSize = 4 * 1024 * 1024;
     // chunkSize = 4 * 1024;
-    self.chunkSize=chunkSize;
+    // self.chunkSize=chunkSize;
 
     // console.log('chunkSize:',chunkSize);
 
@@ -414,7 +417,9 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
         }
       }).then((res) => {
         var fileStream = self.slicer.createWriteStream({ start: start});
+        var  buffers = [];
         res.stream.on('data', function(chunk) {
+          buffers.push(chunk);
           checkPoints.Parts[partNumber].done = false;
           checkPoints.Parts[partNumber].loaded = checkPoints.Parts[partNumber].loaded + chunk.length;
 
@@ -428,6 +433,17 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
 
         })
         res.stream.pipe(fileStream).on('finish', function() {
+          var buffersAll = Buffer.concat(buffers);
+          var len = buffersAll.length;
+          var start = new Date();
+          self.crc64Promise.push(util.getBufferCrc64(buffersAll).then(data => {
+            console.log('part crc64 finish use: ' + ((+new Date()) - start) + 'ms');
+            self.crc64List[partNumber - 1] = {
+              crc64: data,
+              len: len
+            }
+          }));
+
           concurrency--;
 
           _log_opt[partNumber].end = Date.now();
@@ -447,7 +463,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             loaded += checkPoints.Parts[k].loaded;
           }
           self.prog.loaded = loaded;
-          console.log(self.prog, 'prog');
+          // console.log(self.prog, 'prog');
           self.emit('progress', self.prog);
 
           var progInfo = util.getPartProgress(checkPoints.Parts)
@@ -457,31 +473,58 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             //util.closeFD(keepFd);
             //检验MD5
             self._changeStatus('verifying');
-            util.checkFileHash(tmpName,  hashCrc64ecma, fileMd5, function (err) {
-              if (err) {
-                self.message = (err.message||err);
-                console.error(self.message, self.to.path);
-                self._changeStatus('failed');
-                self.emit('error', err);
-                return;
+            var start = new Date();
+            util.combineCrc64(self.crc64List).then(res => {
+              console.log('combine crc64  use: ' + ((+new Date()) - start) + 'ms');
+              if (res === hashCrc64ecma) {
+                //临时文件重命名为正式文件
+                fs.rename(tmpName, self.to.path, function (err) {
+                  if (err) {
+                    console.error(err, self.to.path);
+                  } else {
+
+                    self._changeStatus('finished');
+                    //self.emit('progress', progCp);
+                    self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
+                    util.printPartTimeLine(_log_opt);
+                    self.emit('complete');
+                    console.log('download: ' + self.to.path + ' %celapse', 'background:green;color:white', self.endTime - self.startTime, 'ms')
+                  }
+                });
+              } else {
+                throw new Error();
               }
-
-              //临时文件重命名为正式文件
-              fs.rename(tmpName, self.to.path, function (err) {
-                if (err) {
-                  console.error(err, self.to.path);
-                } else {
-
-                  self._changeStatus('finished');
-                  //self.emit('progress', progCp);
-                  self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
-                  util.printPartTimeLine(_log_opt);
-                  self.emit('complete');
-                  console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
-                }
-
-              });
-            });
+            }).catch(err => {
+              self.message = (err.message||err);
+              console.error(self.message, self.to.path);
+              self._changeStatus('failed');
+              self.emit('error', err);
+            })
+            // util.checkFileHash(tmpName,  hashCrc64ecma, fileMd5, function (err) {
+            //   if (err) {
+            //     self.message = (err.message||err);
+            //     console.error(self.message, self.to.path);
+            //     self._changeStatus('failed');
+            //     self.emit('error', err);
+            //     return;
+            //   }
+            //
+            //   //临时文件重命名为正式文件
+            //   fs.rename(tmpName, self.to.path, function (err) {
+            //     if (err) {
+            //       console.error(err, self.to.path);
+            //     } else {
+            //
+            //       self._changeStatus('finished');
+            //       //self.emit('progress', progCp);
+            //       self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
+            //       util.printPartTimeLine(_log_opt);
+            //       self.emit('complete');
+            //       console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
+            //     }
+            //
+            //   });
+            // });
           } else {
             //self.emit('progress', progCp);
             self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
