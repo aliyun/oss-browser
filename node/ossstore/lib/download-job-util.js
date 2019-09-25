@@ -60,7 +60,8 @@ module.exports = {
       }
     }
     return str;
-  }
+  },
+  createFileIfNotExists: util.createFileIfNotExists
 };
 
 

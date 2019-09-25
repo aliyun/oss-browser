@@ -4,12 +4,18 @@ var Base = require('./base');
 var fs = require('fs');
 var path = require('path');
 var util = require('./download-job-util');
-var isDebug = process.env.NODE_ENV=='development';
+var isDebug = process.env.NODE_ENV == 'development';
 var commonUtil = require('./util');
 var RETRYTIMES = commonUtil.getRetryTimes();
 var fdSlicer = require('fd-slicer');
 
+function getNextPart(chunks) {
+  return chunks.shift();
+}
 
+function hasNextPart(chunks) {
+  return chunks.length > 0;
+}
 
 class DownloadJob extends Base {
 
@@ -26,7 +32,7 @@ class DownloadJob extends Base {
    */
   constructor(ossClient, config, aliOSS) {
     super();
-    this.id= 'dj-'+new Date().getTime()+'-'+ ((''+Math.random()).substring(2));
+    this.id = 'dj-' + new Date().getTime() + '-' + (('' + Math.random()).substring(2));
     this.oss = ossClient;
     this.aliOSS = aliOSS;
     this._config = {};
@@ -60,7 +66,7 @@ class DownloadJob extends Base {
 
     //console.log('created download job');
 
-    this.maxConcurrency = parseInt(localStorage.getItem('downloadConcurrecyPartSize') || 15 )
+    this.maxConcurrency = parseInt(localStorage.getItem('downloadConcurrecyPartSize') || 15)
 
     this.crc64List = [];
     this.crc64Promise = [];
@@ -69,22 +75,22 @@ class DownloadJob extends Base {
 
 DownloadJob.prototype.start = function () {
   var self = this;
-  if(this.status=='running')return;
+  if (this.status == 'running') return;
 
-  if(this._lastStatusFailed){
+  if (this._lastStatusFailed) {
     //从头开始
     this.checkPoints = {};
     this.crc64Str = '';
   }
 
-  self.message='';
+  self.message = '';
   self.startTime = new Date().getTime();
   self.endTime = null;
 
   self.stopFlag = false;
   self._changeStatus('running');
 
-  self.checkPoints =  (self.checkPoints && self.checkPoints.Parts) ? self.checkPoints: {
+  self.checkPoints = (self.checkPoints && self.checkPoints.Parts) ? self.checkPoints : {
     from: self.from,
     to: self.to,
     Parts: {}
@@ -99,7 +105,7 @@ DownloadJob.prototype.start = function () {
 
 DownloadJob.prototype.stop = function () {
   var self = this;
-  if(self.status=='stopped')return;
+  if (self.status == 'stopped') return;
   self.stopFlag = true;
   self._changeStatus('stopped');
   self.speed = 0;
@@ -109,8 +115,8 @@ DownloadJob.prototype.stop = function () {
 
 DownloadJob.prototype.wait = function () {
   var self = this;
-  if(this.status=='waiting')return;
-  this._lastStatusFailed = this.status=='failed';
+  if (this.status == 'waiting') return;
+  this._lastStatusFailed = this.status == 'failed';
   self.stopFlag = true;
   self._changeStatus('waiting');
   return self;
@@ -129,16 +135,16 @@ DownloadJob.prototype._changeStatus = function (status, retryTimes) {
     clearInterval(self.speedTid);
     self.speed = 0;
     //推测耗时
-    self.predictLeftTime=0;
+    self.predictLeftTime = 0;
   }
 };
 
 DownloadJob.prototype.startSpeedCounter = function () {
   var self = this;
 
-  self.lastLoaded = self.prog.loaded|| 0;
+  self.lastLoaded = self.prog.loaded || 0;
   self.lastSpeed = 0;
-  var tick=0;
+  var tick = 0;
   clearInterval(self.speedTid);
   self.speedTid = setInterval(function () {
 
@@ -150,19 +156,18 @@ DownloadJob.prototype.startSpeedCounter = function () {
 
     self.speed = self.prog.loaded - self.lastLoaded;
     console.log("self.speed.........." + self.speed)
-    if(self.lastSpeed != self.speed) self.emit('speedChange',self.speed);
+    if (self.lastSpeed != self.speed) self.emit('speedChange', self.speed);
     self.lastSpeed = self.speed;
     self.lastLoaded = self.prog.loaded;
-
 
     //推测耗时
     self.predictLeftTime = self.speed == 0 ? 0 : Math.floor((self.prog.total - self.prog.loaded) / self.speed * 1000);
 
     //根据speed 动态调整 maxConcurrency, 5秒修改一次
     tick++;
-    if(tick>5){
-      tick=0;
-      self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.chunkSize,self.maxConcurrency);
+    if (tick > 5) {
+      tick = 0;
+      self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.chunkSize, self.maxConcurrency);
       // console.log('max concurrency:', self.maxConcurrency);
     }
   }, 1000);
@@ -192,12 +197,9 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
   //var keepFd;
   var chunks = [];
 
-
   var maxRetries = RETRYTIMES;
 
   var concurrency = 0;
-
-  //console.log('maxConcurrency:', maxConcurrency);
 
   var tmpName = self.to.path + '.download';
   var fileMd5 = '';
@@ -207,20 +209,18 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     Bucket: self.from.bucket,
     Key: self.from.key
   };
-  // this.aliOSS
   this.aliOSS.useBucket(self.from.bucket);
   util.headObject(self, objOpt, function (err, headers) {
     if (err) {
       console.log(err)
-      if(err.message.indexOf('Network Failure')!=-1
-    || err.message.indexOf('getaddrinfo ENOTFOUND')!=-1){
+      if (err.message.indexOf('Network Failure') != -1
+        || err.message.indexOf('getaddrinfo ENOTFOUND') != -1) {
         self.message = 'failed to get oss object meta: ' + err.message;
         //console.error(self.message);
         console.error(self.message, self.to.path);
         self.stop();
         //self.emit('error', err);
-      }
-      else{
+      } else {
         self.message = 'failed to get oss object meta: ' + err.message;
         //console.error(self.message);
         console.error(self.message, self.to.path);
@@ -259,7 +259,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             done: 0
           });
           self.emit('complete');
-          console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
+          console.log('download: ' + self.to.path + ' %celapse', 'background:green;color:white', self.endTime - self.startTime, 'ms')
 
         }
       });
@@ -269,7 +269,6 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     if (self.stopFlag) {
       return;
     }
-
 
     chunkSize = checkPoints.chunkSize || self._config.chunkSize || util.getSensibleChunkSize(self.prog.total);
 
@@ -304,9 +303,9 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
       }
       self.prog.loaded = loaded1;
       self._changeStatus('verifying');
-      util.checkFileHash(tmpName,  hashCrc64ecma , fileMd5,  function (err) {
+      util.checkFileHash(self, tmpName, hashCrc64ecma, fileMd5, function (err) {
         if (err) {
-          self.message=(err.message||err);
+          self.message = (err.message || err);
           console.error(self.message, self.to.path);
           self._changeStatus('failed');
           self.emit('error', err);
@@ -326,63 +325,50 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
               done: chunkNum
             });
             self.emit('complete');
-            console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
+            console.log('download: ' + self.to.path + ' %celapse', 'background:green;color:white', self.endTime - self.startTime, 'ms')
           }
         });
       });
       return;
     }
 
-    //downloadPart(getNextPart());
-    createFileIfNotExists(tmpName, (err) => {
-      if (err) {
-        self.message = 'failed to open local file:' + err.message;
-        //console.error(self.message);
-        console.error(self.message, self.to.path);
-        self._changeStatus('failed');
-        self.emit('error', err);
-        return;
-      }
+    try {
+      util.createFileIfNotExists(tmpName);
+    } catch (err) {
+      self.message = 'failed to open local file:' + err.message;
+      console.error(self.message, self.to.path);
+      self._changeStatus('failed');
+      self.emit('error', err);
+      return;
+    }
+    if (self.stopFlag) {
+      util.closeFD(self.fd);
+      return;
+    }
+    var fd = fs.openSync(tmpName, 'a+');
+    self.slicer = fdSlicer.createFromFd(fd);
+    self.fd = fd;
 
-      if (self.stopFlag) {
-        util.closeFD(self.fd);
-        return;
-      }
-      var fd = fs.openSync(tmpName, 'a+');
-      self.slicer = fdSlicer.createFromFd(fd);
-      self.fd = fd;
-
-      util.getFreeDiskSize(tmpName, function(err, freeDiskSize){
-        console.log('got free disk size:',freeDiskSize, contentLength, freeDiskSize - contentLength)
-
-        if(!err){
-          if(contentLength > freeDiskSize - 10*1024*1024 ){
-            // < 100MB warning
-            self.message="Insufficient disk space";
-            self.stop();
-            return;
-          }
+    util.getFreeDiskSize(tmpName, function (err, freeDiskSize) {
+      console.log('got free disk size:', freeDiskSize, contentLength, freeDiskSize - contentLength)
+      if (!err) {
+        if (contentLength > freeDiskSize - 10 * 1024 * 1024) {
+          // < 100MB warning
+          self.message = "Insufficient disk space";
+          self.stop();
+          return;
         }
+      }
 
-        downloadPart(getNextPart());
-      });
+      downloadPart(getNextPart(chunks));
     });
-
   });
 
-  function createFileIfNotExists(p, fn) {
-    if (!fs.existsSync(p)) {
-      fs.writeFile(tmpName, '', fn);
-    } else {
-      fn();
-    }
-  }
-
-  function downloadPart(n, process) {
+  function downloadPart(n) {
     if (n == null) return;
 
     var partNumber = n + 1;
-    if(checkPoints.Parts[partNumber].done){
+    if (checkPoints.Parts[partNumber].done) {
       console.error('tmd', n);
       return;
     }
@@ -395,8 +381,8 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     concurrency++;
     doDownload(n);
 
-    if (hasNextPart() && concurrency < self.maxConcurrency) {
-        downloadPart(getNextPart(), process);
+    if (hasNextPart(chunks) && concurrency < self.maxConcurrency) {
+      downloadPart(getNextPart(chunks));
     }
 
     function doDownload(n) {
@@ -411,64 +397,32 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
         start: Date.now()
       };
 
-      self.aliOSS.getStream(objOpt.Key,  {
+      self.aliOSS.getStream(objOpt.Key, {
         headers: {
           Range: `bytes=${start}-${end - 1}`
         }
       }).then((res) => {
-        var fileStream = self.slicer.createWriteStream({ start: start});
-        var  buffers = [];
-        res.stream.on('data', function(chunk) {
+        var fileStream = self.slicer.createWriteStream({start: start});
+        var buffers = [];
+        res.stream.on('data', function (chunk) {
           buffers.push(chunk);
           checkPoints.Parts[partNumber].done = false;
           checkPoints.Parts[partNumber].loaded = checkPoints.Parts[partNumber].loaded + chunk.length;
-
-          var loaded = 0;
-          for (var k in checkPoints.Parts) {
-            loaded += checkPoints.Parts[k].loaded;
-          }
-
-          self.prog.loaded = loaded;
-          self.emit('progress', self.prog);
-
-        })
-        res.stream.pipe(fileStream).on('finish', function() {
-          var buffersAll = Buffer.concat(buffers);
-          var len = buffersAll.length;
-          var start = new Date();
-          self.crc64Promise.push(util.getBufferCrc64(buffersAll).then(data => {
-            console.log('part crc64 finish use: ' + ((+new Date()) - start) + 'ms');
-            self.crc64List[partNumber - 1] = {
-              crc64: data,
-              len: len
-            }
-          }));
-
+          self._calProgress(checkPoints);
+        });
+        res.stream.pipe(fileStream).on('finish', function () {
+          const buffersAll = Buffer.concat(buffers);
+          self._calPartCRC64(buffersAll, partNumber);
           concurrency--;
 
           _log_opt[partNumber].end = Date.now();
-
-          //self.prog.loaded += (end-start);
-
           checkPoints.Parts[partNumber].done = true;
-          //checkPoints.Parts[partNumber].loaded = data.ContentLength;
-
-          //var progCp = JSON.parse(JSON.stringify(self.prog));
 
           console.log(`complete part [${n}] ${self.to.path}`);
 
-
-          var loaded = 0;
-          for (var k in checkPoints.Parts) {
-            loaded += checkPoints.Parts[k].loaded;
-          }
-          self.prog.loaded = loaded;
-          // console.log(self.prog, 'prog');
-          self.emit('progress', self.prog);
-
+          self._calProgress(checkPoints);
           var progInfo = util.getPartProgress(checkPoints.Parts)
-
-          if (progInfo.done==progInfo.total) {
+          if (progInfo.done == progInfo.total) {
             //下载完成
             //util.closeFD(keepFd);
             //检验MD5
@@ -495,36 +449,11 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
                 throw new Error();
               }
             }).catch(err => {
-              self.message = (err.message||err);
+              self.message = (err.message || err);
               console.error(self.message, self.to.path);
               self._changeStatus('failed');
               self.emit('error', err);
             })
-            // util.checkFileHash(tmpName,  hashCrc64ecma, fileMd5, function (err) {
-            //   if (err) {
-            //     self.message = (err.message||err);
-            //     console.error(self.message, self.to.path);
-            //     self._changeStatus('failed');
-            //     self.emit('error', err);
-            //     return;
-            //   }
-            //
-            //   //临时文件重命名为正式文件
-            //   fs.rename(tmpName, self.to.path, function (err) {
-            //     if (err) {
-            //       console.error(err, self.to.path);
-            //     } else {
-            //
-            //       self._changeStatus('finished');
-            //       //self.emit('progress', progCp);
-            //       self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
-            //       util.printPartTimeLine(_log_opt);
-            //       self.emit('complete');
-            //       console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
-            //     }
-            //
-            //   });
-            // });
           } else {
             //self.emit('progress', progCp);
             self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
@@ -532,10 +461,10 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
               util.closeFD(self.fd);
               return;
             }
-            downloadPart(getNextPart());
+            downloadPart(getNextPart(chunks));
           }
         })
-      }).catch(function(e) {
+      }).catch(function (e) {
         console.error('download error', e)
         checkPoints.Parts[partNumber].loaded = 0;
         checkPoints.Parts[partNumber].done = false;
@@ -546,7 +475,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
           return;
         }
 
-        if(retryCount >= maxRetries){
+        if (retryCount >= maxRetries) {
           self.message = `failed to download part [${n}]: ${err.message}`;
           //console.error(self.message);
           console.error(self.message, self.to.path);
@@ -554,233 +483,55 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
           self.stop();
           //self.emit('error', err);
           //util.closeFD(keepFd);
-        }
-        else if(err.code=='InvalidObjectState' ){
+        } else if (err.code == 'InvalidObjectState') {
           self.message = `failed to download part [${n}]: ${err.message}`;
           //console.error(self.message);
           console.error(self.message, self.to.path);
           self._changeStatus('failed');
           self.emit('error', err);
           //util.closeFD(keepFd);
-        }
-        else{
+        } else {
           retryCount++;
           console.log(`retry download part [${n}] error:${err}, ${self.to.path}`);
-          setTimeout(function(){
+          setTimeout(function () {
             doDownload(n);
-          },2000);
+          }, 2000);
         }
       });
-      //console.log('doDownload('+n+')')
-      // var req = self.oss.getObject(obj, (err, data) => {
-      //   //console.log('getObject('+n+')', data)
-      //   // var md5 = ALY.util.crypto.md5(data.Body,'hex');
-      //   if (self.stopFlag) {
-      //     //util.closeFD(keepFd);
-      //     return;
-      //   }
-      //
-      //
-      //
-      //
-      //   if (err) {
-      //
-      //     try {
-      //       req.abort();
-      //     } catch (e) {
-      //       console.log(e.stack);
-      //     }
-      //     checkPoints.Parts[partNumber].loaded = 0;
-      //     checkPoints.Parts[partNumber].done = false;
-      //
-      //     //console.log(err);
-      //     if (err.code == 'RequestAbortedError') {
-      //       //用户取消
-      //       console.warn('用户取消');
-      //       return;
-      //     }
-      //
-      //
-      //
-      //     if(retryCount >= maxRetries){
-      //       self.message = `failed to download part [${n}]: ${err.message}`;
-      //       //console.error(self.message);
-      //       console.error(self.message, self.to.path);
-      //       //self._changeStatus('failed');
-      //       self.stop();
-      //       //self.emit('error', err);
-      //       //util.closeFD(keepFd);
-      //     }
-      //     else if(err.code=='InvalidObjectState' ){
-      //       self.message = `failed to download part [${n}]: ${err.message}`;
-      //       //console.error(self.message);
-      //       console.error(self.message, self.to.path);
-      //       self._changeStatus('failed');
-      //       self.emit('error', err);
-      //       //util.closeFD(keepFd);
-      //     }
-      //     else{
-      //       retryCount++;
-      //       console.log(`retry download part [${n}] error:${err}, ${self.to.path}`);
-      //       setTimeout(function(){
-      //         doDownload(n);
-      //       },2000);
-      //     }
-      //     return;
-      //   }
-      //   else if(data.Body.length!=parseInt(data.ContentLength)){
-      //     //下载不完整，重试， 这里应该判断crc，但是考虑效率，先不做
-      //
-      //     try {
-      //       req.abort();
-      //     } catch (e) {
-      //       console.log(e.stack);
-      //     }
-      //     checkPoints.Parts[partNumber].loaded = 0;
-      //     checkPoints.Parts[partNumber].done = false;
-      //
-      //     retryCount++;
-      //     console.warn(`retry download part [${n}] error: missing data, ${self.to.path}`);
-      //     setTimeout(function(){
-      //       doDownload(n);
-      //     },2000);
-      //     return;
-      //   }
-      //
-      //   //console.log(n, end - start, start, end, data.Body.length);
-      //   writeFileRange(tmpName, data.Body, start, function (err) {
-      //
-      //     if (self.stopFlag) {
-      //       //util.closeFD(keepFd);
-      //       return;
-      //     }
-      //
-      //     if (err) {
-      //       self.message = 'failed to write local file: ' + err.message;
-      //       //console.error(self.message);
-      //       console.error(self.message, self.to.path);
-      //       self._changeStatus('failed');
-      //       self.emit('error', err);
-      //       //util.closeFD(keepFd);
-      //       return;
-      //     }
-      //
-      //     concurrency--;
-      //
-      //     _log_opt[partNumber].end = Date.now();
-      //
-      //     //self.prog.loaded += (end-start);
-      //
-      //     checkPoints.Parts[partNumber].done = true;
-      //     //checkPoints.Parts[partNumber].loaded = data.ContentLength;
-      //
-      //     //var progCp = JSON.parse(JSON.stringify(self.prog));
-      //
-      //     console.log(`complete part [${n}] ${self.to.path}`);
-      //
-      //     //console.log(JSON.stringify(checkPoints.Parts,' ',2))
-      //
-      //     var progInfo = util.getPartProgress(checkPoints.Parts)
-      //
-      //     if (progInfo.done==progInfo.total) {
-      //       //下载完成
-      //       //util.closeFD(keepFd);
-      //       //检验MD5
-      //       self._changeStatus('verifying');
-      //       util.checkFileHash(tmpName,  hashCrc64ecma, fileMd5, function (err) {
-      //         if (err) {
-      //           self.message = (err.message||err);
-      //           console.error(self.message, self.to.path);
-      //           self._changeStatus('failed');
-      //           self.emit('error', err);
-      //           return;
-      //         }
-      //
-      //         //临时文件重命名为正式文件
-      //         fs.rename(tmpName, self.to.path, function (err) {
-      //           if (err) {
-      //             console.error(err, self.to.path);
-      //           } else {
-      //
-      //             self._changeStatus('finished');
-      //             //self.emit('progress', progCp);
-      //             self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
-      //             util.printPartTimeLine(_log_opt);
-      //             self.emit('complete');
-      //             console.log('download: '+self.to.path+' %celapse','background:green;color:white',self.endTime-self.startTime,'ms')
-      //           }
-      //
-      //         });
-      //       });
-      //     } else {
-      //       //self.emit('progress', progCp);
-      //       self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
-      //       downloadPart(getNextPart());
-      //     }
-      //   });
-      // });
-      //
-      //
-      // //fix abort: _abortCallback is not a function
-      // req.httpRequest._abortCallback = function () {};
-      //
-      // req.on('httpDownloadProgress', function (p) {
-      //   checkPoints.Parts[partNumber].done = false;
-      //
-      //   if (self.stopFlag) {
-      //     try {
-      //       req.abort();
-      //     } catch (e) {
-      //       console.log(e.stack);
-      //     }
-      //     checkPoints.Parts[partNumber].loaded = 0;
-      //     checkPoints.Parts[partNumber].done = false;
-      //     return;
-      //   }
-      //
-      //   checkPoints.Parts[partNumber].loaded = p.loaded;
-      //
-      //   var loaded = 0;
-      //   for (var k in checkPoints.Parts) {
-      //     loaded += checkPoints.Parts[k].loaded;
-      //   }
-      //
-      //   self.prog.loaded = loaded;
-      //   self.emit('progress', self.prog);
-      //
-      // });
     }
   }
-
-  function getNextPart() {
-    return chunks.shift();
-  }
-
-  function hasNextPart() {
-    return chunks.length > 0;
-  }
-
-
-
-  // function writeFileRange(tmpName, data, start, fn) {
-  //   fs.open(tmpName, 'a+', function(err, fd){
-  //     fs.write(fd, data, 0, data.length,  start, fn)
-  //   });
-  // }
-  function writeFileRange(tmpName, data, start, fn) {
-    var file = fs.createWriteStream(tmpName, {
-      start: start,
-      flags: 'r+',
-      autoClose: true,
-    });
-    file.end(data);
-    file.on('error', (err) => {
-      fn(err);
-    });
-    file.on('finish', () => {
-      fn(null);
-    });
-  }
 };
+
+/**
+ * 异步计算分片crc64
+ * @param buffersAll
+ * @private
+ */
+DownloadJob.prototype._calPartCRC64 = function (buffersAll, partNumber) {
+  const self = this;
+  const len = buffersAll.length;
+  const start = new Date();
+  self.crc64Promise.push(util.getBufferCrc64(buffersAll).then(data => {
+    console.log('part crc64 finish use: ' + ((+new Date()) - start) + 'ms');
+    self.crc64List[partNumber - 1] = {
+      crc64: data,
+      len: len
+    }
+  }));
+}
+
+/**
+ * 计算当前下载进度
+ * @param checkPoints
+ * @private
+ */
+DownloadJob.prototype._calProgress = function (checkPoints) {
+  var loaded = 0;
+  for (var k in checkPoints.Parts) {
+    loaded += checkPoints.Parts[k].loaded;
+  }
+  this.prog.loaded = loaded;
+  this.emit('progress', this.prog);
+}
 
 module.exports = DownloadJob;

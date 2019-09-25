@@ -20,6 +20,7 @@ module.exports = {
   printPartTimeLine: printPartTimeLine,
   getRetryTimes: getRetryTimes,
   closeFD: closeFD,
+  createFileIfNotExists: createFileIfNotExists,
   combileCrc64: combileCrc64,
   getBufferCrc64: getBufferCrc64,
   crcFinal: crcFinal
@@ -55,7 +56,7 @@ function printPartTimeLine(opt){
 }
 
 
-function checkFileHash(filePath, hashCrc64ecma,fileMd5, fn) {
+function checkFileHash(self, filePath, hashCrc64ecma,fileMd5, fn) {
   //console.log(filePath, ',,,,,,,,,,,,,,,,,')
   if(hashCrc64ecma){
       var startTime = new Date();
@@ -176,6 +177,12 @@ function parseOssPath(osspath) {
 
 function getRetryTimes() {
   return 10
+}
+
+function createFileIfNotExists(name) {
+  if (!fs.existsSync(name)) {
+    fs.writeFileSync(name, '');
+  }
 }
 
 /**
