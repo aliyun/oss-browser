@@ -32,13 +32,18 @@ module.exports = {
   closeFD: util.closeFD,
   getBufferCrc64: buffer => {
     return new Promise((resolve, reject) => {
-      util.getBufferCrc64(buffer, (err, data) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(data)
-        }
-      });
+      try {
+        util.getBufferCrc64(buffer, (err, data) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(data)
+          }
+        });
+      } catch(e) {
+        console.error('crc64 function error')
+        reject(e);
+      }
     })
   },
   combineCrc64: async (list) => {

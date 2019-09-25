@@ -410,7 +410,7 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
           checkPoints.Parts[partNumber].loaded = checkPoints.Parts[partNumber].loaded + chunk.length;
           self._calProgress(checkPoints);
         });
-        res.stream.pipe(fileStream).on('finish', function () {
+        res.stream.pipe(fileStream).on('finish', async function () {
           const buffersAll = Buffer.concat(buffers);
           self._calPartCRC64(buffersAll, partNumber);
           concurrency--;
@@ -428,6 +428,9 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             //检验MD5
             self._changeStatus('verifying');
             var start = new Date();
+
+            // 确保所有crc64已经校验完成
+            await Promise.all(self.crc64Promise);
             util.combineCrc64(self.crc64List).then(res => {
               console.log('combine crc64  use: ' + ((+new Date()) - start) + 'ms');
               if (res === hashCrc64ecma) {
