@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6ED0FE2D-0387-E896-542F-C7FC4C800115}</ProjectGuid>
+    <ProjectGuid>{5E19D627-64B3-6447-B408-C6DED09EE2E0}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>crc64_ecma182_base</RootNamespace>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
@@ -43,7 +43,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\luozhang.lz\.node-gyp\8.2.1\include\node;C:\Users\luozhang.lz\.node-gyp\8.2.1\src;C:\Users\luozhang.lz\.node-gyp\8.2.1\deps\uv\include;C:\Users\luozhang.lz\.node-gyp\8.2.1\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\SForv\.node-gyp\iojs-1.8.4\include\node;C:\Users\SForv\.node-gyp\iojs-1.8.4\src;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\openssl\config;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\openssl\openssl\include;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\uv\include;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\zlib;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -65,7 +65,7 @@
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
     </Lib>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\luozhang.lz\.node-gyp\8.2.1\x64\node.lib&quot;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\SForv\.node-gyp\iojs-1.8.4\x64\iojs.lib&quot;</AdditionalDependencies>
       <AdditionalOptions>/ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <AllowIsolation>true</AllowIsolation>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -78,13 +78,13 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>C:\Users\luozhang.lz\.node-gyp\8.2.1\include\node;C:\Users\luozhang.lz\.node-gyp\8.2.1\src;C:\Users\luozhang.lz\.node-gyp\8.2.1\deps\uv\include;C:\Users\luozhang.lz\.node-gyp\8.2.1\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\SForv\.node-gyp\iojs-1.8.4\include\node;C:\Users\SForv\.node-gyp\iojs-1.8.4\src;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\openssl\config;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\openssl\openssl\include;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\uv\include;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\zlib;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=crc64_ecma182_base;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;DEBUG;_DEBUG;V8_ENABLE_CHECKS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\luozhang.lz\.node-gyp\8.2.1\include\node;C:\Users\luozhang.lz\.node-gyp\8.2.1\src;C:\Users\luozhang.lz\.node-gyp\8.2.1\deps\uv\include;C:\Users\luozhang.lz\.node-gyp\8.2.1\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\SForv\.node-gyp\iojs-1.8.4\include\node;C:\Users\SForv\.node-gyp\iojs-1.8.4\src;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\openssl\config;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\openssl\openssl\include;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\uv\include;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\zlib;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -112,7 +112,7 @@
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
     </Lib>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\luozhang.lz\.node-gyp\8.2.1\x64\node.lib&quot;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\SForv\.node-gyp\iojs-1.8.4\x64\iojs.lib&quot;</AdditionalDependencies>
       <AdditionalOptions>/ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <AllowIsolation>true</AllowIsolation>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -128,7 +128,7 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>C:\Users\luozhang.lz\.node-gyp\8.2.1\include\node;C:\Users\luozhang.lz\.node-gyp\8.2.1\src;C:\Users\luozhang.lz\.node-gyp\8.2.1\deps\uv\include;C:\Users\luozhang.lz\.node-gyp\8.2.1\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\SForv\.node-gyp\iojs-1.8.4\include\node;C:\Users\SForv\.node-gyp\iojs-1.8.4\src;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\openssl\config;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\openssl\openssl\include;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\uv\include;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\zlib;C:\Users\SForv\.node-gyp\iojs-1.8.4\deps\v8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=crc64_ecma182_base;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
