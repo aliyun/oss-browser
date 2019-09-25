@@ -22,6 +22,3 @@ for (var i = 0;i < 2499;i++) {
 var end = new Date()
 console.log("crc compibe is ==============>" + temp )
 console.log("累计耗时 (ms)==============>" + parseInt(end - start))
-
-// pararm [] {}
-function combile
