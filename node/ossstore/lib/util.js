@@ -22,6 +22,7 @@ module.exports = {
   closeFD: closeFD,
   combileCrc64: combileCrc64,
   getBufferCrc64: getBufferCrc64,
+  crcFinal: crcFinal
 };
 
 function printPartTimeLine(opt){
@@ -229,4 +230,20 @@ function closeFD(fd) {
       console.error('Close file error');
     }
   });
+}
+/***
+ * 封装crc最后合并，传入一个大数组 [arr1 ,arr2 ....] 每一个都是一个对象 {crc: crc, len: len} //数组为空这种交给业务自己去处理
+ * @param arr
+ * @returns {crc|*}
+ */
+function crcFinal(arr) {
+  var temp = arr[0].crc
+  var length = arr.length;
+  for (var i = 0; i< length -1; i++) {
+    combileCrc64(temp, arr[i+1].crc, arr[i+1].len, function(err, data) {
+      if (err) console.log(err)
+      temp = data
+    })
+  }
+  return temp;
 }
