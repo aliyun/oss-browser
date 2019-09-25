@@ -39,20 +39,17 @@ streamToBuffer(stream).then(res=> {
       crc.push(obj)
     })
   }
-
   console.log("所有的crc =======================>")
   console.log(crc)
-
   // 循环计算
-
-  var temp = crc[0].crc
-  for (var j = 0; j < crc.length-1; j++) {
-    util.combileCrc64(temp, crc[j+1].crc,crc[j+1].len, function(err, data) {
-      if(err) console.log(err)
-      temp = data;
-      console.log(data)
-    })
-  }
-  console.log("finale combile crc64 ===========================> " + temp )
-  temp.should.equal('6143515797969536685');
+  // var temp = crc[0].crc
+  // for (var j = 0; j < crc.length-1; j++) {
+  //   util.combileCrc64(temp, crc[j+1].crc,crc[j+1].len, function(err, data) {
+  //     if(err) console.log(err)
+  //     temp = data;
+  //     console.log(data)
+  //   })
+  // }
+  // console.log("finale combile crc64 ===========================> " + temp )
+  util.crcFinal(crc).should.equal('6143515797969536685')
 })
