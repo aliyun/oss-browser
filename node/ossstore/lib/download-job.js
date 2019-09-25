@@ -2,9 +2,9 @@
 
 var Base = require('./base');
 var fs = require('fs');
-var path = require('path');
+// var path = require('path');
 var util = require('./download-job-util');
-var isDebug = process.env.NODE_ENV == 'development';
+// var isDebug = process.env.NODE_ENV == 'development';
 var commonUtil = require('./util');
 var RETRYTIMES = commonUtil.getRetryTimes();
 var fdSlicer = require('fd-slicer');
@@ -98,8 +98,6 @@ DownloadJob.prototype.start = function () {
 
   self.startDownload(self.checkPoints);
 
-  self.startSpeedCounter();
-
   return self;
 };
 
@@ -187,7 +185,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
 /**
  * 开始download
  */
-DownloadJob.prototype.startDownload = function (checkPoints) {
+DownloadJob.prototype.startDownload = async function (checkPoints) {
   var self = this;
 
   var _log_opt = {}
@@ -210,158 +208,158 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
     Key: self.from.key
   };
   this.aliOSS.useBucket(self.from.bucket);
-  util.headObject(self, objOpt, function (err, headers) {
-    if (err) {
-      console.log(err)
-      if (err.message.indexOf('Network Failure') != -1
-        || err.message.indexOf('getaddrinfo ENOTFOUND') != -1) {
-        self.message = 'failed to get oss object meta: ' + err.message;
-        //console.error(self.message);
-        console.error(self.message, self.to.path);
-        self.stop();
-        //self.emit('error', err);
-      } else {
-        self.message = 'failed to get oss object meta: ' + err.message;
+  let headers;
+  try {
+    headers = await util.headObject(self, objOpt);
+  } catch (err) {
+    if (err.message.indexOf('Network Failure') != -1
+      || err.message.indexOf('getaddrinfo ENOTFOUND') != -1) {
+      self.message = 'failed to get oss object meta: ' + err.message;
+      //console.error(self.message);
+      console.error(self.message, self.to.path);
+      self.stop();
+      //self.emit('error', err);
+    } else {
+      self.message = 'failed to get oss object meta: ' + err.message;
+      //console.error(self.message);
+      console.error(self.message, self.to.path);
+      self._changeStatus('failed');
+      self.emit('error', err);
+    }
+    return;
+  }
+
+  fileMd5 = headers['content-md5'];//.replace(/(^\"*)|(\"*$)/g, '');
+  //console.log('file md5:',fileMd5);
+  hashCrc64ecma = headers['x-oss-hash-crc64ecma'];
+
+  var contentLength = parseInt(headers['content-length']);
+  self.prog.total = contentLength;
+  //console.log('got content length:', contentLength)
+  //空文件
+  if (self.prog.total == 0) {
+
+    fs.writeFile(self.to.path, '', function (err) {
+      if (err) {
+        self.message = 'failed to open local file:' + err.message;
         //console.error(self.message);
         console.error(self.message, self.to.path);
         self._changeStatus('failed');
         self.emit('error', err);
+
+      } else {
+        self._changeStatus('finished');
+        self.emit('progress', {
+          total: 0,
+          loaded: 0
+        });
+        self.emit('partcomplete', {
+          total: 0,
+          done: 0
+        });
+        self.emit('complete');
+        console.log('download: ' + self.to.path + ' %celapse', 'background:green;color:white', self.endTime - self.startTime, 'ms')
+
       }
-      return;
+    });
+    return;
+  }
+
+  if (self.stopFlag) {
+    return;
+  }
+
+  chunkSize = checkPoints.chunkSize || self._config.chunkSize || util.getSensibleChunkSize(self.prog.total);
+
+  // chunkSize = 4 * 1024 * 1024;
+  // chunkSize = 4 * 1024;
+  // self.chunkSize=chunkSize;
+
+  // console.log('chunkSize:',chunkSize);
+
+  chunkNum = Math.ceil(self.prog.total / chunkSize);
+
+  chunks = [];
+
+  for (var i = 0; i < chunkNum; i++) {
+    if (!checkPoints.Parts[i + 1] || !checkPoints.Parts[i + 1].done) {
+      chunks.push(i);
+      checkPoints.Parts[i + 1] = {
+        PartNumber: i + 1,
+        loaded: 0,
+        done: false
+      };
     }
+  }
 
-    fileMd5 = headers.ContentMD5;//.replace(/(^\"*)|(\"*$)/g, '');
-    //console.log('file md5:',fileMd5);
-    hashCrc64ecma = headers.HashCrc64ecma;
+  //之前每个part都已经全部下载完成，状态还没改成完成的, 这种情况出现几率极少。
+  if (chunks.length == 0) {
+    //done
 
-    var contentLength = parseInt(headers['ContentLength']);
-    self.prog.total = contentLength;
-    //console.log('got content length:', contentLength)
-    //空文件
-    if (self.prog.total == 0) {
+    var loaded1 = 0;
+    for (var k in checkPoints.Parts) {
+      loaded1 += checkPoints.Parts[k].loaded;
+    }
+    self.prog.loaded = loaded1;
+    self._changeStatus('verifying');
+    util.checkFileHash(self, tmpName, hashCrc64ecma, fileMd5, function (err) {
+      if (err) {
+        self.message = (err.message || err);
+        console.error(self.message, self.to.path);
+        self._changeStatus('failed');
+        self.emit('error', err);
+        return;
+      }
 
-      fs.writeFile(self.to.path, '', function (err) {
+      //临时文件重命名为正式文件
+      fs.rename(tmpName, self.to.path, function (err) {
         if (err) {
-          self.message = 'failed to open local file:' + err.message;
-          //console.error(self.message);
-          console.error(self.message, self.to.path);
-          self._changeStatus('failed');
-          self.emit('error', err);
-
+          console.log(err);
         } else {
+          var progCp = JSON.parse(JSON.stringify(self.prog));
           self._changeStatus('finished');
-          self.emit('progress', {
-            total: 0,
-            loaded: 0
-          });
+          self.emit('progress', progCp);
           self.emit('partcomplete', {
-            total: 0,
-            done: 0
+            total: chunkNum,
+            done: chunkNum
           });
           self.emit('complete');
           console.log('download: ' + self.to.path + ' %celapse', 'background:green;color:white', self.endTime - self.startTime, 'ms')
-
         }
       });
-      return;
-    }
-
-    if (self.stopFlag) {
-      return;
-    }
-
-    chunkSize = checkPoints.chunkSize || self._config.chunkSize || util.getSensibleChunkSize(self.prog.total);
-
-    // chunkSize = 4 * 1024 * 1024;
-    // chunkSize = 4 * 1024;
-    // self.chunkSize=chunkSize;
-
-    // console.log('chunkSize:',chunkSize);
-
-    chunkNum = Math.ceil(self.prog.total / chunkSize);
-
-    chunks = [];
-
-    for (var i = 0; i < chunkNum; i++) {
-      if (!checkPoints.Parts[i + 1] || !checkPoints.Parts[i + 1].done) {
-        chunks.push(i);
-        checkPoints.Parts[i + 1] = {
-          PartNumber: i + 1,
-          loaded: 0,
-          done: false
-        };
-      }
-    }
-
-    //之前每个part都已经全部下载完成，状态还没改成完成的, 这种情况出现几率极少。
-    if (chunks.length == 0) {
-      //done
-
-      var loaded1 = 0;
-      for (var k in checkPoints.Parts) {
-        loaded1 += checkPoints.Parts[k].loaded;
-      }
-      self.prog.loaded = loaded1;
-      self._changeStatus('verifying');
-      util.checkFileHash(self, tmpName, hashCrc64ecma, fileMd5, function (err) {
-        if (err) {
-          self.message = (err.message || err);
-          console.error(self.message, self.to.path);
-          self._changeStatus('failed');
-          self.emit('error', err);
-          return;
-        }
-
-        //临时文件重命名为正式文件
-        fs.rename(tmpName, self.to.path, function (err) {
-          if (err) {
-            console.log(err);
-          } else {
-            var progCp = JSON.parse(JSON.stringify(self.prog));
-            self._changeStatus('finished');
-            self.emit('progress', progCp);
-            self.emit('partcomplete', {
-              total: chunkNum,
-              done: chunkNum
-            });
-            self.emit('complete');
-            console.log('download: ' + self.to.path + ' %celapse', 'background:green;color:white', self.endTime - self.startTime, 'ms')
-          }
-        });
-      });
-      return;
-    }
-
-    try {
-      util.createFileIfNotExists(tmpName);
-    } catch (err) {
-      self.message = 'failed to open local file:' + err.message;
-      console.error(self.message, self.to.path);
-      self._changeStatus('failed');
-      self.emit('error', err);
-      return;
-    }
-    if (self.stopFlag) {
-      util.closeFD(self.fd);
-      return;
-    }
-    var fd = fs.openSync(tmpName, 'a+');
-    self.slicer = fdSlicer.createFromFd(fd);
-    self.fd = fd;
-
-    util.getFreeDiskSize(tmpName, function (err, freeDiskSize) {
-      console.log('got free disk size:', freeDiskSize, contentLength, freeDiskSize - contentLength)
-      if (!err) {
-        if (contentLength > freeDiskSize - 10 * 1024 * 1024) {
-          // < 100MB warning
-          self.message = "Insufficient disk space";
-          self.stop();
-          return;
-        }
-      }
-
-      downloadPart(getNextPart(chunks));
     });
+    return;
+  }
+
+  try {
+    util.createFileIfNotExists(tmpName);
+  } catch (err) {
+    self.message = 'failed to open local file:' + err.message;
+    console.error(self.message, self.to.path);
+    self._changeStatus('failed');
+    self.emit('error', err);
+    return;
+  }
+  if (self.stopFlag) {
+    return;
+  }
+  const fd = fs.openSync(tmpName, 'a+');
+  self.slicer = fdSlicer.createFromFd(fd);
+  self.fd = fd;
+
+  util.getFreeDiskSize(tmpName, function (err, freeDiskSize) {
+    console.log('got free disk size:', freeDiskSize, contentLength, freeDiskSize - contentLength)
+    if (!err) {
+      if (contentLength > freeDiskSize - 10 * 1024 * 1024) {
+        // < 100MB warning
+        self.message = "Insufficient disk space";
+        self.stop();
+        return;
+      }
+    }
+
+    self.startSpeedCounter();
+    downloadPart(getNextPart(chunks));
   });
 
   function downloadPart(n) {
@@ -389,7 +387,6 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
       if (n == null) return;
 
       if (self.stopFlag) {
-        util.closeFD(keepFd);
         return;
       }
 
@@ -402,8 +399,12 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
           Range: `bytes=${start}-${end - 1}`
         }
       }).then((res) => {
-        var fileStream = self.slicer.createWriteStream({start: start});
-        var buffers = [];
+        if (self.stopFlag) {
+          // util.closeFD(self.fd);
+          return;
+        }
+        const fileStream = self.slicer.createWriteStream({start: start});
+        const buffers = [];
         res.stream.on('data', function (chunk) {
           buffers.push(chunk);
           checkPoints.Parts[partNumber].done = false;
@@ -445,11 +446,16 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
                     self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
                     util.printPartTimeLine(_log_opt);
                     self.emit('complete');
+                    util.closeFD(self.fd);
                     console.log('download: ' + self.to.path + ' %celapse', 'background:green;color:white', self.endTime - self.startTime, 'ms')
                   }
                 });
+              } else {
+                const error = new Error();
+                error.message = '文件校验不匹配，请删除文件重新下载';
+                throw error;
               }
-            } catch (e) {
+            } catch (err) {
               self.message = (err.message || err);
               console.error(self.message, self.to.path);
               self._changeStatus('failed');
@@ -459,7 +465,6 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             //self.emit('progress', progCp);
             self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
             if (self.stopFlag) {
-              util.closeFD(self.fd);
               return;
             }
             downloadPart(getNextPart(chunks));

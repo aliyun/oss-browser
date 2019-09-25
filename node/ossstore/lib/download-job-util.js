@@ -1,18 +1,11 @@
-var fs = require('fs');
-var crypto = require('crypto');
+// var fs = require('fs');
+// var crypto = require('crypto');
 var util = require('./util');
 var os = require('os')
 var path = require('path')
 var cp = require('child_process')
 var commonUtil = require('./util');
 var RETRYTIMES = commonUtil.getRetryTimes();
-
-function runPromiseByQueue(myPromises) {
-  myPromises.reduce(
-    (previousPromise, nextPromise) => previousPromise.then(() => nextPromise()),
-    Promise.resolve()
-  );
-}
 
 module.exports = {
   getSensibleChunkSize: getSensibleChunkSize,
@@ -42,7 +35,9 @@ module.exports = {
         });
       } catch(e) {
         console.error('crc64 function error')
-        reject(e);
+        var error = new Error();
+        error.message = 'CRC64模块加载失败请关闭CRC64文件校验';
+        reject(error);
       }
     })
   },
@@ -159,35 +154,34 @@ function getPartProgress(parts){
 
 }
 
-function headObject(self, objOpt, fn){
-  var retryTimes = 0;
-  _dig();
-  function _dig(){
-    self.oss.headObject(objOpt, function (err, headers) {
+function headObject(self, objOpt) {
+  return new Promise((resolve, reject) => {
+    let retryTimes = 0;
+    _dig();
 
-      if (err) {
-        if(err.code=='Forbidden'){
-          err.message='Forbidden';
-          fn(err);
+    function _dig() {
+      self.aliOSS.head(objOpt.Key).then(data => {
+        resolve(data.res.headers);
+      }).catch(err => {
+        // TODO code 需要更改
+        if (err.code == 'Forbidden') {
+          err.message = 'Forbidden';
+          reject(err);
           return;
         }
-
-        if(retryTimes > RETRYTIMES){
-          fn(err);
-        }else{
+        if (retryTimes > RETRYTIMES) {
+          reject(err);
+        } else {
           retryTimes++;
           self._changeStatus('retrying', retryTimes);
           console.warn('headObject error', err, ', ----- retrying...', `${retryTimes}/${RETRYTIMES}`);
-          setTimeout(function(){
-            if(!self.stopFlag) _dig();
-          },2000);
+          setTimeout(function () {
+            if (!self.stopFlag) _dig();
+          }, 2000);
         }
-      }
-      else{
-         fn(null, headers);
-      }
-    });
-  }
+      });
+    }
+  })
 }
 
 
