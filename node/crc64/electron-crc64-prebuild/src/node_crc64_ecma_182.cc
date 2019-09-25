@@ -59,19 +59,16 @@ NAN_METHOD(CombileCRC64) {
         return;
     }
 
-    // 处理第一个参数
     v8::Local<v8::String> ret1 = Nan::To<v8::String>(info[0]).ToLocalChecked();
     Nan::Utf8String val(ret1);
     std::string arg0 = std::string(*val);
     uint64_t crc1 = stringToUINT64(arg0);
 
-    // 处理第二个参数
     v8::Local<v8::String> ret2 = Nan::To<v8::String>(info[1]).ToLocalChecked();
     Nan::Utf8String val1(ret2);
     std::string arg1 = std::string(*val1);
     uint64_t crc2 = stringToUINT64(arg1);
 
-    // 处理第三个参数
     v8::Local<v8::String> ret3 = Nan::To<v8::String>(info[2]).ToLocalChecked();
     Nan::Utf8String val3(ret3);
     std::string arg3 = std::string(*val3);
