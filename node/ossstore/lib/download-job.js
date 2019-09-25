@@ -430,8 +430,9 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
             var start = new Date();
 
             // 确保所有crc64已经校验完成
-            await Promise.all(self.crc64Promise);
-            util.combineCrc64(self.crc64List).then(res => {
+            try {
+              await Promise.all(self.crc64Promise);
+              var res = await util.combineCrc64(self.crc64List);
               console.log('combine crc64  use: ' + ((+new Date()) - start) + 'ms');
               if (res === hashCrc64ecma) {
                 //临时文件重命名为正式文件
@@ -439,7 +440,6 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
                   if (err) {
                     console.error(err, self.to.path);
                   } else {
-
                     self._changeStatus('finished');
                     //self.emit('progress', progCp);
                     self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
@@ -448,15 +448,13 @@ DownloadJob.prototype.startDownload = function (checkPoints) {
                     console.log('download: ' + self.to.path + ' %celapse', 'background:green;color:white', self.endTime - self.startTime, 'ms')
                   }
                 });
-              } else {
-                throw new Error();
               }
-            }).catch(err => {
+            } catch (e) {
               self.message = (err.message || err);
               console.error(self.message, self.to.path);
               self._changeStatus('failed');
               self.emit('error', err);
-            })
+            }
           } else {
             //self.emit('progress', progCp);
             self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
