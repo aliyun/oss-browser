@@ -190,21 +190,27 @@ function createFileIfNotExists(name) {
  * @param p
  * @param fn
  */
-function getStreamCrc64(p, fn){
-  console.time('get crc64 hash for ['+p+']');
-  var startTime = new Date()
-  CRC64.crc64StreamProcess(p, function(err, data){
-    var endTime = new Date();
-    console.timeEnd('get crc64 hash for ['+p+']');
-    console.log(data);
+// function getStreamCrc64(p, fn){
+//   console.time('get crc64 hash for ['+p+']');
+//   var startTime = new Date()
+//   CRC64.crc64StreamProcess(p, function(err, data){
+//     var endTime = new Date();
+//     console.timeEnd('get crc64 hash for ['+p+']');
+//     console.log(data);
+//
+//     if(isLog == 1 && isLogInfo == 1) {
+//       log.transports.file.level = 'info';
+//       log.info(`get crc64 hash for [ ${p} ]: ${endTime-startTime} ms`);
+//       log.info(data);
+//     }
+//     fn(err, data);
+//   });
+// };
 
-    if(isLog == 1 && isLogInfo == 1) {
-      log.transports.file.level = 'info';
-      log.info(`get crc64 hash for [ ${p} ]: ${endTime-startTime} ms`);
-      log.info(data);
-    }
-    fn(err, data);
-  });
+function getStreamCrc64(p){
+  // console.time('get crc64 hash for ['+p+']');
+  // var startTime = new Date()
+  return CRC64.crc64StreamProcess(p)
 };
 
 /**

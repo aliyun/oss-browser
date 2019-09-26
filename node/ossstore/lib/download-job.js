@@ -8,6 +8,7 @@ var util = require('./download-job-util');
 var commonUtil = require('./util');
 var RETRYTIMES = commonUtil.getRetryTimes();
 var fdSlicer = require('fd-slicer');
+var stream = require('stream')
 
 function getNextPart(chunks) {
   return chunks.shift();
@@ -411,9 +412,10 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           checkPoints.Parts[partNumber].loaded = checkPoints.Parts[partNumber].loaded + chunk.length;
           self._calProgress(checkPoints);
         });
+        self._calPartCRC64(res.stream.pipe(new stream.PassThrough()), partNumber);
         res.stream.pipe(fileStream).on('finish', async function () {
-          const buffersAll = Buffer.concat(buffers);
-          self._calPartCRC64(buffersAll, partNumber);
+          // const buffersAll = Buffer.concat(buffers);
+          // self._calPartCRC64(buffersAll, partNumber);
           concurrency--;
 
           _log_opt[partNumber].end = Date.now();
@@ -513,17 +515,28 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
  * @param buffersAll
  * @private
  */
-DownloadJob.prototype._calPartCRC64 = function (buffersAll, partNumber) {
+DownloadJob.prototype._calPartCRC64 = function (s, partNumber) {
   const self = this;
-  const len = buffersAll.length;
+  // const len = buffersAll.length;
+  let len  = 0;
   const start = new Date();
-  self.crc64Promise.push(util.getBufferCrc64(buffersAll).then(data => {
+  s.on('data', function (chunk) {
+    len = len + chunk.length;
+  });
+  self.crc64Promise.push(util.getStreamCrc64(s).then(data => {
     console.log('part crc64 finish use: ' + ((+new Date()) - start) + 'ms');
     self.crc64List[partNumber - 1] = {
       crc64: data,
       len: len
     }
   }));
+  // self.crc64Promise.push(util.getBufferCrc64(buffersAll).then(data => {
+  //   console.log('part crc64 finish use: ' + ((+new Date()) - start) + 'ms');
+  //   self.crc64List[partNumber - 1] = {
+  //     crc64: data,
+  //     len: len
+  //   }
+  // }));
 }
 
 /**

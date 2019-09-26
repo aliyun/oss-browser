@@ -41,6 +41,7 @@ module.exports = {
       }
     })
   },
+  getStreamCrc64: util.getStreamCrc64,
   combineCrc64: async (list) => {
     let str = '';
     for (let i = 0; i < list.length; i ++) {
