@@ -470,8 +470,8 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
             downloadPart(getNextPart(chunks));
           }
         })
-      }).catch(function (e) {
-        console.error('download error', e)
+      }).catch(function (err) {
+        console.error('download error', err)
         checkPoints.Parts[partNumber].loaded = 0;
         checkPoints.Parts[partNumber].done = false;
         // TODO code 状态码修复
