@@ -65,7 +65,7 @@ function OssStore(config) {
       endpoint: this._config.endpoint,
       cname: this._config.cname,
       timeout: TIMEOUT,
-      secure: true
+      // secure: true
     });
   }
   else {
@@ -87,7 +87,7 @@ function OssStore(config) {
       endpoint: this._config.endpoint,
       cname: this._config.cname,
       timeout: TIMEOUT,
-      secure: true
+      // secure: true
     });
   }
 

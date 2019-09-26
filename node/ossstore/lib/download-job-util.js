@@ -163,7 +163,7 @@ function headObject(self, objOpt) {
       self.aliOSS.head(objOpt.Key).then(data => {
         resolve(data.res.headers);
       }).catch(err => {
-        // TODO code 需要更改
+        // TODO code 需要更改, Forbidden 是什么状态？？
         if (err.code == 'Forbidden') {
           err.message = 'Forbidden';
           reject(err);
