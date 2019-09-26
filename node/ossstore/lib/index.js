@@ -65,6 +65,7 @@ function OssStore(config) {
       endpoint: this._config.endpoint,
       cname: this._config.cname,
       timeout: TIMEOUT,
+      isRequestPay: localStorage.getItem("show-request-pay") === 'YES' ? true : false
       // secure: true
     });
   }
@@ -87,6 +88,7 @@ function OssStore(config) {
       endpoint: this._config.endpoint,
       cname: this._config.cname,
       timeout: TIMEOUT,
+      isRequestPay: localStorage.getItem("show-request-pay") === 'YES' ? true : false
       // secure: true
     });
   }
