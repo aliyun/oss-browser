@@ -229,7 +229,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
     return;
   }
 
-  fileMd5 = headers['content-md5'];//.replace(/(^\"*)|(\"*$)/g, '');
+  // fileMd5 = headers['content-md5'];//.replace(/(^\"*)|(\"*$)/g, '');
   //console.log('file md5:',fileMd5);
   hashCrc64ecma = headers['x-oss-hash-crc64ecma'];
 
@@ -294,40 +294,9 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
 
   //之前每个part都已经全部下载完成，状态还没改成完成的, 这种情况出现几率极少。
   if (chunks.length == 0) {
-    //done
-
-    var loaded1 = 0;
-    for (var k in checkPoints.Parts) {
-      loaded1 += checkPoints.Parts[k].loaded;
-    }
-    self.prog.loaded = loaded1;
+    slef._calProgress(checkPoints);
     self._changeStatus('verifying');
-    util.checkFileHash(self, tmpName, hashCrc64ecma, fileMd5, function (err) {
-      if (err) {
-        self.message = (err.message || err);
-        console.error(self.message, self.to.path);
-        self._changeStatus('failed');
-        self.emit('error', err);
-        return;
-      }
-
-      //临时文件重命名为正式文件
-      fs.rename(tmpName, self.to.path, function (err) {
-        if (err) {
-          console.log(err);
-        } else {
-          var progCp = JSON.parse(JSON.stringify(self.prog));
-          self._changeStatus('finished');
-          self.emit('progress', progCp);
-          self.emit('partcomplete', {
-            total: chunkNum,
-            done: chunkNum
-          });
-          self.emit('complete');
-          console.log('download: ' + self.to.path + ' %celapse', 'background:green;color:white', self.endTime - self.startTime, 'ms')
-        }
-      });
-    });
+    await self._complete(tmpName, hashCrc64ecma, checkPoints);
     return;
   }
 
@@ -425,42 +394,12 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           var progInfo = util.getPartProgress(checkPoints.Parts)
           if (progInfo.done == progInfo.total) {
             //下载完成
-            //util.closeFD(keepFd);
             //检验MD5
             self._changeStatus('verifying');
-            var start = new Date();
 
             // 确保所有crc64已经校验完成
-            try {
-              await Promise.all(self.crc64Promise);
-              var res = await util.combineCrc64(self.crc64List);
-              console.log('combine crc64  use: ' + ((+new Date()) - start) + 'ms');
-              if (res === hashCrc64ecma) {
-                //临时文件重命名为正式文件
-                fs.rename(tmpName, self.to.path, function (err) {
-                  if (err) {
-                    console.error(err, self.to.path);
-                  } else {
-                    self._changeStatus('finished');
-                    //self.emit('progress', progCp);
-                    self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
-                    util.printPartTimeLine(_log_opt);
-                    self.emit('complete');
-                    util.closeFD(self.fd);
-                    console.log('download: ' + self.to.path + ' %celapse', 'background:green;color:white', self.endTime - self.startTime, 'ms')
-                  }
-                });
-              } else {
-                const error = new Error();
-                error.message = '文件校验不匹配，请删除文件重新下载';
-                throw error;
-              }
-            } catch (err) {
-              self.message = (err.message || err);
-              console.error(self.message, self.to.path);
-              self._changeStatus('failed');
-              self.emit('error', err);
-            }
+            await self._complete(tmpName, hashCrc64ecma, checkPoints);
+            util.printPartTimeLine(_log_opt);
           } else {
             //self.emit('progress', progCp);
             self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
@@ -476,6 +415,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         checkPoints.Parts[partNumber].done = false;
         // TODO code 状态码修复
         if (err.code == 'RequestAbortedError') {
+          // 必须用callback 而不是 promise 方式才能 abort 请求;
           //用户取消
           console.warn('用户取消');
           return;
@@ -538,6 +478,50 @@ DownloadJob.prototype._calProgress = function (checkPoints) {
   }
   this.prog.loaded = loaded;
   this.emit('progress', this.prog);
+}
+
+/**
+ * 完成文件下载及校验
+ * @param tmpName
+ * @param hashCrc64ecma
+ * @param checkPoints
+ * @returns {Promise<void>}
+ * @private
+ */
+DownloadJob.prototype._complete = async function (tmpName, hashCrc64ecma, checkPoints) {
+  // 确保所有crc64已经校验完成
+  const start = new Date();
+  const self = this;
+  try {
+    await Promise.all(self.crc64Promise);
+    const res = await util.combineCrc64(self.crc64List);
+    console.log('combine crc64  use: ' + ((+new Date()) - start) + 'ms');
+    if (res === hashCrc64ecma) {
+      //临时文件重命名为正式文件
+      fs.rename(tmpName, self.to.path, function (err) {
+        if (err) {
+          console.error(err, self.to.path);
+          throw err;
+        } else {
+          self._changeStatus('finished');
+          //self.emit('progress', progCp);
+          self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
+          self.emit('complete');
+          util.closeFD(self.fd);
+          console.log('download: ' + self.to.path + ' %celapse', 'background:green;color:white', self.endTime - self.startTime, 'ms')
+        }
+      });
+    } else {
+      const error = new Error();
+      error.message = '文件校验不匹配，请删除文件重新下载';
+      throw error;
+    }
+  } catch (err) {
+    self.message = (err.message || err);
+    console.error(self.message, self.to.path);
+    self._changeStatus('failed');
+    self.emit('error', err);
+  }
 }
 
 module.exports = DownloadJob;
