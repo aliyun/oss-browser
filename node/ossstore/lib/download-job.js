@@ -458,7 +458,7 @@ DownloadJob.prototype._calPartCRC64 = function (buffersAll, partNumber) {
   const len = buffersAll.length;
   const start = new Date();
   self.crc64Promise.push(util.getBufferCrc64(buffersAll).then(data => {
-    console.log('part crc64 finish use: ' + ((+new Date()) - start) + 'ms');
+    console.log(`part ${partNumber} crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`);
     self.crc64List[partNumber - 1] = {
       crc64: data,
       len: len
