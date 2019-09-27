@@ -458,12 +458,18 @@ DownloadJob.prototype._calPartCRC64 = function (buffersAll, partNumber) {
   const len = buffersAll.length;
   const start = new Date();
   self.crc64Promise.push(util.getBufferCrc64(buffersAll).then(data => {
-    console.log(`part ${partNumber} crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`);
-    self.crc64List[partNumber - 1] = {
-      crc64: data,
-      len: len
-    }
-  }));
+      console.log(`part ${partNumber} crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`);
+      self.crc64List[partNumber - 1] = {
+        crc64: data,
+        len: len
+      }
+    }).catch(err => {
+      self.message = '分片校验失败';
+      console.error(self.message, self.to.path);
+      self._changeStatus('failed');
+      self.emit('error', err);
+    })
+  );
 }
 
 /**
