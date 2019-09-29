@@ -154,7 +154,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
     }
 
     self.speed = self.prog.loaded - self.lastLoaded;
-    console.log("self.speed.........." + self.speed)
+    // console.log("self.speed.........." + self.speed)
     if (self.lastSpeed != self.speed) self.emit('speedChange', self.speed);
     self.lastSpeed = self.speed;
     self.lastLoaded = self.prog.loaded;
@@ -482,21 +482,23 @@ DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber, len) {
   var streamCpy = s.pipe(new stream.PassThrough());
   const self = this;
   const start = new Date();
-  self.crc64Promise.push(util.getStreamCrc64(streamCpy).then(data => {
-      console.log(`part [${partNumber}] crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`);
-      self.crc64List[partNumber - 1] = {
-        crc64: data,
-        len: len
-      }
-    }).catch(err => {
-      self.message = '分片校验失败';
-      checkPoints.Parts[partNumber].loaded = 0;
-      checkPoints.Parts[partNumber].done = false;
-      console.error(self.message, self.to.path);
-      self._changeStatus('failed');
-      self.emit('error', err);
-    })
-  );
+  const res = util.getStreamCrc64(streamCpy).then(data => {
+    console.log(`part [${partNumber}] crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`);
+    self.crc64List[partNumber - 1] = {
+      crc64: data,
+      len: len
+    }
+  }).catch(err => {
+    self.message = '分片校验失败';
+    self.checkPoints.Parts[partNumber].loaded = 0;
+    self.checkPoints.Parts[partNumber].done = false;
+    console.error(self.message, self.to.path, err);
+    self.stop();
+    self._changeStatus('failed');
+    self.emit('error', err);
+  })
+  self.crc64Promise.push(res);
+  return res;
 }
 
 /**
@@ -551,7 +553,7 @@ DownloadJob.prototype._complete = async function (tmpName, hashCrc64ecma, checkP
     }
   } catch (err) {
     self.message = (err.message || err);
-    console.error(self.message, self.to.path);
+    console.error(self.message, self.to.path, self.crc64List);
     self._changeStatus('failed');
     self.emit('error', err);
   }
