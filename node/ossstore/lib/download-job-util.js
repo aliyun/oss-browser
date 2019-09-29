@@ -60,6 +60,7 @@ module.exports = {
     })
   },
   combineCrc64: async (list) => {
+    console.log('begin combine crc64', list);
     let str = '';
     for (let i = 0; i < list.length; i ++) {
       const item = list[i];
