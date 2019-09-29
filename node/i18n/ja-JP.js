@@ -58,6 +58,7 @@ module.exports = {
   'auth.remember': '入力情報の保存',
   'auth.login': 'ログイン',
   'auth.akHistories': 'AK 履歴',
+  'auth.secure': 'HTTPS暗号化',
 
   'auth.authToken': '認証トークン',
   'auth.authToken.tooltip': 'ドキュメントの表示',
