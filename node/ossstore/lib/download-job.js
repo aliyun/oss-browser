@@ -383,14 +383,18 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         });
         self._calPartCRC64Stream(res.stream, partNumber, end - start);
         res.stream.pipe(fileStream).on('finish', async function () {
-          // const buffersAll = Buffer.concat(buffers);
-          // self._calPartCRC64(buffersAll, partNumber);
+          // CRC64 校验返回在前
+          if (!self.crc64List[partNumber - 1]) {
+            const err = new Error();
+            err.message = 'crc64校验失败';
+            throw new Error()
+          }
           concurrency--;
 
           _log_opt[partNumber].end = Date.now();
           checkPoints.Parts[partNumber].done = true;
 
-          console.log(`complete part [${n}] ${self.to.path}`);
+          console.log(`part [${partNumber}] complete: ${self.to.path}`);
 
           self._calProgress(checkPoints);
           var progInfo = util.getPartProgress(checkPoints.Parts)
@@ -480,7 +484,7 @@ DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber, len) {
   const self = this;
   const start = new Date();
   self.crc64Promise.push(util.getStreamCrc64(streamCpy).then(data => {
-      console.log(`part ${partNumber} crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`);
+      console.log(`part [${partNumber}] crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`);
       self.crc64List[partNumber - 1] = {
         crc64: data,
         len: len
