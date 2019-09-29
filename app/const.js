@@ -34,6 +34,7 @@ angular.module('web')
       KEY_REMEMBER: 'auth-remember',
       SHOW_HIS: 'show-his',
       SHOW_REQUEST_PAY: 'show-request-pay',
+      SHOW_SECURE: 'show-secure',
 
       IMM_DOC_PREVIEW_LINK: 'https://help.aliyun.com',
       IMM_DOC_TYPES: [
@@ -43,7 +44,7 @@ angular.module('web')
         // 'xls','xlt','et','ett','xlsx','xltx','csv','xlsb','xlsm','xltm',
         // //文字文件：
         // 'doc','dot','wps','wpt','docx','dotx','docm','dotm',
-        //其他格式文件： 
+        //其他格式文件：
         'pdf',
         //'lrc','c','cpp','h','asm','s','java','asp','bat','bas','prg','cmd','rtf','txt','log','xml','htm','html',
       ],
