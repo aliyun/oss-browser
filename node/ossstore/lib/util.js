@@ -56,7 +56,7 @@ function printPartTimeLine(opt){
 }
 
 
-function checkFileHash(self, filePath, hashCrc64ecma,fileMd5, fn) {
+function checkFileHash(filePath, hashCrc64ecma,fileMd5, fn) {
   //console.log(filePath, ',,,,,,,,,,,,,,,,,')
   if(hashCrc64ecma){
       var startTime = new Date();

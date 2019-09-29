@@ -15,7 +15,7 @@ module.exports = {
 
   headObject: headObject,
   computeMaxConcurrency: computeMaxConcurrency,
-  checkFileHash : util.checkFileHash,
+  // checkFileHash : util.checkFileHash,
 
   getPartProgress: getPartProgress,
 
