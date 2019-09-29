@@ -383,12 +383,11 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         });
         self._calPartCRC64Stream(res.stream, partNumber, end - start);
         res.stream.pipe(fileStream).on('finish', async function () {
-          // CRC64 校验返回在前
-          if (!self.crc64List[partNumber - 1]) {
-            const err = new Error();
-            err.message = 'crc64校验失败';
-            throw new Error()
-          }
+          // if (!self.crc64List[partNumber - 1]) {
+          //   const err = new Error();
+          //   err.message = 'crc64校验失败';
+          //   throw new Error()
+          // }
           concurrency--;
 
           _log_opt[partNumber].end = Date.now();
@@ -491,6 +490,8 @@ DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber, len) {
       }
     }).catch(err => {
       self.message = '分片校验失败';
+      checkPoints.Parts[partNumber].loaded = 0;
+      checkPoints.Parts[partNumber].done = false;
       console.error(self.message, self.to.path);
       self._changeStatus('failed');
       self.emit('error', err);
