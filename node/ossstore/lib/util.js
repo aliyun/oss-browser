@@ -231,6 +231,12 @@ function getBufferCrc64 (buffer, fn) {
   })
 }
 
+function getStreamCrc64(s, fn) {
+  CRC64.crc64Stream(s, function(err ,data) {
+    fn(err, data)
+  })
+}
+
 function closeFD(fd) {
   fs.close(fd, (err) => {
     if (err) {

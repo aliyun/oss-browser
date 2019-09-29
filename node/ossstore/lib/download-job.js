@@ -8,6 +8,7 @@ var util = require('./download-job-util');
 var commonUtil = require('./util');
 var RETRYTIMES = commonUtil.getRetryTimes();
 var fdSlicer = require('fd-slicer');
+var stream = require('stream');
 
 function getNextPart(chunks) {
   return chunks.shift();
@@ -373,16 +374,17 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           return;
         }
         const fileStream = self.slicer.createWriteStream({start: start});
-        const buffers = [];
+        // const buffers = [];
         res.stream.on('data', function (chunk) {
-          buffers.push(chunk);
+          // buffers.push(chunk);
           checkPoints.Parts[partNumber].done = false;
           checkPoints.Parts[partNumber].loaded = checkPoints.Parts[partNumber].loaded + chunk.length;
           self._calProgress(checkPoints);
         });
+        self._calPartCRC64Stream(res.stream, partNumber, end - start);
         res.stream.pipe(fileStream).on('finish', async function () {
-          const buffersAll = Buffer.concat(buffers);
-          self._calPartCRC64(buffersAll, partNumber);
+          // const buffersAll = Buffer.concat(buffers);
+          // self._calPartCRC64(buffersAll, partNumber);
           concurrency--;
 
           _log_opt[partNumber].end = Date.now();
@@ -448,16 +450,36 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
   }
 };
 
+// DownloadJob.prototype._calPartCRC64 = function (buffersAll, partNumber) {
+//   const self = this;
+//   const len = buffersAll.length;
+//   const start = new Date();
+//   self.crc64Promise.push(util.getBufferCrc64(buffersAll).then(data => {
+//       console.log(`part ${partNumber} crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`);
+//       self.crc64List[partNumber - 1] = {
+//         crc64: data,
+//         len: len
+//       }
+//     }).catch(err => {
+//       self.message = '分片校验失败';
+//       console.error(self.message, self.to.path);
+//       self._changeStatus('failed');
+//       self.emit('error', err);
+//     })
+//   );
+// }
+
+
 /**
  * 异步计算分片crc64
- * @param buffersAll
+ * @param s
  * @private
  */
-DownloadJob.prototype._calPartCRC64 = function (buffersAll, partNumber) {
+DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber, len) {
+  var streamCpy = s.pipe(new stream.PassThrough());
   const self = this;
-  const len = buffersAll.length;
   const start = new Date();
-  self.crc64Promise.push(util.getBufferCrc64(buffersAll).then(data => {
+  self.crc64Promise.push(util.getStreamCrc64(streamCpy).then(data => {
       console.log(`part ${partNumber} crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`);
       self.crc64List[partNumber - 1] = {
         crc64: data,

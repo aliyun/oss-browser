@@ -36,7 +36,25 @@ module.exports = {
       } catch(e) {
         console.error('crc64 function error')
         var error = new Error();
-        error.message = 'CRC64模块加载失败请关闭CRC64文件校验';
+        error.message = 'CRC64模块加载失败';
+        reject(error);
+      }
+    })
+  },
+  getStreamCrc64: s => {
+    return new Promise((resolve, reject) => {
+      try {
+        util.getStreamCrc64(s, (err, data) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(data)
+          }
+        });
+      } catch(e) {
+        console.error('crc64 function error')
+        var error = new Error();
+        error.message = 'CRC64模块加载失败';
         reject(error);
       }
     })
