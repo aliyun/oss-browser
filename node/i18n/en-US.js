@@ -59,6 +59,7 @@ module.exports = {
   'auth.remember': 'Remember',
   'auth.login': 'Login',
   'auth.akHistories': 'AK Histories',
+  'auth.secure': 'HTTPS encryption',
 
   'auth.authToken': 'Auth-Token',
   'auth.authToken.tooltip': 'View document',

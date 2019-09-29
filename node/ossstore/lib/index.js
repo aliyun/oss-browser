@@ -44,7 +44,6 @@ function OssStore(config) {
     return;
   }
 
-
   if (this._config.stsToken) {
     this.oss = new ALYD.OSS({
       accessKeyId: this._config.stsToken.Credentials.AccessKeyId,
@@ -66,7 +65,6 @@ function OssStore(config) {
       cname: this._config.cname,
       timeout: TIMEOUT,
       isRequestPay: localStorage.getItem("show-request-pay") === 'YES' ? true : false
-      // secure: true
     });
   }
   else {
@@ -88,8 +86,7 @@ function OssStore(config) {
       endpoint: this._config.endpoint,
       cname: this._config.cname,
       timeout: TIMEOUT,
-      isRequestPay: localStorage.getItem("show-request-pay") === 'YES' ? true : false
-      // secure: true
+      isRequestPay: localStorage.getItem("show-request-pay") === 'YES' ? true : false,
     });
   }
 

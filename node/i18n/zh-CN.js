@@ -59,6 +59,7 @@ module.exports = {
   'auth.remember': '记住秘钥',
   'auth.login': '登入',
   'auth.akHistories': 'AK历史',
+  'auth.secure': 'HTTPS加密',
 
   'auth.authToken': '授权码',
   'auth.authToken.tooltip': '点击查看帮助',

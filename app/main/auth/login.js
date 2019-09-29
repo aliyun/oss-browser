@@ -2,11 +2,12 @@ angular.module('web')
   .controller('loginCtrl', ['$scope', '$rootScope', '$translate', 'Auth', 'AuthInfo', '$timeout', '$location', 'Const', 'Dialog', 'Toast', 'Cipher', 'settingsSvs',
     function ($scope, $rootScope, $translate, Auth, AuthInfo, $timeout, $location, Const, Dialog, Toast, Cipher, settingsSvs) {
 
-      var DEF_EP_TPL = 'https://{region}.aliyuncs.com';
+      var DEF_EP_TPL = 'http://{region}.aliyuncs.com';
 
       var KEY_REMEMBER = Const.KEY_REMEMBER;
       var SHOW_HIS = Const.SHOW_HIS;
       var SHOW_REQUEST_PAY = Const.SHOW_REQUEST_PAY;
+      var SHOW_SECURE = Const.SHOW_SECURE;
       var KEY_AUTHTOKEN = 'key-authtoken';
       var regions = angular.copy(Const.regions);
 
@@ -17,7 +18,8 @@ angular.module('web')
         flags: {
           remember: 'NO',
           showHis: 'NO',
-          requestpaystatus: 'NO'
+          requestpaystatus: 'NO',
+          secure: 'NO'
         },
         item: {
           eptpl: DEF_EP_TPL,
@@ -41,7 +43,7 @@ angular.module('web')
       });
 
       $scope.$watch('item.eptpl', function (v) {
-        $scope.eptplType = (v == DEF_EP_TPL) ? 'default' : 'customize';
+        $scope.eptplType = v.indexOf('{region}.aliyuncs.com' > -1) ? 'default' : 'customize';
       });
 
       // $scope.$watch('item.eptpl', function(v){
@@ -131,8 +133,11 @@ angular.module('web')
 
         //requestPay状态
         $scope.flags.requestpaystatus = localStorage.getItem(SHOW_REQUEST_PAY) || 'NO';
-        angular.extend($scope.item, AuthInfo.getRemember());
 
+        // 是否使用https
+        $scope.flags.secure = localStorage.getItem(SHOW_SECURE) || 'NO';
+
+        angular.extend($scope.item, AuthInfo.getRemember());
 
         //临时token
         $scope.item.authToken = localStorage.getItem(KEY_AUTHTOKEN) || '';
@@ -152,8 +157,15 @@ angular.module('web')
         });
 
         $scope.$watch('flags.requestpaystatus', function (v) {
-          console.log(v)
           localStorage.setItem(SHOW_REQUEST_PAY, v);
+        });
+
+        $scope.$watch('flags.secure', function (v) {
+          localStorage.setItem(SHOW_SECURE, v);
+          if ( $scope.eptplType === 'default') {
+            var secure = v === 'YES';
+            $scope.item.eptpl = $scope.item.eptpl.replace(/^https?/, secure ? 'https' : 'http');
+          }
         });
       }
 
@@ -205,6 +217,9 @@ angular.module('web')
         if (!data.requestpaystatus) {
           data.requestpaystatus = localStorage.getItem(SHOW_REQUEST_PAY) || 'NO';
         }
+
+        data.secure = localStorage.getItem(SHOW_SECURE) || 'NO';
+
         //trim password
         if (data.secret) data.secret = data.secret.trim();
 
