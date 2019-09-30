@@ -414,6 +414,9 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
             downloadPart(getNextPart(chunks));
           }
         })
+          .on('error', function (err) {
+            throw err;
+          })
       }).catch(function (err) {
         console.error('download error', err)
         checkPoints.Parts[partNumber].loaded = 0;
