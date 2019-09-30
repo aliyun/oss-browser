@@ -422,10 +422,10 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
             downloadPart(getNextPart(chunks));
           }
         })
-          .on('error', function (err) {
-            throw err;
-          })
-      }).catch(function (err) {
+          .on('error', _handleError)
+      }).catch(_handleError);
+
+      function _handleError(err) {
         console.error('download error', err)
         checkPoints.Parts[partNumber].loaded = 0;
         checkPoints.Parts[partNumber].done = false;
@@ -459,7 +459,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
             doDownload(n);
           }, 2000);
         }
-      });
+      }
     }
   }
 };
