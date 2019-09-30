@@ -377,12 +377,20 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         // const buffers = [];
         res.stream.on('data', function (chunk) {
           // buffers.push(chunk);
+          if (self.stopFlag) {
+            res.stream.destroy();
+            return;
+          }
           checkPoints.Parts[partNumber].done = false;
           checkPoints.Parts[partNumber].loaded = checkPoints.Parts[partNumber].loaded + chunk.length;
           self._calProgress(checkPoints);
         });
         self._calPartCRC64Stream(res.stream, partNumber, end - start);
         res.stream.pipe(fileStream).on('finish', async function () {
+          if (self.stopFlag) {
+            return;
+          }
+          console.log('finish');
           // if (!self.crc64List[partNumber - 1]) {
           //   const err = new Error();
           //   err.message = 'crc64校验失败';
@@ -486,6 +494,9 @@ DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber, len) {
   const self = this;
   const start = new Date();
   const res = util.getStreamCrc64(streamCpy).then(data => {
+    if (self.stopFlag) {
+      return;
+    }
     console.log(`part [${partNumber}] crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`);
     self.crc64List[partNumber - 1] = {
       crc64: data,
