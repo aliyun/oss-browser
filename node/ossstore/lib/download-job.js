@@ -337,7 +337,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
 
     var partNumber = n + 1;
     if (checkPoints.Parts[partNumber].done) {
-      console.error(`part [${n}] has finished`);
+      console.log(`part [${n}] has finished`);
       return;
     }
 
