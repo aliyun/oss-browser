@@ -85,6 +85,8 @@ module.exports = {
 
 
 function getFreeDiskSize(p, fn){
+  var stats = fs.statSync(p)
+  var fileSize = stats.size;
 
   if(os.platform()=='win32'){
     //windows
@@ -107,7 +109,7 @@ function getFreeDiskSize(p, fn){
       }catch(e){
 
       }
-      if(num!=null)fn(null, num)
+      if (num != null) fn(null, num - fileSize);
       else fn(new Error('Failed to get free disk size, path='+p))
     });
   }else{
@@ -141,7 +143,7 @@ function getFreeDiskSize(p, fn){
         }
       }catch(e){}
 
-      if(size!=null)fn(null, size);
+      if(size!=null)fn(null, size - fileSize);
       else fn(new Error('Failed to get free disk size, path='+p))
     });
   }

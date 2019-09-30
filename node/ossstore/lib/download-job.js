@@ -547,19 +547,18 @@ DownloadJob.prototype._complete = async function (tmpName, hashCrc64ecma, checkP
     console.log('combine crc64  use: ' + ((+new Date()) - start) + 'ms');
     if (res === hashCrc64ecma) {
       //临时文件重命名为正式文件
-      fs.rename(tmpName, self.to.path, function (err) {
-        if (err) {
-          console.error(err, self.to.path);
-          throw err;
-        } else {
-          self._changeStatus('finished');
-          //self.emit('progress', progCp);
-          self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
-          self.emit('complete');
-          util.closeFD(self.fd);
-          console.log('download: ' + self.to.path + ' %celapse', 'background:green;color:white', self.endTime - self.startTime, 'ms')
-        }
-      });
+      try {
+        fs.renameSync(tmpName, self.to.path);
+      } catch (err) {
+        err.message = '文件重命名失败';
+        throw err;
+      }
+      self._changeStatus('finished');
+      //self.emit('progress', progCp);
+      self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
+      self.emit('complete');
+      util.closeFD(self.fd);
+      console.log('download: ' + self.to.path + ' %celapse', 'background:green;color:white', self.endTime - self.startTime, 'ms')
     } else {
       const error = new Error();
       error.message = '文件校验不匹配，请删除文件重新下载';
