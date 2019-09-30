@@ -295,7 +295,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
 
   //之前每个part都已经全部下载完成，状态还没改成完成的, 这种情况出现几率极少。
   if (chunks.length == 0) {
-    slef._calProgress(checkPoints);
+    self._calProgress(checkPoints);
     self._changeStatus('verifying');
     await self._complete(tmpName, hashCrc64ecma, checkPoints);
     return;
