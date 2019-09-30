@@ -189,7 +189,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
 DownloadJob.prototype.startDownload = async function (checkPoints) {
   var self = this;
 
-  var _log_opt = {}
+  self._log_opt = {}
 
   var chunkNum = 0;
   var chunkSize = 0;
@@ -337,7 +337,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
 
     var partNumber = n + 1;
     if (checkPoints.Parts[partNumber].done) {
-      console.error('tmd', n);
+      console.error(`part [${n}] has finished`);
       return;
     }
 
@@ -360,7 +360,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         return;
       }
 
-      _log_opt[partNumber] = {
+      self._log_opt[partNumber] = {
         start: Date.now()
       };
 
@@ -390,7 +390,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           // }
           concurrency--;
 
-          _log_opt[partNumber].end = Date.now();
+          self._log_opt[partNumber].end = Date.now();
           checkPoints.Parts[partNumber].done = true;
 
           console.log(`part [${partNumber}] complete: ${self.to.path}`);
@@ -404,7 +404,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
 
             // 确保所有crc64已经校验完成
             await self._complete(tmpName, hashCrc64ecma, checkPoints);
-            util.printPartTimeLine(_log_opt);
+            util.printPartTimeLine(self._log_opt);
           } else {
             //self.emit('progress', progCp);
             self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
