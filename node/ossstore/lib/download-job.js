@@ -313,7 +313,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
   if (self.stopFlag) {
     return;
   }
-  const fd = fs.openSync(tmpName, 'a+');
+  const fd = fs.openSync(tmpName, 'r+');
   self.slicer = fdSlicer.createFromFd(fd);
   self.fd = fd;
 
