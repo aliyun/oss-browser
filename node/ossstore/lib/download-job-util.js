@@ -109,7 +109,7 @@ function getFreeDiskSize(p, fn){
       }catch(e){
 
       }
-      if (num != null) fn(null, num - fileSize);
+      if (num != null) fn(null, num + fileSize);
       else fn(new Error('Failed to get free disk size, path='+p))
     });
   }else{
@@ -143,7 +143,7 @@ function getFreeDiskSize(p, fn){
         }
       }catch(e){}
 
-      if(size!=null)fn(null, size - fileSize);
+      if(size!=null)fn(null, size + fileSize);
       else fn(new Error('Failed to get free disk size, path='+p))
     });
   }
