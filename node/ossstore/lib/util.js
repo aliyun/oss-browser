@@ -176,7 +176,7 @@ function parseOssPath(osspath) {
 }
 
 function getRetryTimes() {
-  return 10
+  return 5
 }
 
 function createFileIfNotExists(name) {

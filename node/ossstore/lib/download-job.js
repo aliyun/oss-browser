@@ -390,12 +390,14 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           if (self.stopFlag) {
             return;
           }
-          console.log('finish');
-          // if (!self.crc64List[partNumber - 1]) {
-          //   const err = new Error();
-          //   err.message = 'crc64校验失败';
-          //   throw new Error()
-          // }
+          // 判断分片下载长度是否正确
+          if (fileStream.bytesWritten !== end - start) {
+            const error = new Error();
+            error.message = '分片下载长度不匹配';
+            error.code = 'InvalidPartLength';
+            _handleError(error);
+            return;
+          }
           concurrency--;
 
           self._log_opt[partNumber].end = Date.now();
