@@ -298,10 +298,12 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           // util.closeFD(self.fd);
           return;
         }
-        const fileStream = self.slicer.createWriteStream({
-          start: start,
-        });
+        // const fileStream = self.slicer.createWriteStream({
+        //   start: start,
+        // });
+        // const st = new Date();
         let bufs = [];
+        // console.log(new Date() - st, 'allocUnsafe');
         res.stream.on('data', function (chunk) {
           // buffers.push(chunk);
           if (self.stopFlag) {
@@ -310,6 +312,10 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           }
           // checkPoints.Parts[partNumber].data.push(chunk);
           bufs.push(chunk);
+          // const st = new Date();
+          // buf.fill(chunk, checkPoints.Parts[partNumber].loaded);
+          // console.log(new Date() - st, 'fill', len);
+          // len = len + chunk.length;
             // Buffer.concat([checkPoints.Parts[partNumber].data, chunk]);
           checkPoints.Parts[partNumber].done = false;
           checkPoints.Parts[partNumber].loaded = checkPoints.Parts[partNumber].loaded + chunk.length;
@@ -318,27 +324,18 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         res.stream.on('end', async function() {
           checkPoints.Parts[partNumber].done = true;
           // checkPoints.Parts[partNumber].data = Buffer.concat(bufs);
-          self.dataCache[partNumber] = Buffer.concat(bufs);
-          bufs = [];
+          self.dataCache[partNumber] = bufs;
+          bufs = null;
           console.log(`part [${partNumber}] complete: ${self.to.path}`);
           self._calProgress(checkPoints);
-          var progInfo = util.getPartProgress(checkPoints.Parts)
-          if (progInfo.done == progInfo.total) {
-            //下载完成
-            //检验MD5
-            self._changeStatus('verifying');
-            // 确保所有crc64已经校验完成
-            await self._complete(tmpName, hashCrc64ecma, checkPoints);
-            // util.printPartTimeLine(self._log_opt);
-          } else {
-            self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
-            if (self.stopFlag) {
-              return;
-            }
-            downloadPart(getNextPart(chunks));
-            writePartData();
+          if (self.stopFlag) {
+            return;
           }
+          writePartData();
         })
+        if (hasNextPart(chunks) && concurrency < self.maxConcurrency) {
+          downloadPart(getNextPart(chunks));
+        }
         self._calPartCRC64Stream(res.stream, partNumber, end - start);
 
         return false;
@@ -364,13 +361,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           self._calProgress(checkPoints);
           var progInfo = util.getPartProgress(checkPoints.Parts)
           if (progInfo.done == progInfo.total) {
-            //下载完成
-            //检验MD5
-            self._changeStatus('verifying');
 
-            // 确保所有crc64已经校验完成
-            await self._complete(tmpName, hashCrc64ecma, checkPoints);
-            util.printPartTimeLine(self._log_opt);
           } else {
             //self.emit('progress', progCp);
             self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
@@ -383,11 +374,16 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           .on('error', _handleError)
       }).catch(_handleError);
 
-      function writePartData() {
+      async function writePartData() {
         const { writing, writePos, checkPoints } = self;
         console.log(writePos, chunkNum);
         if (writePos > chunkNum) {
-          util.closeFD(self.fd);
+          //下载完成
+          //检验MD5
+          self._changeStatus('verifying');
+
+          // 确保所有crc64已经校验完成
+          await self._complete(tmpName, hashCrc64ecma, checkPoints);
           return false;
         }
         // 保证只有一个写操作
@@ -398,17 +394,18 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           return false;
         }
         self.writing = true;
-        fs.write(self.fd, self.dataCache[writePos], 0, checkPoints.Parts[writePos].loaded, function() {
+        fs.write(self.fd, Buffer.concat(self.dataCache[writePos]), 0, checkPoints.Parts[writePos].loaded, function() {
           self.writing = false;
-          self.writePos = self.writePos + 1;
           self.dataCache[writePos] = null;
-          // self._writePartData();
+          self.writePos = self.writePos + 1;
           writePartData();
           // 并发数减小
           concurrency--;
 
           // 下载下一个分片
-          downloadPart(getNextPart(chunks));
+          if (hasNextPart(chunks) && concurrency < self.maxConcurrency) {
+            downloadPart(getNextPart(chunks));
+          }
         })
       }
 
