@@ -82,6 +82,8 @@ DownloadJob.prototype.start = function () {
     //从头开始
     this.checkPoints = {};
     this.crc64Str = '';
+    this.crc64Promise = [];
+    this.crc64List = [];
   }
 
   self.message = '';
@@ -373,7 +375,9 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           // util.closeFD(self.fd);
           return;
         }
-        const fileStream = self.slicer.createWriteStream({start: start});
+        const fileStream = self.slicer.createWriteStream({
+          start: start,
+        });
         // const buffers = [];
         res.stream.on('data', function (chunk) {
           // buffers.push(chunk);
@@ -499,11 +503,11 @@ DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber, len) {
     if (self.stopFlag) {
       return;
     }
-    console.log(`part [${partNumber}] crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`);
     self.crc64List[partNumber - 1] = {
       crc64: data,
       len: len
     }
+    console.log(`part [${partNumber}] crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`, self.crc64List);
   }).catch(err => {
     self.message = '分片校验失败';
     self.checkPoints.Parts[partNumber].loaded = 0;
