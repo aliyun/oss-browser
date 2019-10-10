@@ -71,6 +71,11 @@ class DownloadJob extends Base {
 
     this.crc64List = [];
     this.crc64Promise = [];
+
+    // 正在写文件状态
+    this.writing = false;
+    // 文件写入的分片位置
+    this.writePos = 1;
   }
 }
 
@@ -84,6 +89,8 @@ DownloadJob.prototype.start = function () {
     this.crc64Str = '';
     this.crc64Promise = [];
     this.crc64List = [];
+    this.writing = false;
+    this.writePos = 1;
   }
 
   self.message = '';
@@ -101,88 +108,9 @@ DownloadJob.prototype.start = function () {
 
   self.startDownload(self.checkPoints);
 
+  self.dataCache = {};
+
   return self;
-};
-
-DownloadJob.prototype.stop = function () {
-  var self = this;
-  if (self.status == 'stopped') return;
-  self.stopFlag = true;
-  self._changeStatus('stopped');
-  self.speed = 0;
-  self.predictLeftTime = 0;
-  return self;
-};
-
-DownloadJob.prototype.wait = function () {
-  var self = this;
-  if (this.status == 'waiting') return;
-  this._lastStatusFailed = this.status == 'failed';
-  self.stopFlag = true;
-  self._changeStatus('waiting');
-  return self;
-};
-
-DownloadJob.prototype._changeStatus = function (status, retryTimes) {
-  var self = this;
-  self.status = status;
-  self.emit('statuschange', self.status, retryTimes);
-
-  if (status == 'failed' || status == 'stopped' || status == 'finished') {
-    self.endTime = new Date().getTime();
-    //util.closeFD(self.keepFd);
-
-    console.log('clear speed tid, status:', self.status)
-    clearInterval(self.speedTid);
-    self.speed = 0;
-    //推测耗时
-    self.predictLeftTime = 0;
-  }
-};
-
-DownloadJob.prototype.startSpeedCounter = function () {
-  var self = this;
-
-  self.lastLoaded = self.prog.loaded || 0;
-  self.lastSpeed = 0;
-  var tick = 0;
-  clearInterval(self.speedTid);
-  self.speedTid = setInterval(function () {
-
-    if (self.stopFlag) {
-      self.speed = 0;
-      self.predictLeftTime = 0;
-      return;
-    }
-
-    self.speed = self.prog.loaded - self.lastLoaded;
-    // console.log("self.speed.........." + self.speed)
-    if (self.lastSpeed != self.speed) self.emit('speedChange', self.speed);
-    self.lastSpeed = self.speed;
-    self.lastLoaded = self.prog.loaded;
-
-    //推测耗时
-    self.predictLeftTime = self.speed == 0 ? 0 : Math.floor((self.prog.total - self.prog.loaded) / self.speed * 1000);
-
-    //根据speed 动态调整 maxConcurrency, 5秒修改一次
-    tick++;
-    if (tick > 5) {
-      tick = 0;
-      self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.chunkSize, self.maxConcurrency);
-      // console.log('max concurrency:', self.maxConcurrency);
-    }
-  }, 1000);
-
-  // function onFinished() {
-  //   clearInterval(self.speedTid);
-  //   self.speed = 0;
-  //   //推测耗时
-  //   self.predictLeftTime = 0;
-  // }
-  //
-  // self.on('stopped', onFinished);
-  // self.on('error', onFinished);
-  // self.on('complete', onFinished);
 };
 
 /**
@@ -218,13 +146,11 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
     if (err.message.indexOf('Network Failure') != -1
       || err.message.indexOf('getaddrinfo ENOTFOUND') != -1) {
       self.message = 'failed to get oss object meta: ' + err.message;
-      //console.error(self.message);
       console.error(self.message, self.to.path);
       self.stop();
       //self.emit('error', err);
     } else {
       self.message = 'failed to get oss object meta: ' + err.message;
-      //console.error(self.message);
       console.error(self.message, self.to.path);
       self._changeStatus('failed');
       self.emit('error', err);
@@ -236,9 +162,8 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
   //console.log('file md5:',fileMd5);
   hashCrc64ecma = headers['x-oss-hash-crc64ecma'];
 
-  var contentLength = parseInt(headers['content-length']);
+  const contentLength = parseInt(headers['content-length']);
   self.prog.total = contentLength;
-  //console.log('got content length:', contentLength)
   //空文件
   if (self.prog.total == 0) {
 
@@ -278,8 +203,6 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
   // chunkSize = 4 * 1024;
   // self.chunkSize=chunkSize;
 
-  // console.log('chunkSize:',chunkSize);
-
   chunkNum = Math.ceil(self.prog.total / chunkSize);
 
   chunks = [];
@@ -290,7 +213,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
       checkPoints.Parts[i + 1] = {
         PartNumber: i + 1,
         loaded: 0,
-        done: false
+        done: false,
       };
     }
   }
@@ -378,18 +301,47 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         const fileStream = self.slicer.createWriteStream({
           start: start,
         });
-        // const buffers = [];
+        let bufs = [];
         res.stream.on('data', function (chunk) {
           // buffers.push(chunk);
           if (self.stopFlag) {
             res.stream.destroy();
             return;
           }
+          // checkPoints.Parts[partNumber].data.push(chunk);
+          bufs.push(chunk);
+            // Buffer.concat([checkPoints.Parts[partNumber].data, chunk]);
           checkPoints.Parts[partNumber].done = false;
           checkPoints.Parts[partNumber].loaded = checkPoints.Parts[partNumber].loaded + chunk.length;
           self._calProgress(checkPoints);
         });
+        res.stream.on('end', async function() {
+          checkPoints.Parts[partNumber].done = true;
+          // checkPoints.Parts[partNumber].data = Buffer.concat(bufs);
+          self.dataCache[partNumber] = Buffer.concat(bufs);
+          bufs = [];
+          console.log(`part [${partNumber}] complete: ${self.to.path}`);
+          self._calProgress(checkPoints);
+          var progInfo = util.getPartProgress(checkPoints.Parts)
+          if (progInfo.done == progInfo.total) {
+            //下载完成
+            //检验MD5
+            self._changeStatus('verifying');
+            // 确保所有crc64已经校验完成
+            await self._complete(tmpName, hashCrc64ecma, checkPoints);
+            // util.printPartTimeLine(self._log_opt);
+          } else {
+            self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
+            if (self.stopFlag) {
+              return;
+            }
+            downloadPart(getNextPart(chunks));
+            writePartData();
+          }
+        })
         self._calPartCRC64Stream(res.stream, partNumber, end - start);
+
+        return false;
         res.stream.pipe(fileStream).on('finish', async function () {
           if (self.stopFlag) {
             return;
@@ -431,6 +383,35 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           .on('error', _handleError)
       }).catch(_handleError);
 
+      function writePartData() {
+        const { writing, writePos, checkPoints } = self;
+        console.log(writePos, chunkNum);
+        if (writePos > chunkNum) {
+          util.closeFD(self.fd);
+          return false;
+        }
+        // 保证只有一个写操作
+        if (writing) {
+          return false;
+        }
+        if (!checkPoints.Parts[writePos].done) {
+          return false;
+        }
+        self.writing = true;
+        fs.write(self.fd, self.dataCache[writePos], 0, checkPoints.Parts[writePos].loaded, function() {
+          self.writing = false;
+          self.writePos = self.writePos + 1;
+          self.dataCache[writePos] = null;
+          // self._writePartData();
+          writePartData();
+          // 并发数减小
+          concurrency--;
+
+          // 下载下一个分片
+          downloadPart(getNextPart(chunks));
+        })
+      }
+
       function _handleError(err) {
         console.error('download error', err)
         checkPoints.Parts[partNumber].loaded = 0;
@@ -469,6 +450,24 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
     }
   }
 };
+
+DownloadJob.prototype._writePartData = function() {
+  const { writing, writePos, checkPoints } = this;
+  const self = this;
+  // 保证只有一个写操作
+  if (writing) {
+    return false;
+  }
+  this.writing = true;
+  fs.write(this.fd, checkPoints.Parts[writePos].data, function() {
+    self.writing = false;
+    self.writePos = self.writePos + 1;
+    self._writePartData();
+    // 并发数减小
+
+    // 下载下一个分片
+  })
+}
 
 // DownloadJob.prototype._calPartCRC64 = function (buffersAll, partNumber) {
 //   const self = this;
@@ -577,5 +576,86 @@ DownloadJob.prototype._complete = async function (tmpName, hashCrc64ecma, checkP
     self.emit('error', err);
   }
 }
+
+DownloadJob.prototype.stop = function () {
+  var self = this;
+  if (self.status == 'stopped') return;
+  self.stopFlag = true;
+  self._changeStatus('stopped');
+  self.speed = 0;
+  self.predictLeftTime = 0;
+  return self;
+};
+
+DownloadJob.prototype.wait = function () {
+  var self = this;
+  if (this.status == 'waiting') return;
+  this._lastStatusFailed = this.status == 'failed';
+  self.stopFlag = true;
+  self._changeStatus('waiting');
+  return self;
+};
+
+DownloadJob.prototype._changeStatus = function (status, retryTimes) {
+  var self = this;
+  self.status = status;
+  self.emit('statuschange', self.status, retryTimes);
+
+  if (status == 'failed' || status == 'stopped' || status == 'finished') {
+    self.endTime = new Date().getTime();
+    //util.closeFD(self.keepFd);
+
+    console.log('clear speed tid, status:', self.status)
+    clearInterval(self.speedTid);
+    self.speed = 0;
+    //推测耗时
+    self.predictLeftTime = 0;
+  }
+};
+
+DownloadJob.prototype.startSpeedCounter = function () {
+  var self = this;
+
+  self.lastLoaded = self.prog.loaded || 0;
+  self.lastSpeed = 0;
+  var tick = 0;
+  clearInterval(self.speedTid);
+  self.speedTid = setInterval(function () {
+
+    if (self.stopFlag) {
+      self.speed = 0;
+      self.predictLeftTime = 0;
+      return;
+    }
+
+    self.speed = self.prog.loaded - self.lastLoaded;
+    // console.log("self.speed.........." + self.speed)
+    if (self.lastSpeed != self.speed) self.emit('speedChange', self.speed);
+    self.lastSpeed = self.speed;
+    self.lastLoaded = self.prog.loaded;
+
+    //推测耗时
+    self.predictLeftTime = self.speed == 0 ? 0 : Math.floor((self.prog.total - self.prog.loaded) / self.speed * 1000);
+
+    //根据speed 动态调整 maxConcurrency, 5秒修改一次
+    tick++;
+    if (tick > 5) {
+      tick = 0;
+      self.maxConcurrency = util.computeMaxConcurrency(self.speed, self.chunkSize, self.maxConcurrency);
+      // console.log('max concurrency:', self.maxConcurrency);
+    }
+  }, 1000);
+
+  // function onFinished() {
+  //   clearInterval(self.speedTid);
+  //   self.speed = 0;
+  //   //推测耗时
+  //   self.predictLeftTime = 0;
+  // }
+  //
+  // self.on('stopped', onFinished);
+  // self.on('error', onFinished);
+  // self.on('complete', onFinished);
+};
 
 module.exports = DownloadJob;
