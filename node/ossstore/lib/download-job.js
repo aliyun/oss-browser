@@ -7,8 +7,9 @@ var util = require('./download-job-util');
 // var isDebug = process.env.NODE_ENV == 'development';
 var commonUtil = require('./util');
 var RETRYTIMES = commonUtil.getRetryTimes();
-var fdSlicer = require('fd-slicer');
+// var fdSlicer = require('fd-slicer');
 var stream = require('stream');
+const DataCache = require('./DataCache');
 
 function getNextPart(chunks) {
   return chunks.shift();
@@ -16,61 +17,6 @@ function getNextPart(chunks) {
 
 function hasNextPart(chunks) {
   return chunks.length > 0;
-}
-
-var removeArrayItem = function (arrays, from, to) {
-  from=parseInt(from);
-  var rest = arrays.slice((to || from) + 1 || arrays.length);
-  arrays.length = from < 0 ? arrays.length + from : from;
-  return arrays.push.apply(arrays, rest);
-};
-
-var DataCache = function () {
-  this.partNumbersArray = [];  //保存段号
-  this.downloadCaches = new Map();   //key:段号,value:{buffers: 下载的buffer数组,length:buffer数组的总字节长度}
-};
-
-DataCache.prototype.push = function (partNumber, data) {
-  if (!this.downloadCaches.has(partNumber)) {
-    this.partNumbersArray.push(partNumber);
-    var partCache = {"buffers": [data], "length": data.length}
-    this.downloadCaches.set(partNumber, partCache);
-  } else {
-    var partCache = this.downloadCaches.get(partNumber);
-    partCache["buffers"].push(data);
-    partCache['length'] = partCache['length'] + data.length;
-  }
-};
-
-/**
- * 从缓存中删除一个段的下载信息
- * @param partNumber
- */
-DataCache.prototype.cleanPart = function (partNumber) {
-  this.downloadCaches.delete(partNumber);
-  var index = this.partNumbersArray.indexOf(partNumber);
-  if (index >= 0) {
-    removeArrayItem(this.partNumbersArray, index);
-  }
-}
-
-DataCache.prototype.shift = function () {
-  var partNumber = this.partNumbersArray.shift();
-  if (!partNumber) {
-    return undefined;
-  }
-  var result = this.downloadCaches.get(partNumber);
-  this.downloadCaches.delete(partNumber);
-
-  return {
-    partNumber: partNumber,
-    length: result.length,
-    data: Buffer.concat(result['buffers'], result.length)
-  };
-};
-
-DataCache.prototype.size = function () {
-  return this.downloadCaches.size;
 }
 
 
@@ -130,8 +76,8 @@ class DownloadJob extends Base {
 
     // 正在写文件状态
     this.writing = false;
-    // 文件写入的分片位置
-    this.writePos = 1;
+    // // 文件写入的分片位置
+    // this.writePos = 1;
   }
 }
 
@@ -146,7 +92,7 @@ DownloadJob.prototype.start = function () {
     this.crc64Promise = [];
     this.crc64List = [];
     this.writing = false;
-    this.writePos = 1;
+    // this.writePos = 1;
   }
 
   self.message = '';
@@ -267,16 +213,20 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
   for (var i = 0; i < chunkNum; i++) {
     if (!checkPoints.Parts[i + 1] || !checkPoints.Parts[i + 1].done) {
       chunks.push(i);
+      let size = chunkSize;
+      if (i + 1 === chunkNum) {
+        size = self.prog.total % chunkSize;
+      }
       checkPoints.Parts[i + 1] = {
-        PartNumber: i + 1,
-        loaded: 0,
-        done: false,
-        position: p
+        PartNumber: i + 1, // 分片序号
+        loaded: 0,         // 该分片已经写盘长度
+        size: size,   // 该分片需要写盘的长度，用于判断分片是否完成
+        done: false,       // 该分片是否已经下载并完成写盘
+        position: p        // 该分片中下一个 data 需要写入文件中的位置
       };
       p += chunkSize;
     }
   }
-  console.log(checkPoints, 'checkPoints');
 
   //之前每个part都已经全部下载完成，状态还没改成完成的, 这种情况出现几率极少。
   if (chunks.length == 0) {
@@ -299,7 +249,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
     return;
   }
   const fd = fs.openSync(tmpName, 'r+');
-  self.slicer = fdSlicer.createFromFd(fd);
+  // self.slicer = fdSlicer.createFromFd(fd);
   self.fd = fd;
 
   util.getFreeDiskSize(tmpName, function (err, freeDiskSize) {
@@ -355,42 +305,17 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         }
       }).then((res) => {
         if (self.stopFlag) {
-          // util.closeFD(self.fd);
           return;
         }
-        // const fileStream = self.slicer.createWriteStream({
-        //   start: start,
-        // });
-        // const st = new Date();
-        // let bufs = [];
-        // console.log(new Date() - st, 'allocUnsafe');
-        // self.dataCache[partNumber] = [];
         res.stream.on('data', function (chunk) {
-          // buffers.push(chunk);
           if (self.stopFlag) {
             res.stream.destroy();
             return;
           }
-          // checkPoints.Parts[partNumber].data.push(chunk);
           self.dataCache.push(partNumber,chunk);
-          // const st = new Date();
-          // buf.fill(chunk, checkPoints.Parts[partNumber].loaded);
-          // console.log(new Date() - st, 'fill', len);
-          // len = len + chunk.length;
-            // Buffer.concat([checkPoints.Parts[partNumber].data, chunk]);
-          checkPoints.Parts[partNumber].done = false;
-          checkPoints.Parts[partNumber].loaded = checkPoints.Parts[partNumber].loaded + chunk.length;
-          self._calProgress(checkPoints);
-          console.log(self.dataCache, 'cache');
           writePartData();
         });
         res.stream.on('end', async function() {
-          checkPoints.Parts[partNumber].done = true;
-          // checkPoints.Parts[partNumber].data = Buffer.concat(bufs);
-          // self.dataCache[partNumber] = bufs;
-          // bufs = null;
-          console.log(`part [${partNumber}] complete: ${self.to.path}`);
-          self._calProgress(checkPoints);
           if (self.stopFlag) {
             return;
           }
@@ -401,63 +326,15 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           }
         })
         self._calPartCRC64Stream(res.stream, partNumber, end - start);
-
-        return false;
-        res.stream.pipe(fileStream).on('finish', async function () {
-          if (self.stopFlag) {
-            return;
-          }
-          // 判断分片下载长度是否正确
-          if (fileStream.bytesWritten !== end - start) {
-            const error = new Error();
-            error.message = '分片下载长度不匹配';
-            error.code = 'InvalidPartLength';
-            _handleError(error);
-            return;
-          }
-          concurrency--;
-
-          self._log_opt[partNumber].end = Date.now();
-          checkPoints.Parts[partNumber].done = true;
-
-          console.log(`part [${partNumber}] complete: ${self.to.path}`);
-
-          self._calProgress(checkPoints);
-          var progInfo = util.getPartProgress(checkPoints.Parts)
-          if (progInfo.done == progInfo.total) {
-
-          } else {
-            //self.emit('progress', progCp);
-            self.emit('partcomplete', util.getPartProgress(checkPoints.Parts), checkPoints);
-            if (self.stopFlag) {
-              return;
-            }
-            downloadPart(getNextPart(chunks));
-          }
-        })
-          .on('error', _handleError)
       }).catch(_handleError);
 
       async function writePartData() {
-        const { writing, writePos, checkPoints } = self;
-        console.log(writePos, chunkNum);
-        // if (writePos > chunkNum) {
-        //   //下载完成
-        //   //检验MD5
-        //   self._changeStatus('verifying');
-        //
-        //   // 确保所有crc64已经校验完成
-        //   await self._complete(tmpName, hashCrc64ecma, checkPoints);
-        //   return false;
-        // }
+        const { writing, checkPoints } = self;
         // 保证只有一个写操作
         if (writing) {
           return false;
         }
-        // if (!checkPoints.Parts[writePos].done) {
-        //   return false;
-        // }
-        var dataInfo = self.dataCache.shift();
+        const dataInfo = self.dataCache.shift();
         if (!dataInfo) {
           // if (!self.isDownloadOver) {   //带写入的数据已经全部被写入，网络上下载的数据还没有到达.
             return;
@@ -465,22 +342,36 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           //   // return self.cleanup();
           // }
         }
+        const {partNumber, data, length} = dataInfo;
+        const part = checkPoints.Parts[partNumber];
         self.writing = true;
-        fs.write(self.fd, dataInfo.data, 0, dataInfo.length, checkPoints.Parts[dataInfo.partNumber].position, function () {
+        fs.write(self.fd, data, 0, length, part.position, function (err, bytesWritten) {
+          if (err) {
+            console.log(err, 'err');
+            return false;
+          }
+          if (bytesWritten !== length) {
+            console.log('the chunk data are not full written');
+            return false;
+          }
           self.writing = false;
-          // self.dataCache[writePos] = null;
-          // self.writePos = self.writePos + 1;
-          checkPoints.Parts[dataInfo.partNumber].position += dataInfo.length;
-          writePartData();
-
-
-          // 并发数减小
-          // concurrency--;
-
-          //下载下一个分片
-          // if (hasNextPart(chunks) && concurrency < self.maxConcurrency) {
-          //   downloadPart(getNextPart(chunks));
-          // }
+          part.loaded =+ part.loaded + length;
+          part.position += length;
+          if (part.loaded === part.size) {
+            part.done = true;
+          } else {
+            part.done = false;
+          }
+          console.log(checkPoints.Parts, 'checkPoints', self.test);
+          self._calProgress(checkPoints);
+          if (self.prog.loaded === self.prog.total) {
+            //  下载完成
+            self._changeStatus('verifying');
+            // 确保所有crc64已经校验完成
+            self._complete(tmpName, hashCrc64ecma, checkPoints);
+          } else {
+            writePartData();
+          }
         })
       }
 
@@ -522,43 +413,6 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
     }
   }
 };
-
-DownloadJob.prototype._writePartData = function() {
-  const { writing, writePos, checkPoints } = this;
-  const self = this;
-  // 保证只有一个写操作
-  if (writing) {
-    return false;
-  }
-  this.writing = true;
-  fs.write(this.fd, checkPoints.Parts[writePos].data, function() {
-    self.writing = false;
-    self.writePos = self.writePos + 1;
-    self._writePartData();
-    // 并发数减小
-
-    // 下载下一个分片
-  })
-}
-
-// DownloadJob.prototype._calPartCRC64 = function (buffersAll, partNumber) {
-//   const self = this;
-//   const len = buffersAll.length;
-//   const start = new Date();
-//   self.crc64Promise.push(util.getBufferCrc64(buffersAll).then(data => {
-//       console.log(`part ${partNumber} crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`);
-//       self.crc64List[partNumber - 1] = {
-//         crc64: data,
-//         len: len
-//       }
-//     }).catch(err => {
-//       self.message = '分片校验失败';
-//       console.error(self.message, self.to.path);
-//       self._changeStatus('failed');
-//       self.emit('error', err);
-//     })
-//   );
-// }
 
 
 /**
