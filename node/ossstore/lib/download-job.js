@@ -229,7 +229,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
   }
 
   //之前每个part都已经全部下载完成，状态还没改成完成的, 这种情况出现几率极少。
-  if (chunks.length == 0) {
+  if (self.prog.loaded === self.prog.total) {
     self._calProgress(checkPoints);
     self._changeStatus('verifying');
     await self._complete(tmpName, hashCrc64ecma, checkPoints);
@@ -249,7 +249,6 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
     return;
   }
   const fd = fs.openSync(tmpName, 'r+');
-  // self.slicer = fdSlicer.createFromFd(fd);
   self.fd = fd;
 
   util.getFreeDiskSize(tmpName, function (err, freeDiskSize) {
@@ -270,7 +269,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
   function downloadPart(n) {
     if (n == null) return;
 
-    var partNumber = n + 1;
+    const partNumber = n + 1;
     if (checkPoints.Parts[partNumber].done) {
       console.log(`part [${n}] has finished`);
       return;
@@ -295,9 +294,11 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         return;
       }
 
-      self._log_opt[partNumber] = {
-        start: Date.now()
-      };
+      // self._log_opt[partNumber] = {
+      //   start: Date.now()
+      // };
+      const part = checkPoints.Parts[partNumber];
+      console.log(part, 'part download');
 
       self.aliOSS.getStream(objOpt.Key, {
         headers: {
@@ -314,13 +315,21 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           }
           self.dataCache.push(partNumber,chunk);
           writePartData();
-        });
-        res.stream.on('end', async function() {
+        }).on('end', async function() {
           if (self.stopFlag) {
             return;
           }
           // writePartData();
           concurrency --;
+          // 网络下载快于磁盘读写，sleep 防止内存占用过大
+          if (self.dataCache.size() >= chunkNum * 2) {
+            setTimeout(function() {
+              if (hasNextPart(chunks) && concurrency < self.maxConcurrency) {
+                downloadPart(getNextPart(chunks));
+              }
+            }, 1000);
+            return;
+          }
           if (hasNextPart(chunks) && concurrency < self.maxConcurrency) {
             downloadPart(getNextPart(chunks));
           }
@@ -362,7 +371,6 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           } else {
             part.done = false;
           }
-          console.log(checkPoints.Parts, 'checkPoints', self.test);
           self._calProgress(checkPoints);
           if (self.prog.loaded === self.prog.total) {
             //  下载完成
@@ -425,9 +433,6 @@ DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber, len) {
   const self = this;
   const start = new Date();
   const res = util.getStreamCrc64(streamCpy).then(data => {
-    if (self.stopFlag) {
-      return;
-    }
     self.crc64List[partNumber - 1] = {
       crc64: data,
       len: len
@@ -442,6 +447,9 @@ DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber, len) {
     self._changeStatus('failed');
     self.emit('error', err);
   })
+  if (self.stopFlag) {
+    return;
+  }
   self.crc64Promise.push(res);
   return res;
 }
