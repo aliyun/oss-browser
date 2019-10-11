@@ -345,11 +345,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         }
         const dataInfo = self.dataCache.shift();
         if (!dataInfo) {
-          // if (!self.isDownloadOver) {   //带写入的数据已经全部被写入，网络上下载的数据还没有到达.
             return;
-          // } else {
-          //   // return self.cleanup();
-          // }
         }
         const {partNumber, data, length} = dataInfo;
         const part = checkPoints.Parts[partNumber];
