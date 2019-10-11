@@ -18,6 +18,62 @@ function hasNextPart(chunks) {
   return chunks.length > 0;
 }
 
+var removeArrayItem = function (arrays, from, to) {
+  from=parseInt(from);
+  var rest = arrays.slice((to || from) + 1 || arrays.length);
+  arrays.length = from < 0 ? arrays.length + from : from;
+  return arrays.push.apply(arrays, rest);
+};
+
+var DataCache = function () {
+  this.partNumbersArray = [];  //保存段号
+  this.downloadCaches = new Map();   //key:段号,value:{buffers: 下载的buffer数组,length:buffer数组的总字节长度}
+};
+
+DataCache.prototype.push = function (partNumber, data) {
+  if (!this.downloadCaches.has(partNumber)) {
+    this.partNumbersArray.push(partNumber);
+    var partCache = {"buffers": [data], "length": data.length}
+    this.downloadCaches.set(partNumber, partCache);
+  } else {
+    var partCache = this.downloadCaches.get(partNumber);
+    partCache["buffers"].push(data);
+    partCache['length'] = partCache['length'] + data.length;
+  }
+};
+
+/**
+ * 从缓存中删除一个段的下载信息
+ * @param partNumber
+ */
+DataCache.prototype.cleanPart = function (partNumber) {
+  this.downloadCaches.delete(partNumber);
+  var index = this.partNumbersArray.indexOf(partNumber);
+  if (index >= 0) {
+    removeArrayItem(this.partNumbersArray, index);
+  }
+}
+
+DataCache.prototype.shift = function () {
+  var partNumber = this.partNumbersArray.shift();
+  if (!partNumber) {
+    return undefined;
+  }
+  var result = this.downloadCaches.get(partNumber);
+  this.downloadCaches.delete(partNumber);
+
+  return {
+    partNumber: partNumber,
+    length: result.length,
+    data: Buffer.concat(result['buffers'], result.length)
+  };
+};
+
+DataCache.prototype.size = function () {
+  return this.downloadCaches.size;
+}
+
+
 class DownloadJob extends Base {
 
   /**
@@ -108,7 +164,7 @@ DownloadJob.prototype.start = function () {
 
   self.startDownload(self.checkPoints);
 
-  self.dataCache = {};
+  self.dataCache = new DataCache();
 
   return self;
 };
@@ -207,6 +263,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
 
   chunks = [];
 
+  let p = 0;
   for (var i = 0; i < chunkNum; i++) {
     if (!checkPoints.Parts[i + 1] || !checkPoints.Parts[i + 1].done) {
       chunks.push(i);
@@ -214,9 +271,12 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         PartNumber: i + 1,
         loaded: 0,
         done: false,
+        position: p
       };
+      p += chunkSize;
     }
   }
+  console.log(checkPoints, 'checkPoints');
 
   //之前每个part都已经全部下载完成，状态还没改成完成的, 这种情况出现几率极少。
   if (chunks.length == 0) {
@@ -302,8 +362,9 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         //   start: start,
         // });
         // const st = new Date();
-        let bufs = [];
+        // let bufs = [];
         // console.log(new Date() - st, 'allocUnsafe');
+        // self.dataCache[partNumber] = [];
         res.stream.on('data', function (chunk) {
           // buffers.push(chunk);
           if (self.stopFlag) {
@@ -311,7 +372,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
             return;
           }
           // checkPoints.Parts[partNumber].data.push(chunk);
-          bufs.push(chunk);
+          self.dataCache.push(partNumber,chunk);
           // const st = new Date();
           // buf.fill(chunk, checkPoints.Parts[partNumber].loaded);
           // console.log(new Date() - st, 'fill', len);
@@ -320,22 +381,25 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           checkPoints.Parts[partNumber].done = false;
           checkPoints.Parts[partNumber].loaded = checkPoints.Parts[partNumber].loaded + chunk.length;
           self._calProgress(checkPoints);
+          console.log(self.dataCache, 'cache');
+          writePartData();
         });
         res.stream.on('end', async function() {
           checkPoints.Parts[partNumber].done = true;
           // checkPoints.Parts[partNumber].data = Buffer.concat(bufs);
-          self.dataCache[partNumber] = bufs;
-          bufs = null;
+          // self.dataCache[partNumber] = bufs;
+          // bufs = null;
           console.log(`part [${partNumber}] complete: ${self.to.path}`);
           self._calProgress(checkPoints);
           if (self.stopFlag) {
             return;
           }
-          writePartData();
+          // writePartData();
+          concurrency --;
+          if (hasNextPart(chunks) && concurrency < self.maxConcurrency) {
+            downloadPart(getNextPart(chunks));
+          }
         })
-        if (hasNextPart(chunks) && concurrency < self.maxConcurrency) {
-          downloadPart(getNextPart(chunks));
-        }
         self._calPartCRC64Stream(res.stream, partNumber, end - start);
 
         return false;
@@ -377,35 +441,46 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
       async function writePartData() {
         const { writing, writePos, checkPoints } = self;
         console.log(writePos, chunkNum);
-        if (writePos > chunkNum) {
-          //下载完成
-          //检验MD5
-          self._changeStatus('verifying');
-
-          // 确保所有crc64已经校验完成
-          await self._complete(tmpName, hashCrc64ecma, checkPoints);
-          return false;
-        }
+        // if (writePos > chunkNum) {
+        //   //下载完成
+        //   //检验MD5
+        //   self._changeStatus('verifying');
+        //
+        //   // 确保所有crc64已经校验完成
+        //   await self._complete(tmpName, hashCrc64ecma, checkPoints);
+        //   return false;
+        // }
         // 保证只有一个写操作
         if (writing) {
           return false;
         }
-        if (!checkPoints.Parts[writePos].done) {
-          return false;
+        // if (!checkPoints.Parts[writePos].done) {
+        //   return false;
+        // }
+        var dataInfo = self.dataCache.shift();
+        if (!dataInfo) {
+          // if (!self.isDownloadOver) {   //带写入的数据已经全部被写入，网络上下载的数据还没有到达.
+            return;
+          // } else {
+          //   // return self.cleanup();
+          // }
         }
         self.writing = true;
-        fs.write(self.fd, Buffer.concat(self.dataCache[writePos]), 0, checkPoints.Parts[writePos].loaded, function() {
+        fs.write(self.fd, dataInfo.data, 0, dataInfo.length, checkPoints.Parts[dataInfo.partNumber].position, function () {
           self.writing = false;
-          self.dataCache[writePos] = null;
-          self.writePos = self.writePos + 1;
+          // self.dataCache[writePos] = null;
+          // self.writePos = self.writePos + 1;
+          checkPoints.Parts[dataInfo.partNumber].position += dataInfo.length;
           writePartData();
-          // 并发数减小
-          concurrency--;
 
-          // 下载下一个分片
-          if (hasNextPart(chunks) && concurrency < self.maxConcurrency) {
-            downloadPart(getNextPart(chunks));
-          }
+
+          // 并发数减小
+          // concurrency--;
+
+          //下载下一个分片
+          // if (hasNextPart(chunks) && concurrency < self.maxConcurrency) {
+          //   downloadPart(getNextPart(chunks));
+          // }
         })
       }
 
