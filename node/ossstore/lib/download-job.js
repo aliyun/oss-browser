@@ -548,24 +548,33 @@ DownloadJob.prototype.startSpeedCounter = function () {
 
   self.lastLoaded = self.prog.loaded || 0;
   self.lastSpeed = 0;
-  var tick = 0;
+
+  // 防止速度计算发生抖动，
+  self.speeds = [];
+  const tick = 0;
   clearInterval(self.speedTid);
   self.speedTid = setInterval(function () {
 
     if (self.stopFlag) {
       self.speed = 0;
+      self.speeds = [];
       self.predictLeftTime = 0;
       return;
     }
 
     self.speed = self.prog.loaded - self.lastLoaded;
-    // console.log("self.speed.........." + self.speed)
-    if (self.lastSpeed != self.speed) self.emit('speedChange', self.speed);
-    self.lastSpeed = self.speed;
+    self.speeds[tick] = self.speed;
+    const speedsAll = self.speeds.filter(i => typeof i === 'number');
+    let speedAvg = 0;
+    if (speedsAll.length !== 0) {
+      speedAvg = speedsAll.reduce((acc, cur) => acc + cur) /  speedsAll.length;
+    }
+    if (self.lastSpeed != speedAvg) self.emit('speedChange', speedAvg);
+    self.lastSpeed = speedAvg;
     self.lastLoaded = self.prog.loaded;
 
     //推测耗时
-    self.predictLeftTime = self.speed == 0 ? 0 : Math.floor((self.prog.total - self.prog.loaded) / self.speed * 1000);
+    self.predictLeftTime = speedAvg == 0 ? 0 : Math.floor((self.prog.total - self.prog.loaded) / speedAvg * 1000);
 
     //根据speed 动态调整 maxConcurrency, 5秒修改一次
     tick++;
