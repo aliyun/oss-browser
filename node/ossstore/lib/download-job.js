@@ -214,7 +214,9 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
     if (!checkPoints.Parts[i + 1] || !checkPoints.Parts[i + 1].done) {
       chunks.push(i);
       let size = chunkSize;
-      if (i + 1 === chunkNum) {
+      if (chunkNum === 1) {
+        size = chunkSize;
+      } else if (i + 1 === chunkNum) {
         size = self.prog.total % chunkSize;
       }
       checkPoints.Parts[i + 1] = {
@@ -485,8 +487,19 @@ DownloadJob.prototype._complete = async function (tmpName, hashCrc64ecma, checkP
       try {
         fs.renameSync(tmpName, self.to.path);
       } catch (err) {
-        err.message = '文件重命名失败';
-        throw err;
+        const stats = fs.statSync(tmpName);
+        const fileSize = stats.size;
+        if (fileSize === self.prog.total) {
+          // 文件已经下载完, 长度也正确，没必要重新下载，暂停即可
+          console.log('rename error', err);
+          self.message = '文件重名失败: ' + err.message;
+          self.stop();
+          return;
+        } else {
+          // 其他错误，重新下载文件
+          err.message = '文件重命名失败';
+          throw err;
+        }
       }
       self._changeStatus('finished');
       //self.emit('progress', progCp);
@@ -551,7 +564,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
 
   // 防止速度计算发生抖动，
   self.speeds = [];
-  const tick = 0;
+  let tick = 0;
   clearInterval(self.speedTid);
   self.speedTid = setInterval(function () {
 
