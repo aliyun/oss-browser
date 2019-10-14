@@ -226,8 +226,9 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         done: false,       // 该分片是否已经下载并完成写盘
         position: p        // 该分片中下一个 data 需要写入文件中的位置
       };
-      p += chunkSize;
+      // p += chunkSize;
     }
+    p += chunkSize;
   }
 
   //之前每个part都已经全部下载完成，状态还没改成完成的, 这种情况出现几率极少。
