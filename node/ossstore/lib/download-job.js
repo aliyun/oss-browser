@@ -341,10 +341,11 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
 
       function downloadPartByMemoryLimit() {
         // 网络下载快于磁盘读写，sleep 防止内存占用过大
-        if (self.dataCache.size() < chunkNum * 2 && hasNextPart(chunks) && concurrency < self.maxConcurrency) {
+        if (self.dataCache.size() <  self.maxConcurrency && hasNextPart(chunks)) {
           downloadPart(getNextPart(chunks));
         } else {
           setTimeout(() => {
+            console.log(self.dataCache);
             downloadPartByMemoryLimit()
           }, 1000)
         }
@@ -365,11 +366,11 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         self.writing = true;
         fs.write(self.fd, data, 0, length, part.position, function (err, bytesWritten) {
           if (err) {
-            console.log(err, 'err');
+            console.error(err, 'err');
             return false;
           }
           if (bytesWritten !== length) {
-            console.log('the chunk data are not full written');
+            console.error('the chunk data are not full written');
             return false;
           }
           self.writing = false;
