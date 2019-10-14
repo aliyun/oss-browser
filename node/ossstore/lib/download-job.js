@@ -324,6 +324,8 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
             res.stream.destroy();
             return;
           }
+          // 用来计算下载速度
+          self.downloaded = (self.downloaded || 0) + chunk.length;
           self.dataCache.push(partNumber,chunk);
           writePartData();
         }).on('end', async function() {
@@ -566,9 +568,9 @@ DownloadJob.prototype._changeStatus = function (status, retryTimes) {
 };
 
 DownloadJob.prototype.startSpeedCounter = function () {
-  var self = this;
+  const self = this;
 
-  self.lastLoaded = self.prog.loaded || 0;
+  self.lastLoaded = self.downloaded || 0;
   self.lastSpeed = 0;
 
   // 防止速度计算发生抖动，
@@ -584,7 +586,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
       return;
     }
 
-    self.speed = self.prog.loaded - self.lastLoaded;
+    self.speed = self.downloaded - self.lastLoaded;
     self.speeds[tick] = self.speed;
     const speedsAll = self.speeds.filter(i => typeof i === 'number');
     let speedAvg = 0;
@@ -593,7 +595,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
     }
     if (self.lastSpeed != speedAvg) self.emit('speedChange', speedAvg);
     self.lastSpeed = speedAvg;
-    self.lastLoaded = self.prog.loaded;
+    self.lastLoaded = self.downloaded;
 
     //推测耗时
     self.predictLeftTime = speedAvg == 0 ? 0 : Math.floor((self.prog.total - self.prog.loaded) / speedAvg * 1000);
