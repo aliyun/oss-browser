@@ -335,7 +335,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           if (hasNextPart(chunks) && concurrency < self.maxConcurrency) {
             downloadPart(getNextPart(chunks));
           }
-        })
+        }).on('error', _handleError);
         self._calPartCRC64Stream(res.stream, partNumber, end - start);
       }).catch(_handleError);
 
@@ -427,7 +427,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
  * @private
  */
 DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber, len) {
-  var streamCpy = s.pipe(new stream.PassThrough());
+  const streamCpy = s.pipe(new stream.PassThrough());
   const self = this;
   const start = new Date();
   const res = util.getStreamCrc64(streamCpy).then(data => {

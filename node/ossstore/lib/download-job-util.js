@@ -53,7 +53,7 @@ module.exports = {
         });
       } catch(e) {
         console.error('crc64 function error')
-        var error = new Error();
+        const error = new Error();
         error.message = 'CRC64模块加载失败';
         reject(error);
       }
