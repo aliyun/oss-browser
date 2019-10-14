@@ -332,21 +332,21 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           }
           // writePartData();
           concurrency --;
-          // 网络下载快于磁盘读写，sleep 防止内存占用过大
-          if (self.dataCache.size() >= chunkNum * 2) {
-            setTimeout(function() {
-              if (hasNextPart(chunks) && concurrency < self.maxConcurrency) {
-                downloadPart(getNextPart(chunks));
-              }
-            }, 1000);
-            return;
-          }
-          if (hasNextPart(chunks) && concurrency < self.maxConcurrency) {
-            downloadPart(getNextPart(chunks));
-          }
+          downloadPartByMemoryLimit();
         }).on('error', _handleError);
         self._calPartCRC64Stream(res.stream, partNumber, end - start);
       }).catch(_handleError);
+
+      function downloadPartByMemoryLimit() {
+        // 网络下载快于磁盘读写，sleep 防止内存占用过大
+        if (self.dataCache.size() >= chunkNum * 2 && (hasNextPart(chunks) && concurrency < self.maxConcurrency)) {
+          downloadPart(getNextPart(chunks));
+        } else {
+          setTimeout(() => {
+            downloadPartByMemoryLimit()
+          }, 1000)
+        }
+      }
 
       async function writePartData() {
         const { writing, checkPoints } = self;
