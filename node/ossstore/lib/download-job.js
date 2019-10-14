@@ -333,7 +333,6 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
             return;
           }
           // writePartData();
-          concurrency --;
           downloadPartByMemoryLimit();
         }).on('error', _handleError);
         self._calPartCRC64Stream(res.stream, partNumber, end - start);
@@ -341,7 +340,9 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
 
       function downloadPartByMemoryLimit() {
         // 网络下载快于磁盘读写，sleep 防止内存占用过大
-        if (self.dataCache.size() <  self.maxConcurrency && hasNextPart(chunks)) {
+        if (self.dataCache.size() < self.maxConcurrency && hasNextPart(chunks)
+          && concurrency < self.maxConcurrency
+        ) {
           downloadPart(getNextPart(chunks));
         } else {
           setTimeout(() => {
@@ -378,6 +379,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           part.position += length;
           if (part.loaded === part.size) {
             part.done = true;
+            concurrency --;
           } else {
             part.done = false;
           }
