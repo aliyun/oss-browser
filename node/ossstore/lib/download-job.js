@@ -163,6 +163,14 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
   // fileMd5 = headers['content-md5'];//.replace(/(^\"*)|(\"*$)/g, '');
   //console.log('file md5:',fileMd5);
   hashCrc64ecma = headers['x-oss-hash-crc64ecma'];
+  if (self.hashCrc64ecma && self.hashCrc64ecma !== hashCrc64ecma) {
+    // 做下判断，防止原始文件发生变更
+    self.message = '文件已经发生变更，新重新下载该文件';
+    console.error(self.message, self.to.path);
+    self._changeStatus('failed');
+    return false;
+  }
+  self.hashCrc64ecma = hashCrc64ecma;
 
   const contentLength = parseInt(headers['content-length']);
   self.prog.total = contentLength;
