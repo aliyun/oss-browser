@@ -339,7 +339,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
 
       function downloadPartByMemoryLimit() {
         // 网络下载快于磁盘读写，sleep 防止内存占用过大
-        if (self.dataCache.size() >= chunkNum * 2 && (hasNextPart(chunks) && concurrency < self.maxConcurrency)) {
+        if (self.dataCache.size() < chunkNum * 2 && hasNextPart(chunks) && concurrency < self.maxConcurrency) {
           downloadPart(getNextPart(chunks));
         } else {
           setTimeout(() => {
