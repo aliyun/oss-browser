@@ -329,9 +329,6 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           self.dataCache.push(partNumber,chunk);
           writePartData();
         }).on('end', async function() {
-          if (self.stopFlag) {
-            return;
-          }
           // writePartData();
           downloadPartByMemoryLimit();
         }).on('error', _handleError);
@@ -339,6 +336,9 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
       }).catch(_handleError);
 
       function downloadPartByMemoryLimit() {
+        if (self.stopFlag) {
+          return;
+        }
         // 网络下载快于磁盘读写，sleep 防止内存占用过大
         if (hasNextPart(chunks)) {
           if (self.dataCache.size() < self.maxConcurrency && concurrency <= self.maxConcurrency) {
