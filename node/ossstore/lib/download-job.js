@@ -111,7 +111,6 @@ DownloadJob.prototype.start = function () {
 
   self.startDownload(self.checkPoints);
 
-  self.dataCache = new DataCache();
 
   return self;
 };
@@ -136,6 +135,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
   var tmpName = self.to.path + '.download';
   var fileMd5 = '';
   var hashCrc64ecma = '';
+  self.dataCache = new DataCache();
 
   var objOpt = {
     Bucket: self.from.bucket,
