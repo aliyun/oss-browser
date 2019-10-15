@@ -366,15 +366,21 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         const part = checkPoints.Parts[partNumber];
         self.writing = true;
         fs.write(self.fd, data, 0, length, part.position, function (err, bytesWritten) {
+          self.writing = false;
           if (err) {
             console.error(err, 'err');
+            self.message = '文件写入失败, 重新尝试下载: ' + err.message;
+            self.stop();
+            self.dataCache.cleanPart(partNumber);
             return false;
           }
           if (bytesWritten !== length) {
             console.error('the chunk data are not full written');
+            self.message = '文件写入长度不一致，重新下载!';
+            self.stop();
+            self.dataCache.cleanPart(partNumber);
             return false;
           }
-          self.writing = false;
           part.loaded =+ part.loaded + length;
           part.position += length;
           if (part.loaded === part.size) {
