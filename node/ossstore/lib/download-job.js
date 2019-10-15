@@ -495,24 +495,31 @@ DownloadJob.prototype._complete = async function (tmpName, hashCrc64ecma, checkP
     await Promise.all(self.crc64Promise);
     const res = await util.combineCrc64(self.crc64List);
     console.log('combine crc64  use: ' + ((+new Date()) - start) + 'ms');
+    const stats = fs.statSync(tmpName);
+    const fileSize = stats.size;
     if (res === hashCrc64ecma) {
       //临时文件重命名为正式文件
-      try {
-        fs.renameSync(tmpName, self.to.path);
-      } catch (err) {
-        const stats = fs.statSync(tmpName);
-        const fileSize = stats.size;
-        if (fileSize === self.prog.total) {
-          // 文件已经下载完, 长度也正确，没必要重新下载，暂停即可
-          console.log('rename error', err);
-          self.message = '文件重名失败: ' + err.message;
-          self.stop();
-          return;
-        } else {
-          // 其他错误，重新下载文件
-          err.message = '文件重命名失败';
-          throw err;
+      if (fileSize === self.prog.total) {
+        try {
+          fs.renameSync(tmpName, self.to.path);
+        } catch (err) {
+          if (fileSize === self.prog.total) {
+            // 文件已经下载完, 长度也正确，没必要重新下载，暂停即可
+            console.log('rename error', err);
+            self.message = '文件重名失败: ' + err.message;
+            self.stop();
+            return;
+          } else {
+            // 其他错误，重新下载文件
+            err.message = '文件重命名失败';
+            throw err;
+          }
         }
+      } else {
+        const err = new Error();
+        // 文件长度不对，需要重新下载
+        err.message = '文件长度错误，请重新下载';
+        throw err;
       }
       self._changeStatus('finished');
       //self.emit('progress', progCp);
