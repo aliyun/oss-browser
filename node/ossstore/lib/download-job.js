@@ -53,6 +53,7 @@ class DownloadJob extends Base {
     this.from = util.parseOssPath(this._config.from); //oss path
     this.to = util.parseLocalPath(this._config.to); //local path
     this.region = this._config.region;
+    this.hashCrc64ecma = this._config.hashCrc64ecma;
 
     this.prog = this._config.prog || {
       loaded: 0,

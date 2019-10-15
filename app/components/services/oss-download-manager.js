@@ -303,7 +303,8 @@ angular.module('web')
               from: n.from,
               message: n.message,
               status: n.status,
-              prog: n.prog
+              prog: n.prog,
+              hashCrc64ecma: n.hashCrc64ecma
             });
           });
           //console.log('save:', t);
