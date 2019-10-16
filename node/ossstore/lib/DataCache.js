@@ -50,7 +50,7 @@ DataCache.prototype.size = function () {
 }
 
 DataCache.prototype.isEmpty = function() {
-  return partNumbersArray.length === 0 && this.downloadCaches.size === 0;
+  return this.partNumbersArray.length === 0 && this.downloadCaches.size === 0;
 }
 
 module.exports = DataCache;

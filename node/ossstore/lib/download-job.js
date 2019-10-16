@@ -449,11 +449,15 @@ DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber, len) {
   const streamCpy = s.pipe(new stream.PassThrough());
   const self = this;
   const start = new Date();
-  const part = self.checkPoints.Parts[partNumber];
+  const checkPoints = self.checkPoints;
+  const part = checkPoints.Parts[partNumber];
   const res = util.getStreamCrc64(streamCpy).then(data => {
     part.crc64 = data;
     try {
-      const list = this._getCRC64List(self.checkPoints);
+      const list = Object.keys(checkPoints.Parts).sort((a, b) => (+a) - (+b))
+        .map(key => checkPoints.Parts[key])
+        .filter(item => item.crc64)
+        .map(item => ({crc64: item.crc64, len: item.size, partNumber: item.PartNumber}));
       console.log(`part [${partNumber}] crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`, list);
     } catch(e){
       console.error(e);
@@ -651,7 +655,7 @@ DownloadJob.prototype.startSpeedCounter = function () {
 };
 
 DownloadJob.prototype._getCRC64List = function(checkPoints) {
-  const parts = Object.keys(checkPoints.Parts).sort().map(key => checkPoints.Parts[key]);
+  const parts = Object.keys(checkPoints.Parts).sort((a,b) => (+a) - (+b)).map(key => checkPoints.Parts[key]);
   if (parts.every(item => item.done)) {
     return parts.map(item => ({crc64: item.crc64, len: item.size}));
   } else {
