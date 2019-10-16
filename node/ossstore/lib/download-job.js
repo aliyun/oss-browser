@@ -379,7 +379,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
             self.dataCache.cleanPart(partNumber);
             return false;
           }
-          part.loaded =+ part.loaded + length;
+          part.loaded += length;
           part.position += length;
           if (part.loaded === part.size) {
             part.done = true;
@@ -390,6 +390,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           self._calProgress(checkPoints);
           if (self.prog.loaded === self.prog.total) {
             //  下载完成
+            console.info('download finished: ', self.dataCache);
             self._changeStatus('verifying');
             // 确保所有crc64已经校验完成
             self._complete(tmpName, hashCrc64ecma, checkPoints);
