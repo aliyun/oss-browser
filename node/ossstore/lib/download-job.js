@@ -390,7 +390,6 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           self._calProgress(checkPoints);
           if (self.prog.loaded === self.prog.total) {
             //  下载完成
-            console.info('download finished: ', self.dataCache);
             self._changeStatus('verifying');
             // 确保所有crc64已经校验完成
             self._complete(tmpName, hashCrc64ecma, checkPoints);
@@ -453,7 +452,12 @@ DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber, len) {
   const part = self.checkPoints.Parts[partNumber];
   const res = util.getStreamCrc64(streamCpy).then(data => {
     part.crc64 = data;
-    console.log(`part [${partNumber}] crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`,  self.checkPoints.Parts);
+    try {
+      const list = this._getCRC64List(self.checkPoints);
+      console.log(`part [${partNumber}] crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`, list);
+    } catch(e){
+      console.error(e);
+    }
   }).catch(err => {
     self.message = '分片校验失败';
     part.loaded = 0;
@@ -497,7 +501,15 @@ DownloadJob.prototype._complete = async function (tmpName, hashCrc64ecma, checkP
   // 确保所有crc64已经校验完成
   const start = new Date();
   const self = this;
+
   try {
+    if (!self.dataCache.isEmpty()) {
+      const err = new Error();
+      console.error('download finished: ', self.dataCache);
+      err.message = '文件下载错误：has data cache';
+      throw err;
+    }
+
     await Promise.all(self.crc64Promise);
     const crc64List = this._getCRC64List(checkPoints);
     const res = await util.combineCrc64(crc64List);
