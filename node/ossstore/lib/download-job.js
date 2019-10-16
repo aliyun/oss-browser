@@ -160,7 +160,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
   hashCrc64ecma = headers['x-oss-hash-crc64ecma'];
   if (self.hashCrc64ecma && self.hashCrc64ecma !== hashCrc64ecma) {
     // 做下判断，防止原始文件发生变更
-    self.message = '文件已经发生变更，新重新下载该文件';
+    self.message = '文件已经发生变更，请重新下载该文件';
     console.error(self.message, self.to.path);
     self._changeStatus('failed');
     return false;
@@ -309,17 +309,26 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         if (self.stopFlag) {
           return;
         }
+        let dataSize = 0;
         res.stream.on('data', function (chunk) {
           if (self.stopFlag) {
             res.stream.destroy();
             return;
           }
+          dataSize += chunk.length;
           // 用来计算下载速度
           self.downloaded = (self.downloaded || 0) + chunk.length;
           self.dataCache.push(partNumber,chunk);
           writePartData();
         }).on('end', async function() {
-          // writePartData();
+          if (dataSize !== part.size) {
+            let message = "请重新启动下载: download size != part size" ;
+            console.error(message, 'part');
+            const err = new Error();
+            err.message = message;
+            _handleError(err);
+            return;
+          }
           downloadPartByMemoryLimit();
         }).on('error', _handleError);
         self._calPartCRC64Stream(res.stream, partNumber, end - start);
