@@ -322,7 +322,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           writePartData();
         }).on('end', async function() {
           if (dataSize !== part.size) {
-            let message = "请重新启动下载: download size != part size" ;
+            const message = "请重新启动下载: download size != part size" ;
             console.error(message, 'part');
             const err = new Error();
             err.message = message;
@@ -331,7 +331,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           }
           downloadPartByMemoryLimit();
         }).on('error', _handleError);
-        self._calPartCRC64Stream(res.stream, partNumber, end - start);
+        self._calPartCRC64Stream(res.stream, partNumber);
       }).catch(_handleError);
 
       function downloadPartByMemoryLimit() {
@@ -445,7 +445,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
  * @param s
  * @private
  */
-DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber, len) {
+DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber) {
   const streamCpy = s.pipe(new stream.PassThrough());
   const self = this;
   const start = new Date();
