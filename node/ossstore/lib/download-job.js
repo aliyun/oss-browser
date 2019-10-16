@@ -72,13 +72,10 @@ class DownloadJob extends Base {
 
     this.maxConcurrency = parseInt(localStorage.getItem('downloadConcurrecyPartSize') || 15)
 
-    this.crc64List = [];
     this.crc64Promise = [];
 
     // 正在写文件状态
     this.writing = false;
-    // // 文件写入的分片位置
-    // this.writePos = 1;
   }
 }
 
@@ -89,11 +86,8 @@ DownloadJob.prototype.start = function () {
   if (this._lastStatusFailed) {
     //从头开始
     this.checkPoints = {};
-    this.crc64Str = '';
     this.crc64Promise = [];
-    this.crc64List = [];
     this.writing = false;
-    // this.writePos = 1;
   }
 
   self.message = '';
@@ -209,11 +203,6 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
   }
 
   chunkSize = checkPoints.chunkSize || self._config.chunkSize || util.getSensibleChunkSize(self.prog.total);
-
-  // chunkSize = 4 * 1024 * 1024;
-  // chunkSize = 4 * 1024;
-  // self.chunkSize=chunkSize;
-
   chunkNum = Math.ceil(self.prog.total / chunkSize);
 
   chunks = [];
@@ -233,9 +222,9 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         loaded: 0,         // 该分片已经写盘长度
         size: size,   // 该分片需要写盘的长度，用于判断分片是否完成
         done: false,       // 该分片是否已经下载并完成写盘
-        position: p        // 该分片中下一个 data 需要写入文件中的位置
+        position: p,        // 该分片中下一个 data 需要写入文件中的位置
+        crc64: ''           // 该分片中 crc64 值
       };
-      // p += chunkSize;
     }
     p += chunkSize;
   }
@@ -450,16 +439,15 @@ DownloadJob.prototype._calPartCRC64Stream = function (s, partNumber, len) {
   const streamCpy = s.pipe(new stream.PassThrough());
   const self = this;
   const start = new Date();
+  const part = self.checkPoints.Parts[partNumber];
   const res = util.getStreamCrc64(streamCpy).then(data => {
-    self.crc64List[partNumber - 1] = {
-      crc64: data,
-      len: len
-    }
-    console.log(`part [${partNumber}] crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`, self.crc64List);
+    part.crc64 = data;
+    console.log(`part [${partNumber}] crc64 finish use: '${((+new Date()) - start)} ms, crc64 is ${data}`,  self.checkPoints.Parts);
   }).catch(err => {
     self.message = '分片校验失败';
-    self.checkPoints.Parts[partNumber].loaded = 0;
-    self.checkPoints.Parts[partNumber].done = false;
+    part.loaded = 0;
+    part.done = false;
+    part.crc64 = '';
     console.error(self.message, self.to.path, err);
     self.stop();
     self._changeStatus('failed');
@@ -500,7 +488,8 @@ DownloadJob.prototype._complete = async function (tmpName, hashCrc64ecma, checkP
   const self = this;
   try {
     await Promise.all(self.crc64Promise);
-    const res = await util.combineCrc64(self.crc64List);
+    const crc64List = this._getCRC64List(checkPoints);
+    const res = await util.combineCrc64(crc64List);
     console.log('combine crc64  use: ' + ((+new Date()) - start) + 'ms');
     const stats = fs.statSync(tmpName);
     const fileSize = stats.size;
@@ -541,7 +530,7 @@ DownloadJob.prototype._complete = async function (tmpName, hashCrc64ecma, checkP
     }
   } catch (err) {
     self.message = (err.message || err);
-    console.error(self.message, self.to.path, self.crc64List);
+    console.error(self.message, self.to.path, checkPoints);
     self._changeStatus('failed');
     self.emit('error', err);
   }
@@ -636,5 +625,18 @@ DownloadJob.prototype.startSpeedCounter = function () {
   // self.on('error', onFinished);
   // self.on('complete', onFinished);
 };
+
+DownloadJob.prototype._getCRC64List = function(checkPoints) {
+  const parts = Object.keys(checkPoints.Parts).sort().map(key => checkPoints.Parts[key]);
+  if (parts.every(item => item.done)) {
+    return parts.map(item => ({crc64: item.crc64, len: item.size}));
+  } else {
+    const err = new Error();
+    console.error('文件检验失败，请重新下载', checkPoints);
+    err.message = '文件检验失败，请重新下载: get CRC64List error';
+    throw err;
+  }
+}
+
 
 module.exports = DownloadJob;
