@@ -321,18 +321,18 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           self.dataCache.push(partNumber,chunk);
           writePartData();
         }).on('end', async function() {
-          if (dataSize !== part.size) {
-            const message = "请重新启动下载: download size != part size" ;
+          if (dataSize !== part.size && !self.stopFlag) {
+            const message = "重新下载: download size != part size" ;
             console.error(message, 'part');
             const err = new Error();
             err.message = message;
-            _handleError(err);
+            _handleError(err, partNumber);
             return;
           }
           downloadPartByMemoryLimit();
-        }).on('error', _handleError);
+        }).on('error', e => _handleError(e, partNumber));
         self._calPartCRC64Stream(res.stream, partNumber);
-      }).catch(_handleError);
+      }).catch(e => _handleError(e, partNumber));
 
       function downloadPartByMemoryLimit() {
         if (self.stopFlag) {
@@ -369,14 +369,13 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
             console.error(err, 'err');
             self.message = '文件写入失败, 重新尝试下载: ' + err.message;
             self.stop();
-            self.dataCache.cleanPart(partNumber);
             return false;
           }
           if (bytesWritten !== length) {
-            console.error('the chunk data are not full written');
-            self.message = '文件写入长度不一致，重新下载!';
-            self.stop();
-            self.dataCache.cleanPart(partNumber);
+            const err = new Error();
+            err.message = '文件写入长度不一致'
+            console.error('文件写入长度不一致，重新下载');
+            _handleError(err, partNumber);
             return false;
           }
           part.loaded += length;
@@ -399,7 +398,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         })
       }
 
-      function _handleError(err) {
+      function _handleError(err, partNumber) {
         console.error('download error', err)
         checkPoints.Parts[partNumber].loaded = 0;
         checkPoints.Parts[partNumber].done = false;
@@ -413,7 +412,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         }
 
         if (retryCount >= maxRetries) {
-          self.message = `failed to download part [${n}]: ${err.message}`;
+          self.message = `failed to download part [${partNumber}]: ${err.message}`;
           //console.error(self.message);
           console.error(self.message, self.to.path);
           //self._changeStatus('failed');
@@ -421,7 +420,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           //self.emit('error', err);
           //util.closeFD(keepFd);
         } else if (err.code == 'InvalidObjectState') {
-          self.message = `failed to download part [${n}]: ${err.message}`;
+          self.message = `failed to download part [${partNumber}]: ${err.message}`;
           //console.error(self.message);
           console.error(self.message, self.to.path);
           self._changeStatus('failed');
@@ -429,9 +428,9 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           //util.closeFD(keepFd);
         } else {
           retryCount++;
-          console.log(`retry download part [${n}] error:${err}, ${self.to.path}`);
+          console.log(`retry download part [${partNumber}] error:${err}, ${self.to.path}`);
           setTimeout(function () {
-            doDownload(n);
+            doDownload(partNumber - 1);
           }, 2000);
         }
       }
@@ -571,6 +570,8 @@ DownloadJob.prototype.stop = function () {
   self._changeStatus('stopped');
   self.speed = 0;
   self.predictLeftTime = 0;
+  // 清空 cache
+  self.dataCache = new DataCache();
   return self;
 };
 
