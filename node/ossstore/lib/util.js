@@ -20,6 +20,7 @@ module.exports = {
   printPartTimeLine: printPartTimeLine,
   getRetryTimes: getRetryTimes,
   closeFD: closeFD,
+  deleteFileIfExists: deleteFileIfExists,
   createFileIfNotExists: createFileIfNotExists,
   combileCrc64: combileCrc64,
   getBufferCrc64: getBufferCrc64,
@@ -182,6 +183,12 @@ function getRetryTimes() {
 function createFileIfNotExists(name) {
   if (!fs.existsSync(name)) {
     fs.writeFileSync(name, '');
+  }
+}
+
+function deleteFileIfExists(name) {
+  if (fs.existsSync(name)) {
+    fs.unlinkSync(name, '');
   }
 }
 

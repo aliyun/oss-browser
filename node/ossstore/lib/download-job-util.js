@@ -23,6 +23,7 @@ module.exports = {
   printPartTimeLine: util.printPartTimeLine,
 
   closeFD: util.closeFD,
+  deleteFileIfExists: util.deleteFileIfExists,
   getBufferCrc64: buffer => {
     return new Promise((resolve, reject) => {
       try {

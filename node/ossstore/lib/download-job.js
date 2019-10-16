@@ -511,7 +511,7 @@ DownloadJob.prototype._complete = async function (tmpName, hashCrc64ecma, checkP
         } catch (err) {
           if (fileSize === self.prog.total) {
             // 文件已经下载完, 长度也正确，没必要重新下载，暂停即可
-            console.log('rename error', err);
+            console.error('rename error', err);
             self.message = '文件重名失败: ' + err.message;
             self.stop();
             return;
@@ -522,8 +522,8 @@ DownloadJob.prototype._complete = async function (tmpName, hashCrc64ecma, checkP
           }
         }
       } else {
-        const err = new Error();
         // 文件长度不对，需要重新下载
+        const err = new Error();
         err.message = '文件长度错误，请重新下载';
         throw err;
       }
@@ -542,6 +542,7 @@ DownloadJob.prototype._complete = async function (tmpName, hashCrc64ecma, checkP
     self.message = (err.message || err);
     console.error(self.message, self.to.path, checkPoints);
     self._changeStatus('failed');
+    util.deleteFileIfExists(tmpName);
     self.emit('error', err);
   }
 }
@@ -647,6 +648,5 @@ DownloadJob.prototype._getCRC64List = function(checkPoints) {
     throw err;
   }
 }
-
 
 module.exports = DownloadJob;
