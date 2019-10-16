@@ -403,6 +403,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
         console.error('download error', err)
         checkPoints.Parts[partNumber].loaded = 0;
         checkPoints.Parts[partNumber].done = false;
+        self.dataCache.cleanPart(partNumber);
         // TODO code 状态码修复
         if (err.code == 'RequestAbortedError') {
           // 必须用callback 而不是 promise 方式才能 abort 请求;
