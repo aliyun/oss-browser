@@ -300,6 +300,8 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
       // };
       const part = checkPoints.Parts[partNumber];
       console.log(part, 'part download');
+      // 保留原始分片信息，出错后进行重置
+      const originPart = Object.assign({}, part);
 
       self.aliOSS.getStream(objOpt.Key, {
         headers: {
@@ -380,6 +382,13 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           }
           part.loaded += length;
           part.position += length;
+          if (part.loaded > part.size) {
+            console.error(part.loaded, part.size);
+            part.done = false;
+            self.message = '文件写入长度大于实际长度，重新下载';
+            self.stop();
+            return false;
+          }
           if (part.loaded === part.size) {
             part.done = true;
             concurrency --;
@@ -400,8 +409,8 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
 
       function _handleError(err, partNumber) {
         console.error('download error', err)
-        checkPoints.Parts[partNumber].loaded = 0;
-        checkPoints.Parts[partNumber].done = false;
+        // 重置原始状态
+        checkPoints.Parts[partNumber] = originPart;
         self.dataCache.cleanPart(partNumber);
         // TODO code 状态码修复
         if (err.code == 'RequestAbortedError') {
