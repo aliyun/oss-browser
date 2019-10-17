@@ -320,7 +320,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           self.downloaded = (self.downloaded || 0) + chunk.length;
           self.dataCache.push(partNumber,chunk);
           writePartData();
-        }).on('end', async function() {
+        }).on('close', async function() {
           if ((dataSize !== part.size || !res.stream.complete) && !self.stopFlag) {
             const message = "重新下载: download size != part size" ;
             console.error(message, 'part');
