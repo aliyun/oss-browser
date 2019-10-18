@@ -29,7 +29,7 @@ angular.module('web')
 
       maxDownloadJobCount: {
         get: function () {
-          return parseInt(localStorage.getItem('maxDownloadJobCount') || 3);
+          return parseInt(localStorage.getItem('maxDownloadJobCount') || 1);
         },
         set: function (v) {
           return localStorage.setItem('maxDownloadJobCount', v);
@@ -103,7 +103,7 @@ angular.module('web')
       },
       downloadConcurrecyPartSize: {
         get: function () {
-          return parseInt(localStorage.getItem('downloadConcurrecyPartSize') || 15);
+          return parseInt(localStorage.getItem('downloadConcurrecyPartSize') || 5);
         },
         set: function (v) {
           return localStorage.setItem('downloadConcurrecyPartSize', v);

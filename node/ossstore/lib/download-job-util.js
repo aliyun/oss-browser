@@ -235,6 +235,6 @@ function getSensibleChunkSize(size) {
 
 //根据网速调整下载并发量
 function computeMaxConcurrency(speed, chunkSize, lastConcurrency){
-  var downloadConcurrecyPartSize =  parseInt(localStorage.getItem('downloadConcurrecyPartSize') || 15 )
+  var downloadConcurrecyPartSize =  parseInt(localStorage.getItem('downloadConcurrecyPartSize') || 5 )
   return downloadConcurrecyPartSize
 }

@@ -70,7 +70,7 @@ class DownloadJob extends Base {
 
     //console.log('created download job');
 
-    this.maxConcurrency = parseInt(localStorage.getItem('downloadConcurrecyPartSize') || 15)
+    this.maxConcurrency = parseInt(localStorage.getItem('downloadConcurrecyPartSize') || 5)
 
     this.crc64Promise = [];
 
