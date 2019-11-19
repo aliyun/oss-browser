@@ -15,7 +15,7 @@
     "node": "8.2.1"
   },
   "devDependencies": {
-    "angular": "1.5.8",
+    "angular": "1.7.9",
     "angular-bootstrap-contextmenu": "^1.1.0",
     "angular-sanitize": "1.5.8",
     "angular-translate": "^2.15.2",
