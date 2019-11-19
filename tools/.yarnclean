@@ -1,0 +1,14 @@
+*.yaml
+*.md
+*.ts
+*.bak
+*.png
+*.jpg
+*.svg
+*.coffee
+*.map
+tsconfig.json
+LICENSE
+AUTHORS
+Makefile
+package-lock.json
