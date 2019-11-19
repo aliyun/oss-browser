@@ -42,7 +42,7 @@
     "gulp-connect": "^1.0.7",
     "gulp-jshint": "~1.5.0",
     "gulp-load-plugins": "~0.4.0",
-    "jquery": "^2.2.3",
+    "jquery": "^3.4.1",
     "jquery.qrcode": "^1.0.3",
     "karma": "^0.12.1",
     "karma-chrome-launcher": "^0.1.2",
