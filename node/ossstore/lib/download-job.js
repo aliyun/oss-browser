@@ -204,6 +204,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
 
   chunkSize = checkPoints.chunkSize || self._config.chunkSize || util.getSensibleChunkSize(self.prog.total);
   chunkNum = Math.ceil(self.prog.total / chunkSize);
+  const divisible = self.prog.total % chunkSize === 0;
 
   chunks = [];
 
@@ -212,7 +213,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
     if (!checkPoints.Parts[i + 1] || !checkPoints.Parts[i + 1].done) {
       chunks.push(i);
       let size = chunkSize;
-      if (chunkNum === 1) {
+      if (chunkNum === 1 || divisible) {
         size = chunkSize;
       } else if (i + 1 === chunkNum) {
         size = self.prog.total % chunkSize;
