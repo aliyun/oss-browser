@@ -1,6 +1,6 @@
 angular.module('web')
-  .controller('addBucketModalCtrl', ['$scope', '$uibModalInstance', '$translate', 'callback', 'ossSvs2', 'Const', 'Toast',
-    function ($scope, $modalInstance, $translate, callback, ossSvs2, Const, Toast) {
+  .controller('addBucketModalCtrl', ['$scope', '$uibModalInstance', '$translate', 'callback', 'ossSvs2', 'Const', 'Toast', 'Dialog',
+    function ($scope, $modalInstance, $translate, callback, ossSvs2, Const, Toast, Dialog) {
       var T = $translate.instant;
 
       var bucketACL = angular.copy(Const.bucketACL);
@@ -23,6 +23,7 @@ angular.module('web')
         },
         reg: /^[a-z0-9][a-z0-9\-]{1,61}[a-z0-9]$/,
         onRegionChanged: onRegionChanged,
+        onAclChanged: onAclChanged,
         openURL: function(v){
           openExternal(v)
         }
@@ -66,6 +67,13 @@ angular.module('web')
         //   $scope.storageClasses=[{value:'Standard',name:'标准类型'},{value:'IA',name:'低频访问类型'},{value:'Archive',name:'归档类型'}];
         // }
         $scope.item.storageClass = 'Standard';
+      }
+
+      function onAclChanged() {
+        if ($scope.item.acl !== 'private') {
+          let message = T('acl.warn-not-private.' + $scope.item.acl);
+          Dialog.alert('', message);
+        }
       }
 
       function cancel() {
