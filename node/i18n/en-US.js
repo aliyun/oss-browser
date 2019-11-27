@@ -138,6 +138,8 @@ module.exports = {
   'bucket.name': 'Bucket Name',
   'creationTime': 'Creation Time',
   'bucket.add.name.invalid': 'The Bucket name is invalid!',
+  'acl.warn-not-private.public-read': 'If your bucket ACL is <code>public read</code> anyone can access your bucket without prior authentication. We recommend that you set the Bucket ACL to Private. Exercise caution when setting bucket ACLs.',
+  'acl.warn-not-private.public-read-write': 'If your bucket ACL is <code>public read/write</code> anyone can access your bucket without prior authentication. We recommend that you set the Bucket ACL to Private. Exercise caution when setting bucket ACLs.',
 
   'multipart.management': 'Multipart',
   'multipart.description': 'Manage events and fragments that are generated during the multipipart (upload) process.',
