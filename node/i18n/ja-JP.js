@@ -128,6 +128,8 @@ module.exports = {
   'bucket.name': 'バケット名',
   'creationTime': '作成日時',
   'bucket.add.name.invalid': 'バケット名が無効です!',
+  'acl.warn-not-private.public-read': '<code>公開読み取り</code>権限は、匿名でバケット内のデータにアクセスでき、 セキュリティリスクが高くなるため、 非公開 (private) を推奨します。',
+  'acl.warn-not-private.public-read-write': '<code>公開読み書き</code>権限は、匿名でバケット内のデータにアクセスでき、 セキュリティリスクが高くなるため、 非公開 (private) を推奨します。',
 
   'multipart.management': 'マルチパート',
   'multipart.description': 'マルチパート (アップロード) プロセス中に生成されたイベントやフラグメントを管理します',

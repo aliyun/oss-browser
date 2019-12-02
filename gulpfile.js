@@ -3,6 +3,7 @@ var plugins = require("gulp-load-plugins")({lazy: false});
 var fs = require('fs');
 var path = require('path');
 var os =require('os');
+var del = require('del');
 var minimist = require('minimist')
 //var NwBuilder = require('nw-builder');
 //var pkg = require('./package');
@@ -178,17 +179,19 @@ gulp.task('copy-static', function () {
 // });
 
 gulp.task('copy-index', function () {
-  gulp.src(['./app/index.html',
+  return gulp.src(['./app/index.html',
   './main.js',
   './server.js',
   './vendor/*.js',
-  './release-notes.md'])
+  './release-notes.md',
+  './tools/.yarnclean'
+  ])
     .pipe(gulp.dest(DIST));
 });
 
-gulp.task('gen-package', function () {
-  gulp.src(['./package.json'])
-  .on('end', function(){
+gulp.task('gen-package', ['copy-index'], function () {
+  return gulp.src(['./package.json'])
+  .on('end', function(cb){
     var info = require('./package');
 
     delete info.devDependencies;
@@ -206,9 +209,16 @@ gulp.task('gen-package', function () {
 
     try{ fs.statSync(DIST); }catch(e){ fs.mkdirSync(DIST); }
     fs.writeFileSync(DIST+'/package.json', JSON.stringify(info,' ',2));
-    exec('cd dist && cnpm i');
+    exec('cd dist && yarn install --prod && yarn autoclean --force', cb);
   });
 });
+
+gulp.task('remove-redundant', ['gen-package'], function (cb) {
+  return del.sync([
+    'dist/node_modules/protobufjs/dist',
+    'dist/node_modules/aliyun-sdk/dist'
+  ]);
+})
 
 
 
@@ -252,6 +262,6 @@ gulp.task('watch', function () {
 //   livereload: true
 // }));
 
-gulp.task('build', ['js', 'templates', 'css', 'copy-index', 'libJS', 'libCSS', 'copy-fonts','copy-node','copy-docs','copy-icons','copy-static','gen-package']);
+gulp.task('build', ['js', 'templates', 'css', 'copy-index', 'libJS', 'libCSS', 'copy-fonts','copy-node','copy-docs','copy-icons','copy-static','gen-package', 'remove-redundant']);
 
 gulp.task('default', [  'build', 'watch']);

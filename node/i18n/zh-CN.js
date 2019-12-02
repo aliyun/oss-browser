@@ -129,6 +129,8 @@ module.exports = {
   'bucket.name': 'Bucket名称',
   'creationTime': '创建时间',
   'bucket.add.name.invalid': '您输入的Bucket名称无效',
+  'acl.warn-not-private.public-read': '<code>公共读（public-read）</code>权限可以不通过身份验证直接读取您 Bucket 中的数据，安全风险高，为确保您的数据安全，不推荐此配置，建议您选择私有（private）。',
+  'acl.warn-not-private.public-read-write': '<code>公共读写（public-read-write）</code>权限可以不通过身份验证直接读取您 Bucket 中的数据，安全风险高，为确保您的数据安全，不推荐此配置，建议您选择私有（private）。',
 
   'multipart.management': 'Multipart管理',
   'multipart.description': '管理通过Multipart（分块）方式上传过程中产生的事件与碎片。',
