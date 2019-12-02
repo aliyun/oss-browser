@@ -59,6 +59,7 @@ module.exports = {
   'auth.remember': 'Remember',
   'auth.login': 'Login',
   'auth.akHistories': 'AK Histories',
+  'auth.secure': 'HTTPS encryption',
 
   'auth.authToken': 'Auth-Token',
   'auth.authToken.tooltip': 'View document',
@@ -112,6 +113,7 @@ module.exports = {
   'settings.file.info.msg': "put info log file in local ?",
   'settings.connectTimeout':'overtime(ms)',
   'settings.uploadPartSize':'uploadpart size(M)',
+  'settings.downloadConcurrecyPartSize':'download concurrency part number',
   'settings.uploadAndDownloadRetryTimes': 'retry times',
 
     //address bar

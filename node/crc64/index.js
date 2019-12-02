@@ -39,4 +39,28 @@ obj.crc64FileProcess = function(p, fn){
   });
 }
 
+obj.crc64StreamProcess = function(p, fn){
+  // fs.stat(p, function(err, data){
+  //   if(err)fn(err);
+  //   else{
+  //     if(data.size > 100 * 1024){
+  //       var proc = cp.fork(path.join(__dirname, 'fork.js'), [p])
+  //       proc.on('message', function(data){
+  //         fn(data.error, data.data)
+  //       });
+  //     }else{
+  //       obj.crc64Stream(p,fn);
+  //     }
+  //   }
+  // });
+  obj.crc64Stream(p,fn);
+}
+
+obj.combileCrc64Process = function (str1, str2, len2 ,fn) {
+  obj.combileCrc64Process(str1, str2, len2, function(err, data) {
+    fn(err, data)
+  })
+}
+
+
 module.exports = obj;

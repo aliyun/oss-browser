@@ -66,7 +66,7 @@
             </label>
             <div class="col-sm-8" style="padding:0">
 
-              <div ng-class="{'col-sm-12':eptplType=='default','col-sm-4':eptplType=='customize'||eptplType=='cname'}">
+              <div ng-class="{'col-sm-9':eptplType=='default','col-sm-4':eptplType=='customize'||eptplType=='cname'}">
                 <select class="form-control" ng-model="eptplType" ng-change="eptplChange(eptplType)">
                   <option value="default">{{'default'|translate}} ({{'public.cloud'|translate}})
                   </option>
@@ -74,18 +74,24 @@
                   <option value="cname">cname</option>
                 </select>
               </div>
+              <div ng-if="eptplType=='default'" class="col-sm-3" style="height:34px">
+                <label style="vertical-align: -webkit-baseline-middle; margin-bottom: 0;">
+                  <input type="checkbox" ng-model="flags.secure" ng-true-value="'YES'" ng-false-value="'NO'">
+                  {{'auth.secure'|translate}}
+                </label>
+              </div>
               <div style="display:flex;justify-content: space-around" class="col-sm-8"
                    style="padding-left:0" ng-if="eptplType=='customize'"
                    ng-class="{'has-error':!form1.endpoint.$valid}">
                 <input type="text" required ng-model="item.eptpl" ng-pattern="/^http(s)?\:\/\//"
-                       class="form-control" id="endpoint" name="endpoint" placeholder="http://">
+                       class="form-control" id="endpoint" name="endpoint" placeholder="http(s)://">
               </div>
               <!--// cname -->
               <div style="display:flex;justify-content: space-around" class="col-sm-8"
                    style="padding-left:0" ng-if="eptplType=='cname'"
                    ng-class="{'has-error':!form1.endpoint.$valid}">
                 <input type="text" required ng-model="item.eptplcname" ng-pattern="/^http(s)?\:\/\//"
-                       class="form-control" id="cname" name="cname" placeholder="http://">
+                       class="form-control" id="cname" name="cname" placeholder="http(s)://">
               </div>
             </div>
           </div>

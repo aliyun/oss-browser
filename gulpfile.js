@@ -224,9 +224,9 @@ gulp.task('remove-redundant', ['gen-package'], function (cb) {
 
 gulp.task('watch', function () {
   gulp.watch([
-    '!'+DIST+'/**/node_modules/**',
+    // '!'+DIST+'/node_modules/**/*',
     DIST + '/**/*.html',
-    DIST + '/**/*.js',
+    DIST + '/!(node_modules)/*.js',
     DIST + '/**/*.css'
   ], function (event) {
     return gulp.src(event.path)
