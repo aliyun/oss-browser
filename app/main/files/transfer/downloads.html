@@ -120,5 +120,6 @@
     <div class="break text-left">
         <div><label class="text-success">From:</label> oss://{{item.from.bucket}}/{{item.from.key}}</div>
         <div><label class="text-primary">To:</label> {{item.to.path}}</div>
+        <div ng-if="item.hashCrc64ecma"><label class="text-primary">CRC64(ECMA):</label> {{item.hashCrc64ecma}}</div>
     </div>
 </script>

@@ -59,6 +59,7 @@ module.exports = {
   'auth.remember': '记住秘钥',
   'auth.login': '登入',
   'auth.akHistories': 'AK历史',
+  'auth.secure': 'HTTPS加密',
 
   'auth.authToken': '授权码',
   'auth.authToken.tooltip': '点击查看帮助',
@@ -201,6 +202,7 @@ module.exports = {
   'settings.file.info.msg': "是否把info级别的日志存到本地",
   'settings.connectTimeout':'超时时间(ms)',
   'settings.uploadPartSize':'分片大小(M)',
+  'settings.downloadConcurrecyPartSize':'并发分片下载数',
   'settings.uploadAndDownloadRetryTimes': '重试次数',
     //bookmark
   'bookmarks.title': '书签管理',

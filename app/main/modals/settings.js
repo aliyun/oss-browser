@@ -17,6 +17,7 @@ angular.module('web')
         logFileInfo: settingsSvs.logFileInfo.get(),
         connectTimeout: settingsSvs.connectTimeout.get(),
         uploadPartSize: settingsSvs.uploadPartSize.get(),
+        downloadConcurrecyPartSize: settingsSvs.downloadConcurrecyPartSize.get(),
         uploadAndDownloadRetryTimes: settingsSvs.uploadAndDownloadRetryTimes.get()
       },
       reg: {

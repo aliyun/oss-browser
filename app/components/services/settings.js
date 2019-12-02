@@ -29,7 +29,7 @@ angular.module('web')
 
       maxDownloadJobCount: {
         get: function () {
-          return parseInt(localStorage.getItem('maxDownloadJobCount') || 3);
+          return parseInt(localStorage.getItem('maxDownloadJobCount') || 1);
         },
         set: function (v) {
           return localStorage.setItem('maxDownloadJobCount', v);
@@ -101,9 +101,17 @@ angular.module('web')
           return localStorage.setItem('uploadPartSize', v);
         }
       },
+      downloadConcurrecyPartSize: {
+        get: function () {
+          return parseInt(localStorage.getItem('downloadConcurrecyPartSize') || 5);
+        },
+        set: function (v) {
+          return localStorage.setItem('downloadConcurrecyPartSize', v);
+        }
+      },
       uploadAndDownloadRetryTimes: {
         get: function () {
-          return parseInt(localStorage.getItem('uploadAndDownloadRetryTimes') || 10);
+          return parseInt(localStorage.getItem('uploadAndDownloadRetryTimes') || 5);
         },
         set: function (v) {
           return localStorage.setItem('uploadAndDownloadRetryTimes', v);
