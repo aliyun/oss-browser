@@ -80,6 +80,11 @@ angular.module('web')
         if (!form.$valid) return;
         var item = angular.copy($scope.item);
 
+        if (!/^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$/.test(item.name)) {
+          Toast.error(T('bucket.add.name.illegality')); //'bucket 名称违规'
+          return;
+        }
+
         ossSvs2.createBucket(item.region, item.name, item.acl, item.storageClass).then(function (result) {
 
           callback();

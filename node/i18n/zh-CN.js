@@ -128,6 +128,7 @@ module.exports = {
   'bucket.name': 'Bucket名称',
   'creationTime': '创建时间',
   'bucket.add.name.invalid': '您输入的Bucket名称无效',
+  'bucket.add.name.illegality': '您输入的 Bucket 名称不符合规则',
 
   'multipart.management': 'Multipart管理',
   'multipart.description': '管理通过Multipart（分块）方式上传过程中产生的事件与碎片。',
@@ -419,6 +420,7 @@ module.exports = {
   'http.headers': 'HTTP头',
   'key': '参数',
   'value': '值',
+  'headers.expires.tooltip': '过期时间格式应为日期对象、ISO-8601 字符串或 UNIX 时间戳',
   'userMetaData': '用户自定义元数据',
 
   'setting.on': '正在设置..',

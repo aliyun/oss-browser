@@ -138,6 +138,7 @@ module.exports = {
   'bucket.name': 'Bucket Name',
   'creationTime': 'Creation Time',
   'bucket.add.name.invalid': 'The Bucket name is invalid!',
+  'bucket.add.name.illegality': 'The Bucket name is illegality!',
 
   'multipart.management': 'Multipart',
   'multipart.description': 'Manage events and fragments that are generated during the multipipart (upload) process.',
@@ -420,6 +421,7 @@ module.exports = {
   'http.headers': 'Http Headers',
   'key': 'Key',
   'value': 'Value',
+  'headers.expires.tooltip': 'The expiration time format should be a date object, an ISO-8601 string, or a UNIX timestamp',
   'userMetaData': 'User-defined Metadata',
 
   'setting.on': 'Setting..',

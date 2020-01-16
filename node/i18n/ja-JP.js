@@ -127,6 +127,7 @@ module.exports = {
   'bucket.name': 'バケット名',
   'creationTime': '作成日時',
   'bucket.add.name.invalid': 'バケット名が無効です!',
+  'bucket.add.name.illegality': '入力したバケット名はルールに一致しません',
 
   'multipart.management': 'マルチパート',
   'multipart.description': 'マルチパート (アップロード) プロセス中に生成されたイベントやフラグメントを管理します',
@@ -419,6 +420,7 @@ module.exports = {
   'http.headers': 'HTTP ヘッダー',
   'key': 'Key',
   'value': 'Value',
+  'headers.expires.tooltip': '有効期限の形式は、日付オブジェクト、ISO-8601文字列、またはUNIXタイムスタンプでなければなりません',
   'userMetaData': 'ユーザー定義のメタデータ',
 
   'setting.on': '設定中..',

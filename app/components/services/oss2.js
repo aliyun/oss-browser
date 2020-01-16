@@ -1050,7 +1050,7 @@ angular.module('web')
             ContentDisposition: headers['ContentDisposition'],
             ContentEncoding: headers['ContentEncoding'],
             ContentLanguage: headers['ContentLanguage'],
-            Expires: headers['Expires']
+            Expires: Number(headers['Expires']) // 这里把传入的值转成 Number 类型
           };
           client.copyObject(opt, function (err, data) {
 
