@@ -1,6 +1,6 @@
 {
   "name": "electron-crc64-prebuild",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "crc64 module prebuild for electron",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "license": "MIT",
   "gypfile": true,
   "devDependencies": {
-    "electron": "1.8.4",
+    "electron": "7.1.9",
     "mocha": "^3.4.2",
     "shelljs": "^0.7.8",
     "should": "^11.2.1"
