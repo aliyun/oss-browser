@@ -7,9 +7,13 @@ DEFS_Debug := \
 	'-DUSING_UV_SHARED=1' \
 	'-DUSING_V8_SHARED=1' \
 	'-DV8_DEPRECATION_WARNINGS=1' \
+	'-DV8_DEPRECATION_WARNINGS' \
+	'-DV8_IMMINENT_DEPRECATION_WARNINGS' \
 	'-D_DARWIN_USE_64_BIT_INODE=1' \
 	'-D_LARGEFILE_SOURCE' \
 	'-D_FILE_OFFSET_BITS=64' \
+	'-DOPENSSL_NO_PINSHARED' \
+	'-DOPENSSL_THREADS' \
 	'-DDEBUG' \
 	'-D_DEBUG' \
 	'-DV8_ENABLE_CHECKS'
@@ -18,7 +22,7 @@ DEFS_Debug := \
 CFLAGS_Debug := \
 	-O0 \
 	-gdwarf-2 \
-	-mmacosx-version-min=10.7 \
+	-mmacosx-version-min=10.10 \
 	-arch x86_64 \
 	-Wall \
 	-Wendif-labels \
@@ -31,11 +35,10 @@ CFLAGS_C_Debug := \
 
 # Flags passed to only C++ files.
 CFLAGS_CC_Debug := \
-	-std=gnu++0x \
+	-std=gnu++1y \
 	-stdlib=libc++ \
 	-fno-rtti \
 	-fno-exceptions \
-	-fno-threadsafe-statics \
 	-fno-strict-aliasing
 
 # Flags passed to only ObjC files.
@@ -45,25 +48,32 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/luozhang/.electron-gyp/.node-gyp/iojs-1.8.4/include/node \
-	-I/Users/luozhang/.electron-gyp/.node-gyp/iojs-1.8.4/src \
-	-I/Users/luozhang/.electron-gyp/.node-gyp/iojs-1.8.4/deps/uv/include \
-	-I/Users/luozhang/.electron-gyp/.node-gyp/iojs-1.8.4/deps/v8/include
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/include/node \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/src \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/deps/openssl/config \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/deps/openssl/openssl/include \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/deps/uv/include \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/deps/zlib \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/deps/v8/include
 
 DEFS_Release := \
 	'-DNODE_GYP_MODULE_NAME=crc64_ecma182_base' \
 	'-DUSING_UV_SHARED=1' \
 	'-DUSING_V8_SHARED=1' \
 	'-DV8_DEPRECATION_WARNINGS=1' \
+	'-DV8_DEPRECATION_WARNINGS' \
+	'-DV8_IMMINENT_DEPRECATION_WARNINGS' \
 	'-D_DARWIN_USE_64_BIT_INODE=1' \
 	'-D_LARGEFILE_SOURCE' \
-	'-D_FILE_OFFSET_BITS=64'
+	'-D_FILE_OFFSET_BITS=64' \
+	'-DOPENSSL_NO_PINSHARED' \
+	'-DOPENSSL_THREADS'
 
 # Flags passed to all source files.
 CFLAGS_Release := \
 	-Os \
 	-gdwarf-2 \
-	-mmacosx-version-min=10.7 \
+	-mmacosx-version-min=10.10 \
 	-arch x86_64 \
 	-Wall \
 	-Wendif-labels \
@@ -76,11 +86,10 @@ CFLAGS_C_Release := \
 
 # Flags passed to only C++ files.
 CFLAGS_CC_Release := \
-	-std=gnu++0x \
+	-std=gnu++1y \
 	-stdlib=libc++ \
 	-fno-rtti \
 	-fno-exceptions \
-	-fno-threadsafe-statics \
 	-fno-strict-aliasing
 
 # Flags passed to only ObjC files.
@@ -90,10 +99,13 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/luozhang/.electron-gyp/.node-gyp/iojs-1.8.4/include/node \
-	-I/Users/luozhang/.electron-gyp/.node-gyp/iojs-1.8.4/src \
-	-I/Users/luozhang/.electron-gyp/.node-gyp/iojs-1.8.4/deps/uv/include \
-	-I/Users/luozhang/.electron-gyp/.node-gyp/iojs-1.8.4/deps/v8/include
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/include/node \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/src \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/deps/openssl/config \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/deps/openssl/openssl/include \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/deps/uv/include \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/deps/zlib \
+	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/7.1.9/deps/v8/include
 
 OBJS := \
 	$(obj).target/$(TARGET)/src/crc64_ecma_182.o
@@ -125,7 +137,7 @@ $(obj).$(TOOLSET)/$(TARGET)/%.o: $(obj)/%.cc FORCE_DO_CMD
 # End of this set of suffix rules
 ### Rules for final target.
 LDFLAGS_Debug := \
-	-mmacosx-version-min=10.7 \
+	-mmacosx-version-min=10.10 \
 	-arch x86_64 \
 	-L$(builddir) \
 	-stdlib=libc++
@@ -133,7 +145,7 @@ LDFLAGS_Debug := \
 LIBTOOLFLAGS_Debug :=
 
 LDFLAGS_Release := \
-	-mmacosx-version-min=10.7 \
+	-mmacosx-version-min=10.10 \
 	-arch x86_64 \
 	-L$(builddir) \
 	-stdlib=libc++
