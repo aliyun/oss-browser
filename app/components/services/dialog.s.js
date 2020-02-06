@@ -19,7 +19,7 @@ angular.module('web')
       dialog.showOpenDialog({
         title: 'Upload',
         properties: isMac ? ['openFile', 'openDirectory', 'multiSelections']:  selopt
-      }, function(filePaths){
+      }).then(function({filePaths}){
         if(typeof(fn)=='function')fn(filePaths);
       });
     }
@@ -27,7 +27,7 @@ angular.module('web')
       dialog.showOpenDialog({
         title: 'Download',
         properties: ['openDirectory']
-      }, function(filePaths){
+      }).then( function({filePaths}){
         if(typeof(fn)=='function')fn(filePaths);
       });
     }
