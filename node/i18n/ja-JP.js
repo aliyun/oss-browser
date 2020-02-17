@@ -58,6 +58,7 @@ module.exports = {
   'auth.remember': '入力情報の保存',
   'auth.login': 'ログイン',
   'auth.akHistories': 'AK 履歴',
+  'auth.secure': 'HTTPS暗号化',
 
   'auth.authToken': '認証トークン',
   'auth.authToken.tooltip': 'ドキュメントの表示',
@@ -128,6 +129,8 @@ module.exports = {
   'creationTime': '作成日時',
   'bucket.add.name.invalid': 'バケット名が無効です!',
   'bucket.add.name.illegality': '入力したバケット名はルールに一致しません',
+  'acl.warn-not-private.public-read': '<code>公開読み取り</code>権限は、匿名でバケット内のデータにアクセスでき、 セキュリティリスクが高くなるため、 非公開 (private) を推奨します。',
+  'acl.warn-not-private.public-read-write': '<code>公開読み書き</code>権限は、匿名でバケット内のデータにアクセスでき、 セキュリティリスクが高くなるため、 非公開 (private) を推奨します。',
 
   'multipart.management': 'マルチパート',
   'multipart.description': 'マルチパート (アップロード) プロセス中に生成されたイベントやフラグメントを管理します',
@@ -199,6 +202,7 @@ module.exports = {
   'settings.file.info.msg': "infoレベルのログを地元に預かるかどうか",
   'settings.connectTimeout':'タイムアウト(ms)',
   'settings.uploadPartSize':'スライスサイズ(M)',
+  'settings.downloadConcurrecyPartSize':'ダウンロード数',
   'settings.uploadAndDownloadRetryTimes': '再試行回数',
 
     //bookmark

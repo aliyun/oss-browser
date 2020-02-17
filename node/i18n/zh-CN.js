@@ -59,6 +59,7 @@ module.exports = {
   'auth.remember': '记住秘钥',
   'auth.login': '登入',
   'auth.akHistories': 'AK历史',
+  'auth.secure': 'HTTPS加密',
 
   'auth.authToken': '授权码',
   'auth.authToken.tooltip': '点击查看帮助',
@@ -129,6 +130,8 @@ module.exports = {
   'creationTime': '创建时间',
   'bucket.add.name.invalid': '您输入的Bucket名称无效',
   'bucket.add.name.illegality': '您输入的 Bucket 名称不符合规则',
+  'acl.warn-not-private.public-read': '<code>公共读（public-read）</code>权限可以不通过身份验证直接读取您 Bucket 中的数据，安全风险高，为确保您的数据安全，不推荐此配置，建议您选择私有（private）。',
+  'acl.warn-not-private.public-read-write': '<code>公共读写（public-read-write）</code>权限可以不通过身份验证直接读取您 Bucket 中的数据，安全风险高，为确保您的数据安全，不推荐此配置，建议您选择私有（private）。',
 
   'multipart.management': 'Multipart管理',
   'multipart.description': '管理通过Multipart（分块）方式上传过程中产生的事件与碎片。',
@@ -200,6 +203,7 @@ module.exports = {
   'settings.file.info.msg': "是否把info级别的日志存到本地",
   'settings.connectTimeout':'超时时间(ms)',
   'settings.uploadPartSize':'分片大小(M)',
+  'settings.downloadConcurrecyPartSize':'并发分片下载数',
   'settings.uploadAndDownloadRetryTimes': '重试次数',
     //bookmark
   'bookmarks.title': '书签管理',

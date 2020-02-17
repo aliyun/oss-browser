@@ -41,7 +41,7 @@
       <div class="col-sm-8">
         <select ng-model="item.acl" autofocus ng-options="acl.acl as acl.label for acl in bucketACL"
           name="acl" required="required"
-          class="input-md form-control"></select>
+          class="input-md form-control" ng-change="onAclChanged()"></select>
       </div>
     </div>
 

@@ -59,6 +59,7 @@ module.exports = {
   'auth.remember': 'Remember',
   'auth.login': 'Login',
   'auth.akHistories': 'AK Histories',
+  'auth.secure': 'HTTPS encryption',
 
   'auth.authToken': 'Auth-Token',
   'auth.authToken.tooltip': 'View document',
@@ -112,6 +113,7 @@ module.exports = {
   'settings.file.info.msg': "put info log file in local ?",
   'settings.connectTimeout':'overtime(ms)',
   'settings.uploadPartSize':'uploadpart size(M)',
+  'settings.downloadConcurrecyPartSize':'download concurrency part number',
   'settings.uploadAndDownloadRetryTimes': 'retry times',
 
     //address bar
@@ -139,6 +141,8 @@ module.exports = {
   'creationTime': 'Creation Time',
   'bucket.add.name.invalid': 'The Bucket name is invalid!',
   'bucket.add.name.illegality': 'The Bucket name is illegality!',
+  'acl.warn-not-private.public-read': 'If your bucket ACL is <code>public read</code> anyone can access your bucket without prior authentication. We recommend that you set the Bucket ACL to Private. Exercise caution when setting bucket ACLs.',
+  'acl.warn-not-private.public-read-write': 'If your bucket ACL is <code>public read/write</code> anyone can access your bucket without prior authentication. We recommend that you set the Bucket ACL to Private. Exercise caution when setting bucket ACLs.',
 
   'multipart.management': 'Multipart',
   'multipart.description': 'Manage events and fragments that are generated during the multipipart (upload) process.',

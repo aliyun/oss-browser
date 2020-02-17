@@ -69,3 +69,38 @@ exports.crc64File = function(filename, toString, callback) {
         return callback(undefined, toString ? exports.toUInt64String(ret) : ret);
     });
 };
+
+/***
+ * crc64 stream 计算
+ */
+exports.crc64Stream = function(stream, toString, callback) {
+  if(typeof toString === 'function') {
+    callback = toString;
+    toString = true;
+  }
+
+  let errored = false;
+  stream.on('error', function(err) {
+    errored = true;
+    stream.destroy();
+    return callback(err);
+  });
+
+  const ret = Buffer.alloc(8);
+  stream.on('data', function(chunk) {
+    exports.check(chunk, ret);
+  });
+  stream.on('end', function() {
+    if(errored) return;
+    return callback(undefined, toString ? exports.toUInt64String(ret) : ret);
+  });
+};
+
+exports.combileCrc64 = function(str1, str2, len2, callback) {
+  return callback(undefined, binding.combileCrc64(str1, str2, len2))
+}
+
+exports.crc64Buffer = function(buffer ,callback) {
+  const ret = Buffer.alloc(8);
+  return callback(undefined, exports.crc64(buffer, ret))
+}
