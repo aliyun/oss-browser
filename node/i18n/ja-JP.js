@@ -13,6 +13,7 @@ module.exports = {
   'region.oss-cn-zhangjiakou': '張家口 (中国北部 3)',
   'region.oss-cn-huhehaote': 'フフホト (中国北部 5)',
   'region.oss-cn-shenzhen': '深セン (中国南部 1)',
+  'region.oss-cn-heyuan': '河源(中国南部 2)',
   'region.oss-cn-chengdu': '成都(中国西部 1)',
   'region.oss-cn-hongkong': '香港',
 
