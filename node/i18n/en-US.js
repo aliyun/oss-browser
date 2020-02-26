@@ -13,6 +13,7 @@ module.exports = {
   'region.oss-cn-zhangjiakou': 'North China 3(Zhangjiakou)',
   'region.oss-cn-huhehaote': 'North China 5(Huhehaote)',
   'region.oss-cn-shenzhen': 'South China 1(Shenzhen)',
+  'region.oss-cn-heyuan': 'South China 2(Heyuan)',
   'region.oss-cn-chengdu': 'Southwest China 1(Chengdu)',
   'region.oss-cn-hongkong': 'Hongkong',
 

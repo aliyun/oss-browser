@@ -104,6 +104,11 @@ angular.module('web')
           storageClasses: getStorageClasses(3)
         },
         {
+          id: 'oss-cn-heyuan',
+          label: '华南2(河源)',
+          storageClasses: getStorageClasses(3)
+        },
+        {
           id: 'oss-cn-chengdu',
           label: '西南1(成都)',
           storageClasses: getStorageClasses(3)
