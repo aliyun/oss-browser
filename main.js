@@ -1,6 +1,10 @@
 var electron = require('electron');
 // Module to control application life.
 
+// use self signed certificate for Apsara Stack
+// https://stackoverflow.com/questions/58615762/will-an-electron-based-app-pass-system-wide-nodejs-environment-variables
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
 var app = electron.app;
 var Menu = electron.Menu;
 var ipcMain = electron.ipcMain;
