@@ -184,3 +184,12 @@ oss-browser/
 ## 9. 开源 LICENSE
 
 [Apache License 2.0](LICENSE)
+
+
+
+## 10. Mac升级到10.15 以上打包问题修复
+Mac 新系统不在支持32位程序，打包windows包的wine需要使用64位系统，导致无法打包windows的包。
+修复方案
+1. brew install homebrew/cask/wine-stable
+2. mv /usr/local/bin/wine /usr/local/bin/wine-old && mv /usr/local/bin/wine64 /usr/local/bin/wine
+3. 下载 "https://github.com/electron/rcedit/releases/download/v1.1.1/rcedit-x64.exe", 重命为 "rcedit.exe" 然后替换 "node_modules/rcedit/bin/rcedit.exe" 
