@@ -1,10 +1,10 @@
 angular.module('web')
   .factory('ossSvs2', ['$q', '$rootScope', '$timeout', '$state', 'Toast', 'Const', 'AuthInfo',
-    function ($q, $rootScope, $timeout, $state, Toast, Const, AuthInfo,) {
+    function ($q, $rootScope, $timeout, $state, Toast, Const, AuthInfo) {
       var NEXT_TICK = 1;
 
       var DEF_ADDR = 'oss://';
-      //var ALY = require('aliyun-sdk');
+      var ALY = require('aliyun-sdk');
       var path = require('path');
 
       return {

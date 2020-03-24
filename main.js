@@ -61,7 +61,10 @@ function createWindow() {
     icon: custom.logo_ico || path.join(__dirname, 'icons', 'icon.ico'),
 
     webPreferences: {
-      plugins: true
+      plugins: true,
+      webSecurity: false,
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true
     }
   };
 
@@ -122,7 +125,7 @@ ipcMain.on('asynchronous', (event, data) => {
 
     case 'refreshPage':
       win.reload();
-      break
+      break;
     case 'installRestart':
 
       var version = data.version;
@@ -179,7 +182,8 @@ function moveFile(from, to, fn){
 }
 
 //singleton
-var shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+var isPrimaryInstance = app.requestSingleInstanceLock();
+app.on('second-instance', (event, argv, cwd) => {
   // Someone tried to run a second instance, we should focus our window.
   if (win) {
     if (win.isMinimized()) win.restore();
@@ -187,7 +191,7 @@ var shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
   }
 });
 
-if (shouldQuit) {
+if (!isPrimaryInstance) {
   app.quit();
   process.exit(0);
 }
