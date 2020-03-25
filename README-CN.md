@@ -10,6 +10,16 @@ OSS Browser 提供类似 windows 资源管理器功能。用户可以很方便�
 
 Windows7 above, Linux and Mac,不建议使用windows XP平台和windows Server平台
 
+### Linux NOTE
+
+如果在 Linux 平台下运行出现`The SUID sandbox helper binary was found, but is not configured correctly. Rather than run without sandboxing I'm aborting now. You need to make sure that /path/to/chrome-sandbox is owned by root and has mode 4755.` 这样的错误时，以下解决方案任选其一:
+
+- 添加`kernel.unprivileged_userns_clone = 1`到`/etc/sysct.conf`，然后执行`sudo sysctl -p`即可
+- 上述方法需要内核参数开启`CONFIG_USER_NS=y`才会有效。如果上述方法报错，可以按照错误提示给`chrome-sandbox`添加`SUID`权限: `sudo chown root chrome-sandbox && sudo chmod 4755 chrome-sandbox`
+- 如果以上两种方案都无效，那么只能关闭`sandbox`。在`oss-browser`命令行参数追加`--no-sandbox`参数。
+
+有关详情请参考官方[issue](https://github.com/electron/electron/issues/17972)
+
 ## 2. 客户端下载：
 
 最新版本`1.9.5`，下载地址如下，解压即可使用。

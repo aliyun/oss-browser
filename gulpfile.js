@@ -4,7 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var os =require('os');
 var del = require('del');
-var minimist = require('minimist')
+var minimist = require('minimist');
 //var NwBuilder = require('nw-builder');
 //var pkg = require('./package');
 require('shelljs/global');
