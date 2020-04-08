@@ -294,6 +294,8 @@ module.exports = {
   'getAddress.message': '请输入链接有效期',
   'generate': '生成',
   'qrcode.download': '扫码下载',
+  'not_use_own_domain': '不使用自有域名',
+  'custom_domain': '自有域名',
 
   'restore.checker.message1': '归档文件，需要解冻才能预览或下载。',
   'restore.immediately': '立即解冻',
