@@ -30,8 +30,9 @@ angular.module('web')
         $scope.step = 2;
         var ignoreError = true;
 
+        const url = ossSvs2.signatureUrl2(currentInfo.region, currentInfo.bucket, item.path, $scope.info.sec);
         $.ajax({
-          url: item.url,
+          url: url,
           headers: {
             'Range': 'bytes=0-1',
             'x-random': Math.random(),
