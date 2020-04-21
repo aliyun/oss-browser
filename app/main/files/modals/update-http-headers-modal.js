@@ -63,7 +63,7 @@ angular.module('web')
         });
         //console.log(headers, metas)
         Toast.info(T('setting.on')); //'正在设置..'
-        Promise.all(item.map(i => ossSvs2.setMeta(currentInfo.region, currentInfo.bucket, i.path, headers, metas))).then(result => {
+        Promise.all(item.map(i => ossSvs2.setMeta2(currentInfo.region, currentInfo.bucket, i.path, headers, metas))).then(result => {
           Toast.success(T('setting.success')); //'设置成功'
         }).finally(() => {
           cancel();

@@ -16,6 +16,7 @@ angular.module('web')
         getMeta: getMeta,
         getFileInfo: getMeta, //head object
         setMeta: setMeta,
+        setMeta2: setMeta2,
 
         checkFileExists: checkFileExists,
         checkFolderExists: checkFolderExists,
@@ -1062,6 +1063,14 @@ angular.module('web')
             }
           });
         });
+      }
+
+      function setMeta2(region, bucket, key, headers, meta) {
+        const client = getClient2({region , bucket});
+        return client.copy(key, key, {
+          headers,
+          meta
+        }).catch(handleError)
       }
 
       function restoreFile(region, bucket, key, days) {
