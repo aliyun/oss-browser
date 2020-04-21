@@ -22,9 +22,9 @@ angular.module('web')
         $scope.isLoading = true;
         $scope.step=2;
         var ignoreError = true;
+        if(item.length > 1) return;
 
-        ossSvs2.getMeta(currentInfo.region, currentInfo.bucket, item.path).then(function(result){
-
+        ossSvs2.getMeta(currentInfo.region, currentInfo.bucket, item[0].path).then(function(result){
           $scope.headers = {
             'ContentLanguage': result.ContentLanguage,
             'ContentType': result.ContentType,
@@ -63,11 +63,10 @@ angular.module('web')
         });
         //console.log(headers, metas)
         Toast.info(T('setting.on')); //'正在设置..'
-
-        ossSvs2.setMeta(currentInfo.region, currentInfo.bucket, item.path, headers, metas).then(function(result){
+        Promise.all(item.map(i => ossSvs2.setMeta(currentInfo.region, currentInfo.bucket, i.path, headers, metas))).then(result => {
           Toast.success(T('setting.success')); //'设置成功'
+        }).finally(() => {
           cancel();
-
         });
       }
 

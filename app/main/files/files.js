@@ -1,4 +1,7 @@
 angular.module('web')
+.filter('canSetHeader', function() {
+  return sel => sel && sel.has && sel.has.length && sel.has.every(f => !f.isFolder);
+})
   .controller('filesCtrl', ['$scope', '$rootScope', '$uibModal', '$timeout','$translate', 'AuthInfo', 'ossSvs2', 'settingsSvs', 'fileSvs', 'safeApply', 'Toast', 'Dialog',
     function ($scope, $rootScope, $modal, $timeout, $translate, AuthInfo, ossSvs2, settingsSvs, fileSvs, safeApply, Toast, Dialog) {
       var T = $translate.instant;
@@ -234,9 +237,9 @@ angular.module('web')
             //Http头
             return '<i class="fa fa-cog"></i> ' + T('http.headers')
           }, function ($itemScope, $event) {
-            showHttpHeaders($scope.sel.has[0])
+            showHttpHeaders($scope.sel.has)
           }, function(){
-            return $scope.sel.has && $scope.sel.has.length==1 && !$scope.sel.has[0].isFolder;
+            return $scope.sel.has && $scope.sel.has.length && $scope.sel.has.every(f => !f.isFolder);
           }],
 
           [function(){
@@ -1111,7 +1114,7 @@ angular.module('web')
           controller: 'updateHttpHeadersModalCtrl',
           resolve: {
             item: function () {
-              return angular.copy(item);
+              return angular.copy(Array.isArray(item) ? item : [item]);
             },
             currentInfo: function () {
               return angular.copy($scope.currentInfo);
