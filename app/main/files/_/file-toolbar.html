@@ -120,7 +120,7 @@
         </li>
 
         <li>
-          <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder" ng-click="showHttpHeaders(sel.has[0])">
+          <a href="" ng-if="sel | canSetHeader" ng-click="showHttpHeaders(sel.has)">
             <i class="fa fa-cog"></i>
             <!-- Http头 -->
             {{'http.headers'|translate}}
