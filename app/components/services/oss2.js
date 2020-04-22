@@ -13,8 +13,8 @@ angular.module('web')
         restoreFile: restoreFile,
         loadStorageStatus: loadStorageStatus,
 
-        getMeta: getMeta,
-        getFileInfo: getMeta, //head object
+        getMeta: getMeta2,
+        getFileInfo: getMeta2, //head object
         setMeta: setMeta,
         setMeta2: setMeta2,
 
@@ -1030,6 +1030,105 @@ angular.module('web')
             }
           });
         });
+      }
+
+      function getMeta2(region , bucket, key) {
+        const client = getClient2({ region, bucket })
+        return client.head(key).then(obj => {
+          const outputStructure = {
+            "AcceptRanges": {
+              "name": "accept-ranges"
+            },
+            "CacheControl": {
+              "name": "Cache-Control"
+            },
+            "ContentDisposition": {
+              "name": "Content-Disposition"
+            },
+            "ContentEncoding": {
+              "name": "Content-Encoding"
+            },
+            "ContentLanguage": {
+              "name": "Content-Language"
+            },
+            "ContentLength": {
+              "type": "integer",
+              "name": "Content-Length"
+            },
+            "ContentType": {
+              "name": "Content-Type"
+            },
+            "DeleteMarker": {
+              "type": "boolean",
+              "name": "x-oss-delete-marker"
+            },
+            "ETag": {
+              "name": "ETag"
+            },
+            "Expiration": {
+              "name": "x-oss-expiration"
+            },
+            "Expires": {
+              "type": "timestamp",
+              "name": "Expires"
+            },
+            "LastModified": {
+              "type": "timestamp",
+              "name": "Last-Modified"
+            },
+            // "Metadata": {
+            //   "type": "map",
+            //   "name": "x-oss-meta-",
+            //   "members": {},
+            //   "keys": {}
+            // },
+            "MissingMeta": {
+              "type": "integer",
+              "name": "x-oss-missing-meta"
+            },
+            "Restore": {
+              "name": "x-oss-restore"
+            },
+            "ServerSideEncryption": {
+              "name": "x-oss-server-side-encryption"
+            },
+            "VersionId": {
+              "name": "x-oss-version-id"
+            },
+            "WebsiteRedirectLocation": {
+              "name": "x-oss-website-redirect-location"
+            }
+          }
+          const output = {
+            Metadata: obj.meta
+          }
+          const { hasOwnProperty } = Object.prototype
+          const headers = obj.res.headers
+          // extract output
+          for(let key in outputStructure){
+            if(hasOwnProperty.call(outputStructure, key)){
+              const name = outputStructure[key].name.toLowerCase()
+              if(headers[name] !== undefined){
+                output[key] = headers[name];
+              }
+            }
+          }
+          // extract x-oss-...
+          for(let key in headers){
+            if(key.indexOf('x-oss-')==0){
+              let arr = key.substring('x-oss-'.length).split('-');
+              for(let i = 0; i < arr.length; i++){
+                arr[i] = arr[i][0].toUpperCase()+arr[i].substring(1);
+              }
+              output[arr.join('')] = headers[key];
+            }else if(key ==='content-md5'){
+              output['ContentMD5'] = headers['content-md5'];
+            }
+          }
+          // extract requestId
+          output.RequestId = headers['x-oss-request-id'] || headers['x-oss-requestid']
+          return output
+        })
       }
 
       function setMeta(region, bucket, key, headers, metas) {

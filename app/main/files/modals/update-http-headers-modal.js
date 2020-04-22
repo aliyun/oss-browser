@@ -23,7 +23,6 @@ angular.module('web')
         $scope.step=2;
         var ignoreError = true;
         if(item.length > 1) return;
-
         ossSvs2.getMeta(currentInfo.region, currentInfo.bucket, item[0].path).then(function(result){
           $scope.headers = {
             'ContentLanguage': result.ContentLanguage,
