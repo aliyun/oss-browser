@@ -6,6 +6,7 @@ angular.module('web')
       var DEF_ADDR = 'oss://';
       //var ALY = require('aliyun-sdk');
       var path = require('path');
+      var AliOSS = require('ali-oss');
 
       return {
         createFolder: createFolder,
@@ -74,6 +75,25 @@ angular.module('web')
         });
         console.log(OSS.version);
         return client;
+      }
+
+      function getClient3(opt){
+        const options = prepaireOptions(opt);
+        const final = {
+          accessKeyId: options.accessKeyId,
+          accessKeySecret: options.secretAccessKey,
+          bucket: opt.bucket,
+          endpoint: options.endpoint,
+          region: opt.region,
+          timeout: options.httpOptions.timeout,
+          cname: options.cname,
+          isRequestPay: options.isRequestPayer
+        }
+        if(options.hasOwnProperty('securityToken')) {
+          final.stsToken = options.securityToken
+        }
+        const client = new AliOSS(final)
+        return client
       }
 
       function signatureUrl2(region, bucket, key, expires, xprocess) {
@@ -1032,49 +1052,49 @@ angular.module('web')
         });
       }
 
-      function getMeta2(region , bucket, key) {
-        const client = getClient2({ region, bucket })
-        return client.head(key).then(obj => {
+      function getMeta2(region, bucket, key) {
+        const client = getClient3({ region, bucket });
+        function adapter(obj) {
           const outputStructure = {
-            "AcceptRanges": {
-              "name": "accept-ranges"
+            AcceptRanges: {
+              name: "accept-ranges",
             },
-            "CacheControl": {
-              "name": "Cache-Control"
+            CacheControl: {
+              name: "Cache-Control",
             },
-            "ContentDisposition": {
-              "name": "Content-Disposition"
+            ContentDisposition: {
+              name: "Content-Disposition",
             },
-            "ContentEncoding": {
-              "name": "Content-Encoding"
+            ContentEncoding: {
+              name: "Content-Encoding",
             },
-            "ContentLanguage": {
-              "name": "Content-Language"
+            ContentLanguage: {
+              name: "Content-Language",
             },
-            "ContentLength": {
-              "type": "integer",
-              "name": "Content-Length"
+            ContentLength: {
+              type: "integer",
+              name: "Content-Length",
             },
-            "ContentType": {
-              "name": "Content-Type"
+            ContentType: {
+              name: "Content-Type",
             },
-            "DeleteMarker": {
-              "type": "boolean",
-              "name": "x-oss-delete-marker"
+            DeleteMarker: {
+              type: "boolean",
+              name: "x-oss-delete-marker",
             },
-            "ETag": {
-              "name": "ETag"
+            ETag: {
+              name: "ETag",
             },
-            "Expiration": {
-              "name": "x-oss-expiration"
+            Expiration: {
+              name: "x-oss-expiration",
             },
-            "Expires": {
-              "type": "timestamp",
-              "name": "Expires"
+            Expires: {
+              type: "timestamp",
+              name: "Expires",
             },
-            "LastModified": {
-              "type": "timestamp",
-              "name": "Last-Modified"
+            LastModified: {
+              type: "timestamp",
+              name: "Last-Modified",
             },
             // "Metadata": {
             //   "type": "map",
@@ -1082,53 +1102,58 @@ angular.module('web')
             //   "members": {},
             //   "keys": {}
             // },
-            "MissingMeta": {
-              "type": "integer",
-              "name": "x-oss-missing-meta"
+            MissingMeta: {
+              type: "integer",
+              name: "x-oss-missing-meta",
             },
-            "Restore": {
-              "name": "x-oss-restore"
+            Restore: {
+              name: "x-oss-restore",
             },
-            "ServerSideEncryption": {
-              "name": "x-oss-server-side-encryption"
+            ServerSideEncryption: {
+              name: "x-oss-server-side-encryption",
             },
-            "VersionId": {
-              "name": "x-oss-version-id"
+            VersionId: {
+              name: "x-oss-version-id",
             },
-            "WebsiteRedirectLocation": {
-              "name": "x-oss-website-redirect-location"
-            }
-          }
+            WebsiteRedirectLocation: {
+              name: "x-oss-website-redirect-location",
+            },
+          };
           const output = {
-            Metadata: obj.meta
-          }
-          const { hasOwnProperty } = Object.prototype
-          const headers = obj.res.headers
+            Metadata: obj.meta,
+          };
+          const { hasOwnProperty } = Object.prototype;
+          const headers = obj.res.headers;
           // extract output
-          for(let key in outputStructure){
-            if(hasOwnProperty.call(outputStructure, key)){
-              const name = outputStructure[key].name.toLowerCase()
-              if(headers[name] !== undefined){
+          for (let key in outputStructure) {
+            if (hasOwnProperty.call(outputStructure, key)) {
+              const name = outputStructure[key].name.toLowerCase();
+              if (headers[name] !== undefined) {
                 output[key] = headers[name];
               }
             }
           }
           // extract x-oss-...
-          for(let key in headers){
-            if(key.indexOf('x-oss-')==0){
-              let arr = key.substring('x-oss-'.length).split('-');
-              for(let i = 0; i < arr.length; i++){
-                arr[i] = arr[i][0].toUpperCase()+arr[i].substring(1);
+          for (let key in headers) {
+            if (key.indexOf("x-oss-") == 0) {
+              let arr = key.substring("x-oss-".length).split("-");
+              for (let i = 0; i < arr.length; i++) {
+                arr[i] = arr[i][0].toUpperCase() + arr[i].substring(1);
               }
-              output[arr.join('')] = headers[key];
-            }else if(key ==='content-md5'){
-              output['ContentMD5'] = headers['content-md5'];
+              output[arr.join("")] = headers[key];
+            } else if (key === "content-md5") {
+              output["ContentMD5"] = headers["content-md5"];
             }
           }
           // extract requestId
-          output.RequestId = headers['x-oss-request-id'] || headers['x-oss-requestid']
-          return output
-        })
+          output.RequestId =
+            headers["x-oss-request-id"] || headers["x-oss-requestid"];
+          return output;
+        }
+        return client.head(key).then((res) => {
+          console.log(res, adapter(res))
+          return adapter(res);
+        });
       }
 
       function setMeta(region, bucket, key, headers, metas) {
