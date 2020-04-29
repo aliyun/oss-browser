@@ -1102,10 +1102,10 @@ angular.module('web')
             //   "members": {},
             //   "keys": {}
             // },
-            MissingMeta: {
-              type: "integer",
-              name: "x-oss-missing-meta",
-            },
+            // MissingMeta: {
+            //   type: "integer",
+            //   name: "x-oss-missing-meta",
+            // },
             Restore: {
               name: "x-oss-restore",
             },
