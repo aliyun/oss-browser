@@ -189,6 +189,13 @@
           <div class="form-group">
             <div class="col-sm-offset-4 col-sm-8">
               <div class="checkbox">
+                <label style="margin-right: 20px;">
+                  <input type="checkbox" ng-model="flags.keepLoggedIn"
+                         ng-true-value="'YES'" ng-false-value="'NO'">
+                  {{'auth.keepLoggedIn'|translate}}
+                  <!-- 保持登录 -->
+                </label>
+
                 <label>
                   <input type="checkbox" ng-model="flags.remember"
                          ng-true-value="'YES'" ng-false-value="'NO'">
@@ -200,6 +207,7 @@
                                              <i class="fa fa-question-circle"></i>
                                            </span>
                 </label>
+
               </div>
             </div>
           </div>
