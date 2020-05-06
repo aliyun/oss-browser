@@ -43,7 +43,7 @@ angular.module("web").controller("loginCtrl", [
         remember: "NO",
         showHis: "NO",
         requestpaystatus: "NO",
-        secure: "NO",
+        secure: "YES",
         keepLoggedIn: "YES",
       },
       item: {
@@ -169,7 +169,7 @@ angular.module("web").controller("loginCtrl", [
           localStorage.getItem(SHOW_REQUEST_PAY) || "NO");
 
       // 是否使用https
-      $scope.flags.secure = localStorage.getItem(SHOW_SECURE) || "NO";
+      $scope.flags.secure = localStorage.getItem(SHOW_SECURE) || "YES";
       angular.extend($scope.item, AuthInfo.getRemember());
 
       //临时token
@@ -267,7 +267,7 @@ angular.module("web").controller("loginCtrl", [
         data.requestpaystatus = localStorage.getItem(SHOW_REQUEST_PAY) || "NO";
       }
 
-      data.secure = localStorage.getItem(SHOW_SECURE) || "NO";
+      data.secure = localStorage.getItem(SHOW_SECURE) || "YES";
 
       //trim password
       if (data.secret) data.secret = data.secret.trim();
