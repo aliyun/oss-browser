@@ -10,12 +10,35 @@
     </h4>
   </div>
   <div class="modal-body">
-
     <div class="form-group">
-      <label class="col-sm-2 control-label" for="name">{{'name'|translate}}:</label>
+      <label class="col-sm-2 control-label" for="name"
+        >{{'name'|translate}}:</label
+      >
       <div class="col-sm-8">
-        <input type="text" ng-model="item.name" id="name"  readonly
-        placeholder="bucket" class="input-md form-control"/>
+        <input
+          type="text"
+          ng-model="item.name"
+          id="name"
+          readonly
+          placeholder="bucket"
+          class="input-md form-control"
+        />
+      </div>
+    </div>
+
+    <div class="form-group" ng-if="!!customDomainList.length">
+      <label class="col-sm-2 control-label" for="custom_domain">
+        <!-- 自有域名 -->
+        {{'custom_domain' | translate}}:
+      </label>
+      <div class="col-sm-8">
+        <select
+          class="form-control"
+          id="custom_domain"
+          ng-model="info.custom_domain"
+          ng-options="domain.value as (domain.label) for domain in customDomainList"
+        >
+        </select>
       </div>
     </div>
 
@@ -23,40 +46,58 @@
       <label class="col-sm-2 control-label" for="acl">
         {{'address'|translate}}
         <!-- 地址: -->
-
       </label>
       <div class="col-sm-8">
         <div class="input-group">
-          <input type="text" id="genAddress" ng-model="item.url" rows="4"  class="input-md form-control"/>
+          <input
+            type="text"
+            id="genAddress"
+            ng-model="item.url"
+            rows="4"
+            class="input-md form-control"
+          />
           <span class="input-group-btn">
-            <a href="" class="btn btn-info"  clipboard-button target="'#genAddress'">
+            <a
+              href=""
+              class="btn btn-info"
+              clipboard-button
+              target="'#genAddress'"
+            >
               <!-- 点击复制 -->
               {{'click.copy'|translate}}
             </a>
           </span>
           <span class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-click="info.showSendTo=!info.showSendTo">
+            <button
+              type="button"
+              class="btn btn-default"
+              ng-click="info.showSendTo=!info.showSendTo"
+            >
               {{'send.email'|translate}}
             </button>
           </span>
         </div>
       </div>
-
     </div>
 
     <div class="form-group" ng-if="step==2">
       <label class="col-sm-2 control-label" for="acl">
         {{'address'|translate}}:
         <!-- 地址: -->
-
       </label>
-      <div ng-if="!info.url"  class="col-sm-10">
+      <div ng-if="!info.url" class="col-sm-10">
         <!-- 请输入链接有效期: -->
         {{'getAddress.message'|translate}}:
-        <input type="number" ng-model="info.sec" id="sec" required
-        placeholder="" class="input-md form-control" style="display:inline-block;width:80px"/>
-        {{'unit.second'|translate}}
-        &nbsp;&nbsp;
+        <input
+          type="number"
+          ng-model="info.sec"
+          id="sec"
+          required
+          placeholder=""
+          class="input-md form-control"
+          style="display: inline-block; width: 80px;"
+        />
+        {{'unit.second'|translate}} &nbsp;&nbsp;
         <button type="submit" class="btn btn-success btn-sm">
           <i class="glyphicon glyphicon-ok"></i>
           <!-- 生成 -->
@@ -66,60 +107,86 @@
 
       <div ng-if="info.url" class="col-sm-8">
         <div class="input-group">
-          <input type="text" id="genAddress2" ng-model="info.url" class="input-md form-control"/>
+          <input
+            type="text"
+            id="genAddress2"
+            ng-model="info.url"
+            class="input-md form-control"
+          />
           <span class="input-group-btn">
-            <a href="" class="btn btn-info" clipboard-button target="'#genAddress2'">
+            <a
+              href=""
+              class="btn btn-info"
+              clipboard-button
+              target="'#genAddress2'"
+            >
               <!-- 点击复制 -->
               {{'click.copy'|translate}}
             </a>
           </span>
           <span class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-click="info.showSendTo=!info.showSendTo">
+            <button
+              type="button"
+              class="btn btn-default"
+              ng-click="info.showSendTo=!info.showSendTo"
+            >
               {{'send.email'|translate}}
             </button>
           </span>
         </div>
       </div>
-
     </div>
 
     <div class="form-group" ng-if="step==3">
       <div class="alert alert-danger text-center">{{err}}</div>
     </div>
 
-    <div class="alert alert-warning" ng-if="info.url">{{'file.download.warning'|translate}}</div>
+    <div class="alert alert-warning" ng-if="info.url">
+      {{'file.download.warning'|translate}}
+    </div>
     <div ng-if="info.url" class="text-center" id="addr-qrcode-wrap">
-      <qrcode  text="info.url" width="300" height="300">
+      <qrcode text="info.url" width="300" height="300">
         <!-- 扫码下载 -->
         {{'qrcode.download'|translate}}
       </qrcode>
     </div>
 
-
     <div class="form-group" ng-if="info.showSendTo">
-      <label class="col-sm-2 control-label" for="name">{{'send.to'|translate}}:</label>
+      <label class="col-sm-2 control-label" for="name"
+        >{{'send.to'|translate}}:</label
+      >
       <div class="col-sm-8">
         <div class="input-group">
-
-          <input type="email" name="email" required ng-pattern="reg.email"
-           ng-keyup="$event.keyCode==13?sendTo(form1):void(0)"
-           ng-model="info.mailTo" placeholder="Email" class="input-md form-control"/>
+          <input
+            type="email"
+            name="email"
+            required
+            ng-pattern="reg.email"
+            ng-keyup="$event.keyCode==13?sendTo(form1):void(0)"
+            ng-model="info.mailTo"
+            placeholder="Email"
+            class="input-md form-control"
+          />
           <span class="input-group-btn">
-            <button type="button" ng-disabled="!form1.email.$valid" class="btn btn-primary" ng-click="sendTo(form1)">
+            <button
+              type="button"
+              ng-disabled="!form1.email.$valid"
+              class="btn btn-primary"
+              ng-click="sendTo(form1)"
+            >
               {{'send.now'|translate}}
             </button>
           </span>
         </div>
-
       </div>
     </div>
 
     <div class="clearfix"></div>
   </div>
   <div class="modal-footer">
-
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
-      {{'close'|translate}}</button>
+      {{'close'|translate}}
+    </button>
   </div>
 </form>
