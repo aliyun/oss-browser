@@ -1,6 +1,10 @@
 var electron = require('electron');
 // Module to control application life.
 
+// use self signed certificate for Apsara Stack
+// https://stackoverflow.com/questions/58615762/will-an-electron-based-app-pass-system-wide-nodejs-environment-variables
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
 var app = electron.app;
 var Menu = electron.Menu;
 var ipcMain = electron.ipcMain;
@@ -212,6 +216,14 @@ app.on('activate', () => {
   if (win === null) {
     createWindow();
   }
+});
+
+// SSL/TSL: this is the self signed certificate support
+app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+  // On certificate error we disable default behaviour (stop loading the page)
+  // and we then say "it is all fine - true" to the callback
+  event.preventDefault();
+  callback(true);
 });
 
 
