@@ -316,6 +316,8 @@ module.exports = {
   "getAddress.message": "Please enter the validity period of the link",
   generate: "Generate",
   "qrcode.download": "Sweep code to download",
+  not_use_own_domain: "Not use your own domain name",
+  custom_domain: "Custom Domain Name",
 
   "restore.checker.message1":
     "Archive need to be restored in order to preview or download.",
