@@ -2,16 +2,15 @@
 
 ## 1. Logon using the Access Key of a subaccount with high-level privilege
 
-* The primary account is not recommended for Access Key-based logon. A subaccount with high-level privilege is recommended.
+- The primary account is not recommended for Access Key-based logon. A subaccount with high-level privilege is recommended.
 
-* Go to the [RAM console](https://ram.console.aliyun.com) to create a subaccount Access Key.
+- Go to the [RAM console](https://ram.console.aliyun.com) to create a subaccount Access Key.
 
-* The subaccount must be assigned the "AliyunSTSAssumeRoleAccess" and "AliyunRAMReadOnlyAccess" permissions and the permission to access the directory to be authorized.
+- The subaccount must be assigned the "AliyunSTSAssumeRoleAccess" and "AliyunRAMReadOnlyAccess" permissions and the permission to access the directory to be authorized.
 
-* Authorization of the subaccount with high-level privilege (recommended configuration for novice users):
+- Authorization of the subaccount with high-level privilege (recommended configuration for novice users):
 
 ![](../preview/genToken1.png)
-
 
 (1) Example of logon to public cloud:
 

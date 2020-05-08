@@ -1,65 +1,62 @@
-.red{
-  color:red;
+.red {
+  color: red;
 }
 
 .mg4 {
-    margin: 4px;
+  margin: 4px;
 }
 .mg0 {
-    margin: 0px;
+  margin: 0px;
 }
-.mgb2{
-  margin-bottom:2px;
+.mgb2 {
+  margin-bottom: 2px;
 }
-.mgb4{
-  margin-bottom:4px;
+.mgb4 {
+  margin-bottom: 4px;
 }
-.mgb6{
-  margin-bottom:6px;
+.mgb6 {
+  margin-bottom: 6px;
 }
-.mgl4{
+.mgl4 {
   margin-left: 4px;
 }
-.pd0{
-    padding:0px;
+.pd0 {
+  padding: 0px;
 }
-.pd2{
-    padding:2px;
+.pd2 {
+  padding: 2px;
 }
-.pd4{
-    padding:4px;
+.pd4 {
+  padding: 4px;
 }
-.pd10{
-    padding:10px;
+.pd10 {
+  padding: 10px;
 }
-.pdt4{
-    padding-top:4px;
+.pdt4 {
+  padding-top: 4px;
 }
-.break{
-    word-break:break-all;
+.break {
+  word-break: break-all;
 }
 button.btn.btn-sm {
-    outline: none;
+  outline: none;
 }
-.f8{
-  font-size:80%;
+.f8 {
+  font-size: 80%;
 }
-.f9{
-  font-size:90%;
+.f9 {
+  font-size: 90%;
 }
-
 
 .input-group-sm .form-control,
 .input-group-sm .input-group-addon,
-.input-group-sm  .input-group-btn  .btn {
-    height: 30px;
-    padding: 5px 10px;
-    font-size: 12px;
-    line-height: 1.5;
-    border-radius: 3px;
-  }
-
-
+.input-group-sm .input-group-btn .btn {
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
 
 /*@media (min-width: 768px){
   body .modal-dialog {
@@ -72,59 +69,58 @@ button.btn.btn-sm {
   }
 }*/
 
-
-.modal-header, .modal-footer {
-    padding: 4px 8px;
-    background: #F6F6F6;
+.modal-header,
+.modal-footer {
+  padding: 4px 8px;
+  background: #f6f6f6;
 }
 
 .modal-header {
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 .modal-footer {
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
-html, body {
-  
+html,
+body {
 }
-.shadow10{
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-}
-
-.text-overflow{
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    overflow:hidden
-}
-.text-orange{
-  color:orange;
+.shadow10 {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.truncate{
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+.text-overflow {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.text-orange {
+  color: orange;
 }
 
-
-
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .loadEffect {
   width: 100px;
   height: 100px;
   margin: 0 auto;
-  margin-top:100px;
+  margin-top: 100px;
   position: relative;
 }
-.loadEffect div{
+.loadEffect div {
   width: 100%;
   height: 100%;
   position: absolute;
   -webkit-animation: load 2.08s linear infinite;
 }
-.loadEffect div span{
+.loadEffect div span {
   display: inline-block;
   width: 20px;
   height: 20px;
@@ -135,41 +131,40 @@ html, body {
   margin-top: -10px;
   margin-left: -10px;
 }
-@-webkit-keyframes load{
-  0%{
-      -webkit-transform: rotate(0deg);
+@-webkit-keyframes load {
+  0% {
+    -webkit-transform: rotate(0deg);
   }
-  10%{
-      -webkit-transform: rotate(45deg);
+  10% {
+    -webkit-transform: rotate(45deg);
   }
-  50%{
-      opacity: 1;
-      -webkit-transform: rotate(160deg);
+  50% {
+    opacity: 1;
+    -webkit-transform: rotate(160deg);
   }
-  62%{
-      opacity: 0;
+  62% {
+    opacity: 0;
   }
-  65%{
-      opacity: 0;
-      -webkit-transform: rotate(200deg);
+  65% {
+    opacity: 0;
+    -webkit-transform: rotate(200deg);
   }
-  90%{
-      -webkit-transform: rotate(340deg);
+  90% {
+    -webkit-transform: rotate(340deg);
   }
-  100%{
-      -webkit-transform: rotate(360deg);
+  100% {
+    -webkit-transform: rotate(360deg);
   }
-
 }
-.loadEffect div:nth-child(1){
-  -webkit-animation-delay:0.2s;
+.loadEffect div:nth-child(1) {
+  -webkit-animation-delay: 0.2s;
 }
-.loadEffect div:nth-child(2){
-  -webkit-animation-delay:0.4s;
+.loadEffect div:nth-child(2) {
+  -webkit-animation-delay: 0.4s;
 }
-.loadEffect div:nth-child(3){
-  -webkit-animation-delay:0.6s;
+.loadEffect div:nth-child(3) {
+  -webkit-animation-delay: 0.6s;
 }
-.loadEffect div:nth-child(4){
-  -webkit-animation-delay:0.8s;
+.loadEffect div:nth-child(4) {
+  -webkit-animation-delay: 0.8s;
 }

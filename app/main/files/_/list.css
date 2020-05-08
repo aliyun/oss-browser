@@ -1,49 +1,49 @@
-.item-block{
-  float:left;
+.item-block {
+  float: left;
   height: 50px;
   width: 220px;
-  margin:6px;
-  padding:4px;
-  border:2px solid #eee;
+  margin: 6px;
+  padding: 4px;
+  border: 2px solid #eee;
   cursor: pointer;
 }
-.item-block:hover{
+.item-block:hover {
   border-color: #ccc;
   cursor: pointer;
 }
-.item-block.active{
+.item-block.active {
   border-color: #3cf;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
-.item-block i.fa{
-  float:left;
-  text-align:center;
-  vertical-align:middle;
-  width:40px;
+.item-block i.fa {
+  float: left;
+  text-align: center;
+  vertical-align: middle;
+  width: 40px;
   height: 40px;
-  line-height:40px;
-  font-size:220%;
+  line-height: 40px;
+  font-size: 220%;
   display: block;
 }
-.item-block .item-block-name{
-  float:left;
+.item-block .item-block-name {
+  float: left;
   display: block;
-  width:140px;
-  height:20px;
+  width: 140px;
+  height: 20px;
   line-height: 20px;
 
   text-overflow: ellipsis;
-  white-space:nowrap;
+  white-space: nowrap;
   overflow: hidden;
 }
 
-.item-block .item-block-desc{
-  float:left;
+.item-block .item-block-desc {
+  float: left;
   display: block;
   text-overflow: ellipsis;
-  width:140px;
-  height:16px;
+  width: 140px;
+  height: 16px;
   line-height: 16px;
-  font-size:80%;
-  color:#999;
+  font-size: 80%;
+  color: #999;
 }

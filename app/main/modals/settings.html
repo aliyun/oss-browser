@@ -10,26 +10,45 @@
     </h4>
   </div>
   <div class="modal-body">
-
     <fieldset>
-      <legend><h5 class="text-primary">{{'settings.subtitle.updown'|translate}}</h5></legend>
+      <legend>
+        <h5 class="text-primary">{{'settings.subtitle.updown'|translate}}</h5>
+      </legend>
       <div class="form-group">
         <label class="col-sm-4 control-label">
-        <!-- 最大上传任务数: -->
-        {{'settings.maxUploadNum'|translate}}:
-      </label>
+          <!-- 最大上传任务数: -->
+          {{'settings.maxUploadNum'|translate}}:
+        </label>
         <div class="col-sm-7">
-          <input type="number" name="maxUploadJobCount" ng-model="set.maxUploadJobCount" ng-change="setChange(form1,'maxUploadJobCount')" max="10" min="1" required class=" form-control" />
+          <input
+            type="number"
+            name="maxUploadJobCount"
+            ng-model="set.maxUploadJobCount"
+            ng-change="setChange(form1,'maxUploadJobCount')"
+            max="10"
+            min="1"
+            required
+            class="form-control"
+          />
         </div>
       </div>
 
       <div class="form-group">
         <label class="col-sm-4 control-label">
-        <!-- 最大下载任务数: -->
-        {{'settings.maxDownloadNum'|translate}}:
-      </label>
+          <!-- 最大下载任务数: -->
+          {{'settings.maxDownloadNum'|translate}}:
+        </label>
         <div class="col-sm-7">
-          <input type="number" name="maxDownloadJobCount" ng-model="set.maxDownloadJobCount" ng-change="setChange(form1,'maxDownloadJobCount')" max="10" min="1" required class=" form-control" />
+          <input
+            type="number"
+            name="maxDownloadJobCount"
+            ng-model="set.maxDownloadJobCount"
+            ng-change="setChange(form1,'maxDownloadJobCount')"
+            max="10"
+            min="1"
+            required
+            class="form-control"
+          />
         </div>
       </div>
 
@@ -39,7 +58,14 @@
           {{'settings.connectTimeout'|translate}}:
         </label>
         <div class="col-sm-7">
-          <input type="string" name="connectTimeout" ng-model="set.connectTimeout" ng-change="setChange(form1,'connectTimeout')"  required class=" form-control" />
+          <input
+            type="string"
+            name="connectTimeout"
+            ng-model="set.connectTimeout"
+            ng-change="setChange(form1,'connectTimeout')"
+            required
+            class="form-control"
+          />
         </div>
       </div>
 
@@ -49,7 +75,16 @@
           {{'settings.uploadPartSize'|translate}}:
         </label>
         <div class="col-sm-7">
-          <input type="number" name="uploadPartSize" ng-model="set.uploadPartSize" ng-change="setChange(form1,'uploadPartSize')" max="100" min="5" required class=" form-control" />
+          <input
+            type="number"
+            name="uploadPartSize"
+            ng-model="set.uploadPartSize"
+            ng-change="setChange(form1,'uploadPartSize')"
+            max="100"
+            min="5"
+            required
+            class="form-control"
+          />
         </div>
       </div>
 
@@ -59,7 +94,16 @@
           {{'settings.downloadConcurrecyPartSize'|translate}}:
         </label>
         <div class="col-sm-7">
-          <input type="number" name="downloadConcurrecyPartSize" ng-model="set.downloadConcurrecyPartSize" ng-change="setChange(form1,'downloadConcurrecyPartSize')" max="100" min="1" required class=" form-control" />
+          <input
+            type="number"
+            name="downloadConcurrecyPartSize"
+            ng-model="set.downloadConcurrecyPartSize"
+            ng-change="setChange(form1,'downloadConcurrecyPartSize')"
+            max="100"
+            min="1"
+            required
+            class="form-control"
+          />
         </div>
       </div>
 
@@ -69,10 +113,18 @@
           {{'settings.uploadAndDownloadRetryTimes'|translate}}:
         </label>
         <div class="col-sm-7">
-          <input type="number" name="uploadAndDownloadRetryTimes" ng-model="set.uploadAndDownloadRetryTimes" ng-change="setChange(form1,'uploadAndDownloadRetryTimes')" max="20" min="3" required class=" form-control" />
+          <input
+            type="number"
+            name="uploadAndDownloadRetryTimes"
+            ng-model="set.uploadAndDownloadRetryTimes"
+            ng-change="setChange(form1,'uploadAndDownloadRetryTimes')"
+            max="20"
+            min="3"
+            required
+            class="form-control"
+          />
         </div>
       </div>
-
     </fieldset>
 
     <!-- <div class="form-group">
@@ -84,123 +136,198 @@
       </div> -->
 
     <fieldset>
-      <legend><h5 class="text-primary">{{'settings.subtitle.sys'|translate}}</h5></legend>
+      <legend>
+        <h5 class="text-primary">{{'settings.subtitle.sys'|translate}}</h5>
+      </legend>
 
       <div class="form-group">
         <label class="col-sm-4 control-label">
-        <!-- 自动更新: -->
-        {{'settings.autoUpgrade'|translate}}:
-      </label>
+          <!-- 自动更新: -->
+          {{'settings.autoUpgrade'|translate}}:
+        </label>
         <div class="col-sm-7">
           <div class="checkbox">
             <label>
-          <input type="checkbox" name="autoUpgrade"
-          ng-model="set.autoUpgrade"
-          ng-change="setChange(form1,'autoUpgrade')"
-          ng-true-value="1" ng-false-value="0" />
-          <!-- (自动下载更新包) -->
-          ({{'settings.autoUpgrade.msg'|translate}})
-        </label>
+              <input
+                type="checkbox"
+                name="autoUpgrade"
+                ng-model="set.autoUpgrade"
+                ng-change="setChange(form1,'autoUpgrade')"
+                ng-true-value="1"
+                ng-false-value="0"
+              />
+              <!-- (自动下载更新包) -->
+              ({{'settings.autoUpgrade.msg'|translate}})
+            </label>
           </div>
         </div>
       </div>
 
       <div class="form-group">
         <label class="col-sm-4 control-label">
-        <!-- 是否显示图片缩略: -->
-        {{'settings.WhetherShowThumbnail'|translate}}:
-      </label>
+          <!-- 是否显示图片缩略: -->
+          {{'settings.WhetherShowThumbnail'|translate}}:
+        </label>
         <div class="col-sm-7">
           <div class="checkbox">
             <label>
-          <input type="checkbox" name="showImageSnapshot"
-          ng-model="set.showImageSnapshot"
-          ng-change="setChange(form1,'showImageSnapshot')"
-          ng-true-value="1" ng-false-value="0" />
-          <!-- (在文件列表中显示图片缩略, 会消耗一定的流量) -->
-          ({{'settings.WhetherShowThumbnail.msg'|translate}})
-        </label>
+              <input
+                type="checkbox"
+                name="showImageSnapshot"
+                ng-model="set.showImageSnapshot"
+                ng-change="setChange(form1,'showImageSnapshot')"
+                ng-true-value="1"
+                ng-false-value="0"
+              />
+              <!-- (在文件列表中显示图片缩略, 会消耗一定的流量) -->
+              ({{'settings.WhetherShowThumbnail.msg'|translate}})
+            </label>
           </div>
         </div>
       </div>
-
 
       <div class="form-group">
         <label class="col-sm-4 control-label">{{'language'|translate}}:</label>
         <div class="col-sm-7">
-          <select class="form-control input-sm" ng-model="langSettings.lang" ng-change="langSettings.changeLanguage(langSettings.lang)" ng-options="a.lang as a.label for a in langSettings.langList"></select>
+          <select
+            class="form-control input-sm"
+            ng-model="langSettings.lang"
+            ng-change="langSettings.changeLanguage(langSettings.lang)"
+            ng-options="a.lang as a.label for a in langSettings.langList"
+          ></select>
         </div>
       </div>
-
     </fieldset>
 
     <fieldset>
       <legend>
-        <h5 class="text-primary">{{'settings.subtitle.email'|translate}}
-        <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}" tooltip-append-to-body="true"
-        ng-click="openURL('https://github.com/aliyun/oss-browser/blob/master/docs/smtpSetting.md')">
-        <i class="fa fa-question-circle"></i></a>
+        <h5 class="text-primary">
+          {{'settings.subtitle.email'|translate}}
+          <a
+            href=""
+            uib-tooltip="{{'auth.authToken.tooltip'|translate}}"
+            tooltip-append-to-body="true"
+            ng-click="openURL('https://github.com/aliyun/oss-browser/blob/master/docs/smtpSetting.md')"
+          >
+            <i class="fa fa-question-circle"></i
+          ></a>
         </h5>
       </legend>
 
       <div class="form-group">
         <label class="col-sm-4 control-label">
-        <!-- SMTP地址: -->
-        {{'settings.mailSmtp.addr'|translate}}:
-      </label>
-        <div class="col-sm-5" style="padding-right:2px">
-          <input type="text" name="host" ng-pattern="reg.host" ng-model="set.mailSmtp.host" placeholder="Host" ng-required="false" ng-change="setChange(form1,'mailSmtp', 1000)" class="form-control" />
+          <!-- SMTP地址: -->
+          {{'settings.mailSmtp.addr'|translate}}:
+        </label>
+        <div class="col-sm-5" style="padding-right: 2px;">
+          <input
+            type="text"
+            name="host"
+            ng-pattern="reg.host"
+            ng-model="set.mailSmtp.host"
+            placeholder="Host"
+            ng-required="false"
+            ng-change="setChange(form1,'mailSmtp', 1000)"
+            class="form-control"
+          />
         </div>
 
-        <div class="col-sm-2" style="padding-left:0">
-          <input type="number" name="port" ng-pattern="reg.port" ng-model="set.mailSmtp.port" placeholder="Port" ng-required="false" ng-change="setChange(form1,'mailSmtp', 1000)" class="form-control" />
+        <div class="col-sm-2" style="padding-left: 0;">
+          <input
+            type="number"
+            name="port"
+            ng-pattern="reg.port"
+            ng-model="set.mailSmtp.port"
+            placeholder="Port"
+            ng-required="false"
+            ng-change="setChange(form1,'mailSmtp', 1000)"
+            class="form-control"
+          />
         </div>
       </div>
 
       <div class="form-group">
         <label class="col-sm-4 control-label">
-        <!-- 使用SSL: -->
-        {{'settings.mailSmtp.ssl'|translate}}:
-      </label>
-        <div class="col-sm-7">
-          <input type="checkbox" name="secure" ng-model="set.mailSmtp.secure" ng-change="setChange(form1,'mailSmtp', 1000)" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-4 control-label">
-        <!-- 发送邮件的邮箱: -->
-        {{'settings.mailSmtp.from'|translate}}:
-      </label>
-        <div class="col-sm-7">
-          <input type="text" name="email" ng-pattern="reg.from" ng-model="set.mailSmtp.from" placeholder="Email" ng-required="false" ng-change="setChange(form1,'mailSmtp', 1000)" class="form-control" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-4 control-label">
-        {{'user'|translate}}/{{'pass'|translate}}
-        <!-- 用户名/密码: -->
-      </label>
-        <div class="col-sm-4" style="padding-right:2px">
-          <input type="text" name="text" ng-model="set.mailSmtp.auth.user" placeholder="UserName" ng-required="false" ng-change="setChange(form1,'mailSmtp', 1000)" class="form-control" />
-        </div>
-
-        <div class="col-sm-3" style="padding-left:0">
-          <input type="password" name="password" ng-model="set.mailSmtp.auth.pass" class="form-control" ng-change="setChange(form1,'mailSmtp', 1000)" ng-required="false" placeholder="password" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-4 control-label">
+          <!-- 使用SSL: -->
+          {{'settings.mailSmtp.ssl'|translate}}:
         </label>
         <div class="col-sm-7">
-           <button type="button" ng-disabled="!set.mailSmtp.from" class="btn btn-sm btn-default" ng-click="testMail()">{{'test'|translate}}</button>
+          <input
+            type="checkbox"
+            name="secure"
+            ng-model="set.mailSmtp.secure"
+            ng-change="setChange(form1,'mailSmtp', 1000)"
+          />
         </div>
       </div>
-  </fieldset>
+
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+          <!-- 发送邮件的邮箱: -->
+          {{'settings.mailSmtp.from'|translate}}:
+        </label>
+        <div class="col-sm-7">
+          <input
+            type="text"
+            name="email"
+            ng-pattern="reg.from"
+            ng-model="set.mailSmtp.from"
+            placeholder="Email"
+            ng-required="false"
+            ng-change="setChange(form1,'mailSmtp', 1000)"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+          {{'user'|translate}}/{{'pass'|translate}}
+          <!-- 用户名/密码: -->
+        </label>
+        <div class="col-sm-4" style="padding-right: 2px;">
+          <input
+            type="text"
+            name="text"
+            ng-model="set.mailSmtp.auth.user"
+            placeholder="UserName"
+            ng-required="false"
+            ng-change="setChange(form1,'mailSmtp', 1000)"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-sm-3" style="padding-left: 0;">
+          <input
+            type="password"
+            name="password"
+            ng-model="set.mailSmtp.auth.pass"
+            class="form-control"
+            ng-change="setChange(form1,'mailSmtp', 1000)"
+            ng-required="false"
+            placeholder="password"
+          />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-4 control-label"> </label>
+        <div class="col-sm-7">
+          <button
+            type="button"
+            ng-disabled="!set.mailSmtp.from"
+            class="btn btn-sm btn-default"
+            ng-click="testMail()"
+          >
+            {{'test'|translate}}
+          </button>
+        </div>
+      </div>
+    </fieldset>
 
     <fieldset>
-      <legend><h5 class="text-primary">{{'settings.log'|translate}}</h5></legend>
+      <legend>
+        <h5 class="text-primary">{{'settings.log'|translate}}</h5>
+      </legend>
 
       <div class="form-group">
         <label class="col-sm-4 control-label">
@@ -222,10 +349,14 @@
         <div class="col-sm-7">
           <div class="checkbox">
             <label>
-              <input type="checkbox" name="logFile"
-                 ng-model="set.logFile"
-                 ng-change="setChange(form1,'logFile')"
-                 ng-true-value="1" ng-false-value="0" />
+              <input
+                type="checkbox"
+                name="logFile"
+                ng-model="set.logFile"
+                ng-change="setChange(form1,'logFile')"
+                ng-true-value="1"
+                ng-false-value="0"
+              />
               ({{'settings.file.msg'|translate}})
             </label>
           </div>
@@ -240,19 +371,20 @@
         <div class="col-sm-7">
           <div class="checkbox">
             <label>
-              <input type="checkbox" name="logFileInfo"
-                     ng-model="set.logFileInfo"
-                     ng-change="setChange(form1,'logFileInfo')"
-                     ng-true-value="1" ng-false-value="0" />
+              <input
+                type="checkbox"
+                name="logFileInfo"
+                ng-model="set.logFileInfo"
+                ng-change="setChange(form1,'logFileInfo')"
+                ng-true-value="1"
+                ng-false-value="0"
+              />
               ({{'settings.file.info.msg'|translate}})
             </label>
           </div>
         </div>
       </div>
-
     </fieldset>
-
-
   </div>
   <div class="modal-footer">
     <!-- <button type="submit" class="btn btn-success btn-sm">
@@ -263,6 +395,5 @@
       <!-- 关闭 -->
       {{'close'|translate}}
     </button>
-  </div>
   </div>
 </form>

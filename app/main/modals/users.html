@@ -1,79 +1,92 @@
-
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="cancel()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <h4 class="modal-title">
-      <i class="fa fa-users text-orange"></i>
-      {{'users.title'|translate}}
-      <!-- 子用户管理 -->
-    </h4>
-  </div>
-  <div class="modal-body form-horizontal">
-
-    <div class="alert alert-success">
-      {{'user.list.message.tip'|translate}}
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="modal-title">
+    <i class="fa fa-users text-orange"></i>
+    {{'users.title'|translate}}
+    <!-- 子用户管理 -->
+  </h4>
+</div>
+<div class="modal-body form-horizontal">
+  <div class="alert alert-success">
+    {{'user.list.message.tip'|translate}}
     <!-- 这里只提供必要的用户管理功能，更进一步的增强功能，请到RAM控制台操作: -->
-      <a href="" ng-click="openURL('https://ram.console.aliyun.com')">https://ram.console.aliyun.com</a>
-    </div>
+    <a href="" ng-click="openURL('https://ram.console.aliyun.com')"
+      >https://ram.console.aliyun.com</a
+    >
+  </div>
 
-    <header class="form-group">
-      <div class="col-sm-9">
-       <div class="input-group input-group-sm">
-          <input type="text" ng-model="sch.txt" class="form-control" cleanable-input placeholder="{{'ram.search.placeholder'|translate}}"/>
-          <span class="input-group-btn">
-            <a class="btn btn-info"><i class="fa fa-search"></i></a>
-          </span>
-       </div>
-     </div>
-     <div class="col-sm-3 text-right">
-       <!-- <a class="btn btn-success btn-sm" ng-click="showAdd()">
+  <header class="form-group">
+    <div class="col-sm-9">
+      <div class="input-group input-group-sm">
+        <input
+          type="text"
+          ng-model="sch.txt"
+          class="form-control"
+          cleanable-input
+          placeholder="{{'ram.search.placeholder'|translate}}"
+        />
+        <span class="input-group-btn">
+          <a class="btn btn-info"><i class="fa fa-search"></i></a>
+        </span>
+      </div>
+    </div>
+    <div class="col-sm-3 text-right">
+      <!-- <a class="btn btn-success btn-sm" ng-click="showAdd()">
          <i class="fa fa-plus"></i>
           {{'add'|translate}}
        </a> -->
 
-       <a class="btn btn-default btn-sm" ng-click="refresh()">
-         <i class="fa fa-refresh"></i>
-         {{'refresh'|translate}}
-       </a>
-     </div>
-    </header>
+      <a class="btn btn-default btn-sm" ng-click="refresh()">
+        <i class="fa fa-refresh"></i>
+        {{'refresh'|translate}}
+      </a>
+    </div>
+  </header>
 
-    <div ng-if="err" class="alert alert-danger">{{err.message}}</div>
+  <div ng-if="err" class="alert alert-danger">{{err.message}}</div>
 
-    <div is-loading ng-if="isLoading"> </div>
+  <div is-loading ng-if="isLoading"></div>
 
-    <div no-data ng-if="!isLoading && items.length==0"> </div>
-    <table ng-if="!isLoading && items.length>0"
-      class="mg0 table table-bordered table-striped table-condensed">
-       <tr><th>{{'username'|translate}}/{{'displayName'|translate}}</th>
-         <th>{{'comments'|translate}}</th>
-         <th>{{'lastModifyTime'|translate}}</th>
-         <th>{{'actions'|translate}}</th></tr>
-       <tr ng-repeat="item in items|filter:sch.txt">
-         <td>
-           <a href="" ng-click="showUpdate(item)">{{item.UserName}}</a>
-           <span ng-if="item.DisplayName">({{item.DisplayName}})</span>
-         </td>
-         <td>{{item.Comments|sub:30}}</td>
-         <td>{{item.UpdateDate|timeFormat}}</td>
-         <td>
-           <a href="" class="text-primary" ng-click="showUpdate(item)">{{'update'|translate}}</a> |
-            <a href="" class="text-primary" ng-click="showAK(item)">{{'aks'|translate}}</a> |
-            <a href="" class="text-danger" ng-click="showRemove(item)">{{'delete'|translate}}</a>
-         </td>
-       </tr>
-    </table>
-
-
-
-  </div>
-  <div class="modal-footer">
-
-    <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
-      <i class="glyphicon glyphicon-remove"></i>
-      <!-- 关闭 -->
-      {{'close'|translate}}
-    </button>
-  </div>
+  <div no-data ng-if="!isLoading && items.length==0"></div>
+  <table
+    ng-if="!isLoading && items.length>0"
+    class="mg0 table table-bordered table-striped table-condensed"
+  >
+    <tr>
+      <th>{{'username'|translate}}/{{'displayName'|translate}}</th>
+      <th>{{'comments'|translate}}</th>
+      <th>{{'lastModifyTime'|translate}}</th>
+      <th>{{'actions'|translate}}</th>
+    </tr>
+    <tr ng-repeat="item in items|filter:sch.txt">
+      <td>
+        <a href="" ng-click="showUpdate(item)">{{item.UserName}}</a>
+        <span ng-if="item.DisplayName">({{item.DisplayName}})</span>
+      </td>
+      <td>{{item.Comments|sub:30}}</td>
+      <td>{{item.UpdateDate|timeFormat}}</td>
+      <td>
+        <a href="" class="text-primary" ng-click="showUpdate(item)"
+          >{{'update'|translate}}</a
+        >
+        |
+        <a href="" class="text-primary" ng-click="showAK(item)"
+          >{{'aks'|translate}}</a
+        >
+        |
+        <a href="" class="text-danger" ng-click="showRemove(item)"
+          >{{'delete'|translate}}</a
+        >
+      </td>
+    </tr>
+  </table>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
+    <i class="glyphicon glyphicon-remove"></i>
+    <!-- 关闭 -->
+    {{'close'|translate}}
+  </button>
 </div>

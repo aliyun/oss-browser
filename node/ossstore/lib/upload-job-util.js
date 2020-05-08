@@ -1,16 +1,14 @@
-'use strict';
+"use strict";
 
-
-var fs = require('fs');
-var path = require('path');
-var util = require('./util');
-var commonUtil = require('./util');
+var fs = require("fs");
+var path = require("path");
+var util = require("./util");
+var commonUtil = require("./util");
 var RETRYTIMES = commonUtil.getRetryTimes();
-
 
 module.exports = {
   genUploadNumArr: genUploadNumArr,
-  prepareChunks:prepareChunks,
+  prepareChunks: prepareChunks,
   getSensibleChunkSize: getSensibleChunkSize,
   parseLocalPath: util.parseLocalPath,
   parseOssPath: util.parseOssPath,
@@ -24,129 +22,134 @@ module.exports = {
   computeMaxConcurrency: computeMaxConcurrency,
 
   checkFileHash: util.checkFileHash,
-  printPartTimeLine: util.printPartTimeLine
+  printPartTimeLine: util.printPartTimeLine,
 };
-
-
 
 /*************************************
  //  以下是纯函数
  ************************************/
 
-
-function getFileCrc64_2(self, p, fn){
-  if(self.crc64Str){
+function getFileCrc64_2(self, p, fn) {
+  if (self.crc64Str) {
     fn(null, self.crc64Str);
     return;
   }
-   var retryTimes = 0;
-   _dig();
-   function _dig(){
-     util.getFileCrc64(p,function(err,data){
-       if(err){
-         if(retryTimes> RETRYTIMES ){
-           fn(err);
-         }else{
-           retryTimes ++;
-           setTimeout(function(){
-             if(!self.stopFlag)_dig();
-           },1000);
-         }
-       }else{
-         fn(null,data);
-       }
-     });
-   }
-};
-
-
-function getPartProgress(checkPoints){
-  var total = checkPoints.chunks.length;
-  var c=0;
-  for(var k in checkPoints.Parts){
-    if(checkPoints.Parts[k].ETag) c++;
-  }
-
-  return {
-    done: c, total: total
-  };
-}
-
-function checkAllPartCompleted(checkPoints){
-  var prog = getPartProgress(checkPoints);
-  return prog.done==prog.total;
-}
-
-
-function completeMultipartUpload(self, doneParams ,fn){
-  var retryTimes  = 0;
-  setTimeout(_dig,10);
-  function _dig(){
-    self.oss.completeMultipartUpload(doneParams, function(err, data){
-
+  var retryTimes = 0;
+  _dig();
+  function _dig() {
+    util.getFileCrc64(p, function (err, data) {
       if (err) {
-        if(err.message.indexOf('The specified upload does not exist')!=-1){
-
-          self.oss.headObject({
-            Bucket: self.to.bucket,
-            Key: self.to.key
-          }, function(err2, data2){
-            //console.log('headobject: ', err2, err2.message, data);
-            if(err2){
-              fn(err2);
-            }else{
-              fn(null, data2);
-            }
-          });
-          return;
-        }
-
-        if(retryTimes > RETRYTIMES){
+        if (retryTimes > RETRYTIMES) {
           fn(err);
-        }else{
+        } else {
           retryTimes++;
-          self._changeStatus('retrying', retryTimes);
-          console.error('completeMultipartUpload error', err, ', ----- retrying...', `${retryTimes}/${RETRYTIMES}`);
-          setTimeout(function(){
-            if(!self.stopFlag) _dig();
-          },2000);
+          setTimeout(function () {
+            if (!self.stopFlag) _dig();
+          }, 1000);
         }
-      }
-      else{
+      } else {
         fn(null, data);
       }
     });
+  }
+}
+
+function getPartProgress(checkPoints) {
+  var total = checkPoints.chunks.length;
+  var c = 0;
+  for (var k in checkPoints.Parts) {
+    if (checkPoints.Parts[k].ETag) c++;
+  }
+
+  return {
+    done: c,
+    total: total,
   };
 }
 
-function getUploadId(checkPoints, self, params, fn){
+function checkAllPartCompleted(checkPoints) {
+  var prog = getPartProgress(checkPoints);
+  return prog.done == prog.total;
+}
 
-  if(checkPoints.uploadId){
+function completeMultipartUpload(self, doneParams, fn) {
+  var retryTimes = 0;
+  setTimeout(_dig, 10);
+  function _dig() {
+    self.oss.completeMultipartUpload(doneParams, function (err, data) {
+      if (err) {
+        if (err.message.indexOf("The specified upload does not exist") != -1) {
+          self.oss.headObject(
+            {
+              Bucket: self.to.bucket,
+              Key: self.to.key,
+            },
+            function (err2, data2) {
+              //console.log('headobject: ', err2, err2.message, data);
+              if (err2) {
+                fn(err2);
+              } else {
+                fn(null, data2);
+              }
+            }
+          );
+          return;
+        }
+
+        if (retryTimes > RETRYTIMES) {
+          fn(err);
+        } else {
+          retryTimes++;
+          self._changeStatus("retrying", retryTimes);
+          console.error(
+            "completeMultipartUpload error",
+            err,
+            ", ----- retrying...",
+            `${retryTimes}/${RETRYTIMES}`
+          );
+          setTimeout(function () {
+            if (!self.stopFlag) _dig();
+          }, 2000);
+        }
+      } else {
+        fn(null, data);
+      }
+    });
+  }
+}
+
+function getUploadId(checkPoints, self, params, fn) {
+  if (checkPoints.uploadId) {
     fn(null, checkPoints.uploadId);
     return;
   }
 
-  var retryTimes  = 0;
+  var retryTimes = 0;
   _dig();
-  function _dig(){
+  function _dig() {
     self.oss.createMultipartUpload(params, function (err, res) {
-
       //console.log(err, res, '<========')
       if (err) {
-        if(err.message.indexOf('You have no right to access')!=-1 || retryTimes > RETRYTIMES){
+        if (
+          err.message.indexOf("You have no right to access") != -1 ||
+          retryTimes > RETRYTIMES
+        ) {
           fn(err);
-        }else{
-
+        } else {
           retryTimes++;
-          self._changeStatus('retrying', retryTimes);
-          console.warn('createMultipartUpload error', err, ', ----- retrying...', `${retryTimes}/${RETRYTIMES}`);
-          setTimeout(function(){
-            if(!self.stopFlag)_dig();
-          },2000);
+          self._changeStatus("retrying", retryTimes);
+          console.warn(
+            "createMultipartUpload error",
+            err,
+            ", ----- retrying...",
+            `${retryTimes}/${RETRYTIMES}`
+          );
+          setTimeout(function () {
+            if (!self.stopFlag) _dig();
+          }, 2000);
         }
         return;
-      }
-      else{
+      } else {
         checkPoints.uploadId = res.UploadId;
         fn(null, res.UploadId);
       }
@@ -154,53 +157,51 @@ function getUploadId(checkPoints, self, params, fn){
   }
 }
 
-function genUploadNumArr(result){
+function genUploadNumArr(result) {
   var parts = result.Parts;
   var chunkNum = result.chunks.length;
 
   var mDone = {};
-  var mHas={};
-  if(parts){
-    for(var k in parts){
-      if(parts[k].ETag) {
+  var mHas = {};
+  if (parts) {
+    for (var k in parts) {
+      if (parts[k].ETag) {
         mDone[k] = parts[k].ETag;
       }
-      mHas[k]=parts[k];
+      mHas[k] = parts[k];
     }
   }
 
-  var t=[];
-  for(var i=0;i<chunkNum;i++){
-    if(!mDone[(i+1)+'']){
+  var t = [];
+  for (var i = 0; i < chunkNum; i++) {
+    if (!mDone[i + 1 + ""]) {
       t.push(i);
     }
 
-    if(!mHas[(i+1)+'']){
-      parts[(i+1)+'']={
+    if (!mHas[i + 1 + ""]) {
+      parts[i + 1 + ""] = {
         PartNumber: i + 1,
-        loaded: 0
+        loaded: 0,
       };
     }
   }
   return t;
 }
 
-
-
-function prepareChunks(filePath, checkPoints, fn){
-
+function prepareChunks(filePath, checkPoints, fn) {
   checkPoints = checkPoints || {};
 
   var fileName = path.basename(filePath);
 
-  fs.stat(filePath, function(err, state) {
+  fs.stat(filePath, function (err, state) {
     if (err) {
       callback(err);
       return;
     }
 
-    var chunkSize = checkPoints.chunkSize  || getSensibleChunkSize(state.size);
-    var chunkNum = state.size > chunkSize ? Math.ceil(state.size / chunkSize) : 1;
+    var chunkSize = checkPoints.chunkSize || getSensibleChunkSize(state.size);
+    var chunkNum =
+      state.size > chunkSize ? Math.ceil(state.size / chunkSize) : 1;
 
     //console.log('chunkSize: ', chunkSize, "chunkNum: ", chunkNum);
 
@@ -210,7 +211,7 @@ function prepareChunks(filePath, checkPoints, fn){
       var start = i * chunkSize;
       chunks[i] = {
         start: start,
-        len: (i + 1 == chunkNum) ? (state.size - start) : chunkSize
+        len: i + 1 == chunkNum ? state.size - start : chunkSize,
       };
     }
 
@@ -222,41 +223,40 @@ function prepareChunks(filePath, checkPoints, fn){
       file: {
         name: fileName,
         size: state.size,
-        path: filePath
-      }
+        path: filePath,
+      },
     });
-
   });
 }
-
-
 
 /**
  * @param total size
  */
 function getSensibleChunkSize(size) {
+  console.warn(
+    `localStorage uploadPartSize: " ${
+      localStorage.getItem("uploadPartSize") || 10
+    }M`
+  );
 
-  console.warn(`localStorage uploadPartSize: " ${localStorage.getItem('uploadPartSize')|| 10 }M`)
+  var chunkSize =
+    parseInt(localStorage.getItem("uploadPartSize") || 10) * 1024 * 1024;
 
-  var chunkSize = parseInt(localStorage.getItem('uploadPartSize') || 10 ) * 1024 * 1024;
-
-  if(size < chunkSize){
-      return size;
+  if (size < chunkSize) {
+    return size;
   }
 
-  var c = Math.ceil(size/10000);
+  var c = Math.ceil(size / 10000);
   return Math.max(c, chunkSize);
 }
 
-
 //根据网速调整上传并发量
-function computeMaxConcurrency(speed, chunkSize, lastConcurrency){
+function computeMaxConcurrency(speed, chunkSize, lastConcurrency) {
   lastConcurrency = lastConcurrency || 5;
-  if(speed > chunkSize * lastConcurrency * 0.9){
+  if (speed > chunkSize * lastConcurrency * 0.9) {
     return lastConcurrency + 5;
-
-  }else{
-    if(lastConcurrency > 5) return lastConcurrency-3;
+  } else {
+    if (lastConcurrency > 5) return lastConcurrency - 3;
     return 5;
   }
 }

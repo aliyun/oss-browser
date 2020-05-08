@@ -30,113 +30,208 @@
   </div>
 </script>
 
-
-<div style="overflow:auto;height:100%">
-
-  <div class="clearfix" style="height:40px;"></div>
+<div style="overflow: auto; height: 100%;">
+  <div class="clearfix" style="height: 40px;"></div>
 
   <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default shadow10">
       <!-- <div class="panel-heading">
       AK登录
        </div> -->
-      <div class="panel-heading pd0" style="border:0">
-
+      <div class="panel-heading pd0" style="border: 0;">
         <ul class="nav nav-tabs">
-          <li role="presentation" ng-class="{active:gtab==1}"><a href="" ng-click="gtab=1">
-            {{'auth.akLogin'|translate}}
-            <!-- AK登录 -->
-          </a></li>
-          <li role="presentation" ng-class="{active:gtab==2}"><a href="" ng-click="gtab=2">
-            {{'auth.tokenLogin'|translate}}
-            <!-- 授权码登录 -->
-          </a></li>
+          <li role="presentation" ng-class="{active:gtab==1}">
+            <a href="" ng-click="gtab=1">
+              {{'auth.akLogin'|translate}}
+              <!-- AK登录 -->
+            </a>
+          </li>
+          <li role="presentation" ng-class="{active:gtab==2}">
+            <a href="" ng-click="gtab=2">
+              {{'auth.tokenLogin'|translate}}
+              <!-- 授权码登录 -->
+            </a>
+          </li>
         </ul>
-
       </div>
       <div class="panel-body">
-
-        <form ng-if="gtab==1" class="form-horizontal" name="form1" ng-submit="onSubmit(form1)">
+        <form
+          ng-if="gtab==1"
+          class="form-horizontal"
+          name="form1"
+          ng-submit="onSubmit(form1)"
+        >
           <div class="form-group">
-            <label for="endpoint" class="col-sm-4 control-label"><span class="red">*</span> Endpoint:
-              <span uib-popover-template="'auth-endpoint-popup.html'"
-                    popover-trigger="'mouseenter'" popover-append-to-body="true">
-                          <i class="fa fa-question-circle"></i>
-                        </span>
+            <label for="endpoint" class="col-sm-4 control-label"
+              ><span class="red">*</span> Endpoint:
+              <span
+                uib-popover-template="'auth-endpoint-popup.html'"
+                popover-trigger="'mouseenter'"
+                popover-append-to-body="true"
+              >
+                <i class="fa fa-question-circle"></i>
+              </span>
             </label>
-            <div class="col-sm-8" style="padding:0">
-
-              <div ng-class="{'col-sm-9':eptplType=='default','col-sm-4':eptplType=='customize'||eptplType=='cname'}">
-                <select class="form-control" ng-model="eptplType" ng-change="eptplChange(eptplType)">
-                  <option value="default">{{'default'|translate}} ({{'public.cloud'|translate}})
+            <div class="col-sm-8" style="padding: 0;">
+              <div
+                ng-class="{'col-sm-9':eptplType=='default','col-sm-4':eptplType=='customize'||eptplType=='cname'}"
+              >
+                <select
+                  class="form-control"
+                  ng-model="eptplType"
+                  ng-change="eptplChange(eptplType)"
+                >
+                  <option value="default"
+                    >{{'default'|translate}} ({{'public.cloud'|translate}})
                   </option>
                   <option value="customize">{{'customize'|translate}}</option>
                   <option value="cname">cname</option>
                 </select>
               </div>
-              <div ng-if="eptplType=='default'" class="col-sm-3" style="height:34px">
-                <label style="vertical-align: -webkit-baseline-middle; margin-bottom: 0;">
-                  <input type="checkbox" ng-model="flags.secure" ng-true-value="'YES'" ng-false-value="'NO'">
+              <div
+                ng-if="eptplType=='default'"
+                class="col-sm-3"
+                style="height: 34px;"
+              >
+                <label
+                  style="
+                    vertical-align: -webkit-baseline-middle;
+                    margin-bottom: 0;
+                  "
+                >
+                  <input
+                    type="checkbox"
+                    ng-model="flags.secure"
+                    ng-true-value="'YES'"
+                    ng-false-value="'NO'"
+                  />
                   {{'auth.secure'|translate}}
                 </label>
               </div>
-              <div style="display:flex;justify-content: space-around" class="col-sm-8"
-                   style="padding-left:0" ng-if="eptplType=='customize'"
-                   ng-class="{'has-error':!form1.endpoint.$valid}">
-                <input type="text" required ng-model="item.eptpl" ng-pattern="/^http(s)?\:\/\//"
-                       class="form-control" id="endpoint" name="endpoint" placeholder="http(s)://">
+              <div
+                style="display: flex; justify-content: space-around;"
+                class="col-sm-8"
+                style="padding-left: 0;"
+                ng-if="eptplType=='customize'"
+                ng-class="{'has-error':!form1.endpoint.$valid}"
+              >
+                <input
+                  type="text"
+                  required
+                  ng-model="item.eptpl"
+                  ng-pattern="/^http(s)?\:\/\//"
+                  class="form-control"
+                  id="endpoint"
+                  name="endpoint"
+                  placeholder="http(s)://"
+                />
               </div>
               <!--// cname -->
-              <div style="display:flex;justify-content: space-around" class="col-sm-8"
-                   style="padding-left:0" ng-if="eptplType=='cname'"
-                   ng-class="{'has-error':!form1.endpoint.$valid}">
-                <input type="text" required ng-model="item.eptplcname" ng-pattern="/^http(s)?\:\/\//"
-                       class="form-control" id="cname" name="cname" placeholder="http(s)://">
+              <div
+                style="display: flex; justify-content: space-around;"
+                class="col-sm-8"
+                style="padding-left: 0;"
+                ng-if="eptplType=='cname'"
+                ng-class="{'has-error':!form1.endpoint.$valid}"
+              >
+                <input
+                  type="text"
+                  required
+                  ng-model="item.eptplcname"
+                  ng-pattern="/^http(s)?\:\/\//"
+                  class="form-control"
+                  id="cname"
+                  name="cname"
+                  placeholder="http(s)://"
+                />
               </div>
             </div>
           </div>
-          <div class="form-group has-feedback" ng-class="{'has-error': !form1.aid.$valid }">
-            <label for="aid" class="col-sm-4 control-label"><span class="red">*</span> AccessKeyId:</label>
+          <div
+            class="form-group has-feedback"
+            ng-class="{'has-error': !form1.aid.$valid }"
+          >
+            <label for="aid" class="col-sm-4 control-label"
+              ><span class="red">*</span> AccessKeyId:</label
+            >
             <div class="col-sm-8">
-              <input type="text" required ng-model="item.id"
-                     class="form-control" id="aid" name="aid"
-                     placeholder="{{'auth.id.placeholder'|translate}}">
+              <input
+                type="text"
+                required
+                ng-model="item.id"
+                class="form-control"
+                id="aid"
+                name="aid"
+                placeholder="{{'auth.id.placeholder'|translate}}"
+              />
             </div>
           </div>
-          <div class="form-group has-feedback" ng-class="{'has-error': !form1.akey.$valid }">
-            <label for="akey" class="col-sm-4 control-label"><span class="red">*</span>
-              AccessKeySecret:</label>
+          <div
+            class="form-group has-feedback"
+            ng-class="{'has-error': !form1.akey.$valid }"
+          >
+            <label for="akey" class="col-sm-4 control-label"
+              ><span class="red">*</span> AccessKeySecret:</label
+            >
             <div class="col-sm-8">
-              <input type="password" required ng-model="item.secret"
-                     class="form-control" id="akey" name="akey"
-                     placeholder="{{'auth.secret.placeholder'|translate}}">
+              <input
+                type="password"
+                required
+                ng-model="item.secret"
+                class="form-control"
+                id="akey"
+                name="akey"
+                placeholder="{{'auth.secret.placeholder'|translate}}"
+              />
             </div>
           </div>
 
-          <div ng-if="item.id.indexOf('STS.')==0" class="form-group has-feedback"
-               ng-class="{'has-error': !form1.stoken.$valid }">
-            <label for="stoken" class="col-sm-4 control-label"> STS Token:</label>
+          <div
+            ng-if="item.id.indexOf('STS.')==0"
+            class="form-group has-feedback"
+            ng-class="{'has-error': !form1.stoken.$valid }"
+          >
+            <label for="stoken" class="col-sm-4 control-label">
+              STS Token:</label
+            >
             <div class="col-sm-8">
-              <input type="text" required ng-model="item.stoken"
-                     class="form-control" id="stoken" name="stoken"
-                     placeholder="{{'auth.stoken.placeholder'|translate}}">
+              <input
+                type="text"
+                required
+                ng-model="item.stoken"
+                class="form-control"
+                id="stoken"
+                name="stoken"
+                placeholder="{{'auth.stoken.placeholder'|translate}}"
+              />
             </div>
           </div>
 
-
-          <div class="form-group" ng-class="{'has-error': !form1.osspath.$valid }">
+          <div
+            class="form-group"
+            ng-class="{'has-error': !form1.osspath.$valid }"
+          >
             <label for="input3" class="col-sm-4 control-label">
               {{'auth.presetOssPath'|translate}}:
               <!-- 预设OSS路径(可选): -->
-              <span uib-popover-template="'auth-preosspath-popup.html'"
-                    popover-trigger="'mouseenter'" popover-append-to-body="true">
-                            <i class="fa fa-question-circle"></i>
-                          </span>
+              <span
+                uib-popover-template="'auth-preosspath-popup.html'"
+                popover-trigger="'mouseenter'"
+                popover-append-to-body="true"
+              >
+                <i class="fa fa-question-circle"></i>
+              </span>
             </label>
             <div class="col-sm-8">
-              <input type="text" name="osspath" ng-pattern="reg_osspath" ng-model="item.osspath"
-                     class="form-control" id="input3"
-                     placeholder="{{'auth.presetOssPath.placeholder'|translate}}">
+              <input
+                type="text"
+                name="osspath"
+                ng-pattern="reg_osspath"
+                ng-model="item.osspath"
+                class="form-control"
+                id="input3"
+                placeholder="{{'auth.presetOssPath.placeholder'|translate}}"
+              />
             </div>
           </div>
 
@@ -144,35 +239,48 @@
             <div class="col-sm-offset-4 col-sm-8">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="flags.requestpaystatus"
-                         ng-true-value="'YES'" ng-false-value="'NO'">
+                  <input
+                    type="checkbox"
+                    ng-model="flags.requestpaystatus"
+                    ng-true-value="'YES'"
+                    ng-false-value="'NO'"
+                  />
                   {{'requestPay'|translate}}
                   <!-- 记住秘钥 -->
 
-                  <span uib-popover-template="'auth-requestpay-popup.html'"
-                        popover-trigger="'click'" popover-append-to-body="true">
-                                             <i class="fa fa-question-circle"></i>
-                                           </span>
+                  <span
+                    uib-popover-template="'auth-requestpay-popup.html'"
+                    popover-trigger="'click'"
+                    popover-append-to-body="true"
+                  >
+                    <i class="fa fa-question-circle"></i>
+                  </span>
                 </label>
               </div>
             </div>
           </div>
 
-          <div class="form-group" ng-if="item.osspath && item.eptpl.indexOf('{region}')!=-1">
+          <div
+            class="form-group"
+            ng-if="item.osspath && item.eptpl.indexOf('{region}')!=-1"
+          >
             <label for="input4" class="col-sm-4 control-label">
               <!-- <span class="red">*</span> -->
               {{'region'|translate}}:
               <!-- 区域: -->
             </label>
             <div class="col-sm-8">
-              <select required ng-model="item.region"
-                      class="form-control" id="input4"
-                      placeholder="{{'auth.region.placeholder'|translate}}"
-                      ng-options="rg.id as ('region.'+rg.id|translate) for rg in regions">
+              <select
+                required
+                ng-model="item.region"
+                class="form-control"
+                id="input4"
+                placeholder="{{'auth.region.placeholder'|translate}}"
+                ng-options="rg.id as ('region.'+rg.id|translate) for rg in regions"
+              >
               </select>
             </div>
           </div>
-
 
           <div class="form-group">
             <label for="input5" class="col-sm-4 control-label">
@@ -180,9 +288,14 @@
               <!-- 备注(最多30个字): -->
             </label>
             <div class="col-sm-8">
-              <input type="text" ng-model="item.desc" maxlength="30"
-                     class="form-control" id="input5"
-                     placeholder="{{'auth.description.placeholder'|translate}}">
+              <input
+                type="text"
+                ng-model="item.desc"
+                maxlength="30"
+                class="form-control"
+                id="input5"
+                placeholder="{{'auth.description.placeholder'|translate}}"
+              />
             </div>
           </div>
 
@@ -190,24 +303,34 @@
             <div class="col-sm-offset-4 col-sm-8">
               <div class="checkbox">
                 <label style="margin-right: 20px;">
-                  <input type="checkbox" ng-model="flags.keepLoggedIn"
-                         ng-true-value="'YES'" ng-false-value="'NO'">
+                  <input
+                    type="checkbox"
+                    ng-model="flags.keepLoggedIn"
+                    ng-true-value="'YES'"
+                    ng-false-value="'NO'"
+                  />
                   {{'auth.keepLoggedIn'|translate}}
                   <!-- 保持登录 -->
                 </label>
 
                 <label>
-                  <input type="checkbox" ng-model="flags.remember"
-                         ng-true-value="'YES'" ng-false-value="'NO'">
+                  <input
+                    type="checkbox"
+                    ng-model="flags.remember"
+                    ng-true-value="'YES'"
+                    ng-false-value="'NO'"
+                  />
                   {{'auth.remember'|translate}}
                   <!-- 记住秘钥 -->
 
-                  <span uib-popover-template="'auth-remember-popup.html'"
-                        popover-trigger="'mouseenter'" popover-append-to-body="true">
-                                             <i class="fa fa-question-circle"></i>
-                                           </span>
+                  <span
+                    uib-popover-template="'auth-remember-popup.html'"
+                    popover-trigger="'mouseenter'"
+                    popover-append-to-body="true"
+                  >
+                    <i class="fa fa-question-circle"></i>
+                  </span>
                 </label>
-
               </div>
             </div>
           </div>
@@ -219,49 +342,75 @@
                 <!-- 登入 -->
               </button>
 
-              <button type="button" class="btn btn-default" ng-model="flags.showHis"
-                      uib-btn-checkbox btn-checkbox-true="'YES'" btn-checkbox-false="'NO'">
+              <button
+                type="button"
+                class="btn btn-default"
+                ng-model="flags.showHis"
+                uib-btn-checkbox
+                btn-checkbox-true="'YES'"
+                btn-checkbox-false="'NO'"
+              >
                 {{'auth.akHistories'|translate}}
                 <!-- AK历史 -->
               </button>
-
             </div>
           </div>
         </form>
 
-
-        <form ng-if="gtab==2" class="form-horizontal" name="form2" ng-submit="onSubmit2(form2)">
-
+        <form
+          ng-if="gtab==2"
+          class="form-horizontal"
+          name="form2"
+          ng-submit="onSubmit2(form2)"
+        >
           <div class="form-group">
-            <label for="input-x" class="col-sm-3 control-label"><span class="red">*</span>
+            <label for="input-x" class="col-sm-3 control-label"
+              ><span class="red">*</span>
               {{'auth.authToken'|translate}}:
               <!-- 授权码: -->
-              <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}"
-                 tooltip-append-to-body="true"
-                 ng-click="openURL('https://github.com/aliyun/oss-browser/blob/master/docs/authToken.md')">
-                <i class="fa fa-question-circle"></i></a></label>
+              <a
+                href=""
+                uib-tooltip="{{'auth.authToken.tooltip'|translate}}"
+                tooltip-append-to-body="true"
+                ng-click="openURL('https://github.com/aliyun/oss-browser/blob/master/docs/authToken.md')"
+              >
+                <i class="fa fa-question-circle"></i></a
+            ></label>
             <div class="col-sm-9">
-
-                            <textarea required ng-model="item.authToken" rows="10" ng-change="authTokenChange()"
-                                      class="form-control" id="input-x"
-                                      placeholder="{{'auth.authToken.placeholder'|translate}}">
-                             </textarea>
+              <textarea
+                required
+                ng-model="item.authToken"
+                rows="10"
+                ng-change="authTokenChange()"
+                class="form-control"
+                id="input-x"
+                placeholder="{{'auth.authToken.placeholder'|translate}}"
+              >
+              </textarea>
 
               <small class="text-danger" ng-if="!authTokenInfo">
                 {{'auth.authToken.error.invalid'|translate}}
                 <!-- 请输入有效的授权码 -->
               </small>
-              <small class="text-danger" ng-if="authTokenInfo && authTokenInfo.isExpired">
+              <small
+                class="text-danger"
+                ng-if="authTokenInfo && authTokenInfo.isExpired"
+              >
                 {{'auth.authToken.error.expired'|translate}}
                 <!-- 授权码已经过期 -->
               </small>
-              <small class="text-success"
-                     ng-if="authTokenInfo && !authTokenInfo.isExpired && authTokenInfo.expiration">
+              <small
+                class="text-success"
+                ng-if="authTokenInfo && !authTokenInfo.isExpired && authTokenInfo.expiration"
+              >
                 ({{"auth.authToken.info.validUntil"|translate:{expiration:authTokenInfo.expirationStr}
                 }},
                 <!-- (有效期至{{authTokenInfo.expiration|timeFormat}},  -->
                 {{'auth.authToken.info.leftTime'|translate}}:
-                <my-timer class="text-warning" expiration="authTokenInfo.expiration"></my-timer>
+                <my-timer
+                  class="text-warning"
+                  expiration="authTokenInfo.expiration"
+                ></my-timer>
                 )
               </small>
             </div>
@@ -269,23 +418,22 @@
 
           <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9">
-              <button ng-disabled="!authTokenInfo || authTokenInfo.isExpired" type="submit"
-                      class="btn btn-primary">
+              <button
+                ng-disabled="!authTokenInfo || authTokenInfo.isExpired"
+                type="submit"
+                class="btn btn-primary"
+              >
                 {{'auth.login'|translate}}
                 <!-- 登入 -->
               </button>
-
             </div>
           </div>
         </form>
-
-
       </div>
     </div>
   </div>
 
   <div class="clearfix"></div>
-
 
   <div ng-if="gtab==1" class="col-xs-12" ng-show="flags.showHis=='YES'">
     <header>
@@ -294,8 +442,12 @@
         <!-- AK历史 -->
       </h4>
       <div class="col-xs-6">
-        <a href="" ng-click="showCleanHistories()" class="pull-right text-danger"
-           style="padding-top:10px;">
+        <a
+          href=""
+          ng-click="showCleanHistories()"
+          class="pull-right text-danger"
+          style="padding-top: 10px;"
+        >
           {{'auth.clearHistories'|translate}}
           <!-- 清空历史 -->
         </a>
@@ -316,7 +468,9 @@
         <td>{{h.desc}}</td>
         <td>
           <a href="" ng-click="useHis(h)">{{'use'|translate}}</a> |
-          <a href="" ng-click="showRemoveHis(h)" class="text-danger">{{'delete'|translate}}</a>
+          <a href="" ng-click="showRemoveHis(h)" class="text-danger"
+            >{{'delete'|translate}}</a
+          >
         </td>
       </tr>
     </table>

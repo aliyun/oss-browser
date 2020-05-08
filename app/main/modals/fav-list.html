@@ -1,37 +1,39 @@
-
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="cancel()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <h4 class="modal-title">
-      <i class="fa fa-star text-orange"></i>
-      {{'bookmarks.title'|translate}}
-      <!-- 书签管理 -->
-    </h4>
-  </div>
-  <div class="modal-body">
-
-    <div no-data ng-if="!items || items.length==0"> </div>
-    <table ng-if="items.length>0" class="mg0 table table-bordered table-striped table-condensed">
-       <tr><th>URL</th><th>{{'time'|translate}}</th><th>{{'actions'|translate}}</th></tr>
-       <tr ng-repeat="item in items">
-         <td><a href="" ng-click="goTo(item.url)">{{item.url}}</a></td>
-         <td>{{item.time|timeFormat}}</td>
-         <td>
-            <a href="" class="text-danger" ng-click="removeFav(item)">{{'delete'|translate}}</a>
-         </td>
-       </tr>
-    </table>
-
-
-
-  </div>
-  <div class="modal-footer">
-
-    <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
-      <i class="glyphicon glyphicon-remove"></i>
-      <!-- 关闭 -->
-      {{'close'|translate}}
-    </button>
-  </div>
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="modal-title">
+    <i class="fa fa-star text-orange"></i>
+    {{'bookmarks.title'|translate}}
+    <!-- 书签管理 -->
+  </h4>
+</div>
+<div class="modal-body">
+  <div no-data ng-if="!items || items.length==0"></div>
+  <table
+    ng-if="items.length>0"
+    class="mg0 table table-bordered table-striped table-condensed"
+  >
+    <tr>
+      <th>URL</th>
+      <th>{{'time'|translate}}</th>
+      <th>{{'actions'|translate}}</th>
+    </tr>
+    <tr ng-repeat="item in items">
+      <td><a href="" ng-click="goTo(item.url)">{{item.url}}</a></td>
+      <td>{{item.time|timeFormat}}</td>
+      <td>
+        <a href="" class="text-danger" ng-click="removeFav(item)"
+          >{{'delete'|translate}}</a
+        >
+      </td>
+    </tr>
+  </table>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
+    <i class="glyphicon glyphicon-remove"></i>
+    <!-- 关闭 -->
+    {{'close'|translate}}
+  </button>
 </div>

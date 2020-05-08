@@ -1,38 +1,56 @@
-
 <div class="input-group">
-  <input type="text" readonly ng-model="selectedItem.ossPath" class="form-control"/>
+  <input
+    type="text"
+    readonly
+    ng-model="selectedItem.ossPath"
+    class="form-control"
+  />
   <span class="input-group-btn">
-     <button type="button" class="btn btn-default" ng-click="goUp()"
-     ng-disabled="(!showBuckets && keepConfig.bucket!='' &&  keepConfig.key=='') || (showBuckets && keepConfig.bucket=='')">
-       <i class="fa fa-arrow-up text-info"></i>
-     </button>
+    <button
+      type="button"
+      class="btn btn-default"
+      ng-click="goUp()"
+      ng-disabled="(!showBuckets && keepConfig.bucket!='' &&  keepConfig.key=='') || (showBuckets && keepConfig.bucket=='')"
+    >
+      <i class="fa fa-arrow-up text-info"></i>
+    </button>
   </span>
 </div>
-<div style="width:100%;overflow:auto;border:1px solid #ccc;" ng-style="{height:height+'px'}">
+<div
+  style="width: 100%; overflow: auto; border: 1px solid #ccc;"
+  ng-style="{height:height+'px'}"
+>
+  <div is-loading ng-if="isLoading"></div>
 
-  <div is-loading ng-if='isLoading'></div>
-
-  <table ng-if='!isLoading' class="table table-condensed table-striped" style="margin:0">
-
-    <tr ng-repeat="item in items"
-    ng-click="goIn(item);$event.stopPropagation()"
-    ng-class="{info:item.path==keepConfig.key}">
+  <table
+    ng-if="!isLoading"
+    class="table table-condensed table-striped"
+    style="margin: 0;"
+  >
+    <tr
+      ng-repeat="item in items"
+      ng-click="goIn(item);$event.stopPropagation()"
+      ng-class="{info:item.path==keepConfig.key}"
+    >
       <td>
-        <div class="text-overflow" style="cursor:pointer;">
-
+        <div class="text-overflow" style="cursor: pointer;">
           <span>
-            <i ng-if="showBuckets && item.region" class="fa fa-database text-warning"></i>
+            <i
+              ng-if="showBuckets && item.region"
+              class="fa fa-database text-warning"
+            ></i>
             <i ng-if="item.isFolder" class="fa fa-folder text-orange"></i>
-            <i ng-if="!folderOnly && !item.region && !item.isFolder" class="fa fa-file-o"></i>
+            <i
+              ng-if="!folderOnly && !item.region && !item.isFolder"
+              class="fa fa-file-o"
+            ></i>
             &nbsp;
             <label>
               <span>{{item.name}}</span>
             </label>
           </span>
-
         </div>
       </td>
-
     </tr>
   </table>
 </div>

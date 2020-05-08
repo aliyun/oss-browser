@@ -1,18 +1,18 @@
-.my-nav.navbar  {
+.my-nav.navbar {
   border: 0px;
   margin-bottom: 0px;
   border-bottom: 1px solid #ccc;
   border-radius: 0;
 }
 
-@media (min-width: 768px){
+@media (min-width: 768px) {
   .navbar {
     border-radius: 0px;
   }
 }
 
 .my-nav .navbar-brand {
-  padding:4px 10px;
+  padding: 4px 10px;
 }
 
 .my-nav.navbar-inverse.navbar-default,
@@ -31,37 +31,52 @@
 .navbar-default .navbar-toggle {
   border-color: #fff;
 }
-.app-version{
-  color:#f90;
-  padding-top:15px;
-  padding-right:20px;
+.app-version {
+  color: #f90;
+  padding-top: 15px;
+  padding-right: 20px;
 }
-.app-version:hover{
-  color:#f60;
-  cursor:pointer;
-}
-
-
-
-
-@keyframes newcolor
-{
-  0% {background: red;}
-  25% {background: orange;}
-  50% {background: green;}
-  75% {background: orange;}
-  100% {background: red;}
+.app-version:hover {
+  color: #f60;
+  cursor: pointer;
 }
 
-@-webkit-keyframes newcolor /* Safari 和 Chrome */
-{
-0% {background: red;}
-25% {background: orange;}
-50% {background: green;}
-75% {background: orange;}
-100% {background: red;}
+@keyframes newcolor {
+  0% {
+    background: red;
+  }
+  25% {
+    background: orange;
+  }
+  50% {
+    background: green;
+  }
+  75% {
+    background: orange;
+  }
+  100% {
+    background: red;
+  }
 }
-.new-animate{
+
+@-webkit-keyframes newcolor /* Safari 和 Chrome */ {
+  0% {
+    background: red;
+  }
+  25% {
+    background: orange;
+  }
+  50% {
+    background: green;
+  }
+  75% {
+    background: orange;
+  }
+  100% {
+    background: red;
+  }
+}
+.new-animate {
   animation: newcolor 5s;
   -webkit-animation: newcolor 5s;
   animation-iteration-count: infinite;

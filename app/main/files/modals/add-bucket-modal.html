@@ -10,33 +10,59 @@
     </h4>
   </div>
   <div class="modal-body">
-
     <div class="form-group" ng-class="{'has-error':!form1.name.$valid}">
       <label class="col-sm-2 control-label" for="name">
         {{'name'|translate}}:
-        <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}" tooltip-append-to-body="true"
-          ng-click="openURL('https://help.aliyun.com/document_detail/31827.html')">
-          <i class="fa fa-question-circle"></i></a> :
+        <a
+          href=""
+          uib-tooltip="{{'auth.authToken.tooltip'|translate}}"
+          tooltip-append-to-body="true"
+          ng-click="openURL('https://help.aliyun.com/document_detail/31827.html')"
+        >
+          <i class="fa fa-question-circle"></i
+        ></a>
+        :
         <!-- 名称: -->
       </label>
       <div class="col-sm-8">
-        <input type="text" ng-model="item.name" id="name" autocomplete="off"
-        autofocus name="name" required="required" ng-pattern="reg"
-        placeholder="{{'bucket.name'|translate}}" class="input-md form-control"/>
+        <input
+          type="text"
+          ng-model="item.name"
+          id="name"
+          autocomplete="off"
+          autofocus
+          name="name"
+          required="required"
+          ng-pattern="reg"
+          placeholder="{{'bucket.name'|translate}}"
+          class="input-md form-control"
+        />
       </div>
     </div>
 
     <div class="form-group">
       <label class="col-sm-2 control-label" for="region">
         {{'region'|translate}}:
-        <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}" tooltip-append-to-body="true"
-          ng-click="openURL('https://help.aliyun.com/document_detail/31837.html')">
-          <i class="fa fa-question-circle"></i></a> :
+        <a
+          href=""
+          uib-tooltip="{{'auth.authToken.tooltip'|translate}}"
+          tooltip-append-to-body="true"
+          ng-click="openURL('https://help.aliyun.com/document_detail/31837.html')"
+        >
+          <i class="fa fa-question-circle"></i
+        ></a>
+        :
         <!-- 区域: -->
       </label>
       <div class="col-sm-8">
-        <select ng-model="item.region" ng-options="region.id as region.label for region in regions" name="region" required="required"
-        class="input-md form-control" ng-change="onRegionChanged()"></select>
+        <select
+          ng-model="item.region"
+          ng-options="region.id as region.label for region in regions"
+          name="region"
+          required="required"
+          class="input-md form-control"
+          ng-change="onRegionChanged()"
+        ></select>
       </div>
     </div>
 
@@ -46,26 +72,41 @@
         <!-- 权限: -->
       </label>
       <div class="col-sm-8">
-        <select ng-model="item.acl" ng-options="acl.acl as acl.label for acl in bucketACL" name="acl" required="required"
-          class="input-md form-control" ng-change="onAclChanged()"></select>
+        <select
+          ng-model="item.acl"
+          ng-options="acl.acl as acl.label for acl in bucketACL"
+          name="acl"
+          required="required"
+          class="input-md form-control"
+          ng-change="onAclChanged()"
+        ></select>
       </div>
     </div>
 
     <div class="form-group">
       <label class="col-sm-2 control-label" for="acl">
         {{'type'|translate}}
-        <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}" tooltip-append-to-body="true"
-          ng-click="openURL('https://help.aliyun.com/document_detail/51374.html')">
-          <i class="fa fa-question-circle"></i></a> :
+        <a
+          href=""
+          uib-tooltip="{{'auth.authToken.tooltip'|translate}}"
+          tooltip-append-to-body="true"
+          ng-click="openURL('https://help.aliyun.com/document_detail/51374.html')"
+        >
+          <i class="fa fa-question-circle"></i
+        ></a>
+        :
         <!-- 类型: -->
       </label>
       <div class="col-sm-8">
-        <select ng-model="item.storageClass" ng-options="sc.value as sc.name for sc in storageClasses" name="storageClass" required="required"
-          class="input-md form-control"></select>
+        <select
+          ng-model="item.storageClass"
+          ng-options="sc.value as sc.name for sc in storageClasses"
+          name="storageClass"
+          required="required"
+          class="input-md form-control"
+        ></select>
       </div>
     </div>
-
-
 
     <div class="clearfix"></div>
   </div>

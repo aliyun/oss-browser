@@ -1,10 +1,14 @@
 <div ng-include="'main/_/top.html'"></div>
 
 <div>
-
-  <div ng-if="currentAuthInfo.id.indexOf('STS.')!=0" ng-include="'main/files/_/address-bar.html'"></div>
-  <div ng-if="currentAuthInfo.id.indexOf('STS.')==0" ng-include="'main/files/_/sub-address-bar.html'"></div>
-
+  <div
+    ng-if="currentAuthInfo.id.indexOf('STS.')!=0"
+    ng-include="'main/files/_/address-bar.html'"
+  ></div>
+  <div
+    ng-if="currentAuthInfo.id.indexOf('STS.')==0"
+    ng-include="'main/files/_/sub-address-bar.html'"
+  ></div>
 
   <div ng-if="ref.isBucketList">
     <div ng-include="'main/files/_/bucket-toolbar.html'"></div>
@@ -13,21 +17,30 @@
     <div ng-include="'main/files/_/file-toolbar.html'"></div>
   </div>
 
-
   <div auto-height="-130" class="file-list-box">
     <div ng-show="isLoading" is-loading></div>
 
-    <section ng-hide="isLoading" ng-if="ref.isBucketList"  style="height:100%">
-      <div ng-include="'main/files/_/bucket-list.html'"  style="height:100%"></div>
+    <section ng-hide="isLoading" ng-if="ref.isBucketList" style="height: 100%;">
+      <div
+        ng-include="'main/files/_/bucket-list.html'"
+        style="height: 100%;"
+      ></div>
     </section>
 
-    <section ng-hide="isLoading" ng-if="!ref.isBucketList" drop-zone="handlerDrop"  style="height:100%">
-      <div ng-include="'main/files/_/file-list.html'" style="height:100%"
-      id="file-list" bottom-loader="loadNext()"></div>
+    <section
+      ng-hide="isLoading"
+      ng-if="!ref.isBucketList"
+      drop-zone="handlerDrop"
+      style="height: 100%;"
+    >
+      <div
+        ng-include="'main/files/_/file-list.html'"
+        style="height: 100%;"
+        id="file-list"
+        bottom-loader="loadNext()"
+      ></div>
     </section>
-
   </div>
 
   <div ng-include="'main/files/transfer/frame.html'"></div>
-
 </div>

@@ -10,24 +10,25 @@
     </h4>
   </div>
   <div class="modal-body">
-
     <div class="form-group">
       <label class="col-sm-2 control-label">
         <!-- 权限: -->
         {{'privilege'|translate}}:
       </label>
       <div class="col-sm-9">
-          <select ng-model="info.acl" class="form-control input-sm">
-              <option value="default">
-                {{'aclType.default'|translate}}
-                <!-- 继承Bucket -->
-              </option>
-              <option value="private">{{'aclType.private'|translate}}</option>
-              <option value="public-read">{{'aclType.public-read'|translate}}</option>
-              <option value="public-read-write">{{'aclType.public-read-write'|translate}}</option>
-          </select>
-
-
+        <select ng-model="info.acl" class="form-control input-sm">
+          <option value="default">
+            {{'aclType.default'|translate}}
+            <!-- 继承Bucket -->
+          </option>
+          <option value="private">{{'aclType.private'|translate}}</option>
+          <option value="public-read"
+            >{{'aclType.public-read'|translate}}</option
+          >
+          <option value="public-read-write"
+            >{{'aclType.public-read-write'|translate}}</option
+          >
+        </select>
       </div>
     </div>
 
@@ -37,13 +38,12 @@
       <li>公共读写：所有人都可以对object进行读写操作
     </div> -->
     <div class="f9 text-muted">
-      <li>{{'aclType.private.message'|translate}}
-      <li>{{'aclType.public-read.message'|translate}}
-      <li>{{'aclType.public-read-write.message'|translate}}
+      <li>{{'aclType.private.message'|translate}}</li>
+      <li>{{'aclType.public-read.message'|translate}}</li>
+      <li>{{'aclType.public-read-write.message'|translate}}</li>
     </div>
 
     <div class="clearfix"></div>
-
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-success btn-sm">

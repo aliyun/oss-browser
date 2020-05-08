@@ -1,120 +1,145 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="modal-title">
+    <i style="color: orange;" class="fa fa-folder"></i>
+    {{'multipart.management'|translate}}
+    <!-- Multipart管理 -->
+    <span style="font-size: 70%;" class="text-muted"
+      >[Bucket:{{bucketInfo.name}},
+      {{'region'|translate}}:{{bucketInfo.region}}]</span
+    >
+  </h4>
+</div>
+<div class="modal-body pd0" style="min-height: 140px;">
+  <div ng-if="isLoading" is-loading></div>
 
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="cancel()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <h4 class="modal-title">
-      <i style="color:orange" class="fa fa-folder"></i>
-      {{'multipart.management'|translate}}
-      <!-- Multipart管理 -->
-      <span style="font-size:70%" class="text-muted">[Bucket:{{bucketInfo.name}}, {{'region'|translate}}:{{bucketInfo.region}}]</span>
-    </h4>
-  </div>
-  <div class="modal-body pd0" style="min-height:140px;">
-    <div ng-if="isLoading" is-loading></div>
+  <header ng-if="!isLoading" class="pd4">
+    <div class="bg-warning pd4">
+      {{'multipart.description'|translate}}
+      <!-- 管理通过Mutipart（分块）方式上传过程中产生的事件与碎片。 -->
+      <i
+        class="fa fa-question-circle"
+        tooltip-placement="bottom"
+        tooltip-append-to-body="true"
+        uib-tooltip="{{'multipart.description.tooltip'|translate}}"
+      ></i>
+    </div>
+  </header>
+  <div ng-if="!isLoading && (!items || items.length==0)" no-data></div>
 
-    <header ng-if="!isLoading" class="pd4">
-       <div class="bg-warning pd4">
-         {{'multipart.description'|translate}}
-         <!-- 管理通过Mutipart（分块）方式上传过程中产生的事件与碎片。 -->
-         <i class="fa fa-question-circle"
-        tooltip-placement="bottom" tooltip-append-to-body="true"
-        uib-tooltip="{{'multipart.description.tooltip'|translate}}"></i> </div>
-    </header>
-    <div ng-if="!isLoading && (!items || items.length==0)" no-data></div>
-
-    <div ng-if="!isLoading && items.length>0">
-
-      <header class="pd4">
-        <div class="col-xs-5">
-           <button type="button" class="btn btn-sm btn-default" ng-click="sel.all=!sel.all;selectAll()">
-            <i class="fa" ng-class="{'fa-check-square-o':sel.all,'fa-square-o':!sel.all}"></i>
-            {{'select.all'|translate}}
-            <!-- 全选 -->
-          </button>
-
-          <button type="button" class="btn btn-sm btn-default" ng-class="{'btn-danger':sel.has}"
-          ng-disabled="!sel.has"
-          ng-click="showDelete(sel.has)">
-            <i class="fa fa-close"></i>
-            {{'delete.selected'|translate}}
-            <!-- 删除所选 -->
-         </button>
-
-         <button type="button" class="btn btn-sm btn-danger"
-         ng-click="showDelete(items)">
-           <i class="fa fa-close"></i>
-           {{'delete.all'|translate}}
-           <!-- 删除所有 -->
+  <div ng-if="!isLoading && items.length>0">
+    <header class="pd4">
+      <div class="col-xs-5">
+        <button
+          type="button"
+          class="btn btn-sm btn-default"
+          ng-click="sel.all=!sel.all;selectAll()"
+        >
+          <i
+            class="fa"
+            ng-class="{'fa-check-square-o':sel.all,'fa-square-o':!sel.all}"
+          ></i>
+          {{'select.all'|translate}}
+          <!-- 全选 -->
         </button>
 
-        </div>
-        <div class="col-xs-5">
-          <div class="input-group input-group-sm">
-             <input type="text" class="form-control" ng-model="sch.txt"/>
-             <span class="input-group-addon">
-               <i class="fa fa-search"></i>
-               {{(items|filter:sch.txt).length}}
-             </span>
-          </div>
-        </div>
-        <div class="col-xs-2 text-right">
-           <button type="button" ng-click="refresh()" class="btn btn-sm btn-default">
-             <i class="fa fa-refresh"></i>
-             {{'refresh'|translate}}
-             <!-- 刷新 -->
-           </button>
-        </div>
+        <button
+          type="button"
+          class="btn btn-sm btn-default"
+          ng-class="{'btn-danger':sel.has}"
+          ng-disabled="!sel.has"
+          ng-click="showDelete(sel.has)"
+        >
+          <i class="fa fa-close"></i>
+          {{'delete.selected'|translate}}
+          <!-- 删除所选 -->
+        </button>
 
-        <div class="clearfix"></div>
-      </header>
+        <button
+          type="button"
+          class="btn btn-sm btn-danger"
+          ng-click="showDelete(items)"
+        >
+          <i class="fa fa-close"></i>
+          {{'delete.all'|translate}}
+          <!-- 删除所有 -->
+        </button>
+      </div>
+      <div class="col-xs-5">
+        <div class="input-group input-group-sm">
+          <input type="text" class="form-control" ng-model="sch.txt" />
+          <span class="input-group-addon">
+            <i class="fa fa-search"></i>
+            {{(items|filter:sch.txt).length}}
+          </span>
+        </div>
+      </div>
+      <div class="col-xs-2 text-right">
+        <button
+          type="button"
+          ng-click="refresh()"
+          class="btn btn-sm btn-default"
+        >
+          <i class="fa fa-refresh"></i>
+          {{'refresh'|translate}}
+          <!-- 刷新 -->
+        </button>
+      </div>
 
-      <section style="height:460px;overflow:auto" bottom-loader="loadNext()">
+      <div class="clearfix"></div>
+    </header>
+
+    <section style="height: 460px; overflow: auto;" bottom-loader="loadNext()">
       <ul class="list-group mg0">
-         <li class="list-group-item"
-         ng-repeat="item in items|filter:sch.txt|limitTo: sch.limitTo" style="cursor:pointer"
-         ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged()">
-
-             <div class="break list-group-item-heading text-primary">
-               <input type="checkbox" ng-model="sel.x['i_'+$index]" name="x"
-                ng-change="selectChanged()" ng-click="$event.stopPropagation()"/>
-               {{$index+1}}.
-               {{item.name}}
-               <a href="" ng-click="showDelete([item]);$event.stopPropagation()"
-               class="pull-right text-danger">
-               {{'delete'|translate}}
-               <!-- 删除 -->
-             </a>
-             </div>
-
-           <div class="list-group-item-text">
-
-             UploadID：<span class="text-warning">{{item.uploadId}}</span>
-             <!-- 最初创建时间： -->
-             {{'initiatedTime'|translate}}
-             <span class="text-muted">{{item.initiated|timeFormat}}</span>
+        <li
+          class="list-group-item"
+          ng-repeat="item in items|filter:sch.txt|limitTo: sch.limitTo"
+          style="cursor: pointer;"
+          ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged()"
+        >
+          <div class="break list-group-item-heading text-primary">
+            <input
+              type="checkbox"
+              ng-model="sel.x['i_'+$index]"
+              name="x"
+              ng-change="selectChanged()"
+              ng-click="$event.stopPropagation()"
+            />
+            {{$index+1}}. {{item.name}}
+            <a
+              href=""
+              ng-click="showDelete([item]);$event.stopPropagation()"
+              class="pull-right text-danger"
+            >
+              {{'delete'|translate}}
+              <!-- 删除 -->
+            </a>
           </div>
 
-         </li>
-         <li ng-if="sch.limitTo < (items|filter:sch.txt).length" class="text-center list-group-item">
-           {{'loading'|translate}} 
-           <!-- 正在载入... -->
-         </div>
+          <div class="list-group-item-text">
+            UploadID：<span class="text-warning">{{item.uploadId}}</span>
+            <!-- 最初创建时间： -->
+            {{'initiatedTime'|translate}}
+            <span class="text-muted">{{item.initiated|timeFormat}}</span>
+          </div>
+        </li>
+        <li
+          ng-if="sch.limitTo < (items|filter:sch.txt).length"
+          class="text-center list-group-item"
+        >
+          {{'loading'|translate}}
+          <!-- 正在载入... -->
+        </li>
       </ul>
-
     </section>
-
-
-
-    </div>
-
-
   </div>
-  <div class="modal-footer">
-
-    <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
-      <i class="glyphicon glyphicon-remove"></i>
-      {{'close'|translate}}
-      <!-- 关闭 -->
-    </button>
-  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
+    <i class="glyphicon glyphicon-remove"></i>
+    {{'close'|translate}}
+    <!-- 关闭 -->
+  </button>
+</div>
