@@ -17,7 +17,7 @@ angular.module("web").controller("codeModalCtrl", [
     $modalInstance,
     $translate,
     $timeout,
-    $modal,
+    _$modal,
     bucketInfo,
     objectInfo,
     fileType,
@@ -75,7 +75,7 @@ angular.module("web").controller("codeModalCtrl", [
               objectInfo.path,
               v
             )
-            .then(function (result) {
+            .then(function () {
               Toast.success(T("save.successfully")); //'保存成功'
               cancel();
             });
@@ -90,12 +90,14 @@ angular.module("web").controller("codeModalCtrl", [
       ossSvs2
         .getContent(bucketInfo.region, bucketInfo.bucket, objectInfo.path)
         .then(function (result) {
-          $scope.isLoading = false;
-
-          var data = result.Body.toString();
-          $scope.originalContent = data;
-          $scope.content = data;
-          editor.setValue(data);
+          // 在data为空时，用safeApply手动触发更新
+          safeApply($scope, () => {
+            $scope.isLoading = false;
+            const data = result.content.toString();
+            $scope.originalContent = data;
+            $scope.content = data;
+            editor.setValue(data);
+          });
         });
     }
 
