@@ -1,26 +1,22 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="modal-title">CRC码</h4>
+</div>
+<div class="modal-body">
+  <h5>CRC64: <code>{{info.HashCrc64ecma}}</code></h5>
 
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="cancel()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <h4 class="modal-title">CRC码</h4>
+  <div class="pd4 bg-success">
+    您可以下载后自行验证, 参考:
+    <a href="" ng-click="openDoc()"> 通过crc64校验数据传输的完整性</a>
   </div>
-  <div class="modal-body">
 
-    <h5>CRC64: <code>{{info.HashCrc64ecma}}</code></h5>
-
-    <div class="pd4 bg-success">
-
-      您可以下载后自行验证, 参考:
-      <a href="" ng-click="openDoc()">
-        通过crc64校验数据传输的完整性</a>
-    </div>
-
-    <div class="clearfix"></div>
-  </div>
-  <div class="modal-footer">
-
-    <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
-      <i class="glyphicon glyphicon-remove"></i>
-      关闭</button>
-  </div>
+  <div class="clearfix"></div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
+    <i class="glyphicon glyphicon-remove"></i>
+    关闭
+  </button>
+</div>

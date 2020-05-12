@@ -1,125 +1,205 @@
 <div class="" ng-controller="transferDownloadsCtrl">
-    <header class="pd4 text-right" style="border-bottom:1px solid #ddd;">
-
-        <div class="pull-left" style="position:relative">
-          <!-- placeholder: 根据名称或状态搜索 -->
-          <input type="text"  cleanable-input placeholder="{{'transframe.search.placeholder'|translate}}"
-           class="form-control input-sm" style="width:150px;" ng-model="sch.downname">
-        </div>
-
-        <div class="pull-left">
-          <a href="" ng-if="totalNum.downStopped>0" class="btn btn-link btn-sm" style="text-decoration:none" ng-click="sch.downname='stopped'"><span class="text-warning"><i class="fa fa-info-circle"></i> {{totalNum.downStopped}}</span></a>
-          <a href="" ng-if="totalNum.downFailed>0" class="btn btn-link btn-sm" style="text-decoration:none" ng-click="sch.downname='failed'"><span class="text-danger"><i class="fa fa-remove"></i> {{totalNum.downFailed}}</span></a>
-        </div>
-
-        <!-- 启动全部 -->
-        <button ng-disabled="allActionBtnDisabled" type="button" class="btn btn-default btn-sm" ng-click="startAll()"
-        uib-tooltip="{{'start.all'|translate}}" tooltip-append-to-body="true">
-            <span class=""><i class="glyphicon glyphicon-play"></i></span>
-        </button>
-
-        <!-- 暂停全部 -->
-        <button ng-disabled="allActionBtnDisabled" type="button" class="btn btn-default btn-sm" ng-click="stopAll()"
-        uib-tooltip="{{'pause.all'|translate}}" tooltip-append-to-body="true">
-            <span class=""><i class="glyphicon glyphicon-pause"></i></span>
-        </button>
-        <!-- 清空已完成 -->
-        <button type="button" class="btn btn-default btn-sm" ng-click="clearAllCompleted()"
-        uib-tooltip="{{'clear.finished'|translate}}" tooltip-append-to-body="true">
-            <span class=""><i class="glyphicon glyphicon-trash"></i></span>
-        </button>
-        <!-- 清空所有 -->
-        <button type="button" class="btn btn-default btn-sm" ng-click="clearAll()"
-        uib-tooltip="{{'clear.all'|translate}}" tooltip-append-to-body="true">
-            <span class=""><i class="text-danger glyphicon glyphicon-trash"></i></span>
-        </button>
-
-        <div class="clearfix"></div>
-    </header>
-
-    <div class="clearfix" style="overflow:auto;height:343px;"
-    long-scroll-list load-more="loadMoreDownloadItems" trigger-size="100">
-
-        <ul class="list-group list-condensed" style="margin:0px;">
-            <li class="list-group-item"
-            ng-repeat="item in lists.downloadJobList|listFilter:schKeyFn:sch.downname|limitTo:limitToNum track by item.id">
-
-                <div class="col-sm-4">
-
-                    <div class="text-overflow" uib-tooltip-template="'download-path-tooltip-tpl.html'"
-                        tooltip-trigger="mouseenter" tooltip-delay="500"
-                         tooltip-placement="left" tooltip-append-to-body="true">{{$index+1}}. {{::item.to.name}}
-                    </div>
-
-                    <div class="progress mg0" style="height:4px;width:100%">
-                        <div class="progress-bar progress-bar-{{item.status|statusCls}}"
-                             ng-style="{width: (item.prog.loaded|persent:item.prog.total:item.status) + '%'}">
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-2 text-overflow text-{{item.status|statusCls}}">
-                  <small ng-show="item.status!='running'">
-                    {{item.status|status:1}}
-                    <i ng-if="item.message"
-                    uib-tooltip="{{item.message|translate}}" tooltip-placement="left" tooltip-append-to-body="true"
-                    class="fa fa-info-circle"></i>
-                  </small>
-                  <small ng-show="item.status=='running'">
-                      {{item.speed|sizeFormat}}/s
-                  </small>
-
-                  <small ng-show="item.status=='retrying'">
-                    {{retryTimes}}
-                  </small>
-                </div>
-
-                <div class="col-sm-4 text-overflow">
-                    <small ng-show="item.prog.total"><span ng-if="item.prog.loaded!=item.prog.total">{{item.prog.loaded|sizeFormat}}/</span>{{item.prog.total|sizeFormat}}</small>
-                    <small ng-show="item.predictLeftTime">, {{item.predictLeftTime|leftTimeFormat}}</small>
-                </div>
-
-
-                <div class="col-sm-2 text-right" style="padding:0">
-                    <a ng-if="item.status=='running' || item.status=='retrying' || item.status=='waiting'|| item.status=='verifying'" href="" ng-click="item.stop()"
-                       class="btn btn-default btn-xs">
-                        <i class="glyphicon glyphicon-pause text-warning"></i>
-                    </a>
-
-                    <a ng-if="item.status=='stopped' || item.status=='failed' || item.status=='finished'" href=""
-                       ng-click="showRemoveItem(item)" class="btn btn-default btn-xs">
-                        <i class="glyphicon glyphicon-remove text-danger "></i>
-                    </a>
-
-                    <a ng-if="item.status=='stopped' || item.status=='failed'" href="" ng-click="checkStartJob(item)"
-                       class="btn btn-default btn-xs">
-                        <i class="glyphicon glyphicon-play text-success "></i>
-                    </a>
-
-                    <a href="" ng-click="openLocaleFolder(item)"
-                       class="btn btn-default btn-xs">
-                        <i class="fa fa-folder-open text-info"></i>
-                    </a>
-
-                </div>
-                <div class="clearfix"></div>
-            </li>
-        </ul>
-
-        <div class="clearfix text-center" style="padding:4px;">
-          {{limitToNum < (lists.downloadJobList|listFilter:schKeyFn:sch.downname).length? ('loading'|translate):''}}
-        </div>
-
+  <header class="pd4 text-right" style="border-bottom: 1px solid #ddd;">
+    <div class="pull-left" style="position: relative;">
+      <!-- placeholder: 根据名称或状态搜索 -->
+      <input
+        type="text"
+        cleanable-input
+        placeholder="{{'transframe.search.placeholder'|translate}}"
+        class="form-control input-sm"
+        style="width: 150px;"
+        ng-model="sch.downname"
+      />
     </div>
-</div>
 
+    <div class="pull-left">
+      <a
+        href=""
+        ng-if="totalNum.downStopped>0"
+        class="btn btn-link btn-sm"
+        style="text-decoration: none;"
+        ng-click="sch.downname='stopped'"
+        ><span class="text-warning"
+          ><i class="fa fa-info-circle"></i> {{totalNum.downStopped}}</span
+        ></a
+      >
+      <a
+        href=""
+        ng-if="totalNum.downFailed>0"
+        class="btn btn-link btn-sm"
+        style="text-decoration: none;"
+        ng-click="sch.downname='failed'"
+        ><span class="text-danger"
+          ><i class="fa fa-remove"></i> {{totalNum.downFailed}}</span
+        ></a
+      >
+    </div>
+
+    <!-- 启动全部 -->
+    <button
+      ng-disabled="allActionBtnDisabled"
+      type="button"
+      class="btn btn-default btn-sm"
+      ng-click="startAll()"
+      uib-tooltip="{{'start.all'|translate}}"
+      tooltip-append-to-body="true"
+    >
+      <span class=""><i class="glyphicon glyphicon-play"></i></span>
+    </button>
+
+    <!-- 暂停全部 -->
+    <button
+      ng-disabled="allActionBtnDisabled"
+      type="button"
+      class="btn btn-default btn-sm"
+      ng-click="stopAll()"
+      uib-tooltip="{{'pause.all'|translate}}"
+      tooltip-append-to-body="true"
+    >
+      <span class=""><i class="glyphicon glyphicon-pause"></i></span>
+    </button>
+    <!-- 清空已完成 -->
+    <button
+      type="button"
+      class="btn btn-default btn-sm"
+      ng-click="clearAllCompleted()"
+      uib-tooltip="{{'clear.finished'|translate}}"
+      tooltip-append-to-body="true"
+    >
+      <span class=""><i class="glyphicon glyphicon-trash"></i></span>
+    </button>
+    <!-- 清空所有 -->
+    <button
+      type="button"
+      class="btn btn-default btn-sm"
+      ng-click="clearAll()"
+      uib-tooltip="{{'clear.all'|translate}}"
+      tooltip-append-to-body="true"
+    >
+      <span class=""
+        ><i class="text-danger glyphicon glyphicon-trash"></i
+      ></span>
+    </button>
+
+    <div class="clearfix"></div>
+  </header>
+
+  <div
+    class="clearfix"
+    style="overflow: auto; height: 343px;"
+    long-scroll-list
+    load-more="loadMoreDownloadItems"
+    trigger-size="100"
+  >
+    <ul class="list-group list-condensed" style="margin: 0px;">
+      <li
+        class="list-group-item"
+        ng-repeat="item in lists.downloadJobList|listFilter:schKeyFn:sch.downname|limitTo:limitToNum track by item.id"
+      >
+        <div class="col-sm-4">
+          <div
+            class="text-overflow"
+            uib-tooltip-template="'download-path-tooltip-tpl.html'"
+            tooltip-trigger="mouseenter"
+            tooltip-delay="500"
+            tooltip-placement="left"
+            tooltip-append-to-body="true"
+          >
+            {{$index+1}}. {{::item.to.name}}
+          </div>
+
+          <div class="progress mg0" style="height: 4px; width: 100%;">
+            <div
+              class="progress-bar progress-bar-{{item.status|statusCls}}"
+              ng-style="{width: (item.prog.loaded|persent:item.prog.total:item.status) + '%'}"
+            ></div>
+          </div>
+        </div>
+
+        <div class="col-sm-2 text-overflow text-{{item.status|statusCls}}">
+          <small ng-show="item.status!='running'">
+            {{item.status|status:1}}
+            <i
+              ng-if="item.message"
+              uib-tooltip="{{item.message|translate}}"
+              tooltip-placement="left"
+              tooltip-append-to-body="true"
+              class="fa fa-info-circle"
+            ></i>
+          </small>
+          <small ng-show="item.status=='running'">
+            {{item.speed|sizeFormat}}/s
+          </small>
+
+          <small ng-show="item.status=='retrying'">
+            {{retryTimes}}
+          </small>
+        </div>
+
+        <div class="col-sm-4 text-overflow">
+          <small ng-show="item.prog.total"
+            ><span ng-if="item.prog.loaded!=item.prog.total"
+              >{{item.prog.loaded|sizeFormat}}/</span
+            >{{item.prog.total|sizeFormat}}</small
+          >
+          <small ng-show="item.predictLeftTime"
+            >, {{item.predictLeftTime|leftTimeFormat}}</small
+          >
+        </div>
+
+        <div class="col-sm-2 text-right" style="padding: 0;">
+          <a
+            ng-if="item.status=='running' || item.status=='retrying' || item.status=='waiting'|| item.status=='verifying'"
+            href=""
+            ng-click="item.stop()"
+            class="btn btn-default btn-xs"
+          >
+            <i class="glyphicon glyphicon-pause text-warning"></i>
+          </a>
+
+          <a
+            ng-if="item.status=='stopped' || item.status=='failed' || item.status=='finished'"
+            href=""
+            ng-click="showRemoveItem(item)"
+            class="btn btn-default btn-xs"
+          >
+            <i class="glyphicon glyphicon-remove text-danger"></i>
+          </a>
+
+          <a
+            ng-if="item.status=='stopped' || item.status=='failed'"
+            href=""
+            ng-click="checkStartJob(item)"
+            class="btn btn-default btn-xs"
+          >
+            <i class="glyphicon glyphicon-play text-success"></i>
+          </a>
+
+          <a
+            href=""
+            ng-click="openLocaleFolder(item)"
+            class="btn btn-default btn-xs"
+          >
+            <i class="fa fa-folder-open text-info"></i>
+          </a>
+        </div>
+        <div class="clearfix"></div>
+      </li>
+    </ul>
+
+    <div class="clearfix text-center" style="padding: 4px;">
+      {{limitToNum <
+      (lists.downloadJobList|listFilter:schKeyFn:sch.downname).length?
+      ('loading'|translate):''}}
+    </div>
+  </div>
+</div>
 
 <script type="text/ng-template" id="download-path-tooltip-tpl.html">
 
-    <div class="break text-left">
-        <div><label class="text-success">From:</label> oss://{{item.from.bucket}}/{{item.from.key}}</div>
-        <div><label class="text-primary">To:</label> {{item.to.path}}</div>
-        <div ng-if="item.hashCrc64ecma"><label class="text-primary">CRC64(ECMA):</label> {{item.hashCrc64ecma}}</div>
-    </div>
+  <div class="break text-left">
+      <div><label class="text-success">From:</label> oss://{{item.from.bucket}}/{{item.from.key}}</div>
+      <div><label class="text-primary">To:</label> {{item.to.path}}</div>
+      <div ng-if="item.hashCrc64ecma"><label class="text-primary">CRC64(ECMA):</label> {{item.hashCrc64ecma}}</div>
+  </div>
 </script>

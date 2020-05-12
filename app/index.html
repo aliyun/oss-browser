@@ -1,48 +1,57 @@
 <!DOCTYPE html>
 <html ng-app="web" ng-controller="mainCtrl">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width"
+    />
     <title>OSS Browser</title>
     <script>
-    var path = require('path');
-    var os = require('os');
-    var fs = require('fs');
-    var request = require('request');
-    // var OSS = require('ali-oss');
-    var custom = {};
-    try {
-      custom = require(path.join(__dirname,'../custom/index.js'));
-    } catch(e) {
-      console.log('没有自定义模块')
-    };
-    document.title = custom.title || 'OSS Browser';
+      var path = require("path");
+      var os = require("os");
+      var fs = require("fs");
+      var request = require("request");
+      // var OSS = require('ali-oss');
+      var custom = {};
+      try {
+        custom = require(path.join(__dirname, "../custom/index.js"));
+      } catch (e) {
+        console.log("没有自定义模块");
+      }
+      document.title = custom.title || "OSS Browser";
     </script>
     <!-- <link href="icons/icon.ico" rel="shortcut icon"/> -->
-    <link href="css/lib.css" rel="stylesheet">
-    <link href="app.css" rel="stylesheet">
+    <link href="css/lib.css" rel="stylesheet" />
+    <link href="app.css" rel="stylesheet" />
   </head>
   <body>
-
     <!-- <div ng-include="'main/_/loading.html'"></div>  -->
     <toast-list></toast-list>
 
     <div ui-view="">
       <!-- loading -->
-       <section style="text-align:center;display:block;width:128px;height:120px;margin:250px auto 0">
-         <div class="loadEffect">
-    		        <div><span></span></div>
-    		        <div><span></span></div>
-    		        <div><span></span></div>
-    		        <div><span></span></div>
-    		</div>
-
-       </section>
+      <section
+        style="
+          text-align: center;
+          display: block;
+          width: 128px;
+          height: 120px;
+          margin: 250px auto 0;
+        "
+      >
+        <div class="loadEffect">
+          <div><span></span></div>
+          <div><span></span></div>
+          <div><span></span></div>
+          <div><span></span></div>
+        </div>
+      </section>
     </div>
 
     <!-- Insert this line above script imports  -->
     <script>
-      if (typeof module === 'object') {
+      if (typeof module === "object") {
         window.module = module;
         module = undefined;
       }
@@ -51,26 +60,26 @@
 
     <!-- Insert this line after script imports -->
     <script>
-      if (window.module)  module = window.module;
+      if (window.module) module = window.module;
     </script>
 
     <script src="ali-oss.min.js"></script>
     <script src="aliyun-sdk-oss.js"></script>
     <script src="templates.js"></script>
     <script>
-      const {ipcRenderer,shell} = require('electron');
-      var isDev = process.env.NODE_ENV=='development';
+      const { ipcRenderer, shell } = require("electron");
+      var isDev = process.env.NODE_ENV == "development";
 
-      ipcRenderer.on('asynchronous-reply', (event, data) => {
-        switch(data.key){
-          case 'getStaticServerPort':
+      ipcRenderer.on("asynchronous-reply", (event, data) => {
+        switch (data.key) {
+          case "getStaticServerPort":
             Global.staticServerPort = data.port;
             break;
         }
       });
-      setTimeout(function(){
-        ipcRenderer.send('asynchronous', {key: 'getStaticServerPort' });
-      },1000);
+      setTimeout(function () {
+        ipcRenderer.send("asynchronous", { key: "getStaticServerPort" });
+      }, 1000);
 
       //自动升级
       // setTimeout(function(){
@@ -80,26 +89,28 @@
       //   ipcRenderer.send('asynchronous-message', 'checkUpgrade');
       // },60000);
 
-      function openExternal(url){
+      function openExternal(url) {
         // Open a URL in the default way
         shell.openExternal(url);
       }
-      function openLocaleFolder(p){
-        shell.showItemInFolder(p)
+      function openLocaleFolder(p) {
+        shell.showItemInFolder(p);
       }
 
-      function openDevTools(){
-        ipcRenderer.send('asynchronous', {key: 'openDevTools'});
+      function openDevTools() {
+        ipcRenderer.send("asynchronous", { key: "openDevTools" });
       }
-      function gInstallAndRestart(version){
-        ipcRenderer.send('asynchronous', {key:'installRestart', version: version});
+      function gInstallAndRestart(version) {
+        ipcRenderer.send("asynchronous", {
+          key: "installRestart",
+          version: version,
+        });
         // setTimeout(function(){
         //   process.exit(0);
         // },1);
       }
 
-
-      var pkg = require('./package');
+      var pkg = require("./package");
       // var ALYD = require('aliyun-sdk');
       // ALYD.util.isBrowser = function(){
       //   return false;
@@ -109,47 +120,48 @@
         //ossEndpointProtocol:'https:',
 
         app: {
-          id: custom.appId || 'oss-browser',
-          logo: custom.logo_png || 'icons/icon.png', //logo
-          version: custom.version || pkg.version //自定义版本号
+          id: custom.appId || "oss-browser",
+          logo: custom.logo_png || "icons/icon.png", //logo
+          version: custom.version || pkg.version, //自定义版本号
         },
-        i18n: require('./node/i18n'),
+        i18n: require("./node/i18n"),
 
-        config_path: path.join(os.homedir(), '.oss-browser'),
+        config_path: path.join(os.homedir(), ".oss-browser"),
 
         //release notes目录后缀，里面有 ${version}.md, 如 1.0.0.md
-        release_notes_url:  `https://raw.githubusercontent.com/aliyun/oss-browser/${isDev?'dev':'master'}/release-notes/`,
+        release_notes_url: `https://raw.githubusercontent.com/aliyun/oss-browser/${
+          isDev ? "dev" : "master"
+        }/release-notes/`,
 
         // //升级检测链接
-        upgrade_url:  `https://raw.githubusercontent.com/aliyun/oss-browser/${isDev?'dev':'master'}/upgrade.json`,
+        upgrade_url: `https://raw.githubusercontent.com/aliyun/oss-browser/${
+          isDev ? "dev" : "master"
+        }/upgrade.json`,
 
-        about_html: custom.about_html
+        about_html: custom.about_html,
       };
-      (function(){
-        if(custom.appName)
-          for(var k in custom.appName){
-            if(Global.i18n[k])
-               Global.i18n[k].content['app.name']=custom.appName[k]||'OSS Browser';
+      (function () {
+        if (custom.appName)
+          for (var k in custom.appName) {
+            if (Global.i18n[k])
+              Global.i18n[k].content["app.name"] =
+                custom.appName[k] || "OSS Browser";
           }
       })();
 
-
-      $(function(){
-        $(document).on('dragover', function(ev){
+      $(function () {
+        $(document).on("dragover", function (ev) {
           ev.preventDefault();
           return false;
-        })
-        $(document).on('drop', function(ev){
+        });
+        $(document).on("drop", function (ev) {
           ev.preventDefault();
           return false;
-        })
+        });
       });
-
 
       //require('./node/crc64/test')
     </script>
     <script src="app.js"></script>
-
-
   </body>
 </html>

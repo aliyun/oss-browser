@@ -1,43 +1,42 @@
-.trans-dock-btn{
-    position:fixed;
-    bottom: 0px;
-    right:0px;
-    min-width:140px;
-    padding:0px 4px;
-    font-size:12px;
-    height:24px;
-    border: 1px solid #999;
-    box-shadow:0 0 5px rgba(0,0,0,0.3);
-    background: #f5f5f5;
-    opacity: 0.8;
-    z-index:10;
-    line-height:24px;
-    text-align:center;
-    overflow: hidden;
-    -ms-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    cursor:pointer;
+.trans-dock-btn {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  min-width: 140px;
+  padding: 0px 4px;
+  font-size: 12px;
+  height: 24px;
+  border: 1px solid #999;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  background: #f5f5f5;
+  opacity: 0.8;
+  z-index: 10;
+  line-height: 24px;
+  text-align: center;
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  cursor: pointer;
 }
-.trans-frame{
-    position: fixed;
-    bottom:0px;
-    right:0px;
-    width:600px;
-    height: 420px;
-    background:#fff;
-    opacity: 0.9;
-    z-index:10;
-    border: 1px solid #ccc;
-    box-shadow:0 0 20px rgba(0,0,0,0.5);
+.trans-frame {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  width: 600px;
+  height: 420px;
+  background: #fff;
+  opacity: 0.9;
+  z-index: 10;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+.trans-nav.nav {
+  background: #f5f5f5;
+}
+.trans-nav.nav > li > a {
+  padding: 6px 10px;
+}
 
-}
-.trans-nav.nav{
-    background: #f5f5f5;
-}
-.trans-nav.nav > li > a{
-    padding: 6px 10px;
-}
-
-.list-condensed .col-sm-4{
-   padding:1px;
+.list-condensed .col-sm-4 {
+  padding: 1px;
 }

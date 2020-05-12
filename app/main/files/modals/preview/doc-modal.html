@@ -1,25 +1,30 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="modal-title">
+    <i style="color: orange;" class="fa fa-folder"></i>
+    <!-- 预览 -->
+    {{'preview'|translate}}
+    <span style="font-size: 80%;">({{objectInfo.size|sizeFormat}})</span>
+  </h4>
+</div>
+<div class="modal-body pd0">
+  <header class="pd4 bg-success">
+    oss://{{bucketInfo.bucket}}/{{objectInfo.path}}
 
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="cancel()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <h4 class="modal-title">
-      <i style="color:orange" class="fa fa-folder"></i>
-      <!-- 预览 -->
-      {{'preview'|translate}}
-      <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span>
-    </h4>
-  </div>
-  <div class="modal-body pd0">
-
-  <header class="pd4 bg-success">oss://{{bucketInfo.bucket}}/{{objectInfo.path}}
-
-    <a ng-if="prevUrl" href="" style="float:right" ng-click="openURL(prevUrl)">{{'preview.in.web.browser'|translate}}</a>
+    <a ng-if="prevUrl" href="" style="float: right;" ng-click="openURL(prevUrl)"
+      >{{'preview.in.web.browser'|translate}}</a
+    >
   </header>
 
-  <restore-checker bucket-info="bucketInfo" object-info='objectInfo' file-type="fileType"
-  after-check-success="afterCheckSuccess()" after-restore-submit="afterRestoreSubmit()">
-
+  <restore-checker
+    bucket-info="bucketInfo"
+    object-info="objectInfo"
+    file-type="fileType"
+    after-check-success="afterCheckSuccess()"
+    after-restore-submit="afterRestoreSubmit()"
+  >
     <!-- <div style="overflow:auto;min-height:100px;" class="text-center"> 
       <div ng-if="!prevUrl">
           <div ng-if="!error" is-loading></div>
@@ -37,28 +42,35 @@
       {{'cannot.preview.this.file'|translate}}
       <!-- 该文件类型无法预览。 -->
     </div>
-    
+
     <div class="text-center">
       <div class="btn-group">
-        <button ng-if="showAsCodeBtn" type="button" class="btn btn-default" ng-click="showAs('code');cancel()"><i class="fa fa-file-code-o"></i>
+        <button
+          ng-if="showAsCodeBtn"
+          type="button"
+          class="btn btn-default"
+          ng-click="showAs('code');cancel()"
+        >
+          <i class="fa fa-file-code-o"></i>
           <!-- 尝试作为文本文件打开 -->
           {{'tryto.open.as.textfile'|translate}}
         </button>
         <!-- <button type="button" class="btn btn-default" ng-click="showFn.download();cancel()"><i class="fa fa-download text-success"></i> 直接下载</button> -->
       </div>
-    
+
       <div class="clearfix">&nbsp;</div>
     </div>
   </restore-checker>
-  
+</div>
+<div class="modal-footer">
+  <span
+    ng-if="previewBarVisible"
+    ng-include="'main/files/modals/preview/preview-bar.html'"
+  ></span>
 
-  </div>
-  <div class="modal-footer">
-    <span ng-if="previewBarVisible" ng-include="'main/files/modals/preview/preview-bar.html'"></span>
-
-    <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
-      <i class="glyphicon glyphicon-remove"></i>
-      <!-- 关闭 -->
-      {{'close'|translate}}
-    </button>
-  </div>
+  <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
+    <i class="glyphicon glyphicon-remove"></i>
+    <!-- 关闭 -->
+    {{'close'|translate}}
+  </button>
+</div>

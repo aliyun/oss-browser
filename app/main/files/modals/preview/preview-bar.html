@@ -34,33 +34,45 @@
 
 </span> -->
 
-<button type="button" class="btn btn-default btn-sm" ng-click="showFn.download();cancel()">
+<button
+  type="button"
+  class="btn btn-default btn-sm"
+  ng-click="showFn.download();cancel()"
+>
   <i class="glyphicon glyphicon-cloud-download text-info"></i>
-  {{'download'|translate}}</button>
+  {{'download'|translate}}
+</button>
 
-
-<button ng-if="currentAuthInfo.id.indexOf('STS.')!=0" type="button" class="btn btn-default btn-sm" ng-click="showFn.address();">
+<button
+  ng-if="currentAuthInfo.id.indexOf('STS.')!=0"
+  type="button"
+  class="btn btn-default btn-sm"
+  ng-click="showFn.address();"
+>
   <i class="fa fa-download"></i>
   <!-- 获取地址 -->
-    {{'getAddress'|translate}}
+  {{'getAddress'|translate}}
 </button>
 
 <!-- <button type="button" class="btn btn-default btn-sm" ng-click="showFn.grant();cancel();">
   <i class="fa fa-shield text-warning"></i>
   简化Policy授权</button> -->
 
+<button
+  type="button"
+  class="btn btn-default btn-sm"
+  ng-click="showFn.httpHeaders();"
+>
+  <i class="fa fa-cog"></i>
+  {{'http.headers'|translate}}
+</button>
 
-  <button type="button" class="btn btn-default btn-sm" ng-click="showFn.httpHeaders();">
-    <i class="fa fa-cog"></i> 
-    {{'http.headers'|translate}}
-  </button>
+<button type="button" class="btn btn-default btn-sm" ng-click="showFn.acl();">
+  <i class="fa fa-shield text-success"></i>
+  <!-- ACL权限 -->
+  {{'acl'|translate}}
+</button>
 
-  <button type="button" class="btn btn-default btn-sm" ng-click="showFn.acl();">
-    <i class="fa fa-shield text-success"></i>
-    <!-- ACL权限 -->
-    {{'acl'|translate}}
-  </button>
-
-  <!-- <button type="button" class="btn btn-default btn-sm" ng-click="showFn.crc();">
+<!-- <button type="button" class="btn btn-default btn-sm" ng-click="showFn.crc();">
     <i class="fa fa-shield text-success"></i>
     查看CRC码</button> -->

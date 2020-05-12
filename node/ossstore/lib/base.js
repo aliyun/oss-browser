@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 function Base() {
   this._eventStack = {};
@@ -33,6 +33,5 @@ Base.prototype.emit = function (evt, ...argv) {
   }
   return this;
 };
-
 
 module.exports = Base;

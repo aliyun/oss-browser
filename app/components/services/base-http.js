@@ -1,52 +1,51 @@
 // register the interceptor as a service
-angular.module('web')
+angular
+  .module("web")
 
-    .factory('BaseHttp', ['$http', '$rootScope', '$timeout',
-        function ($http, $rootScope, $timeout) {
+  .factory("BaseHttp", [
+    "$http",
+    "$rootScope",
+    "$timeout",
+    function ($http, $rootScope, $timeout) {
+      return function (opt) {
+        $rootScope.onRequest = true;
 
-            return function (opt) {
+        opt.headers = opt.headers || {};
+        //for server side: req.xhr
+        if (!opt.headers["X-Requested-With"]) {
+          opt.headers["X-Requested-With"] = "XMLHttpRequest";
+        }
 
-                $rootScope.onRequest = true;
+        if (opt.url.indexOf("http") != 0) {
+          opt.url = Global.endpoint + opt.url;
+        }
+        var httpPromise = $http(opt);
 
-                opt.headers = opt.headers || {};
-                //for server side: req.xhr
-                if (!opt.headers['X-Requested-With']) {
-                    opt.headers['X-Requested-With'] = 'XMLHttpRequest';
-                }
+        httpPromise.success(function (data, status, header) {
+          setOnRequestFalse();
+        });
 
-                if(opt.url.indexOf('http')!=0){
-                    opt.url = Global.endpoint + opt.url;
-                }
-                var httpPromise = $http(opt);
+        httpPromise.error(function (err, status, header) {
+          if (opt.params && opt.params.ignoreError) {
+            //pass
+          } else if (opt.data && opt.data.ignoreError) {
+            //pass
+          } else {
+            $rootScope.$broadcast("http_error_message", err);
+          }
+          setOnRequestFalse();
+        });
 
-                httpPromise.success(function (data, status, header) {
-                    setOnRequestFalse();
-                });
+        return httpPromise;
+      };
 
-                httpPromise.error(function (err, status, header) {
+      var tid;
 
-                    if (opt.params && opt.params.ignoreError) {
-                        //pass
-                    }
-                    else if (opt.data && opt.data.ignoreError) {
-                        //pass
-                    }
-                    else {
-                        $rootScope.$broadcast('http_error_message', err);
-                    }
-                    setOnRequestFalse();
-                });
-
-                return httpPromise;
-            };
-
-            var tid;
-
-            function setOnRequestFalse() {
-                $timeout.cancel(tid);
-                tid = $timeout(function () {
-                    $rootScope.onRequest = false;
-                }, 600);
-            }
-        }]);
-
+      function setOnRequestFalse() {
+        $timeout.cancel(tid);
+        tid = $timeout(function () {
+          $rootScope.onRequest = false;
+        }, 600);
+      }
+    },
+  ]);

@@ -1,13 +1,22 @@
 <div class="modal-header">
   <button type="button" class="close" aria-label="Close" ng-click="cancel()">
-    <span aria-hidden="true">&times;</span></button>
-  <h4 class="modal-title text-{{opt.cls}}" id="myModalLabel" ng-bind-html="title"></h4>
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4
+    class="modal-title text-{{opt.cls}}"
+    id="myModalLabel"
+    ng-bind-html="title"
+  ></h4>
 </div>
 <div class="modal-body">
   <h5 class="col-sm-1 text-{{opt.cls}}" ng-if="opt.hideIcon">
     <i class="glyphicon glyphicon-warning-sign"></i>
   </h5>
-  <h5 class="break" ng-class="{'col-sm-11':!opt.hideIcon,'col-sm-12':opt.hideIcon}" ng-bind-html="message"></h5>
+  <h5
+    class="break"
+    ng-class="{'col-sm-11':!opt.hideIcon,'col-sm-12':opt.hideIcon}"
+    ng-bind-html="message"
+  ></h5>
 
   <div class="clearfix"></div>
 </div>
@@ -16,7 +25,12 @@
     {{'ok'|translate}}
     <!-- 确定 -->
   </button>
-  <button ng-if="!isAlert" type="button" class="btn btn-sm btn-default" ng-click="cancel()">
+  <button
+    ng-if="!isAlert"
+    type="button"
+    class="btn btn-sm btn-default"
+    ng-click="cancel()"
+  >
     {{'cancel'|translate}}
     <!-- 取消 -->
   </button>

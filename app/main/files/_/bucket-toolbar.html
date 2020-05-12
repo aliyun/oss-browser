@@ -1,49 +1,65 @@
 <header class="pd4 bucket-toolbar">
-
   <div class="col-sm-6 pd0">
     <div class="btn-group" role="group">
-      <button ng-disabled="currentAuthInfo.id.indexOf('STS.')==0" type="button" class="btn btn-default btn-sm" ng-click="showAddBucket()">
+      <button
+        ng-disabled="currentAuthInfo.id.indexOf('STS.')==0"
+        type="button"
+        class="btn btn-default btn-sm"
+        ng-click="showAddBucket()"
+      >
         <i class="glyphicon glyphicon-plus text-success"></i>
         <!-- 新建 Bucket -->
         {{'bucket.add'|translate}}
       </button>
     </div>
 
-
-    <div class="btn-group" role="group"  ng-if="ref.isBucketList" >
+    <div class="btn-group" role="group" ng-if="ref.isBucketList">
       <!-- <button type="button" class="btn btn-default btn-sm" ng-disabled="!bucket_sel.item"
       ng-click="goIn(bucket_sel.item.name)">
           <i class="fa fa-arrow-right"></i> 进入
       </button> -->
 
+      <button
+        type="button"
+        class="btn btn-default btn-sm"
+        ng-disabled="!bucket_sel.item"
+        ng-click="showBucketMultipart(bucket_sel.item)"
+      >
+        <i class="fa fa-copy"></i>
+        {{'bucket.multipart'|translate}}
+        <!-- 碎片 -->
+      </button>
 
-        <button type="button" class="btn btn-default btn-sm" ng-disabled="!bucket_sel.item"
-        ng-click="showBucketMultipart(bucket_sel.item)">
-            <i class="fa fa-copy"></i>
-            {{'bucket.multipart'|translate}}
-            <!-- 碎片 -->
-        </button>
+      <button
+        type="button"
+        class="btn btn-default btn-sm"
+        ng-disabled="!bucket_sel.item"
+        ng-click="showUpdateBucket(bucket_sel.item)"
+      >
+        <i class="fa fa-shield text-success"></i>
+        {{'acl'|translate}}
+        <!-- ACL权限 -->
+      </button>
 
-        <button type="button" class="btn btn-default btn-sm" ng-disabled="!bucket_sel.item"
-                ng-click="showUpdateBucket(bucket_sel.item)">
-            <i class="fa fa-shield text-success"></i>
-            {{'acl'|translate}}
-            <!-- ACL权限 -->
-        </button>
-
-        <button type="button" class="btn btn-default btn-sm" ng-disabled="!bucket_sel.item"
-
-          ng-click="showGrant([bucket_sel.item])">
-            <i class="fa fa-shield text-warning"></i>
-            {{'simplePolicy'|translate}}
-            <!-- 简化Policy授权 -->
-        </button>
-
-
+      <button
+        type="button"
+        class="btn btn-default btn-sm"
+        ng-disabled="!bucket_sel.item"
+        ng-click="showGrant([bucket_sel.item])"
+      >
+        <i class="fa fa-shield text-warning"></i>
+        {{'simplePolicy'|translate}}
+        <!-- 简化Policy授权 -->
+      </button>
     </div>
 
     <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default btn-sm dropdown-toggle" ng-disabled="!bucket_sel.item" data-toggle="dropdown">
+      <button
+        type="button"
+        class="btn btn-default btn-sm dropdown-toggle"
+        ng-disabled="!bucket_sel.item"
+        data-toggle="dropdown"
+      >
         <!-- 更多 -->
         {{'more'|translate}}
         <span class="caret"></span>
@@ -57,28 +73,33 @@
           </a>
         </li> -->
         <li>
-          <a href=""
-             ng-disabled="!bucket_sel.item"
-          ng-click="showDeleteBucket(bucket_sel.item)">
-              <i class="fa fa-remove text-danger"></i>
-              {{'delete'|translate}}
-              <!-- 删除 -->
+          <a
+            href=""
+            ng-disabled="!bucket_sel.item"
+            ng-click="showDeleteBucket(bucket_sel.item)"
+          >
+            <i class="fa fa-remove text-danger"></i>
+            {{'delete'|translate}}
+            <!-- 删除 -->
           </a>
         </li>
       </ul>
     </div>
-
   </div>
   <div class="col-sm-4 pd0">
-
     <div class="input-group input-group-sm mgb0">
-      <input type="text" ng-model="sch.bucketName" class="form-control" cleanable-input placeholder="{{'bucket.name'|translate}}">
+      <input
+        type="text"
+        ng-model="sch.bucketName"
+        class="form-control"
+        cleanable-input
+        placeholder="{{'bucket.name'|translate}}"
+      />
       <span class="input-group-addon">
         <i class="fa fa-search"></i>
         {{(buckets|filter:sch.bucketName).length}}
       </span>
     </div>
-
   </div>
   <div class="col-sm-2 pd0">
     <div ng-include="'main/files/_/list-view-options.html'"></div>

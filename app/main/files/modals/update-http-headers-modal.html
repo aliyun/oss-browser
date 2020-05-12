@@ -6,27 +6,34 @@
     <h4 class="modal-title">
       <i class="fa fa-cog text-warning"></i>
       {{'http.headers'|translate}}
-
     </h4>
   </div>
   <div class="modal-body">
-
     <div class="form-group">
       <label class="col-sm-4 control-label" for="name">
         Content-Type:
       </label>
       <div class="col-sm-7">
-        <input type="text" ng-model="headers.ContentType" id="ContentType" class="input-md form-control" />
+        <input
+          type="text"
+          ng-model="headers.ContentType"
+          id="ContentType"
+          class="input-md form-control"
+        />
       </div>
     </div>
-
 
     <div class="form-group">
       <label class="col-sm-4 control-label" for="ContentEncoding">
         Content-Encoding:
       </label>
       <div class="col-sm-7">
-        <input type="text" ng-model="headers.ContentEncoding" id="ContentEncoding" class="input-md form-control" />
+        <input
+          type="text"
+          ng-model="headers.ContentEncoding"
+          id="ContentEncoding"
+          class="input-md form-control"
+        />
       </div>
     </div>
 
@@ -35,7 +42,12 @@
         Cache-Control:
       </label>
       <div class="col-sm-7">
-        <input type="text" ng-model="headers.CacheControl" id="CacheControl" class="input-md form-control" />
+        <input
+          type="text"
+          ng-model="headers.CacheControl"
+          id="CacheControl"
+          class="input-md form-control"
+        />
       </div>
     </div>
 
@@ -44,7 +56,12 @@
         Content-Disposition:
       </label>
       <div class="col-sm-7">
-        <input type="text" ng-model="headers.ContentDisposition" id="ContentDisposition" class="input-md form-control" />
+        <input
+          type="text"
+          ng-model="headers.ContentDisposition"
+          id="ContentDisposition"
+          class="input-md form-control"
+        />
       </div>
     </div>
 
@@ -53,7 +70,12 @@
         Content-Language:
       </label>
       <div class="col-sm-7">
-        <input type="text" ng-model="headers.ContentLanguage" id="ContentLanguage" class="input-md form-control" />
+        <input
+          type="text"
+          ng-model="headers.ContentLanguage"
+          id="ContentLanguage"
+          class="input-md form-control"
+        />
       </div>
     </div>
 
@@ -62,16 +84,27 @@
         Expires:
       </label>
       <div class="col-sm-7">
-        <input type="text" ng-model="headers.Expires" id="Expires" class="input-md form-control" />
+        <input
+          type="text"
+          ng-model="headers.Expires"
+          id="Expires"
+          class="input-md form-control"
+        />
       </div>
     </div>
 
     <div class="clearfix">&nbsp;</div>
     <fieldset>
       <legend>
-        <h5>{{'userMetaData'|translate}}
-         <!-- 用户自定义元数据 -->
-          <a href="" class="pull-right btn btn-xs btn-success" ng-click="metaItems.unshift({key:'',value:''})"><i class="fa fa-plus"></i> {{'add'|translate}}</a>
+        <h5>
+          {{'userMetaData'|translate}}
+          <!-- 用户自定义元数据 -->
+          <a
+            href=""
+            class="pull-right btn btn-xs btn-success"
+            ng-click="metaItems.unshift({key:'',value:''})"
+            ><i class="fa fa-plus"></i> {{'add'|translate}}</a
+          >
         </h5>
       </legend>
 
@@ -85,19 +118,24 @@
           <td>
             <div class="input-group input-group-sm">
               <span class="input-group-addon">x-oss-meta-</span>
-              <input class="form-control" type="text" ng-model="meta.key">
+              <input class="form-control" type="text" ng-model="meta.key" />
             </div>
           </td>
           <td>
-            <input class="input-sm form-control" type="text" ng-model="meta.value">
+            <input
+              class="input-sm form-control"
+              type="text"
+              ng-model="meta.value"
+            />
           </td>
           <td>
-            <a href="" class="text-danger" ng-click="metaItems.splice($index,1)">{{'delete'|translate}}</a>
+            <a href="" class="text-danger" ng-click="metaItems.splice($index,1)"
+              >{{'delete'|translate}}</a
+            >
           </td>
         </tr>
       </table>
     </fieldset>
-
 
     <div class="clearfix"></div>
   </div>

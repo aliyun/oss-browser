@@ -1,19 +1,18 @@
-.address-url{
-  font-family: 微软雅黑, "Microsoft Yahei", "Hiragino Sans GB", tahoma, arial, 宋体;
-  font-weight:bold;
+.address-url {
+  font-family: 微软雅黑, "Microsoft Yahei", "Hiragino Sans GB", tahoma, arial,
+    宋体;
+  font-weight: bold;
 }
 
-.address-bar{
+.address-bar {
   /*border-bottom:1px solid #ddd;
   border-top:1px solid #ddd; */
-
 }
 
 .bucket-toolbar,
-.file-toolbar{
-  border-bottom:1px solid #ddd;
-  border-top:1px solid #ddd;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.5);
-  position:relative;
-
+.file-toolbar {
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+  position: relative;
 }

@@ -8,7 +8,7 @@ OSS Browser 提供类似 windows 资源管理器功能。用户可以很方便�
 
 ## 1. 支持平台
 
-Windows7 above, Linux and Mac,不建议使用windows XP平台和windows Server平台
+Windows7 above, Linux and Mac,不建议使用 windows XP 平台和 windows Server 平台
 
 ## 2. 客户端下载：
 
@@ -77,13 +77,13 @@ Windows7 above, Linux and Mac,不建议使用windows XP平台和windows Server�
 
 - 归档 bucket 下所有文件均为 Archive 存储类型, 需要解冻才能访问。
 
-### (7) 支持自定义域名（cname方式）访问（1.9.0版本开始支持）
+### (7) 支持自定义域名（cname 方式）访问（1.9.0 版本开始支持）
 
 ![cname模式](preview/cname.png)
 
-- cname模式需要用户在oss控制台上进行域名和bucket的绑定，使用cname模式ossbrowser上所有object的操作都会走自定义域名方式
+- cname 模式需要用户在 oss 控制台上进行域名和 bucket 的绑定，使用 cname 模式 ossbrowser 上所有 object 的操作都会走自定义域名方式
 
-### (7) 支持请求付费者模式访问（1.9.0版本开始支持）
+### (7) 支持请求付费者模式访问（1.9.0 版本开始支持）
 
 ![requestPay](preview/requestpay.png)
 
@@ -174,12 +174,13 @@ oss-browser/
 
 ## 7. 关于贡献
 
-- 如有建议或发现 bug，请直接开 issue或者提PR，PR必须merge请求到dev分支,我们会统一把dev分支合并到master并发布，感谢广大开发者参与。
+- 如有建议或发现 bug，请直接开 issue 或者提 PR，PR 必须 merge 请求到 dev 分支,我们会统一把 dev 分支合并到 master 并发布，感谢广大开发者参与。
 
 ## 8. 注意事项
-- OSS Browser使用过程中，如果遇到问题可打开调试面板进行问题初步排查，可通过单击OSS Browser工具左上角图标连续10次弹出调试面板,针对每个操作OSS Browser埋的都有关键操作信息，同时控制台会实时同步错误信息,如果用户无法理解错误日志信息。请issue截图反馈@luozhang002进行排查
-- OSS Browser工具使用过程中尽量不要开本地代理或者VPN相关
-- 开发者如果是通过本地编译github仓库生产的oss browser工具，想要进行主进程和渲染进程相关代码的调试可以参考文档[debug](debug.md)
+
+- OSS Browser 使用过程中，如果遇到问题可打开调试面板进行问题初步排查，可通过单击 OSS Browser 工具左上角图标连续 10 次弹出调试面板,针对每个操作 OSS Browser 埋的都有关键操作信息，同时控制台会实时同步错误信息,如果用户无法理解错误日志信息。请 issue 截图反馈@luozhang002 进行排查
+- OSS Browser 工具使用过程中尽量不要开本地代理或者 VPN 相关
+- 开发者如果是通过本地编译 github 仓库生产的 oss browser 工具，想要进行主进程和渲染进程相关代码的调试可以参考文档[debug](debug.md)
 
 ## 9. 开源 LICENSE
 
