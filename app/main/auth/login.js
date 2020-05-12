@@ -13,7 +13,7 @@ angular.module("web").controller("loginCtrl", [
   "settingsSvs",
   function (
     $scope,
-    $rootScope,
+    _$rootScope,
     $translate,
     Auth,
     AuthInfo,
@@ -21,9 +21,7 @@ angular.module("web").controller("loginCtrl", [
     $location,
     Const,
     Dialog,
-    Toast,
-    Cipher,
-    settingsSvs
+    Toast
   ) {
     var DEF_EP_TPL = "http://{region}.aliyuncs.com";
 
@@ -52,7 +50,7 @@ angular.module("web").controller("loginCtrl", [
       eptplType: "default",
 
       hideTopNav: 1,
-      reg_osspath: /^oss\:\/\//,
+      reg_osspath: /^oss:\/\//,
       regions: regions,
       onSubmit: onSubmit,
       showCleanHistories: showCleanHistories,
@@ -68,14 +66,9 @@ angular.module("web").controller("loginCtrl", [
     });
 
     $scope.$watch("item.eptpl", function (v) {
-      $scope.eptplType = v.indexOf("{region}.aliyuncs.com" > -1)
-        ? "default"
-        : "customize";
+      $scope.eptplType =
+        v.indexOf("{region}.aliyuncs.com") !== -1 ? "default" : "customize";
     });
-
-    // $scope.$watch('item.eptpl', function(v){
-    //     // $scope.eptplType = (v==DEF_EP_TPL)?'default':'customize';
-    // });
 
     $scope.$watch("gtab", function (v) {
       localStorage.setItem("gtag", v);
@@ -137,7 +130,9 @@ angular.module("web").controller("loginCtrl", [
             try {
               var d = new Date(info.expiration).getTime();
               info.isExpired = d <= new Date().getTime();
-            } catch (e) {}
+            } catch (e) {
+              //
+            }
             $scope.authTokenInfo = info;
 
             $scope.authTokenInfo.expirationStr = moment(
@@ -162,15 +157,19 @@ angular.module("web").controller("loginCtrl", [
     function init() {
       $scope.flags.remember = localStorage.getItem(KEY_REMEMBER) || "NO";
       $scope.flags.showHis = localStorage.getItem(SHOW_HIS) || "NO";
-      ($scope.flags.keepLoggedIn =
-        localStorage.getItem(KEEP_ME_LOGGED_IN) || "YES"),
-        //requestPay状态
-        ($scope.flags.requestpaystatus =
-          localStorage.getItem(SHOW_REQUEST_PAY) || "NO");
+      $scope.flags.keepLoggedIn =
+        localStorage.getItem(KEEP_ME_LOGGED_IN) || "YES";
+      //requestPay状态
+      $scope.flags.requestpaystatus =
+        localStorage.getItem(SHOW_REQUEST_PAY) || "NO";
 
       // 是否使用https
       $scope.flags.secure = localStorage.getItem(SHOW_SECURE) || "YES";
-      angular.extend($scope.item, AuthInfo.getRemember());
+
+      const rememberInfo = AuthInfo.getRemember();
+      $scope.eptplType = rememberInfo.eptplType;
+      delete rememberInfo.eptplType;
+      angular.extend($scope.item, rememberInfo);
 
       //临时token
       $scope.item.authToken = localStorage.getItem(KEY_AUTHTOKEN) || "";
@@ -280,7 +279,11 @@ angular.module("web").controller("loginCtrl", [
       }
 
       if ($scope.flags.remember == "YES") {
-        AuthInfo.remember(data);
+        AuthInfo.remember(
+          Object.assign(data, {
+            eptplType: $scope.eptplType,
+          })
+        );
       }
 
       Toast.info(T("logining"), 1000);
