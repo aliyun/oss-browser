@@ -1,84 +1,99 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="modal-title">
+    <i class="fa fa-user text-orange"></i>
+    {{'aks'|translate}} <span class="text-info">({{user.UserName}})</span>
+  </h4>
+</div>
+<div class="modal-body form-horizontal">
+  <header class="form-group">
+    <div class="col-sm-9">
+      <div class="input-group input-group-sm">
+        <input
+          type="text"
+          ng-model="sch.txt"
+          class="form-control"
+          cleanable-input
+          placeholder="search"
+        />
+        <span class="input-group-btn">
+          <a class="btn btn-info"><i class="fa fa-search"></i></a>
+        </span>
+      </div>
+    </div>
+    <div class="col-sm-3 text-right">
+      <a class="btn btn-success btn-sm" ng-click="showAdd()">
+        <i class="fa fa-plus"></i>
+        {{'add'|translate}}
+      </a>
 
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="cancel()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <h4 class="modal-title">
-      <i class="fa fa-user text-orange"></i>
-        {{'aks'|translate}} <span class="text-info">({{user.UserName}})</span>
-    </h4>
-  </div>
-  <div class="modal-body form-horizontal">
+      <a class="btn btn-default btn-sm" ng-click="refresh()">
+        <i class="fa fa-refresh"></i>
+        {{'refresh'|translate}}
+      </a>
+    </div>
+  </header>
 
+  <div is-loading ng-if="isLoading"></div>
 
-    <header class="form-group">
-      <div class="col-sm-9">
-       <div class="input-group input-group-sm">
-          <input type="text" ng-model="sch.txt" class="form-control" cleanable-input placeholder="search"/>
-          <span class="input-group-btn">
-            <a class="btn btn-info"><i class="fa fa-search"></i></a>
-          </span>
-       </div>
-     </div>
-     <div class="col-sm-3 text-right">
-       <a class="btn btn-success btn-sm" ng-click="showAdd()">
-         <i class="fa fa-plus"></i>
-          {{'add'|translate}}
-       </a>
+  <div no-data ng-if="!isLoading && items.length==0"></div>
+  <table
+    ng-if="!isLoading && items.length>0"
+    class="mg0 table table-bordered table-striped table-condensed"
+  >
+    <tr>
+      <th>AccessKeyId/{{'status'|translate}}</th>
+      <th>{{'accessKeySecret'|translate}}</th>
+      <th>{{'createTime'|translate}} <i class="fa fa-arrow-down"></i></th>
 
-       <a class="btn btn-default btn-sm" ng-click="refresh()">
-         <i class="fa fa-refresh"></i>
-         {{'refresh'|translate}}
-       </a>
-     </div>
-    </header>
+      <th>{{'actions'|translate}}</th>
+    </tr>
+    <tr ng-repeat="item in items|filter:sch.txt">
+      <td>
+        <span ng-if="item.Status=='Active'">{{item.AccessKeyId}}</span>
+        <s ng-if="item.Status=='Inactive'" class="text-muted"
+          >{{item.AccessKeyId}}</s
+        >
+        <span class="text-{{item.Status=='Active'?'success':'danger'}}"
+          >({{('status.'+item.Status)|translate}})</span
+        >
+      </td>
+      <td>
+        <div ng-if="item.AccessKeySecret">
+          <code ng-if="!item.toggle">{{item.AccessKeySecret|hideSecret}}</code>
+          <code ng-if="item.toggle">{{item.AccessKeySecret}}</code>
+          <a href="" ng-if="!item.toggle" ng-click="item.toggle=!item.toggle"
+            >{{'show'|translate}}</a
+          >
+        </div>
+        <div ng-if="!item.AccessKeySecret" class="text-muted">
+          <!-- 无法获取 -->
+          {{'can.not.get.accessKeySecret'|translate}}
+        </div>
+      </td>
+      <td>{{item.CreateDate|timeFormat}}</td>
 
-
-    <div is-loading ng-if="isLoading"> </div>
-
-    <div no-data ng-if="!isLoading && items.length==0"> </div>
-    <table ng-if="!isLoading && items.length>0"
-      class="mg0 table table-bordered table-striped table-condensed">
-       <tr><th>AccessKeyId/{{'status'|translate}}</th>
-         <th>{{'accessKeySecret'|translate}}</th>
-         <th>{{'createTime'|translate}} <i class="fa fa-arrow-down"></i></th>
-
-         <th>{{'actions'|translate}}</th></tr>
-       <tr ng-repeat="item in items|filter:sch.txt">
-         <td>
-           <span ng-if="item.Status=='Active'">{{item.AccessKeyId}}</span>
-           <s ng-if="item.Status=='Inactive'" class="text-muted">{{item.AccessKeyId}}</s>
-           <span class="text-{{item.Status=='Active'?'success':'danger'}}">({{('status.'+item.Status)|translate}})</span>
-         </td>
-         <td>
-           <div ng-if="item.AccessKeySecret">
-              <code ng-if="!item.toggle">{{item.AccessKeySecret|hideSecret}}</code>
-              <code ng-if="item.toggle">{{item.AccessKeySecret}}</code>
-              <a href="" ng-if="!item.toggle" ng-click="item.toggle=!item.toggle">{{'show'|translate}}</a>
-            </div>
-            <div ng-if="!item.AccessKeySecret" class="text-muted">
-               <!-- 无法获取 -->
-               {{'can.not.get.accessKeySecret'|translate}}
-            </div>
-          </td>
-         <td>{{item.CreateDate|timeFormat}}</td>
-
-         <td>
-           <a href="" ng-click="updateStatus(item)" ng-class="{'text-danger':item.Status=='Active'}">{{(item.Status=='Active'?'disable':'enable')|translate}}</a>
-          |
-          <a href="" class="text-danger" ng-click="showRemove(item)">{{'delete'|translate}}</a>
-         </td>
-       </tr>
-    </table>
-
-
-  </div>
-  <div class="modal-footer">
-
-    <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
-      <i class="glyphicon glyphicon-remove"></i>
-      <!-- 关闭 -->
-      {{'close'|translate}}
-    </button>
-  </div>
+      <td>
+        <a
+          href=""
+          ng-click="updateStatus(item)"
+          ng-class="{'text-danger':item.Status=='Active'}"
+          >{{(item.Status=='Active'?'disable':'enable')|translate}}</a
+        >
+        |
+        <a href="" class="text-danger" ng-click="showRemove(item)"
+          >{{'delete'|translate}}</a
+        >
+      </td>
+    </tr>
+  </table>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
+    <i class="glyphicon glyphicon-remove"></i>
+    <!-- 关闭 -->
+    {{'close'|translate}}
+  </button>
 </div>

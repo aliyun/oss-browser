@@ -1,53 +1,57 @@
-
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="close()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <h4 class="modal-title text-danger">
-      <!-- 删除目录和文件 -->
-      {{'deleteModal.title'|translate}}
-    </h4>
-  </div>
-  <div class="modal-body">
-
-   <div ng-if="step==1">
+<div class="modal-header">
+  <button type="button" class="close" ng-click="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="modal-title text-danger">
+    <!-- 删除目录和文件 -->
+    {{'deleteModal.title'|translate}}
+  </h4>
+</div>
+<div class="modal-body">
+  <div ng-if="step==1">
     <div class="text-warning">
       {{'deleteModal.message1'|translate}}:
       <!-- 将删除以下目录或文件: -->
     </div>
     <ul>
       <li ng-repeat="item in items" class="break">
-        <i class="fa fa-folder" style="color:orange" ng-if="item.isFolder"></i>
+        <i
+          class="fa fa-folder"
+          style="color: orange;"
+          ng-if="item.isFolder"
+        ></i>
         <i class="fa fa-file" ng-if="!item.isFolder"></i>
         {{item.name}}
       </li>
     </ul>
-   </div>
+  </div>
 
-   <div ng-if="step==2">
+  <div ng-if="step==2">
     <div class="text-info">
       {{'delete.on'|translate}}
       <!-- 正在删除... -->
     </div>
-   </div>
+  </div>
 
-   <div ng-if="step==2 || step==3">
+  <div ng-if="step==2 || step==3">
     <div class="progress mgb2">
-     <div class="progress-bar progress-bar-success" ng-style="{width: progress.current*100/progress.total+'%'}">
-     </div>
-     <div class="progress-bar progress-bar-danger" ng-style="{width: progress.errorCount*100/progress.total+'%'}">
-     </div>
+      <div
+        class="progress-bar progress-bar-success"
+        ng-style="{width: progress.current*100/progress.total+'%'}"
+      ></div>
+      <div
+        class="progress-bar progress-bar-danger"
+        ng-style="{width: progress.errorCount*100/progress.total+'%'}"
+      ></div>
     </div>
     <label>{{progress.current}} / {{progress.total}}</label>
   </div>
 
   <div ng-if="step==3">
-
-
-    <div ng-if='terr && terr.length>0'>
+    <div ng-if="terr && terr.length>0">
       <div ng-if="isStop" class="text-danger">
-         <!-- 用户取消删除 -->
-         {{'deleteModal.message2'|translate}}
+        <!-- 用户取消删除 -->
+        {{'deleteModal.message2'|translate}}
       </div>
       <div class="text-warning">
         <!-- 部分目录或文件无法删除： -->
@@ -55,49 +59,68 @@
       </div>
       <ul>
         <li ng-repeat="terrItem in terr" ng-if="$index<10">
-
-          <i class="fa fa-folder" style="color:orange" ng-if="terrItem.item.isFolder"></i>
+          <i
+            class="fa fa-folder"
+            style="color: orange;"
+            ng-if="terrItem.item.isFolder"
+          ></i>
 
           <i class="fa fa-file-o" ng-if="!terrItem.item.isFolder"></i>
 
           {{terrItem.item.path.substring(currentInfo.key.length)}}
 
-          <i class="fa fa-exclamation-circle text-danger"
-          uib-tooltip="{{terrItem.error.message}}"
-          tooltip-placement="right" tooltip-append-to-body="true"></i>
+          <i
+            class="fa fa-exclamation-circle text-danger"
+            uib-tooltip="{{terrItem.error.message}}"
+            tooltip-placement="right"
+            tooltip-append-to-body="true"
+          ></i>
         </li>
         <li ng-if="terr.length > 10">......</li>
-
       </ul>
     </div>
 
-    <div ng-if='!terr || terr.length==0' class="text-success">
-     <i class="fa fa-check text-success"></i>
+    <div ng-if="!terr || terr.length==0" class="text-success">
+      <i class="fa fa-check text-success"></i>
       <!-- 删除成功 -->
       {{'delete.success'|translate}}
     </div>
- </div>
-
-
-
-    <div class="clearfix"></div>
   </div>
-  <div class="modal-footer">
-    <button ng-if="step==1" type="button" class="btn btn-danger btn-sm" ng-click="start()">
-      <i class="glyphicon glyphicon-trash"></i>
-      <!-- 确定删除 -->
-      {{'ok'|translate}}
-    </button>
 
-    <button ng-if="step==2" ng-disabled="isStop" type="button" class="btn btn-warning btn-sm" ng-click="stop()">
-      <i class="glyphicon glyphicon-remove"></i>
-      <!-- 停止 -->
-      {{'stop'|translate}}
-    </button>
+  <div class="clearfix"></div>
+</div>
+<div class="modal-footer">
+  <button
+    ng-if="step==1"
+    type="button"
+    class="btn btn-danger btn-sm"
+    ng-click="start()"
+  >
+    <i class="glyphicon glyphicon-trash"></i>
+    <!-- 确定删除 -->
+    {{'ok'|translate}}
+  </button>
 
-    <button ng-if="step==3||step==1" type="button" class="btn btn-default btn-sm" ng-click="close()">
-      <i class="glyphicon glyphicon-remove"></i>
-      <!-- 关闭 -->
-      {{'close'|translate}}
-    </button>
-  </div>
+  <button
+    ng-if="step==2"
+    ng-disabled="isStop"
+    type="button"
+    class="btn btn-warning btn-sm"
+    ng-click="stop()"
+  >
+    <i class="glyphicon glyphicon-remove"></i>
+    <!-- 停止 -->
+    {{'stop'|translate}}
+  </button>
+
+  <button
+    ng-if="step==3||step==1"
+    type="button"
+    class="btn btn-default btn-sm"
+    ng-click="close()"
+  >
+    <i class="glyphicon glyphicon-remove"></i>
+    <!-- 关闭 -->
+    {{'close'|translate}}
+  </button>
+</div>

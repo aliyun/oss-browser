@@ -1,11 +1,10 @@
 <style>
   .spinner {
-
-      margin: 40px auto 0px;
-      width: 150px;
-      text-align: center;
+    margin: 40px auto 0px;
+    width: 150px;
+    text-align: center;
   }
-    .spinner2 {
+  .spinner2 {
     position: absolute;
     top: 140px;
     left: 50%;
@@ -18,7 +17,7 @@
   .spinner > div {
     width: 30px;
     height: 30px;
-    background-color: #67CF22;
+    background-color: #67cf22;
 
     border-radius: 100%;
     display: inline-block;
@@ -40,23 +39,32 @@
   }
 
   @-webkit-keyframes bouncedelay {
-    0%, 80%, 100% { -webkit-transform: scale(0.0) }
-    40% { -webkit-transform: scale(1.0) }
+    0%,
+    80%,
+    100% {
+      -webkit-transform: scale(0);
+    }
+    40% {
+      -webkit-transform: scale(1);
+    }
   }
 
   @keyframes bouncedelay {
-    0%, 80%, 100% {
-      transform: scale(0.0);
-      -webkit-transform: scale(0.0);
-    } 40% {
-        transform: scale(1.0);
-        -webkit-transform: scale(1.0);
-      }
+    0%,
+    80%,
+    100% {
+      transform: scale(0);
+      -webkit-transform: scale(0);
+    }
+    40% {
+      transform: scale(1);
+      -webkit-transform: scale(1);
+    }
   }
 </style>
 
 <div class="spinner">
-    <div class="bounce1"></div>
-    <div class="bounce2"></div>
-    <div class="bounce3"></div>
+  <div class="bounce1"></div>
+  <div class="bounce2"></div>
+  <div class="bounce3"></div>
 </div>

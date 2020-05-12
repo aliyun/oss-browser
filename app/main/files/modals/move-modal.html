@@ -1,24 +1,21 @@
-
-  <div class="modal-header">
-    <!-- <button type="button" class="close" ng-click="cancel()">
+<div class="modal-header">
+  <!-- <button type="button" class="close" ng-click="cancel()">
       <span aria-hidden="true">&times;</span>
     </button> -->
-    <h4 ng-if="isCopy" class="modal-title text-info">
-      <i class="fa fa-copy"></i>
-      <!-- 复制 -->
-      {{'copy'|translate}}
-    </h4>
-      <h4 ng-if="!isCopy" class="modal-title text-info">
-        <i class="fa fa-cut"></i>
-        <!-- 移动 -->
-        {{'move'|translate}}
-      </h4>
-  </div>
+  <h4 ng-if="isCopy" class="modal-title text-info">
+    <i class="fa fa-copy"></i>
+    <!-- 复制 -->
+    {{'copy'|translate}}
+  </h4>
+  <h4 ng-if="!isCopy" class="modal-title text-info">
+    <i class="fa fa-cut"></i>
+    <!-- 移动 -->
+    {{'move'|translate}}
+  </h4>
+</div>
 
-
-  <div class="modal-body">
-
-<!-- <div ng-if="step==1">
+<div class="modal-body">
+  <!-- <div ng-if="step==1">
      <div class="text-warning">将以下目录或文件 (共 {{items.length}} 个):</div>
      <ul>
        <li ng-repeat="item in items" ng-if="$index<5">
@@ -43,29 +40,31 @@
 </div>
  -->
 
-<div ng-if="step==2">
- <div class="text-info">{{isCopy? ('copy.on'|translate): ('move.on'|translate)}}...</div>
-</div>
-
-<div ng-if="step==2 || step==3">
- <div class="progress mgb2">
-  <div class="progress-bar progress-bar-success" ng-style="{width: progress.current*100/progress.total+'%'}">
+  <div ng-if="step==2">
+    <div class="text-info">
+      {{isCopy? ('copy.on'|translate): ('move.on'|translate)}}...
+    </div>
   </div>
-  <div class="progress-bar progress-bar-danger" ng-style="{width: progress.errorCount*100/progress.total+'%'}">
+
+  <div ng-if="step==2 || step==3">
+    <div class="progress mgb2">
+      <div
+        class="progress-bar progress-bar-success"
+        ng-style="{width: progress.current*100/progress.total+'%'}"
+      ></div>
+      <div
+        class="progress-bar progress-bar-danger"
+        ng-style="{width: progress.errorCount*100/progress.total+'%'}"
+      ></div>
+    </div>
+    <label>{{progress.current}} / {{progress.total}}</label>
   </div>
- </div>
- <label>{{progress.current}} / {{progress.total}}</label>
-</div>
 
-
-
-
-
-<div ng-if="step==3">
-    <div ng-if='terr && terr.length>0'>
+  <div ng-if="step==3">
+    <div ng-if="terr && terr.length>0">
       <div ng-if="isStop" class="text-danger">
-         <!-- 用户取消 -->
-         {{'use.cancelled'|translate}}
+        <!-- 用户取消 -->
+        {{'use.cancelled'|translate}}
       </div>
       <div class="text-warning">
         {{isCopy? ('copy.error1'|translate): ('move.error1'|translate)}}
@@ -73,48 +72,63 @@
       </div>
       <ul>
         <li ng-repeat="terrItem in terr" ng-if="$index<10">
-
-          <i class="fa fa-folder" style="color:orange" ng-if="terrItem.item.isFolder"></i>
+          <i
+            class="fa fa-folder"
+            style="color: orange;"
+            ng-if="terrItem.item.isFolder"
+          ></i>
 
           <i class="fa fa-file-o" ng-if="!terrItem.item.isFolder"></i>
 
           {{terrItem.item.path.substring(currentInfo.key.length)}}
 
-          <i class="fa fa-exclamation-circle text-danger"
-          uib-tooltip="{{terrItem.error.message}}"
-          tooltip-placement="right" tooltip-append-to-body="true"></i>
+          <i
+            class="fa fa-exclamation-circle text-danger"
+            uib-tooltip="{{terrItem.error.message}}"
+            tooltip-placement="right"
+            tooltip-append-to-body="true"
+          ></i>
         </li>
         <li ng-if="terr.length > 10">......</li>
       </ul>
     </div>
 
-    <div ng-if='!terr || terr.length==0' class="text-success">
-     <i class="fa fa-check text-success"></i>
+    <div ng-if="!terr || terr.length==0" class="text-success">
+      <i class="fa fa-check text-success"></i>
       <!-- {{isCopy?"复制":"移动"}}成功 -->
       {{isCopy? ('copy.success'|translate) : ('move.success'|translate)}}
     </div>
- </div>
-
-    <div class="clearfix"></div>
-
   </div>
 
-  <div class="modal-footer">
+  <div class="clearfix"></div>
+</div>
 
-      <!-- <button ng-if="step==1" ng-disabled="moveTo.ossPath==originPath"
+<div class="modal-footer">
+  <!-- <button ng-if="step==1" ng-disabled="moveTo.ossPath==originPath"
        type="button" class="btn btn-success btn-sm" ng-click="start()">
         <i class="glyphicon glyphicon-ok"></i>
         确定</button> -->
 
-      <button ng-if="step==2" ng-disabled="isStop" type="button" class="btn btn-warning btn-sm" ng-click="stop()">
-        <i class="glyphicon glyphicon-remove"></i>
-        <!-- 停止 -->
-        {{'stop'|translate}}
-      </button>
+  <button
+    ng-if="step==2"
+    ng-disabled="isStop"
+    type="button"
+    class="btn btn-warning btn-sm"
+    ng-click="stop()"
+  >
+    <i class="glyphicon glyphicon-remove"></i>
+    <!-- 停止 -->
+    {{'stop'|translate}}
+  </button>
 
-      <button ng-if="step==3||step==1" type="button" class="btn btn-default btn-sm" ng-click="cancel()">
-        <i class="glyphicon glyphicon-remove"></i>
-        <!-- 关闭 -->
-        {{'close'|translate}}
-      </button>
-  </div>
+  <button
+    ng-if="step==3||step==1"
+    type="button"
+    class="btn btn-default btn-sm"
+    ng-click="cancel()"
+  >
+    <i class="glyphicon glyphicon-remove"></i>
+    <!-- 关闭 -->
+    {{'close'|translate}}
+  </button>
+</div>

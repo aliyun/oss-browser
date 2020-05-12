@@ -1,5 +1,4 @@
 <header class="pd4 file-toolbar">
-
   <div class="col-sm-7 pd0">
     <!-- <button type="button" class="btn btn-default btn-sm"
             ng-click="sel.all=!sel.all;selectAll()">
@@ -8,57 +7,109 @@
 
     <!-- &nbsp; -->
     <div class="btn-group" role="group" ng-if="!copy.pwd">
-
-      <button ng-disabled="currentAuthInfo.privilege=='readOnly'" type="button" class="btn btn-default btn-sm" ng-click="showUploadDialog()">
+      <button
+        ng-disabled="currentAuthInfo.privilege=='readOnly'"
+        type="button"
+        class="btn btn-default btn-sm"
+        ng-click="showUploadDialog()"
+      >
         <i class="fa fa-upload text-info"></i>
         <span ng-if="isMac">{{'upload'|translate}}</span>
         <span ng-if="!isMac">{{'files'|translate}}</span>
         <!-- 上传 -->
       </button>
-      <button ng-if="!isMac" ng-disabled="currentAuthInfo.privilege=='readOnly'" type="button" class="btn btn-default btn-sm" ng-click="showUploadDialog(true)">
+      <button
+        ng-if="!isMac"
+        ng-disabled="currentAuthInfo.privilege=='readOnly'"
+        type="button"
+        class="btn btn-default btn-sm"
+        ng-click="showUploadDialog(true)"
+      >
         <i class="fa fa-upload text-info"></i>
         {{'folder'|translate}}
         <!-- 上传 -->
       </button>
-      <button ng-disabled="currentAuthInfo.privilege=='readOnly'" type="button" class="btn btn-default btn-sm" ng-click="showAddFolder()">
+      <button
+        ng-disabled="currentAuthInfo.privilege=='readOnly'"
+        type="button"
+        class="btn btn-default btn-sm"
+        ng-click="showAddFolder()"
+      >
         <i class="glyphicon glyphicon-plus text-success"></i>
         <!-- 新建目录 -->
         {{'folder.create'|translate}}
       </button>
       <!-- mock -->
-      <div style="position:absolute;width:2px;height:1px;opacity:0.01;overflow:hidden;">
-         <input type="text" style="position:absolute;top:0;left:0" ng-model="mock.uploads" ng-change="mock.uploadsChange()"/>
-         <input type="text" style="position:absolute;top:0;left:1" ng-model="mock.downloads" ng-change="mock.downloadsChange()"/>
+      <div
+        style="
+          position: absolute;
+          width: 2px;
+          height: 1px;
+          opacity: 0.01;
+          overflow: hidden;
+        "
+      >
+        <input
+          type="text"
+          style="position: absolute; top: 0; left: 0;"
+          ng-model="mock.uploads"
+          ng-change="mock.uploadsChange()"
+        />
+        <input
+          type="text"
+          style="position: absolute; top: 0; left: 1;"
+          ng-model="mock.downloads"
+          ng-change="mock.downloadsChange()"
+        />
       </div>
     </div>
 
     &nbsp;
     <div class="btn-group" role="group" ng-if="!copy.pwd">
-
-      <button ng-disabled="!objects||objects==0" type="button" class="btn btn-default btn-sm" ng-click="sel.all=!sel.all;selectAll()">
-        <i class="fa" ng-class="{'fa-check-square-o': sel.all ,'fa-square-o': !sel.all}"></i>
+      <button
+        ng-disabled="!objects||objects==0"
+        type="button"
+        class="btn btn-default btn-sm"
+        ng-click="sel.all=!sel.all;selectAll()"
+      >
+        <i
+          class="fa"
+          ng-class="{'fa-check-square-o': sel.all ,'fa-square-o': !sel.all}"
+        ></i>
         <!-- 全选 -->
         {{'select.all'|translate}}
       </button>
 
-      <button type="button" class="btn btn-default btn-sm" ng-disabled="!sel.has" ng-click="showDownloadDialog()">
+      <button
+        type="button"
+        class="btn btn-default btn-sm"
+        ng-disabled="!sel.has"
+        ng-click="showDownloadDialog()"
+      >
         <i class="fa fa-download text-primary"></i>
         <!-- 下载 -->
         {{'download'|translate}}
       </button>
 
-      <button type="button" class="btn btn-default btn-sm"
-      ng-disabled="!sel.has || currentAuthInfo.privilege=='readOnly'" ng-click="showMove(sel.has, true)">
-      <i class="fa fa-clone text-primary"></i>
+      <button
+        type="button"
+        class="btn btn-default btn-sm"
+        ng-disabled="!sel.has || currentAuthInfo.privilege=='readOnly'"
+        ng-click="showMove(sel.has, true)"
+      >
+        <i class="fa fa-clone text-primary"></i>
         <!-- 复制 -->
         {{'copy'|translate}}
       </button>
-
-
     </div>
 
     <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default btn-sm dropdown-toggle" ng-disabled="!sel.has" data-toggle="dropdown">
+      <button
+        type="button"
+        class="btn btn-default btn-sm dropdown-toggle"
+        ng-disabled="!sel.has"
+        data-toggle="dropdown"
+      >
         <!-- 更多 -->
         {{'more'|translate}}
         <span class="caret"></span>
@@ -67,25 +118,35 @@
       <ul class="dropdown-menu" role="menu">
         <li>
           <!-- && sel.has.length === 1 -->
-          <a href="" class="" ng-if="sel.has  && currentAuthInfo.privilege!='readOnly'" ng-click="showMove(sel.has)">
+          <a
+            href=""
+            class=""
+            ng-if="sel.has  && currentAuthInfo.privilege!='readOnly'"
+            ng-click="showMove(sel.has)"
+          >
             <i class="fa fa-cut text-primary"></i>
             <!-- 移动 -->
             {{'move'|translate}}
           </a>
         </li>
         <li>
-          <a href="" ng-if="(sel.has.length==1) && currentAuthInfo.privilege!='readOnly' && sel.has[0].storageClass!='Archive'"
-          ng-click="showRename(sel.has[0])">
+          <a
+            href=""
+            ng-if="(sel.has.length==1) && currentAuthInfo.privilege!='readOnly' && sel.has[0].storageClass!='Archive'"
+            ng-click="showRename(sel.has[0])"
+          >
             <i class="fa fa-edit text-info"></i>
             <!-- 重命名 -->
             {{'rename'|translate}}
           </a>
         </li>
 
-
         <li>
-          <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.privilege!='readOnly'"
-            ng-click="showACL(sel.has[0])">
+          <a
+            href=""
+            ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.privilege!='readOnly'"
+            ng-click="showACL(sel.has[0])"
+          >
             <i class="fa fa-shield text-success"></i>
             {{'acl'|translate}}
             <!-- ACL权限 -->
@@ -93,18 +154,24 @@
         </li>
 
         <li>
-          <a href="" ng-if="sel.has && currentAuthInfo.id.indexOf('STS.')!=0"
+          <a
+            href=""
+            ng-if="sel.has && currentAuthInfo.id.indexOf('STS.')!=0"
             ng-class="{'text-success':sel.has}"
-            ng-click="showGrant(sel.has)">
+            ng-click="showGrant(sel.has)"
+          >
             <i class="fa fa-shield text-warning"></i>
             {{'simplePolicy'|translate}}
             <!-- 简化Policy授权 -->
           </a>
         </li>
         <li>
-          <a href="" ng-if="sel.has.length==1 && sel.has[0].isFolder && currentAuthInfo.id.indexOf('STS.')!=0"
+          <a
+            href=""
+            ng-if="sel.has.length==1 && sel.has[0].isFolder && currentAuthInfo.id.indexOf('STS.')!=0"
             ng-class="{'text-success':sel.has}"
-            ng-click="showGrantToken(sel.has[0])">
+            ng-click="showGrantToken(sel.has[0])"
+          >
             <i class="fa fa-shield text-success"></i>
             <!-- 生成授权码 -->
             {{'genAuthToken'|translate}}
@@ -112,7 +179,11 @@
         </li>
 
         <li>
-          <a href="" ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.id.indexOf('STS.')!=0" ng-click="showAddress(sel.has[0])">
+          <a
+            href=""
+            ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.id.indexOf('STS.')!=0"
+            ng-click="showAddress(sel.has[0])"
+          >
             <i class="fa fa-download"></i>
             <!-- 获取地址 -->
             {{'getAddress'|translate}}
@@ -120,7 +191,11 @@
         </li>
 
         <li>
-          <a href="" ng-if="sel | canSetHeader" ng-click="showHttpHeaders(sel.has)">
+          <a
+            href=""
+            ng-if="sel | canSetHeader"
+            ng-click="showHttpHeaders(sel.has)"
+          >
             <i class="fa fa-cog"></i>
             <!-- Http头 -->
             {{'http.headers'|translate}}
@@ -128,7 +203,11 @@
         </li>
 
         <li>
-          <a href="" ng-if="sel.has && !sel.has[0].isFolder" ng-click="showRestoreBatch()">
+          <a
+            href=""
+            ng-if="sel.has && !sel.has[0].isFolder"
+            ng-click="showRestoreBatch()"
+          >
             <i class="fa fa-hourglass-2"></i>
             <!-- 恢复 -->
             {{'restore'|translate}}
@@ -136,55 +215,76 @@
         </li>
 
         <li>
-          <a href="" class="" ng-if="sel.has && currentAuthInfo.privilege!='readOnly'" ng-click="showDeleteFilesSelected()">
+          <a
+            href=""
+            class=""
+            ng-if="sel.has && currentAuthInfo.privilege!='readOnly'"
+            ng-click="showDeleteFilesSelected()"
+          >
             <i class="fa fa-remove text-danger"></i>
             {{'delete'|translate}}
             <!-- 删除 -->
           </a>
         </li>
       </ul>
-
     </div>
 
     <div class="btn-group" role="toolbar" ng-if="keepMoveOptions">
-      <button class="btn btn-default btn-sm" type="button"
-      uib-tooltip="{{'paste.resources'|translate}}"
-      tooltip-placement="bottom" tooltip-append-to-body="true"
-      ng-click="showPaste()">
-      <span class="text-primary"><i class="fa fa-paste"></i>
-        {{'paste'|translate}}({{keepMoveOptions.items.length}})
-        <!-- 粘贴 -->
+      <button
+        class="btn btn-default btn-sm"
+        type="button"
+        uib-tooltip="{{'paste.resources'|translate}}"
+        tooltip-placement="bottom"
+        tooltip-append-to-body="true"
+        ng-click="showPaste()"
+      >
+        <span class="text-primary"
+          ><i class="fa fa-paste"></i>
+          {{'paste'|translate}}({{keepMoveOptions.items.length}})
+          <!-- 粘贴 -->
+        </span>
       </button>
 
-      <button class="btn btn-default btn-sm" style="padding-left:3px;padding-right:3px;" type="button"
-      uib-tooltip="{{(keepMoveOptions.isCopy?'copy.cancel':'move.cancel')|translate }}"
-      tooltip-placement="bottom" tooltip-append-to-body="true"
-        ng-click="cancelPaste()">
+      <button
+        class="btn btn-default btn-sm"
+        style="padding-left: 3px; padding-right: 3px;"
+        type="button"
+        uib-tooltip="{{(keepMoveOptions.isCopy?'copy.cancel':'move.cancel')|translate }}"
+        tooltip-placement="bottom"
+        tooltip-append-to-body="true"
+        ng-click="cancelPaste()"
+      >
         <span class="text-danger"><i class="fa fa-close"></i></span>
       </button>
     </div>
-
   </div>
 
   <div class="col-sm-2 pd0">
-
     <div class="input-group input-group-sm">
-      <input type="text" ng-model="sch.objectName" ng-change="searchObjectName()" class="form-control"
-       cleanable-input placeholder="{{'search.files.placeholder'|translate}}">
+      <input
+        type="text"
+        ng-model="sch.objectName"
+        ng-change="searchObjectName()"
+        class="form-control"
+        cleanable-input
+        placeholder="{{'search.files.placeholder'|translate}}"
+      />
       <span class="input-group-addon">
         <i class="fa fa-search"></i> {{objects.length}}
         <span ng-if="nextObjectsMarker">+</span>
       </span>
     </div>
-
   </div>
   <div class="col-sm-3 pd0">
     <span ng-include="'main/files/_/list-view-options.html'"></span>
-    <span ng-if="currentAuthInfo.id.indexOf('STS.')!=0" class="f8 text-muted pull-right" style="line-height:30px;">
+    <span
+      ng-if="currentAuthInfo.id.indexOf('STS.')!=0"
+      class="f8 text-muted pull-right"
+      style="line-height: 30px;"
+    >
       <!-- 区域: -->
-      {{'region'|translate}}:
-      {{currentInfo.region}}
-      &nbsp;</span>
+      {{'region'|translate}}: {{currentInfo.region}} &nbsp;</span
+    >
   </div>
 
   <div class="clearfix"></div>

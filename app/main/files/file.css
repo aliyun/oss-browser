@@ -1,11 +1,10 @@
-.file-list-box{
-
+.file-list-box {
 }
 
-.vis_0{
+.vis_0 {
   visibility: hidden;
 }
-.vis_1{
+.vis_1 {
   visibility: visible;
 }
 
@@ -16,6 +15,6 @@
 .dropdown-menu > .disabled > a i.text-success,
 .dropdown-menu > .disabled > a,
 .dropdown-menu > .disabled > a:hover,
-.dropdown-menu > .disabled > a:focus{
-  color:#ccc;
+.dropdown-menu > .disabled > a:focus {
+  color: #ccc;
 }

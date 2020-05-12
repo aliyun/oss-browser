@@ -27,17 +27,38 @@
       </label>
       <div class="col-sm-12">
         <label class="radio-inline">
-          <input type="radio" name="ptype" ng-click="policyChange()" ng-model="grant.privType" id="inlineRadio1" value="readOnly">
-            {{'privilege.readonly'|translate}}
+          <input
+            type="radio"
+            name="ptype"
+            ng-click="policyChange()"
+            ng-model="grant.privType"
+            id="inlineRadio1"
+            value="readOnly"
+          />
+          {{'privilege.readonly'|translate}}
           <!-- 只读权限 -->
         </label>
         <label class="radio-inline">
-          <input type="radio" name="ptype" ng-click="policyChange()" ng-model="grant.privType" id="inlineRadio2" value="readWrite">
+          <input
+            type="radio"
+            name="ptype"
+            ng-click="policyChange()"
+            ng-model="grant.privType"
+            id="inlineRadio2"
+            value="readWrite"
+          />
           <!-- 读写权限 -->
           {{'privilege.readwrite'|translate}}
         </label>
         <label class="radio-inline">
-          <input type="radio" name="ptype" ng-click="policyChange()" ng-model="grant.privType" id="inlineRadio3" value="all">
+          <input
+            type="radio"
+            name="ptype"
+            ng-click="policyChange()"
+            ng-model="grant.privType"
+            id="inlineRadio3"
+            value="all"
+          />
           <!-- 完全控制 -->
           {{'privilege.all'|translate}}
         </label>
@@ -46,17 +67,22 @@
 
     <div class="clearfix form-group">
       <div class="col-sm-12">
-        <a href="" ng-show='show_policy!=1' ng-click="show_policy=1" class="">
+        <a href="" ng-show="show_policy!=1" ng-click="show_policy=1" class="">
           <!-- [查看Policy] -->
           [{{'simplePolicy.lb3.1'|translate}}]
         </a>
-        <a href="" ng-show='show_policy==1' ng-click="show_policy=0" class="">
+        <a href="" ng-show="show_policy==1" ng-click="show_policy=0" class="">
           <!-- [隐藏Policy] -->
           [{{'simplePolicy.lb3.2'|translate}}]
         </a>
       </div>
-      <div ng-show='show_policy==1' class="col-sm-12">
-        <textarea ng-model="grant.policy" class="form-control input-sm" rows='10' readonly></textarea>
+      <div ng-show="show_policy==1" class="col-sm-12">
+        <textarea
+          ng-model="grant.policy"
+          class="form-control input-sm"
+          rows="10"
+          readonly
+        ></textarea>
       </div>
     </div>
 
@@ -68,49 +94,74 @@
       </div>
     </div> -->
 
-
-
-    <div class="clearfix form-group" ng-class="{'has-error':  !form1.durSeconds.$valid }">
+    <div
+      class="clearfix form-group"
+      ng-class="{'has-error':  !form1.durSeconds.$valid }"
+    >
       <label class="col-sm-12 control-label">
         <!-- 有效时长(秒): -->
         {{'effective.duration'|translate}}({{'unit.second'|translate}})
       </label>
       <div class="col-sm-12">
-
-          <input type="number" min="60" max="3600" name="durSeconds" class="form-control"
-          ng-model="grant.durSeconds" required />
-
+        <input
+          type="number"
+          min="60"
+          max="3600"
+          name="durSeconds"
+          class="form-control"
+          ng-model="grant.durSeconds"
+          required
+        />
       </div>
 
       <div class="clearfix"></div>
     </div>
 
-
-    <div class="clearfix form-group" ng-class="{'has-error':  !form1.roleArn.$valid }">
+    <div
+      class="clearfix form-group"
+      ng-class="{'has-error':  !form1.roleArn.$valid }"
+    >
       <label class="col-sm-12 control-label">
         <!-- 还需要指定一个角色:  -->
         {{'genAuthToken.message3.1'|translate}}:
-          <!-- (这个角色需要至少有这个{{isBucket?"Bucket":'目录'}}的{{grant.privType=='all'?'可写':'只读'}}权限) -->
+        <!-- (这个角色需要至少有这个{{isBucket?"Bucket":'目录'}}的{{grant.privType=='all'?'可写':'只读'}}权限) -->
         (<small class="text-muted">
-          {{'genAuthToken.message3.2'|translate:message5}}
-        </small>)
-        <a href="" uib-tooltip="{{'auth.authToken.tooltip'|translate}}" tooltip-append-to-body="true"
-                            ng-click="openURL('https://help.aliyun.com/document_detail/28649.html?spm=5176.11065259.1996646101.searchclickresult.5c3c75f5Fssks0')">
-                            <i class="fa fa-question-circle"></i></a>
+          {{'genAuthToken.message3.2'|translate:message5}} </small
+        >)
+        <a
+          href=""
+          uib-tooltip="{{'auth.authToken.tooltip'|translate}}"
+          tooltip-append-to-body="true"
+          ng-click="openURL('https://help.aliyun.com/document_detail/28649.html?spm=5176.11065259.1996646101.searchclickresult.5c3c75f5Fssks0')"
+        >
+          <i class="fa fa-question-circle"></i
+        ></a>
       </label>
       <div class="col-sm-12">
-          <select name="roleArn" class="form-control"
+        <select
+          name="roleArn"
+          class="form-control"
           ng-disabled="!roles || roles.length==0"
-          ng-model="grant.roleArn" required
-          ng-options="role.Arn as role.RoleName for role in roles">
-            <option value=''>{{(!roles||roles.length==0)?('nodata'|translate):('chooseone'|translate)}}</option>
-          </select>
-          <small><a ng-if="!roles||roles.length==0" href="" ng-click="openExternal('https://ram.console.aliyun.com/#/role/list')">{{'goto.create.role'|translate}}</a></small>
+          ng-model="grant.roleArn"
+          required
+          ng-options="role.Arn as role.RoleName for role in roles"
+        >
+          <option value=""
+            >{{(!roles||roles.length==0)?('nodata'|translate):('chooseone'|translate)}}</option
+          >
+        </select>
+        <small
+          ><a
+            ng-if="!roles||roles.length==0"
+            href=""
+            ng-click="openExternal('https://ram.console.aliyun.com/#/role/list')"
+            >{{'goto.create.role'|translate}}</a
+          ></small
+        >
       </div>
 
       <div class="clearfix"></div>
     </div>
-
 
     <div ng-if="token" class="clearfix form-group">
       <label class="col-sm-12 control-label text-success">
@@ -118,12 +169,21 @@
         {{'genAuthToken.message4'|translate}}:
       </label>
 
-
       <div ng-if="token" class="col-sm-12">
         <div class="input-group">
-          <input type="text" id="genTokenTa" ng-model="token"  class="input-md form-control"/>
+          <input
+            type="text"
+            id="genTokenTa"
+            ng-model="token"
+            class="input-md form-control"
+          />
           <span class="input-group-btn">
-            <a href="" class="btn btn-info" clipboard-button target="'#genTokenTa'">
+            <a
+              href=""
+              class="btn btn-info"
+              clipboard-button
+              target="'#genTokenTa'"
+            >
               <!-- 点击复制 -->
               {{'click.copy'|translate}}
             </a>
@@ -138,21 +198,21 @@
         </small>
       </div>
 
-
-
-
-
       <div class="clearfix"></div>
     </div>
-
-
   </div>
 
   <div class="modal-footer">
-    <button type="submit" ng-disabled="!form1.$valid" class="btn btn-success btn-sm">
+    <button
+      type="submit"
+      ng-disabled="!form1.$valid"
+      class="btn btn-success btn-sm"
+    >
       <i class="glyphicon glyphicon-ok"></i>
       <!-- {{token?'重新':'确定'}}生成 -->
-      <span>{{(token?'genAuthToken.message6.2':'genAuthToken.message6.1')|translate}}</span>
+      <span
+        >{{(token?'genAuthToken.message6.2':'genAuthToken.message6.1')|translate}}</span
+      >
     </button>
 
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">

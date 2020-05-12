@@ -4,36 +4,47 @@
       <span aria-hidden="true">&times;</span>
     </button>
     <h4 class="modal-title">
-      <i style="color:orange" class="fa fa-folder"></i>
+      <i style="color: orange;" class="fa fa-folder"></i>
       <!-- 新建目录 -->
       {{'folder.create'|translate}}
     </h4>
   </div>
   <div class="modal-body">
-    <div class="form-group" ng-class="{'has-error': form1.name.$dirty && !form1.name.$valid,
-  'has-success': form1.name.$dirty && form1.name.$valid}">
-
+    <div
+      class="form-group"
+      ng-class="{'has-error': form1.name.$dirty && !form1.name.$valid,
+  'has-success': form1.name.$dirty && form1.name.$valid}"
+    >
       <label class="col-sm-3 control-label" for="name">
         <!-- 目录名: -->
         {{'folder.name'|translate}}:
       </label>
       <div class="col-sm-7">
-        <input type="text" ng-model="item.name" id="name1" autocomplete="off" autofocus cleanable-input
-         name="name" required="required" ng-pattern="reg.folderName" class="input-md form-control"/>
+        <input
+          type="text"
+          ng-model="item.name"
+          id="name1"
+          autocomplete="off"
+          autofocus
+          cleanable-input
+          name="name"
+          required="required"
+          ng-pattern="reg.folderName"
+          class="input-md form-control"
+        />
       </div>
 
       <div class="clearfix"></div>
     </div>
-
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-ok"></i>
-        {{'ok'|translate}}
-      </button>
+      {{'ok'|translate}}
+    </button>
     <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
       <i class="glyphicon glyphicon-remove"></i>
       {{'cancel'|translate}}
-      </button>
+    </button>
   </div>
 </form>

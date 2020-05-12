@@ -1,24 +1,37 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="cancel()">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <span aria-hidden="true">&times;</span>
+  </button>
   <h4 class="modal-title">
-      <i class="fa fa-code"></i>
-      <!-- 预览  -->
-      {{'preview'|translate}}
-      <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span></h4>
+    <i class="fa fa-code"></i>
+    <!-- 预览  -->
+    {{'preview'|translate}}
+    <span style="font-size: 80%;">({{objectInfo.size|sizeFormat}})</span>
+  </h4>
 </div>
 <div class="modal-body pd0">
-
   <header class="pd4 bg-success break">
     oss://{{bucketInfo.bucket}}/{{objectInfo.path}}
   </header>
 
-  <div ng-show="isLoading" is-loading style="width:100%;position:absolute;z-index:9999;"></div>
+  <div
+    ng-show="isLoading"
+    is-loading
+    style="width: 100%; position: absolute; z-index: 9999;"
+  ></div>
 
-  <restore-checker  bucket-info="bucketInfo" object-info='objectInfo' file-type="fileType" after-check-success="afterCheckSuccess()" after-restore-submit="afterRestoreSubmit()">
-
-    <div ng-if="objectInfo.size > MAX_SIZE" style="margin:40px auto 0" class="text-center">
+  <restore-checker
+    bucket-info="bucketInfo"
+    object-info="objectInfo"
+    file-type="fileType"
+    after-check-success="afterCheckSuccess()"
+    after-restore-submit="afterRestoreSubmit()"
+  >
+    <div
+      ng-if="objectInfo.size > MAX_SIZE"
+      style="margin: 40px auto 0;"
+      class="text-center"
+    >
       {{'filesize'|translate}}
       <!-- 文件大小:  -->
       <code>{{objectInfo.size|sizeFormat}} > {{MAX_SIZE|sizeFormat}}</code>,
@@ -26,7 +39,12 @@
       <!-- 不支持直接打开，请下载到本地后打开。 -->
       <div class="clearfix">&nbsp;</div>
       <div class="pd4 text-center">
-        <button class="btn btn-default" type="button" ng-click="showFn.download();cancel()"><i class="fa fa-download text-success"></i>
+        <button
+          class="btn btn-default"
+          type="button"
+          ng-click="showFn.download();cancel()"
+        >
+          <i class="fa fa-download text-success"></i>
           <!-- 下载文件 -->
           {{'download.file'|translate}}
         </button>
@@ -35,24 +53,39 @@
       <div class="clearfix">&nbsp;</div>
     </div>
 
-
-    <div ng-if="objectInfo.size <= MAX_SIZE" ui-codemirror="{onLoad: codemirrorLoaded}" ui-codemirror-opts="codeOptions" ng-model="content" style="border:1px solid #ccc"></div>
-
+    <div
+      ng-if="objectInfo.size <= MAX_SIZE"
+      ui-codemirror="{onLoad: codemirrorLoaded}"
+      ui-codemirror-opts="codeOptions"
+      ng-model="content"
+      style="border: 1px solid #ccc;"
+    ></div>
   </restore-checker>
-
 </div>
-<div class="modal-footer" style="text-align:left;">
-  <span ng-if="previewBarVisible" ng-include="'main/files/modals/preview/preview-bar.html'"></span>
+<div class="modal-footer" style="text-align: left;">
+  <span
+    ng-if="previewBarVisible"
+    ng-include="'main/files/modals/preview/preview-bar.html'"
+  ></span>
 
-  <button type="button" class="pull-right btn btn-default btn-sm mgl4" ng-click="cancel()">
-      <i class="glyphicon glyphicon-remove"></i>
-      <!-- 关闭 -->
-      {{'close'|translate}}
-    </button>
+  <button
+    type="button"
+    class="pull-right btn btn-default btn-sm mgl4"
+    ng-click="cancel()"
+  >
+    <i class="glyphicon glyphicon-remove"></i>
+    <!-- 关闭 -->
+    {{'close'|translate}}
+  </button>
 
-  <button ng-if="previewBarVisible && currentAuthInfo.privilege!='readOnly'" type="button" class="pull-right btn btn-primary btn-sm" ng-click="saveContent()">
-        <i class="fa fa-save"></i>
-        <!-- 保存 -->
-        {{'save'|translate}}
-      </button>
+  <button
+    ng-if="previewBarVisible && currentAuthInfo.privilege!='readOnly'"
+    type="button"
+    class="pull-right btn btn-primary btn-sm"
+    ng-click="saveContent()"
+  >
+    <i class="fa fa-save"></i>
+    <!-- 保存 -->
+    {{'save'|translate}}
+  </button>
 </div>

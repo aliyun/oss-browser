@@ -1,31 +1,32 @@
-angular.module('web')
-  .factory('Project', ['BaseHttp','Auth','$state',function($http,Auth, $state){
-
-
+angular.module("web").factory("Project", [
+  "BaseHttp",
+  "Auth",
+  "$state",
+  function ($http, Auth, $state) {
     return {
-      list: function(){
+      list: function () {
         var token = Auth.getXToken();
-        if(!token){
-          $state.go('login')
+        if (!token) {
+          $state.go("login");
           return;
         }
 
         return $http({
-          method: 'GET',
-          url: Global.endpoint+'/api/projects',
+          method: "GET",
+          url: Global.endpoint + "/api/projects",
           headers: {
-            'x-token': token
-          }
+            "x-token": token,
+          },
         });
       },
-      use: function(projectId){
-        localStorage.setItem('projectId',projectId);
+      use: function (projectId) {
+        localStorage.setItem("projectId", projectId);
       },
-      getCurrentProjectId: function(){
-        var v= localStorage.getItem('projectId');
-        v = v || (isNaN(v) ? v: parseInt(v))
+      getCurrentProjectId: function () {
+        var v = localStorage.getItem("projectId");
+        v = v || (isNaN(v) ? v : parseInt(v));
         return v;
-      }
-    }
-  }])
-;
+      },
+    };
+  },
+]);

@@ -6,28 +6,44 @@
     <i class="fa fa-image"></i>
     <!-- 预览 -->
     {{'preview'|translate}}
-    <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span>
+    <span style="font-size: 80%;">({{objectInfo.size|sizeFormat}})</span>
   </h4>
 </div>
 <div class="modal-body pd0">
+  <header class="pd4 bg-success">
+    oss://{{bucketInfo.bucket}}/{{objectInfo.path}}
+  </header>
 
-  <header class="pd4 bg-success">oss://{{bucketInfo.bucket}}/{{objectInfo.path}}</header>
-
-  <restore-checker bucket-info="bucketInfo" object-info='objectInfo' file-type="fileType"
-  after-check-success="afterCheckSuccess()" after-restore-submit="afterRestoreSubmit()">
-
-    <div style="overflow:auto;min-height:100px;" class="text-center">
+  <restore-checker
+    bucket-info="bucketInfo"
+    object-info="objectInfo"
+    file-type="fileType"
+    after-check-success="afterCheckSuccess()"
+    after-restore-submit="afterRestoreSubmit()"
+  >
+    <div style="overflow: auto; min-height: 100px;" class="text-center">
       <div ng-if="!imgsrc" is-loading></div>
-      <img ng-if="imgsrc" ng-src="{{imgsrc}}" alt="{{'cannot.preview'|translate}}" style="max-width:600px;max-height:400px;" />
+      <img
+        ng-if="imgsrc"
+        ng-src="{{imgsrc}}"
+        alt="{{'cannot.preview'|translate}}"
+        style="max-width: 600px; max-height: 400px;"
+      />
     </div>
   </restore-checker>
-
 </div>
-<div class="modal-footer" style="text-align:left;">
+<div class="modal-footer" style="text-align: left;">
+  <span
+    ng-if="previewBarVisible"
+    ng-include="'main/files/modals/preview/preview-bar.html'"
+  ></span>
 
-  <span ng-if="previewBarVisible" ng-include="'main/files/modals/preview/preview-bar.html'"></span>
-
-  <button type="button" class="pull-right btn btn-default btn-sm" ng-click="cancel()">
+  <button
+    type="button"
+    class="pull-right btn btn-default btn-sm"
+    ng-click="cancel()"
+  >
     <i class="glyphicon glyphicon-remove"></i>
-    {{'close'|translate}}</button>
+    {{'close'|translate}}
+  </button>
 </div>

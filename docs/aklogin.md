@@ -1,16 +1,16 @@
-# AK登录
+# AK 登录
 
 > [For English](en-aklogin.md)
 
-### 1. 大权限子账号AK登录
+### 1. 大权限子账号 AK 登录
 
-* 不推荐使用主账号AK登录。推荐大权限子账号。
+- 不推荐使用主账号 AK 登录。推荐大权限子账号。
 
-* 请到[RAM控制台](https://ram.console.aliyun.com) 创建子账号AK。
+- 请到[RAM 控制台](https://ram.console.aliyun.com) 创建子账号 AK。
 
-* 该子账号要被授予 "AliyunSTSAssumeRoleAccess" 和 "AliyunRAMReadOnlyAccess" 权限，还要有*要授权目录*的访问权限。
+- 该子账号要被授予 "AliyunSTSAssumeRoleAccess" 和 "AliyunRAMReadOnlyAccess" 权限，还要有*要授权目录*的访问权限。
 
-* 大权限子账号授权(初级用户推荐配置)：
+- 大权限子账号授权(初级用户推荐配置)：
 
 ![](../preview/genToken1.png)
 

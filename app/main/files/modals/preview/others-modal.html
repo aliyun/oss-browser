@@ -1,19 +1,25 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="cancel()">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <span aria-hidden="true">&times;</span>
+  </button>
   <h4 class="modal-title">
-      <!-- 预览  -->
-      {{'preview'|translate}}
-      <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span></h4>
+    <!-- 预览  -->
+    {{'preview'|translate}}
+    <span style="font-size: 80%;">({{objectInfo.size|sizeFormat}})</span>
+  </h4>
 </div>
 <div class="modal-body pd0">
+  <header class="pd4 bg-success break">
+    oss://{{bucketInfo.bucket}}/{{objectInfo.path}}
+  </header>
 
-  <header class="pd4 bg-success break">oss://{{bucketInfo.bucket}}/{{objectInfo.path}}</header>
-
-  <restore-checker bucket-info="bucketInfo" object-info='objectInfo' file-type="fileType"
-  after-check-success="afterCheckSuccess()" after-restore-submit="afterRestoreSubmit()">
-
+  <restore-checker
+    bucket-info="bucketInfo"
+    object-info="objectInfo"
+    file-type="fileType"
+    after-check-success="afterCheckSuccess()"
+    after-restore-submit="afterRestoreSubmit()"
+  >
     <div class="text-center alert alert-warning">
       {{'cannot.preview.this.file'|translate}}
       <!-- 该文件类型无法预览。 -->
@@ -21,7 +27,13 @@
 
     <div class="text-center">
       <div class="btn-group">
-        <button ng-if="showAsCodeBtn" type="button" class="btn btn-default" ng-click="showAs('code');cancel()"><i class="fa fa-file-code-o"></i>
+        <button
+          ng-if="showAsCodeBtn"
+          type="button"
+          class="btn btn-default"
+          ng-click="showAs('code');cancel()"
+        >
+          <i class="fa fa-file-code-o"></i>
           <!-- 尝试作为文本文件打开 -->
           {{'tryto.open.as.textfile'|translate}}
         </button>
@@ -31,13 +43,19 @@
       <div class="clearfix">&nbsp;</div>
     </div>
   </restore-checker>
-
-
 </div>
-<div class="modal-footer" style="text-align:left;">
-  <span ng-if="previewBarVisible" ng-include="'main/files/modals/preview/preview-bar.html'"></span>
+<div class="modal-footer" style="text-align: left;">
+  <span
+    ng-if="previewBarVisible"
+    ng-include="'main/files/modals/preview/preview-bar.html'"
+  ></span>
 
-  <button type="button" class="pull-right btn btn-default btn-sm" ng-click="cancel()">
-      <i class="glyphicon glyphicon-remove"></i>
-      {{'close'|translate}}</button>
+  <button
+    type="button"
+    class="pull-right btn btn-default btn-sm"
+    ng-click="cancel()"
+  >
+    <i class="glyphicon glyphicon-remove"></i>
+    {{'close'|translate}}
+  </button>
 </div>

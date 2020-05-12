@@ -1,2 +1,1 @@
-
-require('./util-test');
+require("./util-test");

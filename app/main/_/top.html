@@ -1,47 +1,70 @@
-<nav class="navbar navbar-default navbar-fixed-top navbar-inverse my-nav" ng-controller="topCtrl">
-
+<nav
+  class="navbar navbar-default navbar-fixed-top navbar-inverse my-nav"
+  ng-controller="topCtrl"
+>
   <div class="navbar-header">
-
     <a class="navbar-brand" ng-click="click10()">
-      <img src="{{app.logo}}" style="display:inline-block;" width="40" />
+      <img src="{{app.logo}}" style="display: inline-block;" width="40" />
       {{'app.name'|translate}}
     </a>
-    <label class="app-version" ng-click="showReleaseNote()">v{{app.version}}</label>
+    <label class="app-version" ng-click="showReleaseNote()"
+      >v{{app.version}}</label
+    >
   </div>
-
 
   <div class="collapse navbar-collapse" id="collapse-1" ng-if="!hideTopNav">
     <ul class="nav navbar-nav">
       <li ng-class="{active:showTab==1}">
-        <a href="#/"><i class="glyphicon glyphicon-folder-close"></i>
-        {{'files'|translate}}
-        <!-- 文件 -->
-      </a>
+        <a href="#/"
+          ><i class="glyphicon glyphicon-folder-close"></i>
+          {{'files'|translate}}
+          <!-- 文件 -->
+        </a>
       </li>
     </ul>
 
-    <ul class="nav navbar-nav navbar-right" style="margin-right:10px;">
-      <li ng-if="authInfo.id.indexOf('STS.')!=0"><a href="" ng-click="showUserList()"><i class="fa fa-users"></i>
-        {{'users'|translate}}
-        <!-- user -->
-      </a></li>
-      <li ng-if="authInfo.id.indexOf('STS.')!=0"><a href="" ng-click="showFavList()"><i class="fa fa-star"></i>
-        {{'bookmarks'|translate}}
-        <!-- 书签管理 -->
-      </a></li>
-      <li><a href="" ng-click="showSettings()"><i class="fa fa-cog"></i>
-         {{'settings'|translate}}
-        <!-- 设置 -->
-      </a></li>
+    <ul class="nav navbar-nav navbar-right" style="margin-right: 10px;">
+      <li ng-if="authInfo.id.indexOf('STS.')!=0">
+        <a href="" ng-click="showUserList()"
+          ><i class="fa fa-users"></i>
+          {{'users'|translate}}
+          <!-- user -->
+        </a>
+      </li>
+      <li ng-if="authInfo.id.indexOf('STS.')!=0">
+        <a href="" ng-click="showFavList()"
+          ><i class="fa fa-star"></i>
+          {{'bookmarks'|translate}}
+          <!-- 书签管理 -->
+        </a>
+      </li>
+      <li>
+        <a href="" ng-click="showSettings()"
+          ><i class="fa fa-cog"></i>
+          {{'settings'|translate}}
+          <!-- 设置 -->
+        </a>
+      </li>
       <li>
         <a href="" ng-click="showAbout()">
           <i class="fa fa-about"></i> {{'about'|translate}}
           <!-- 关于 -->
-          <small class="new-animate" style="padding:2px;color:#fff;border-radius:2px" ng-if="!upgradeInfo.isLastVersion"> new </small>
+          <small
+            class="new-animate"
+            style="padding: 2px; color: #fff; border-radius: 2px;"
+            ng-if="!upgradeInfo.isLastVersion"
+          >
+            new
+          </small>
         </a>
       </li>
       <li>
-        <a ng-if="authInfo.expiration" uib-tooltip="{{'auth.authToken.info.validUntil'|translate:{expiration:authInfo.expirationStr} }}" tooltip-placement="bottom" tooltip-append-to-body="true">
+        <a
+          ng-if="authInfo.expiration"
+          uib-tooltip="{{'auth.authToken.info.validUntil'|translate:{expiration:authInfo.expirationStr} }}"
+          tooltip-placement="bottom"
+          tooltip-append-to-body="true"
+        >
           <span ng-if="!authInfo.desc">
             {{'tempCert'|translate}}:
             <!-- 临时凭证: -->
@@ -52,40 +75,62 @@
         </a>
         <a ng-if="!authInfo.expiration">
           <i class="fa fa-user"></i>
-          <span ng-if="authInfo.desc">{{authInfo.desc|sub:10}} ({{authInfo.id.substring(0,3)+'..'}})</span>
+          <span ng-if="authInfo.desc"
+            >{{authInfo.desc|sub:10}}
+            ({{authInfo.id.substring(0,3)+'..'}})</span
+          >
           <span ng-if="!authInfo.desc">{{authInfo.id}}</span>
         </a>
       </li>
       <li>
-        <a href="" ng-click="logout()"><i class="fa fa-power-off"></i>
+        <a href="" ng-click="logout()"
+          ><i class="fa fa-power-off"></i>
           {{'logout'|translate}}
           <!-- 退出 -->
         </a>
       </li>
     </ul>
-
   </div>
 
   <form class="navbar-form navbar-right" ng-if="hideTopNav">
     <div class="form-inline form-group">
-      <a href="" ng-click="showSettings()" style="text-decoration:none;font-weight:bold;color:#ccc;">
+      <a
+        href=""
+        ng-click="showSettings()"
+        style="text-decoration: none; font-weight: bold; color: #ccc;"
+      >
         <i class="fa fa-cog"></i>
         {{'settings'|translate}}
-       <!-- 设置 -->
+        <!-- 设置 -->
       </a>
-      <a href="" ng-click="showAbout()" style="text-decoration:none;font-weight:bold;color:#ccc;">
+      <a
+        href=""
+        ng-click="showAbout()"
+        style="text-decoration: none; font-weight: bold; color: #ccc;"
+      >
         <i class="fa fa-about"></i> {{'about'|translate}}
         <!-- 关于 -->
-        <small class="new-animate" style="padding:2px;color:#fff;border-radius:2px" ng-if="!upgradeInfo.isLastVersion"> new </small>
+        <small
+          class="new-animate"
+          style="padding: 2px; color: #fff; border-radius: 2px;"
+          ng-if="!upgradeInfo.isLastVersion"
+        >
+          new
+        </small>
       </a>
       &nbsp;&nbsp;
     </div>
     <div class="form-inline form-group">
       <label class="control-label">{{'language'|translate}}:</label>
-      <select class="form-control input-sm" ng-model="langSettings.lang" ng-change="langSettings.changeLanguage(langSettings.lang)" ng-options="a.lang as a.label for a in langSettings.langList"></select> &nbsp;
+      <select
+        class="form-control input-sm"
+        ng-model="langSettings.lang"
+        ng-change="langSettings.changeLanguage(langSettings.lang)"
+        ng-options="a.lang as a.label for a in langSettings.langList"
+      ></select>
+      &nbsp;
     </div>
   </form>
-
 </nav>
 
-<div style="height:50px;" class="clearfix"></div>
+<div style="height: 50px;" class="clearfix"></div>

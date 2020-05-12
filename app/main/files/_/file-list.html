@@ -1,13 +1,21 @@
 <div ng-if="!isLoading && (!objects || objects.length==0)" no-data></div>
 
-<div ng-if="!isLoading && objects.length>0"
-   context-menu="fileSpacerMenuOptions"
-   style="height:100%" ng-click="toggleTransVisible(false);">
+<div
+  ng-if="!isLoading && objects.length>0"
+  context-menu="fileSpacerMenuOptions"
+  style="height: 100%;"
+  ng-click="toggleTransVisible(false);"
+>
   <section ng-if="ref.isListView">
     <table class="table table-condensed table-striped">
       <tr>
         <th width="40" class="text-center">
-          <input type="checkbox" ng-model="sel.all" name="x-all" ng-click="selectAll()" />
+          <input
+            type="checkbox"
+            ng-model="sel.all"
+            name="x-all"
+            ng-click="selectAll()"
+          />
         </th>
         <th>
           <!-- 名称 -->
@@ -15,8 +23,7 @@
         </th>
         <th>
           <!-- 大小 -->
-          {{'type'|translate}} /
-          {{'size'|translate}}
+          {{'type'|translate}} / {{'size'|translate}}
         </th>
         <th>
           <!-- 最后修改时间 -->
@@ -24,39 +31,61 @@
         </th>
         <th class="text-right">
           <!-- 操作 -->
-          {{'actions'|translate}}
-          &nbsp;</th>
+          {{'actions'|translate}} &nbsp;
+        </th>
       </tr>
       <!--|filter:{name:sch.objectName}-->
-      <tr ng-repeat="item in objects"
-       context-menu="fileMenuOptions(item, $index)" 
-       ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);"
-       ng-class="{'info': sel.x['i_'+$index]}">
+      <tr
+        ng-repeat="item in objects"
+        context-menu="fileMenuOptions(item, $index)"
+        ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);"
+        ng-class="{'info': sel.x['i_'+$index]}"
+      >
         <td class="text-center">
-          <input type="checkbox" ng-model="sel.x['i_'+$index]" name="x" ng-change="selectChanged($event,$index)" ng-click="$event.stopPropagation()" />
+          <input
+            type="checkbox"
+            ng-model="sel.x['i_'+$index]"
+            name="x"
+            ng-change="selectChanged($event,$index)"
+            ng-click="$event.stopPropagation()"
+          />
         </td>
         <td>
-          <div class="text-overflow file-item-name" item-index="{{$index}}" style="cursor:pointer;">
-
-            <span style="color:orange" ng-if="item.isFolder==true">
+          <div
+            class="text-overflow file-item-name"
+            item-index="{{$index}}"
+            style="cursor: pointer;"
+          >
+            <span style="color: orange;" ng-if="item.isFolder==true">
               <i class="fa fa-folder"></i>
               &nbsp;
-              <a ng-click="goIn(currentBucket,item.path);$event.stopPropagation()"
-              uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'"
-              tooltip-placement="right" tooltip-popup-delay="500"
-              tooltip-append-to-body="true">
+              <a
+                ng-click="goIn(currentBucket,item.path);$event.stopPropagation()"
+                uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'"
+                tooltip-placement="right"
+                tooltip-popup-delay="500"
+                tooltip-append-to-body="true"
+              >
                 <span>{{item.name|sub:50}}</span>
               </a>
             </span>
 
             <span ng-if="item.isFolder!=true">
-              <i class="fa fa-{{item|fileIcon}}" ng-class="{'text-muted': item.storageClass=='Archive' && !item.storageStatus}"></i>
+              <i
+                class="fa fa-{{item|fileIcon}}"
+                ng-class="{'text-muted': item.storageClass=='Archive' && !item.storageStatus}"
+              ></i>
               &nbsp;
-              <a ng-click="showPreview(item);$event.stopPropagation()"
-              uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'"
-              tooltip-placement="right" tooltip-popup-delay="500"
-              tooltip-append-to-body="true">
-                <span ng-class="{'text-muted': item.status=='uploading'}">{{item.name|sub:50}}</span>
+              <a
+                ng-click="showPreview(item);$event.stopPropagation()"
+                uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'"
+                tooltip-placement="right"
+                tooltip-popup-delay="500"
+                tooltip-append-to-body="true"
+              >
+                <span ng-class="{'text-muted': item.status=='uploading'}"
+                  >{{item.name|sub:50}}</span
+                >
               </a>
             </span>
           </div>
@@ -73,27 +102,37 @@
           <!-- <a href="" ng-if="item.isFolder!=true" ng-click="showPreview(item);$event.stopPropagation()">预览</a> -->
           <!-- <a href="" ng-if="item.isFolder==true" ng-click="goIn(currentBucket,item.path);$event.stopPropagation()">进入</a>
         | -->
-          <span ng-if="!item.isFolder && (item.storageClass!='Archive' || item.storageStatus==3)">
-            <a href="" ng-click="showAddress(item);$event.stopPropagation()" class="text-info">
+          <span
+            ng-if="!item.isFolder && (item.storageClass!='Archive' || item.storageStatus==3)"
+          >
+            <a
+              href=""
+              ng-click="showAddress(item);$event.stopPropagation()"
+              class="text-info"
+            >
               <!-- 获取地址 -->
               {{'getAddress'|translate}}
-            </a> |
+            </a>
+            |
           </span>
 
           <span ng-if="item.storageClass!='Archive' || item.storageStatus==3">
             <a href="" ng-click="showDownload(item);$event.stopPropagation()">
               <!-- 下载 -->
               {{'download'|translate}}
-            </a> |
+            </a>
+            |
           </span>
 
-          <span ng-if="!item.isFolder && (item.storageClass=='Archive' && item.storageStatus!=3)">
-             <a href="" ng-click="showRestore(item);$event.stopPropagation()">
-               <!-- 恢复 -->
-               {{'restore'|translate}}
-             </a> |
+          <span
+            ng-if="!item.isFolder && (item.storageClass=='Archive' && item.storageStatus!=3)"
+          >
+            <a href="" ng-click="showRestore(item);$event.stopPropagation()">
+              <!-- 恢复 -->
+              {{'restore'|translate}}
+            </a>
+            |
           </span>
-
 
           <a href="" ng-click="showDeleteFiles([item])" class="text-danger">
             <!-- 删除 -->
@@ -108,30 +147,65 @@
       <!-- 正在加载更多.. -->
       {{'loading.more'|translate}}
     </div>
-
   </section>
 
-  <div ng-if="!ref.isListView" class="pd10" style="height:100%" ng-click="sel.all=false;selectAll();">
+  <div
+    ng-if="!ref.isListView"
+    class="pd10"
+    style="height: 100%;"
+    ng-click="sel.all=false;selectAll();"
+  >
     <!--|filter:{name:sch.objectName}-->
-    <div ng-repeat="item in objects" item-index="{{$index}}" class="item-block"
-    context-menu="fileMenuOptions(item, $index)"
-    ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);$event.stopPropagation()"
-    ng-dblclick="item.isFolder!=true?showPreview(item):goIn(currentBucket,item.path);$event.stopPropagation()"
-      ng-class="{ 'active':sel.x[ 'i_'+$index]}">
-      <input type="checkbox" ng-model="sel.x['i_'+$index]" name="x" class="pull-right"
-      ng-change="selectChanged($event,$index)" ng-click="$event.stopPropagation()" />
+    <div
+      ng-repeat="item in objects"
+      item-index="{{$index}}"
+      class="item-block"
+      context-menu="fileMenuOptions(item, $index)"
+      ng-click="sel.x['i_'+$index]=!sel.x['i_'+$index];selectChanged($event,$index);$event.stopPropagation()"
+      ng-dblclick="item.isFolder!=true?showPreview(item):goIn(currentBucket,item.path);$event.stopPropagation()"
+      ng-class="{ 'active':sel.x[ 'i_'+$index]}"
+    >
+      <input
+        type="checkbox"
+        ng-model="sel.x['i_'+$index]"
+        name="x"
+        class="pull-right"
+        ng-change="selectChanged($event,$index)"
+        ng-click="$event.stopPropagation()"
+      />
 
-      <i class="fa fa-folder" style="color:orange" ng-if="!item.pic_url && item.isFolder==true"></i>
+      <i
+        class="fa fa-folder"
+        style="color: orange;"
+        ng-if="!item.pic_url && item.isFolder==true"
+      ></i>
 
-      <i class="fa fa-{{item|fileIcon}}" ng-if="item.isFolder!=true && (!item.pic_url || (item.storageClass=='Archive' && item.storageStatus!=3))"
-        ng-class="{'text-muted': item.storageClass=='Archive' && !item.storageStatus}"></i>
-      <img ng-if="item.isFolder!=true && item.pic_url && (item.storageClass!='Archive' || (item.storageClass=='Archive' && item.storageStatus==3))"
-       ng-src="{{item.pic_url}}" class="pull-left" style="max-width:32px;max-height:32px;margin:4px;" />
+      <i
+        class="fa fa-{{item|fileIcon}}"
+        ng-if="item.isFolder!=true && (!item.pic_url || (item.storageClass=='Archive' && item.storageStatus!=3))"
+        ng-class="{'text-muted': item.storageClass=='Archive' && !item.storageStatus}"
+      ></i>
+      <img
+        ng-if="item.isFolder!=true && item.pic_url && (item.storageClass!='Archive' || (item.storageClass=='Archive' && item.storageStatus==3))"
+        ng-src="{{item.pic_url}}"
+        class="pull-left"
+        style="max-width: 32px; max-height: 32px; margin: 4px;"
+      />
 
-      <div class="item-block-name" uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'"
-      tooltip-append-to-body="true" tooltip-popup-delay="500">{{item.name}}</div>
-      <div class="item-block-desc" ng-if="item.isFolder==true">{{'folder'|translate}}</div>
-      <div class="item-block-desc" ng-if="item.isFolder!=true">{{item.size|sizeFormat}}</div>
+      <div
+        class="item-block-name"
+        uib-tooltip-html="'<div class=\'break\'>'+item.name+'</div>'"
+        tooltip-append-to-body="true"
+        tooltip-popup-delay="500"
+      >
+        {{item.name}}
+      </div>
+      <div class="item-block-desc" ng-if="item.isFolder==true">
+        {{'folder'|translate}}
+      </div>
+      <div class="item-block-desc" ng-if="item.isFolder!=true">
+        {{item.size|sizeFormat}}
+      </div>
     </div>
 
     <div class="clearfix"></div>
@@ -143,6 +217,4 @@
 
     <div class="clearfix">&nbsp;</div>
   </div>
-
-
 </div>

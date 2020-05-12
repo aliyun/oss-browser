@@ -1,48 +1,74 @@
 <div class="pd4 address-bar" ng-controller="subAddressBarCtrl">
-
   <form ng-submit="go()" name="form1">
-
     <div class="input-group input-group-sm">
       <span class="input-group-btn">
-
-        <button class="btn btn-default" ng-disabled="!canGoBack" ng-click="goBack()" type="button"
-        uib-tooltip="{{'backward'|translate}}" tooltip-placement="right"  tooltip-append-to-body="true">
-         <i class="fa fa-arrow-left text-info"></i>
+        <button
+          class="btn btn-default"
+          ng-disabled="!canGoBack"
+          ng-click="goBack()"
+          type="button"
+          uib-tooltip="{{'backward'|translate}}"
+          tooltip-placement="right"
+          tooltip-append-to-body="true"
+        >
+          <i class="fa fa-arrow-left text-info"></i>
         </button>
-        <button class="btn btn-default" ng-disabled="!canGoAhead" ng-click="goAhead()" type="button"
-        uib-tooltip="{{'forward'|translate}}" tooltip-placement="bottom"  tooltip-append-to-body="true">
-         <i class="fa fa-arrow-right text-info"></i>
+        <button
+          class="btn btn-default"
+          ng-disabled="!canGoAhead"
+          ng-click="goAhead()"
+          type="button"
+          uib-tooltip="{{'forward'|translate}}"
+          tooltip-placement="bottom"
+          tooltip-append-to-body="true"
+        >
+          <i class="fa fa-arrow-right text-info"></i>
         </button>
 
-
-
-         <button class="btn btn-default" ng-click="goUp()" type="button"
-         uib-tooltip="{{'goUp'|translate}}" tooltip-placement="bottom" tooltip-append-to-body="true">
+        <button
+          class="btn btn-default"
+          ng-click="goUp()"
+          type="button"
+          uib-tooltip="{{'goUp'|translate}}"
+          tooltip-placement="bottom"
+          tooltip-append-to-body="true"
+        >
           <i class="fa fa-arrow-up text-info"></i>
-         </button>
+        </button>
 
-         <button class="btn btn-default" ng-click="go(true)" type="button"
-         uib-tooltip="{{'refresh'|translate}}" tooltip-placement="bottom"  tooltip-append-to-body="true">
-           <i class="fa fa-refresh text-success"></i>
-          </button>
+        <button
+          class="btn btn-default"
+          ng-click="go(true)"
+          type="button"
+          uib-tooltip="{{'refresh'|translate}}"
+          tooltip-placement="bottom"
+          tooltip-append-to-body="true"
+        >
+          <i class="fa fa-refresh text-success"></i>
+        </button>
 
-          <!-- <button class="btn btn-default" ng-click="goHome()" type="button"
+        <!-- <button class="btn btn-default" ng-click="goHome()" type="button"
           uib-tooltip="首页" tooltip-placement="bottom"  tooltip-append-to-body="true">
             <i class="fa fa-home text-info"></i>
           </button> -->
       </span>
 
-      <input type="text" ng-model="subAddress" class="form-control address-url" placeholder="/">
+      <input
+        type="text"
+        ng-model="subAddress"
+        class="form-control address-url"
+        placeholder="/"
+      />
 
       <span class="input-group-addon">
-       <span class="text-danger" ng-if="currentAuthInfo.privilege=='readOnly'">
-         <!-- 只读 -->
-         {{'readonly'|translate}}
-       </span>
-       <span class="text-success" ng-if="currentAuthInfo.privilege=='all'">
-         <!-- 可写 -->
-         {{'readwrite'|translate}}
-       </span>
+        <span class="text-danger" ng-if="currentAuthInfo.privilege=='readOnly'">
+          <!-- 只读 -->
+          {{'readonly'|translate}}
+        </span>
+        <span class="text-success" ng-if="currentAuthInfo.privilege=='all'">
+          <!-- 可写 -->
+          {{'readwrite'|translate}}
+        </span>
       </span>
       <!-- <span class="input-group-btn">
 
@@ -63,8 +89,6 @@
 
       </span> -->
     </div>
-
-
   </form>
 
   <div class="clearfix"></div>

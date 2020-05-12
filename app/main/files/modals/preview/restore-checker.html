@@ -1,24 +1,31 @@
 <div is-loading ng-if="_Loading"></div>
 <div ng-if="!_Loading && info.type">
-
-   <div ng-if="info.type==1" class="text-center bg-danger" style="padding:20px">
-     <!-- 归档文件，需要恢复才能预览或下载   -->
-     {{'restore.checker.message1'|translate}}
-     <a href="" class="btn btn-primary" ng-click="showRestore()">
-       <!-- 立即恢复 -->
-       {{'restore.immediately'|translate}}
-     </a>
-   </div>
-   <div ng-if="info.type==2" class="text-center bg-warning" style="padding:20px"><i class="fa fa-hourglass-2"></i>
-     <!-- 归档文件正在恢复中，请耐心等待... -->
-     {{'restore.onprogress'|translate}}
-   </div>
-   <div ng-if="info.type==3" class="text-center bg-primary pd-4">
-     <!-- 归档文件已恢复，可读截止时间： -->
-     {{'restore.checker.message2'|translate}}:
-     {{info.expired_time|timeFormat}}
-     &nbsp;</div>
-
+  <div
+    ng-if="info.type==1"
+    class="text-center bg-danger"
+    style="padding: 20px;"
+  >
+    <!-- 归档文件，需要恢复才能预览或下载   -->
+    {{'restore.checker.message1'|translate}}
+    <a href="" class="btn btn-primary" ng-click="showRestore()">
+      <!-- 立即恢复 -->
+      {{'restore.immediately'|translate}}
+    </a>
+  </div>
+  <div
+    ng-if="info.type==2"
+    class="text-center bg-warning"
+    style="padding: 20px;"
+  >
+    <i class="fa fa-hourglass-2"></i>
+    <!-- 归档文件正在恢复中，请耐心等待... -->
+    {{'restore.onprogress'|translate}}
+  </div>
+  <div ng-if="info.type==3" class="text-center bg-primary pd-4">
+    <!-- 归档文件已恢复，可读截止时间： -->
+    {{'restore.checker.message2'|translate}}: {{info.expired_time|timeFormat}}
+    &nbsp;
+  </div>
 </div>
 <section ng-if="!_Loading && info.showContent">
   <ng-transclude></ng-transclude>

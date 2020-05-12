@@ -6,42 +6,68 @@
     <i class="fa fa-image"></i>
     <!-- 预览 -->
     {{'preview'|translate}}
-    <span style="font-size:80%">({{objectInfo.size|sizeFormat}})</span>
+    <span style="font-size: 80%;">({{objectInfo.size|sizeFormat}})</span>
   </h4>
 </div>
 <div class="modal-body pd0">
+  <header class="pd4 bg-success break">
+    oss://{{bucketInfo.bucket}}/{{objectInfo.path}}
+  </header>
 
-  <header class="pd4 bg-success break">oss://{{bucketInfo.bucket}}/{{objectInfo.path}}</header>
+  <restore-checker
+    bucket-info="bucketInfo"
+    object-info="objectInfo"
+    file-type="fileType"
+    after-check-success="afterCheckSuccess()"
+    after-restore-submit="afterRestoreSubmit()"
+  >
+    <div style="overflow: auto;" class="text-center">
+      <audio
+        ng-if="fileType.type=='audio'"
+        ng-src="{{src}}"
+        preload="none"
+        width="100%"
+        height="auto"
+        style="margin: 10px auto;"
+        controls
+      ></audio>
 
-  <restore-checker bucket-info="bucketInfo" object-info='objectInfo' file-type="fileType"
-  after-check-success="afterCheckSuccess()" after-restore-submit="afterRestoreSubmit()">
+      <flv-player
+        ng-if="fileType.type=='video' && fileType.ext[0]=='flv'"
+        src="src"
+        style="width: 100%; min-width: 480px; min-height: 360px;"
+      ></flv-player>
 
-    <div style="overflow:auto; " class="text-center">
-
-      <audio ng-if="fileType.type=='audio'" ng-src="{{src}}" preload="none"
-         width="100%" height="auto" style="margin:10px auto;" controls>
-      </audio>
-
-      <flv-player ng-if="fileType.type=='video' && fileType.ext[0]=='flv'"
-         src="src"
-         style="width:100%;min-width:480px;min-height:360px;"></flv-player>
-
-
-      <video id="video-player" ng-if="fileType.type=='video' && fileType.ext[0]!='flv'" preload="none"
-         ng-src="{{src}}"
-         style="width:auto;min-width:200px;max-width:100%;height:auto;min-height:200px;max-height:100%;"
-         controls>
-      </video>
-
+      <video
+        id="video-player"
+        ng-if="fileType.type=='video' && fileType.ext[0]!='flv'"
+        preload="none"
+        ng-src="{{src}}"
+        style="
+          width: auto;
+          min-width: 200px;
+          max-width: 100%;
+          height: auto;
+          min-height: 200px;
+          max-height: 100%;
+        "
+        controls
+      ></video>
     </div>
   </restore-checker>
-
 </div>
-<div class="modal-footer" style="text-align:left;">
+<div class="modal-footer" style="text-align: left;">
+  <span
+    ng-if="previewBarVisible"
+    ng-include="'main/files/modals/preview/preview-bar.html'"
+  ></span>
 
-  <span ng-if="previewBarVisible" ng-include="'main/files/modals/preview/preview-bar.html'"></span>
-
-  <button type="button" class="pull-right btn btn-default btn-sm" ng-click="cancel()">
+  <button
+    type="button"
+    class="pull-right btn btn-default btn-sm"
+    ng-click="cancel()"
+  >
     <i class="glyphicon glyphicon-remove"></i>
-    {{'close'|translate}}</button>
+    {{'close'|translate}}
+  </button>
 </div>
