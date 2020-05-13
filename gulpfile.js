@@ -2,36 +2,36 @@ var gulp = require("gulp");
 var plugins = require("gulp-load-plugins")({ lazy: false });
 var fs = require("fs");
 var path = require("path");
-var os = require("os");
+// var os = require("os");
 var del = require("del");
-var minimist = require("minimist");
+// var minimist = require("minimist");
 //var NwBuilder = require('nw-builder');
 //var pkg = require('./package');
 require("shelljs/global");
 
 var DIST = "./dist";
 
-function getCustomPath() {
-  var minimist = require("minimist");
+// function getCustomPath() {
+//   var minimist = require("minimist");
 
-  var knownOptions = {
-    string: "custom",
-    default: { custom: "./custom" },
-  };
+//   var knownOptions = {
+//     string: "custom",
+//     default: { custom: "./custom" },
+//   };
 
-  var options = minimist(process.argv.slice(2), knownOptions);
+//   var options = minimist(process.argv.slice(2), knownOptions);
 
-  if (options && options.custom) {
-    var customPath = path.join(options.custom, "**/*");
+//   if (options && options.custom) {
+//     var customPath = path.join(options.custom, "**/*");
 
-    if (customPath.indexOf("~") == 0) {
-      customPath = path.join(os.homedir(), customPath, "**/*");
-    } else if (customPath.indexOf(".") == 0) {
-      customPath = path.join(__dirname, customPath, "**/*");
-    }
-  }
-  return customPath || "custom/**/*";
-}
+//     if (customPath.indexOf("~") == 0) {
+//       customPath = path.join(os.homedir(), customPath, "**/*");
+//     } else if (customPath.indexOf(".") == 0) {
+//       customPath = path.join(__dirname, customPath, "**/*");
+//     }
+//   }
+//   return customPath || "custom/**/*";
+// }
 
 //var VERSION = pkg.version;
 var taskFns = {
@@ -109,14 +109,14 @@ gulp.task("libJS", function () {
 
     //code mirror
     "./vendor/diff_match_patch.js",
+    // angular-translate
+    "./vendor/angular-translate.min.js",
 
     "./node_modules/angular-ui-codemirror/src/ui-codemirror.js",
     "./node_modules/codemirror/lib/codemirror.js",
     "./node_modules/codemirror/addon/mode/simple.js",
     "./node_modules/codemirror/addon/merge/merge.js",
     "./node_modules/codemirror/mode/meta.js",
-
-    "./node_modules/angular-translate/dist/angular-translate.min.js",
 
     "./node_modules/angular-bootstrap-contextmenu/contextMenu.js",
   ];
@@ -209,11 +209,12 @@ gulp.task("gen-package", ["copy-index"], function () {
       fs.mkdirSync(DIST);
     }
     fs.writeFileSync(DIST + "/package.json", JSON.stringify(info, " ", 2));
+    // eslint-disable-next-line no-undef
     exec("cd dist && yarn install --prod && yarn autoclean --force", cb);
   });
 });
 
-gulp.task("remove-redundant", ["gen-package"], function (cb) {
+gulp.task("remove-redundant", ["gen-package"], function () {
   return del.sync([
     "dist/node_modules/protobufjs/dist",
     "dist/node_modules/aliyun-sdk/dist",

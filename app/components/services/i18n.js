@@ -23,7 +23,7 @@ angular
               var msg = _transMap[locale || defaultLocale][key];
               for (var k in options) {
                 msg.replace(
-                  new Regex("\\{\\{" + k + "\\}\\}", "g"),
+                  new RegExp("\\{\\{" + k + "\\}\\}", "g"),
                   options[k]
                 );
               }
