@@ -188,7 +188,7 @@ angular.module("web").factory("ossSvs2", [
 
       var df = $q.defer();
 
-      var client = getClient2({
+      var client = getClient3({
         region: region,
         bucket: bucket,
       });
@@ -280,7 +280,7 @@ angular.module("web").factory("ossSvs2", [
             ) {
               if (itemsToDelete.length > 1) {
                 client
-                  .deleteMulti(itemsToDelete, { isRequestPay: true })
+                  .deleteMulti(itemsToDelete)
                   .then(function () {
                     c += itemsToDelete.length;
                     progress.current += itemsToDelete.length;
@@ -299,7 +299,7 @@ angular.module("web").factory("ossSvs2", [
                   });
               } else {
                 client
-                  .delete(itemsToDelete[0], { isRequestPay: true })
+                  .delete(itemsToDelete[0])
                   .then(function () {
                     c += itemsToDelete.length;
                     progress.current += itemsToDelete.length;
@@ -334,7 +334,7 @@ angular.module("web").factory("ossSvs2", [
             }
 
             client
-              .delete(item.path, { isRequestPay: true })
+              .delete(item.path)
               .then(function () {
                 c++;
                 progress.current++;
