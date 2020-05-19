@@ -11,6 +11,7 @@ angular.module("web").controller("getAddressModalCtrl", [
   "Const",
   "Mailer",
   "Toast",
+  "$timeout",
   function (
     $scope,
     $rootScope,
@@ -23,7 +24,8 @@ angular.module("web").controller("getAddressModalCtrl", [
     safeApply,
     Const,
     Mailer,
-    Toast
+    Toast,
+    $timeout
   ) {
     var T = $translate.instant;
 
@@ -55,7 +57,6 @@ angular.module("web").controller("getAddressModalCtrl", [
     function init() {
       $scope.isLoading = true;
       $scope.step = 2;
-      var ignoreError = true;
 
       $.ajax({
         url: item.url,
@@ -139,10 +140,12 @@ angular.module("web").controller("getAddressModalCtrl", [
     $scope.$watch("info.custom_domain", coerceRefDisplayUrl);
 
     function coerceRefDisplayUrl() {
-      const { originUrl, custom_domain } = $scope.info;
-      $scope.info.url = custom_domain
-        ? (originUrl || "").replace(/\/\/[^/]+\//, `//${custom_domain}/`)
-        : originUrl;
+      $timeout(() => {
+        const { originUrl, custom_domain } = $scope.info;
+        $scope.info.url = custom_domain
+          ? (originUrl || "").replace(/\/\/[^/]+\//, `//${custom_domain}/`)
+          : originUrl;
+      }, 1);
     }
 
     function sendTo(form1) {
