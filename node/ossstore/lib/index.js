@@ -60,6 +60,7 @@ function OssStore(config) {
     this.aliOSS = new OSS({
       accessKeyId: this._config.stsToken.Credentials.AccessKeyId,
       accessKeySecret: this._config.stsToken.Credentials.AccessKeySecret,
+      stsToken: this._config.stsToken.Credentials.SecurityToken,
       endpoint: this._config.endpoint,
       cname: this._config.cname,
       timeout: TIMEOUT,
