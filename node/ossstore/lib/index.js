@@ -150,7 +150,7 @@ OssStore.prototype.setStsToken = function (stsToken) {
 OssStore.prototype.createUploadJob = function createUploadJob(options) {
   var self = this;
 
-  var job = new UploadJob(self.oss, options);
+  var job = new UploadJob(self.oss, options, self.aliOSS);
 
   //默认是 waiting 状态
   return job;

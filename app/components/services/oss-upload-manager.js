@@ -75,7 +75,7 @@ angular.module("web").factory("ossUploadManager", [
       //save
       saveProg();
 
-      job.on("partcomplete", function (prog) {
+      job.on("partcomplete", function () {
         safeApply($scope);
         //save
         saveProg();
@@ -295,9 +295,10 @@ angular.module("web").factory("ossUploadManager", [
       var cname = AuthInfo.get().cname || false;
       var endpointname = cname ? auth.eptplcname : auth.eptpl;
 
+      let store;
       //stsToken
       if (auth.stoken && auth.id.indexOf("STS.") == 0) {
-        var store = new OssStore({
+        store = new OssStore({
           stsToken: {
             Credentials: {
               AccessKeyId: auth.id,
@@ -313,7 +314,7 @@ angular.module("web").factory("ossUploadManager", [
           cname: cname,
         });
       } else {
-        var store = new OssStore({
+        store = new OssStore({
           aliyunCredential: {
             accessKeyId: auth.id,
             secretAccessKey: auth.secret,
@@ -360,6 +361,7 @@ angular.module("web").factory("ossUploadManager", [
               status: n.status,
               message: n.message,
               prog: n.prog,
+              _log_opt: n._log_opt,
             });
           });
 
@@ -380,8 +382,9 @@ angular.module("web").factory("ossUploadManager", [
       try {
         var data = fs.readFileSync(getUpProgFilePath());
         return JSON.parse(data ? data.toString() : "[]");
-      } catch (e) {}
-      return [];
+      } catch (e) {
+        return [];
+      }
     }
 
     //上传进度保存路径
