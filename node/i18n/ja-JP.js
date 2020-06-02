@@ -318,7 +318,6 @@ module.exports = {
   address: "アドレス",
   "getAddress.message": "リンクの有効期間を入力してください",
   generate: "生成",
-  "qrcode.download": "コードをスキャンしダウンロード",
   not_use_own_domain: "独自のドイン名を使用しないいえ",
   custom_domain: " 自分のドメイン",
 

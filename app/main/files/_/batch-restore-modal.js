@@ -35,8 +35,19 @@ angular.module("web").controller("batchRestoreModalCtrl", [
     function init() {
       $scope.isLoading = true;
       for (let i in items) {
+        const options =
+          items[i].versionId === undefined
+            ? undefined
+            : {
+                versionId: items[i].versionId,
+              };
         ossSvs2
-          .getFileInfo(currentInfo.region, currentInfo.bucket, items[i].path)
+          .getFileInfo(
+            currentInfo.region,
+            currentInfo.bucket,
+            items[i].path,
+            options
+          )
           .then(function (data) {
             if (data.Restore) {
               var info = parseRestoreInfo(data.Restore);
@@ -44,7 +55,7 @@ angular.module("web").controller("batchRestoreModalCtrl", [
                 $scope.info.type = 2;
               } else {
                 $scope.info.type = 3;
-                $scope.inf.expiry_date = info["expiry-date"];
+                $scope.info.expiry_date = info["expiry-date"];
               }
             } else {
               $scope.info.type = 1;
@@ -56,10 +67,10 @@ angular.module("web").controller("batchRestoreModalCtrl", [
     }
 
     function parseRestoreInfo(s) {
-      var arr = s.match(/([\w\-]+)=\"([^\"]+)\"/g);
+      var arr = s.match(/([\w-]+)="([^"]+)"/g);
       var m = {};
       angular.forEach(arr, function (n) {
-        var kv = n.match(/([\w\-]+)=\"([^\"]+)\"/);
+        var kv = n.match(/([\w-]+)="([^"]+)"/);
         m[kv[1]] = kv[2];
       });
       return m;
@@ -71,15 +82,19 @@ angular.module("web").controller("batchRestoreModalCtrl", [
 
     function onSubmit(form1) {
       if (!form1.$valid) return;
-      var days = $scope.info.days;
+      // var days = $scope.info.days;
       Toast.info(T("restore.on")); //'提交中...'
       for (let i in items) {
+        let options =
+          items[i].versionId === undefined
+            ? undefined
+            : { versionId: items[i].versionId };
         ossSvs2
           .restoreFile(
             currentInfo.region,
             currentInfo.bucket,
             items[i].path,
-            days
+            options
           )
           .then(function () {
             callback();

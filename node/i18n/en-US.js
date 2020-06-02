@@ -315,7 +315,6 @@ module.exports = {
   address: "Address",
   "getAddress.message": "Please enter the validity period of the link",
   generate: "Generate",
-  "qrcode.download": "Sweep code to download",
   not_use_own_domain: "Not use your own domain name",
   custom_domain: "Custom Domain Name",
 

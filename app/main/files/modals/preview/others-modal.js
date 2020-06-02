@@ -6,7 +6,8 @@ angular.module("web").controller("othersModalCtrl", [
   "objectInfo",
   "fileType",
   "showFn",
-  "safeApply",
+  "showStatus",
+  // "safeApply",
   function (
     $scope,
     $modalInstance,
@@ -15,7 +16,8 @@ angular.module("web").controller("othersModalCtrl", [
     objectInfo,
     fileType,
     showFn,
-    safeApply
+    showStatus
+    // safeApply
   ) {
     angular.extend($scope, {
       bucketInfo: bucketInfo,
@@ -26,6 +28,7 @@ angular.module("web").controller("othersModalCtrl", [
 
       previewBarVisible: false,
       showFn: showFn,
+      showStatus,
       cancel: cancel,
 
       showAs: showAs,

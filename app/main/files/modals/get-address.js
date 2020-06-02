@@ -106,11 +106,20 @@ angular.module("web").controller("getAddressModalCtrl", [
 
       var v = $scope.info.sec;
 
+      const options = {
+        expires: v,
+      };
+
+      if (item.versionId !== undefined) {
+        options.subResource = {
+          versionId: item.versionId,
+        };
+      }
       var url = ossSvs2.signatureUrl2(
         currentInfo.region,
         currentInfo.bucket,
         item.path,
-        v
+        options
       );
 
       $scope.isLoading = true;
