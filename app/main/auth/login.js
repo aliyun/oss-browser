@@ -260,7 +260,7 @@ angular.module("web").controller("loginCtrl", [
       localStorage.setItem(KEY_REMEMBER, $scope.flags.remember);
       // osspath 默认给一个 ''，防止出现 osspath 为 undefined, 导致后续逻辑报错情况
       // 可通过 delete $scope.item.osspath 复现后续错误逻辑
-      $scope.item.osspath =  $scope.item.osspath || '';
+      $scope.item.osspath = $scope.item.osspath || "";
       var data = angular.copy($scope.item);
 
       delete data.requestpaystatus;
@@ -307,7 +307,8 @@ angular.module("web").controller("loginCtrl", [
           $location.url("/");
         },
         function (err) {
-          Toast.error(err.code + ":" + err.message);
+          const requestID = err.headers && err.headers["x-oss-request-id"];
+          Toast.error(err.code + ":" + err.message, undefined, requestID);
         }
       );
 
