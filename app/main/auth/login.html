@@ -132,7 +132,7 @@
                 class="col-sm-8"
                 style="padding-left: 0;"
                 ng-if="eptplType=='cname'"
-                ng-class="{'has-error':!form1.endpoint.$valid}"
+                ng-class="{'has-error':!form1.cname.$valid}"
               >
                 <input
                   type="text"
@@ -246,7 +246,7 @@
                     ng-false-value="'NO'"
                   />
                   {{'requestPay'|translate}}
-                  <!-- 记住秘钥 -->
+                  <!-- 请求者付费模式 -->
 
                   <span
                     uib-popover-template="'auth-requestpay-popup.html'"
