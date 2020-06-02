@@ -11,11 +11,19 @@
 </div>
 <div class="modal-body pd0">
   <header class="pd4 bg-success">
-    oss://{{bucketInfo.bucket}}/{{objectInfo.path}}
-
-    <a ng-if="prevUrl" href="" style="float: right;" ng-click="openURL(prevUrl)"
-      >{{'preview.in.web.browser'|translate}}</a
-    >
+    <p>
+      oss://{{bucketInfo.bucket}}/{{objectInfo.path}}
+      <a
+        ng-if="prevUrl"
+        href=""
+        style="float: right;"
+        ng-click="openURL(prevUrl)"
+        >{{'preview.in.web.browser'|translate}}</a
+      >
+    </p>
+    <p ng-if="objectInfo.versionId !== undefined">
+      versionId: {{objectInfo.versionId}}
+    </p>
   </header>
 
   <restore-checker

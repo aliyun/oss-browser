@@ -40,12 +40,18 @@ angular.module("web").directive("restoreChecker", [
       function check(fn) {
         $scope._Loading = true;
         $scope.info.needRestore = false;
-
+        const options =
+          $scope.objectInfo.versionId === undefined
+            ? undefined
+            : {
+                versionId: $scope.objectInfo.versionId,
+              };
         ossSvs2
           .getFileInfo(
             $scope.bucketInfo.region,
             $scope.bucketInfo.bucket,
-            $scope.objectInfo.path
+            $scope.objectInfo.path,
+            options
           )
           .then(function (data) {
             if (data.Restore) {

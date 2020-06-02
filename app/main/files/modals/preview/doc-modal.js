@@ -5,6 +5,7 @@ angular.module("web").controller("docModalCtrl", [
   "bucketInfo",
   "objectInfo",
   "showFn",
+  "showStatus",
   "ossSvs2",
   "fileType",
   function (
@@ -14,6 +15,7 @@ angular.module("web").controller("docModalCtrl", [
     bucketInfo,
     objectInfo,
     showFn,
+    showStatus,
     ossSvs2,
     fileType
   ) {
@@ -28,6 +30,7 @@ angular.module("web").controller("docModalCtrl", [
 
       previewBarVisible: false,
       showFn: showFn,
+      showStatus,
       cancel: cancel,
 
       MAX_SIZE: 50 * 1024 * 1024, //50MB
@@ -51,28 +54,35 @@ angular.module("web").controller("docModalCtrl", [
     }
 
     function getContent() {
+      const options = {
+        expires: 3600,
+      };
+      if (objectInfo.versionId !== undefined) {
+        options.subResource = {
+          versionId: objectInfo.versionId,
+        };
+      }
       if (fileType.ext[0] == "pdf") {
         $scope.prevUrl = ossSvs2.signatureUrl2(
           bucketInfo.region,
           bucketInfo.bucket,
           objectInfo.path,
-          3600
+          options
         );
         return;
       }
 
-      var process = "imm/previewdoc,copy_1";
+      options.process = "imm/previewdoc,copy_1";
       var prevUrl = ossSvs2.signatureUrl2(
         bucketInfo.region,
         bucketInfo.bucket,
         objectInfo.path,
-        3600,
-        process
+        options
       );
       //console.log(prevUrl)
       $.ajax({
         url: prevUrl,
-        success: function (data) {
+        success: function () {
           $scope.prevUrl = prevUrl;
         },
         error: function (err) {

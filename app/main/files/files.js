@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 angular
   .module("web")
   .filter("canSetHeader", function () {
@@ -55,6 +56,8 @@ angular
           $scope.transVisible = f;
           localStorage.setItem("transVisible", f);
         },
+
+        objects: [],
 
         //object 相关
         showAddFolder: showAddFolder,
@@ -123,6 +126,29 @@ angular
           downloads: "",
           uploadsChange: uploadsChange,
           downloadsChange: downloadsChange,
+        },
+
+        // 该bucket是否支持多版本控制
+        enableMultiVersions: false,
+        // 是否显示多版本文件列表
+        showMultiVersionsFiles: false,
+        toggleShowMultiVersionsFiles,
+        refreshList,
+
+        getTrueLength() {
+          if ($scope.showMultiVersionsFiles) {
+            return $scope.objects.filter((i) => !i.noSelect).length;
+          } else {
+            return $scope.objects.length;
+          }
+        },
+        allowDownload() {
+          if ($scope.showMultiVersionsFiles) {
+            return (
+              $scope.sel.has && $scope.sel.has.every((item) => !item.isFolder)
+            );
+          }
+          return $scope.sel.has;
         },
       });
 
@@ -203,7 +229,7 @@ angular
       ]);
 
       $scope.fileMenuOptions = function (item, $index) {
-        if ($scope.sel.x["i_" + $index]) {
+        if ($scope.sel.x["i_" + $index] || item.noSelect) {
           //pass
         } else {
           $scope.objects.forEach(function (n, i) {
@@ -225,7 +251,7 @@ angular
               showDownloadDialog();
             },
             function () {
-              return $scope.sel.has;
+              return $scope.allowDownload();
             },
           ],
           [
@@ -303,7 +329,9 @@ angular
             },
             function () {
               return (
-                $scope.sel.has && $scope.currentAuthInfo.id.indexOf("STS.") != 0
+                $scope.sel.has &&
+                $scope.currentAuthInfo.id.indexOf("STS.") != 0 &&
+                !$scope.showMultiVersionsFiles
               );
             },
           ],
@@ -323,7 +351,8 @@ angular
                 $scope.sel.has &&
                 $scope.sel.has.length == 1 &&
                 $scope.sel.has[0].isFolder &&
-                $scope.currentAuthInfo.id.indexOf("STS.") != 0
+                $scope.currentAuthInfo.id.indexOf("STS.") != 0 &&
+                !$scope.showMultiVersionsFiles
               );
             },
           ],
@@ -358,7 +387,8 @@ angular
               return (
                 $scope.sel.has &&
                 $scope.sel.has.length &&
-                $scope.sel.has.every((f) => !f.isFolder)
+                $scope.sel.has.every((f) => !f.isFolder) &&
+                (!$scope.showMultiVersionsFiles || item.isLatest)
               );
             },
           ],
@@ -502,6 +532,20 @@ angular
         }
       }
 
+      // 切换显示object的历史版本
+      function toggleShowMultiVersionsFiles() {
+        $scope.showMultiVersionsFiles = !$scope.showMultiVersionsFiles;
+        refreshList();
+      }
+
+      function refreshList() {
+        if ($scope.sch.objectName) {
+          searchObjectName();
+        } else {
+          listFiles();
+        }
+      }
+
       //按名称过滤
       var ttid2;
 
@@ -515,7 +559,9 @@ angular
       }
 
       function addEvents() {
-        $scope.$on("ossAddressChange", function (e, addr, forceRefresh) {
+        // 当bucket改变时，重新获取enableMultiVersions状态
+        let prevBucket = null;
+        $scope.$on("ossAddressChange", async function (e, addr, forceRefresh) {
           console.log(
             "on:ossAddressChange:",
             addr,
@@ -550,6 +596,22 @@ angular
             }
             info.region = $rootScope.bucketMap[info.bucket].region;
             $scope.ref.isBucketList = false;
+
+            if (!prevBucket || info.bucket !== prevBucket) {
+              $scope.enableMultiVersions = false;
+              let prevShowMultiVersionsFiles = $scope.showMultiVersionsFiles;
+              $scope.showMultiVersionsFiles = false;
+              await ossSvs2
+                .checkBucketIsSupportMultiVersion(info.region, info.bucket)
+                .then((enable) => {
+                  $scope.enableMultiVersions = enable;
+                  if (enable) {
+                    $scope.showMultiVersionsFiles = prevShowMultiVersionsFiles;
+                  }
+                  prevBucket = info.bucket;
+                  safeApply($scope);
+                });
+            }
 
             if (fileName) {
               //search
@@ -594,15 +656,101 @@ angular
       }
 
       function doListFiles(info, marker, fn) {
-        ossSvs2
-          .listFiles(info.region, info.bucket, info.key, marker || "")
-          .then(
+        $scope.nextObjectsMarker = null;
+        const { region, bucket, key = "" } = info;
+
+        const prefix = new RegExp(`^${key}`);
+        function removePrefix(s) {
+          return s.replace(prefix, "");
+        }
+        function formatObj(obj) {
+          // 文件夹不显示历史版本
+          if (obj.name === key) {
+            return false;
+          }
+          obj.path = obj.name;
+          obj.name = removePrefix(obj.name);
+          return true;
+        }
+
+        if ($scope.showMultiVersionsFiles) {
+          ossSvs2
+            .getBucketVersions(region, bucket, {
+              prefix: key,
+              keyMarker: marker,
+              versionIdMarker: $scope.NextVersionIdMarker,
+              delimiter: "/",
+            })
+            .then((result) => {
+              let objects = [];
+              if (marker == null && result.prefixes) {
+                const prefixes = Array.isArray(result.prefixes)
+                  ? result.prefixes
+                  : [result.prefixes];
+                objects = objects.concat(
+                  prefixes.map((i) => {
+                    const name = removePrefix(i.Prefix);
+                    return {
+                      name,
+                      path: i.Prefix,
+                      isFolder: true,
+                    };
+                  })
+                );
+              }
+              const files = {};
+              // 返回属性仅name
+              result.deleteMarker.forEach((obj) => {
+                if (formatObj(obj)) {
+                  if (!files[obj.name]) {
+                    files[obj.name] = [];
+                  }
+                  files[obj.name].push(Object.assign({ isDeleted: true }, obj));
+                }
+              });
+              result.objects.forEach((obj) => {
+                if (formatObj(obj)) {
+                  if (!files[obj.name]) {
+                    files[obj.name] = [];
+                  }
+                  files[obj.name].push(obj);
+                }
+              });
+              const { hasOwnProperty } = Object.prototype;
+              for (let key in files) {
+                if (hasOwnProperty.call(files, key)) {
+                  files[key] = files[key].sort((a, b) => {
+                    return moment(b.lastModified) - moment(a.lastModified);
+                  });
+                }
+              }
+              Object.keys(files).forEach((k) => {
+                objects = objects.concat(
+                  {
+                    name: k,
+                    noSelect: true,
+                  },
+                  files[k]
+                );
+              });
+              $scope.objects = $scope.objects.concat(objects);
+              $scope.nextObjectsMarker = result.nextMarker || null;
+              $scope.NextVersionIdMarker = result.NextVersionIdMarker || null;
+              safeApply($scope);
+              if (fn) fn(null);
+            })
+            .catch((err) => {
+              console.log(err);
+              clearObjectsList();
+              if (fn) fn(err);
+            });
+        } else {
+          ossSvs2.listFiles(region, bucket, key, marker || "").then(
             function (result) {
               var arr = result.data;
               settingsSvs.showImageSnapshot.get() == 1
                 ? signPicURL(info, arr)
                 : null;
-
               $scope.objects = $scope.objects.concat(arr);
               $scope.nextObjectsMarker = result.marker || null;
 
@@ -616,6 +764,7 @@ angular
               if (fn) fn(err);
             }
           );
+        }
       }
 
       function loadNext() {
@@ -629,6 +778,7 @@ angular
         initSelect();
         $scope.objects = [];
         $scope.nextObjectsMarker = null;
+        $scope.NextVersionIdMarker = null;
       }
 
       function signPicURL(info, result) {
@@ -637,7 +787,7 @@ angular
           angular.forEach(result, function (n) {
             if (!n.isFolder && fileSvs.getFileType(n).type == "picture") {
               ossSvs2
-                .getImageBase64Url(info.region, info.bucket, n.path)
+                .getContent(info.region, info.bucket, n.path, n.versionId)
                 .then(function (data) {
                   if (data.ContentType.indexOf("image/") == 0) {
                     var base64str = new Buffer(data.Body).toString("base64");
@@ -650,12 +800,20 @@ angular
         } else {
           angular.forEach(result, function (n) {
             if (!n.isFolder && fileSvs.getFileType(n).type == "picture") {
+              const options = {
+                expires: 3600,
+                process: "image/resize,w_48",
+              };
+              if (n.versionId !== undefined) {
+                options.subResource = {
+                  versionId: n.versionId,
+                };
+              }
               n.pic_url = ossSvs2.signatureUrl2(
                 info.region,
                 info.bucket,
                 n.path,
-                3600,
-                "image/resize,w_48"
+                options
               );
             }
           });
@@ -831,12 +989,12 @@ angular
 
         var templateUrl = "main/files/modals/preview/others-modal.html";
         var controller = "othersModalCtrl";
-        var backdrop = true;
+        // var backdrop = true;
 
         if (fileType.type == "code") {
           templateUrl = "main/files/modals/preview/code-modal.html";
           controller = "codeModalCtrl";
-          backdrop = "static";
+          // backdrop = "static";
         } else if (fileType.type == "picture") {
           templateUrl = "main/files/modals/preview/picture-modal.html";
           controller = "pictureModalCtrl";
@@ -851,7 +1009,6 @@ angular
           templateUrl = "main/files/modals/preview/doc-modal.html";
           controller = "docModalCtrl";
         }
-
         $modal.open({
           templateUrl: templateUrl,
           controller: controller,
@@ -909,6 +1066,14 @@ angular
                 crc: function () {
                   showCRC(item);
                 },
+                refreshList,
+              };
+            },
+            showStatus: function () {
+              return {
+                httpHeaders: $scope.showMultiVersionsFiles
+                  ? item.isLatest
+                  : true,
               };
             },
           },
@@ -970,7 +1135,7 @@ angular
         if (e && e.shiftKey) {
           var min = Math.min(lastSeleteIndex, index);
           var max = Math.max(lastSeleteIndex, index);
-          for (var i = min; i <= max; i++) {
+          for (let i = min; i <= max; i++) {
             $scope.sel.x["i_" + i] = true;
           }
         }
@@ -978,7 +1143,7 @@ angular
         var len = $scope.objects.length;
         var all = true;
         var has = false;
-        for (var i = 0; i < len; i++) {
+        for (let i = 0; i < len; i++) {
           if (!$scope.sel.x["i_" + i]) {
             all = false;
           } else {
@@ -1043,7 +1208,7 @@ angular
         });
 
         /**
-         * @param fromOssPath {array}  item={region, bucket, path, name, size }
+         * @param fromOssPath {array}  item={region, bucket, path, name, size, versionId? }
          * @param toLocalPath {string}
          */
         $scope.handlers.downloadFilesHandler(fromArr, to);
@@ -1297,8 +1462,9 @@ angular
         if (selectObjects && selectObjects.length > 0) {
           for (let i in selectObjects) {
             if (
+              // ALY SDK内同时返回storageClass，StorageClass字段，ALI-OSS内仅返回storageClass字段，且无storageStatus字段
               selectObjects[i].storageStatus !== 3 &&
-              selectObjects[i].StorageClass === "Archive"
+              selectObjects[i].storageClass === "Archive"
             ) {
               SelRestore.push(selectObjects[i]);
             }

@@ -97,7 +97,7 @@ function getFreeDiskSize(p, fn) {
       fn(new Error("Failed to get free disk size, path=" + p));
     }
 
-    cp.exec(driver + " && cd / && dir", function (err, stdout, stderr) {
+    cp.exec(driver + " && cd / && dir", function (err, stdout) {
       var num;
       try {
         var arr = stdout.trim().split("\n");
@@ -106,20 +106,22 @@ function getFreeDiskSize(p, fn) {
 
         num = lastLine.match(/\s+([\d,]+)\s+/)[1];
         num = parseInt(num.replace(/,/g, ""));
-      } catch (e) {}
+      } catch (e) {
+        //
+      }
       if (num != null) fn(null, num + fileSize);
       else fn(new Error("Failed to get free disk size, path=" + p));
     });
   } else {
     //linux or mac
-    cp.exec("df -hl", function (err, stdout, stderr) {
+    cp.exec("df -hl", function (err, stdout) {
       var size;
       try {
         var arr = stdout.trim().split("\n");
         arr.splice(0, 1);
 
         var t = [];
-        for (var n of arr) {
+        for (let n of arr) {
           var arr2 = n.split(/\s+/);
           t.push({
             pre: arr2[arr2.length - 1],
@@ -133,13 +135,15 @@ function getFreeDiskSize(p, fn) {
           else return -1;
         });
 
-        for (var n of t) {
+        for (let n of t) {
           if (p.startsWith(n.pre)) {
             size = parseSize(n.freeSize);
             break;
           }
         }
-      } catch (e) {}
+      } catch (e) {
+        //
+      }
 
       if (size != null) fn(null, size + fileSize);
       else fn(new Error("Failed to get free disk size, path=" + p));
@@ -185,8 +189,14 @@ function headObject(self, objOpt) {
     _dig();
 
     function _dig() {
+      let options;
+      if (objOpt.versionId !== undefined) {
+        options = {
+          versionId: objOpt.versionId,
+        };
+      }
       self.aliOSS
-        .head(objOpt.Key)
+        .head(objOpt.Key, options)
         .then((data) => {
           resolve(data.res.headers);
         })
@@ -259,7 +269,7 @@ function getSensibleChunkSize(size) {
 }
 
 //根据网速调整下载并发量
-function computeMaxConcurrency(speed, chunkSize, lastConcurrency) {
+function computeMaxConcurrency() {
   var downloadConcurrecyPartSize = parseInt(
     localStorage.getItem("downloadConcurrecyPartSize") || 5
   );

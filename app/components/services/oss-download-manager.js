@@ -73,7 +73,7 @@ angular.module("web").factory("ossDownloadManager", [
       //save
       saveProg();
 
-      job.on("partcomplete", function (prog) {
+      job.on("partcomplete", function () {
         safeApply($scope);
         //save
         saveProg($scope);
@@ -140,10 +140,19 @@ angular.module("web").factory("ossDownloadManager", [
       //console.log('--------downloadFilesHandler', fromOssInfos, toLocalPath);
       var authInfo = AuthInfo.get();
       var dirPath = path.dirname(fromOssInfos[0].path);
+      // 多版本下可能会下载同一文件不同历史版本，自动重命名文件
+      const fileVersionCount = {};
+      fromOssInfos.forEach((info) => {
+        if (!fileVersionCount[info.path]) {
+          fileVersionCount[info.path] = 1;
+        } else {
+          fileVersionCount[info.path] += 1;
+        }
+      });
 
       loop(
         fromOssInfos,
-        function (jobs) {},
+        function () {},
         function () {
           if (jobsAddedFn) jobsAddedFn();
         }
@@ -202,11 +211,18 @@ angular.module("web").factory("ossDownloadManager", [
           return;
         }
 
-        var fileName = path.basename(ossInfo.path);
-        var filePath = path.join(
-          toLocalPath,
-          path.relative(dirPath, ossInfo.path)
-        );
+        let fileName;
+        if (fileVersionCount[ossInfo.path] > 1) {
+          fileName =
+            path.basename(ossInfo.path, path.extname(ossInfo.path)) +
+            "(" +
+            moment(ossInfo.lastModified).format("YYYY_MM_DD_HH_mm_ss") +
+            ")" +
+            path.extname(ossInfo.path);
+        } else {
+          fileName = path.basename(ossInfo.path);
+        }
+        var filePath = path.join(toLocalPath, path.relative(dirPath, fileName));
 
         if (ossInfo.isFolder) {
           //目录
@@ -249,7 +265,7 @@ angular.module("web").factory("ossDownloadManager", [
           //文件
           if (process.platform == "win32") {
             //修复window下，文件名含非法字符需要转义
-            if (/[\/\\\:\<\>\?\*\"\|]/.test(fileName)) {
+            if (/[/\\:<>?*"|]/.test(fileName)) {
               fileName = encodeURIComponent(fileName);
               filePath = path.join(
                 path.dirname(filePath),
@@ -262,6 +278,7 @@ angular.module("web").factory("ossDownloadManager", [
             from: {
               bucket: ossInfo.bucket,
               key: ossInfo.path,
+              versionId: ossInfo.versionId,
             },
             to: {
               name: fileName,
@@ -290,9 +307,10 @@ angular.module("web").factory("ossDownloadManager", [
       var cname = AuthInfo.get().cname || false;
 
       var endpointname = cname ? auth.eptplcname : auth.eptpl;
+      let store;
       //stsToken
       if (auth.stoken && auth.id.indexOf("STS.") == 0) {
-        var store = new OssStore({
+        store = new OssStore({
           stsToken: {
             Credentials: {
               AccessKeyId: auth.id,
@@ -308,7 +326,7 @@ angular.module("web").factory("ossDownloadManager", [
           cname: cname,
         });
       } else {
-        var store = new OssStore({
+        store = new OssStore({
           aliyunCredential: {
             accessKeyId: auth.id,
             secretAccessKey: auth.secret,
@@ -361,7 +379,9 @@ angular.module("web").factory("ossDownloadManager", [
       try {
         var data = fs.readFileSync(getDownProgFilePath());
         return JSON.parse(data ? data.toString() : "[]");
-      } catch (e) {}
+      } catch (e) {
+        //
+      }
       return [];
     }
 

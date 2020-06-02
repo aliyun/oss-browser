@@ -138,6 +138,7 @@ module.exports = {
     "<code>公共读（public-read）</code>权限可以不通过身份验证直接读取您 Bucket 中的数据，安全风险高，为确保您的数据安全，不推荐此配置，建议您选择私有（private）。",
   "acl.warn-not-private.public-read-write":
     "<code>公共读写（public-read-write）</code>权限可以不通过身份验证直接读取您 Bucket 中的数据，安全风险高，为确保您的数据安全，不推荐此配置，建议您选择私有（private）。",
+  showObjectHistoryVersion: "显示对象的历史版本",
 
   "multipart.management": "Multipart管理",
   "multipart.description":
@@ -308,7 +309,6 @@ module.exports = {
   address: "地址",
   "getAddress.message": "请输入链接有效期",
   generate: "生成",
-  "qrcode.download": "扫码下载",
   not_use_own_domain: "不使用自有域名",
   custom_domain: "自有域名",
 

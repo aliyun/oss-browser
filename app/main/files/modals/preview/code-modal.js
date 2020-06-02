@@ -8,6 +8,7 @@ angular.module("web").controller("codeModalCtrl", [
   "objectInfo",
   "fileType",
   "showFn",
+  "showStatus",
   "Toast",
   "DiffModal",
   "ossSvs2",
@@ -22,6 +23,7 @@ angular.module("web").controller("codeModalCtrl", [
     objectInfo,
     fileType,
     showFn,
+    showStatus,
     Toast,
     DiffModal,
     ossSvs2,
@@ -37,6 +39,7 @@ angular.module("web").controller("codeModalCtrl", [
 
       previewBarVisible: false,
       showFn: showFn,
+      showStatus,
 
       cancel: cancel,
       getContent: getContent,
@@ -75,8 +78,11 @@ angular.module("web").controller("codeModalCtrl", [
               objectInfo.path,
               v
             )
-            .then(function (result) {
+            .then(function () {
               Toast.success(T("save.successfully")); //'保存成功'
+              if (objectInfo.versionId !== undefined) {
+                showFn.refreshList();
+              }
               cancel();
             });
         });
@@ -88,14 +94,19 @@ angular.module("web").controller("codeModalCtrl", [
     function getContent() {
       $scope.isLoading = true;
       ossSvs2
-        .getContent(bucketInfo.region, bucketInfo.bucket, objectInfo.path)
+        .getContent(
+          bucketInfo.region,
+          bucketInfo.bucket,
+          objectInfo.path,
+          objectInfo.versionId
+        )
         .then(function (result) {
           $scope.isLoading = false;
-
-          var data = result.Body.toString();
+          var data = result.content.toString();
           $scope.originalContent = data;
           $scope.content = data;
           editor.setValue(data);
+          safeApply($scope);
         });
     }
 
