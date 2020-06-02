@@ -1620,7 +1620,12 @@ angular.module("web").factory("ossSvs2", [
           err.message.indexOf("ENOTFOUND") != -1
         ) {
           console.error(err);
-        } else Toast.error(err.code + ": " + err.message, undefined, err.requestId);
+        } else {
+          // 兼容ali-oss, ali-yun sdk
+          const requestId =
+            err.requestId || err.RequestId || err.headers["x-oss-request-id"];
+          Toast.error(err.code + ": " + err.message, undefined, requestId);
+        }
       }
     }
 
