@@ -8,10 +8,15 @@ angular.module("web").factory("ossSvs2", [
   "AuthInfo",
   function ($q, $rootScope, $timeout, $state, Toast, Const, AuthInfo) {
     var NEXT_TICK = 1;
+    var stopDeleteFilesFlag = false;
+    var stopCopyFilesFlag = false;
+    //同一时间只能有一个查询，上一个查询如果没有完成，则会被abort
+    // eslint-disable-next-line no-unused-vars
+    var keepListFilesJob;
 
     var DEF_ADDR = "oss://";
     //var ALY = require('aliyun-sdk');
-    var path = require("path");
+    // var path = require("path");
     var AliOSS = require("ali-oss");
 
     return {
@@ -98,7 +103,7 @@ angular.module("web").factory("ossSvs2", [
         cname: options.cname,
         isRequestPay: options.isRequestPayer,
       };
-      if (options.hasOwnProperty("securityToken")) {
+      if (Object.prototype.hasOwnProperty.call(options, "securityToken")) {
         final.stsToken = options.securityToken;
       }
       const client = new AliOSS(final);
@@ -167,8 +172,6 @@ angular.module("web").factory("ossSvs2", [
       return df.promise;
     }
 
-    var stopDeleteFilesFlag = false;
-
     function stopDeleteFiles() {
       stopDeleteFilesFlag = true;
     }
@@ -185,7 +188,7 @@ angular.module("web").factory("ossSvs2", [
 
       var df = $q.defer();
 
-      var client = getClient2({
+      var client = getClient3({
         region: region,
         bucket: bucket,
       });
@@ -258,7 +261,7 @@ angular.module("web").factory("ossSvs2", [
                   delFile(item);
                 });
               },
-              function (err) {
+              function () {
                 //删除目录本身
                 delFile(item);
               }
@@ -277,8 +280,8 @@ angular.module("web").factory("ossSvs2", [
             ) {
               if (itemsToDelete.length > 1) {
                 client
-                  .deleteMulti(itemsToDelete, { isRequestPay: true })
-                  .then(function (res) {
+                  .deleteMulti(itemsToDelete)
+                  .then(function () {
                     c += itemsToDelete.length;
                     progress.current += itemsToDelete.length;
                     itemsToDelete.splice(0, itemsToDelete.length);
@@ -296,8 +299,8 @@ angular.module("web").factory("ossSvs2", [
                   });
               } else {
                 client
-                  .delete(itemsToDelete[0], { isRequestPay: true })
-                  .then(function (res) {
+                  .delete(itemsToDelete[0])
+                  .then(function () {
                     c += itemsToDelete.length;
                     progress.current += itemsToDelete.length;
                     itemsToDelete.splice(0, itemsToDelete.length);
@@ -331,8 +334,8 @@ angular.module("web").factory("ossSvs2", [
             }
 
             client
-              .delete(item.path, { isRequestPay: true })
-              .then(function (res) {
+              .delete(item.path)
+              .then(function () {
                 c++;
                 progress.current++;
                 $timeout(dig, NEXT_TICK);
@@ -350,8 +353,6 @@ angular.module("web").factory("ossSvs2", [
         }
       }
     }
-
-    var stopCopyFilesFlag = false;
 
     function stopCopyFiles() {
       stopCopyFilesFlag = true;
@@ -485,7 +486,9 @@ angular.module("web").factory("ossSvs2", [
                 if (progFn)
                   try {
                     progFn(progress);
-                  } catch (e) {}
+                  } catch (e) {
+                    //
+                  }
                 t.push({
                   item: item,
                   error: err,
@@ -495,7 +498,9 @@ angular.module("web").factory("ossSvs2", [
               if (progFn)
                 try {
                   progFn(progress);
-                } catch (e) {}
+                } catch (e) {
+                  //
+                }
               c++;
 
               //fix ubuntu
@@ -592,7 +597,7 @@ angular.module("web").factory("ossSvs2", [
                         Bucket: source.bucket,
                         Key: source.path,
                       },
-                      function (err) {
+                      function () {
                         $timeout(function () {
                           fn(t);
                         }, NEXT_TICK);
@@ -644,7 +649,9 @@ angular.module("web").factory("ossSvs2", [
         if (progFn)
           try {
             progFn(progress);
-          } catch (e) {}
+          } catch (e) {
+            //
+          }
 
         function _() {
           if (c >= len) {
@@ -683,7 +690,9 @@ angular.module("web").factory("ossSvs2", [
                 if (progFn)
                   try {
                     progFn(progress);
-                  } catch (e) {}
+                  } catch (e) {
+                    //
+                  }
                 terr.push({
                   item: items[c],
                   error: err,
@@ -693,7 +702,9 @@ angular.module("web").factory("ossSvs2", [
               if (progFn)
                 try {
                   progFn(progress);
-                } catch (e) {}
+                } catch (e) {
+                  //
+                }
               $timeout(_, NEXT_TICK);
             });
           } else {
@@ -705,7 +716,9 @@ angular.module("web").factory("ossSvs2", [
               if (progFn)
                 try {
                   progFn(progress);
-                } catch (e) {}
+                } catch (e) {
+                  //
+                }
               $timeout(_, NEXT_TICK);
             });
           }
@@ -828,7 +841,7 @@ angular.module("web").factory("ossSvs2", [
             Key: uploads[c].name,
             UploadId: uploads[c].uploadId,
           },
-          function (err, result) {
+          function (err) {
             if (err) df.reject(err);
             else {
               c++;
@@ -1037,25 +1050,19 @@ angular.module("web").factory("ossSvs2", [
 
     function getContent(region, bucket, key) {
       return new Promise(function (a, b) {
-        var client = getClient({
+        const client = getClient3({
           region: region,
           bucket: bucket,
         });
-        client.getObject(
-          {
-            Bucket: bucket,
-            Key: key,
-            ResponseCacheControl: "No-cache",
-          },
-          function (err, data) {
-            if (err) {
-              handleError(err);
-              b(err);
-            } else {
-              a(data);
-            }
-          }
-        );
+        client
+          .get(key)
+          .then((resp) => {
+            a(resp);
+          })
+          .catch((err) => {
+            handleError(err);
+            b(err);
+          });
       });
     }
 
@@ -1119,7 +1126,7 @@ angular.module("web").factory("ossSvs2", [
               StorageClass: storageClass,
             },
           },
-          function (err, data) {
+          function (err) {
             if (err) {
               handleError(err);
               b(err);
@@ -1472,9 +1479,6 @@ angular.module("web").factory("ossSvs2", [
       });
     }
 
-    //同一时间只能有一个查询，上一个查询如果没有完成，则会被abort
-    var keepListFilesJob;
-
     function listAllFiles(region, bucket, key, folderOnly) {
       // if (keepListFilesJob) {
       //   keepListFilesJob.abort();
@@ -1631,10 +1635,10 @@ angular.module("web").factory("ossSvs2", [
 
     function parseRestoreInfo(s) {
       //"ongoing-request="true"
-      var arr = s.match(/([\w\-]+)=\"([^\"]+)\"/g);
+      var arr = s.match(/([\w-]+)="([^"]+)"/g);
       var m = {};
       angular.forEach(arr, function (n) {
-        var kv = n.match(/([\w\-]+)=\"([^\"]+)\"/);
+        var kv = n.match(/([\w-]+)="([^"]+)"/);
         m[kv[1]] = kv[2];
       });
       return m;
@@ -1720,12 +1724,14 @@ angular.module("web").factory("ossSvs2", [
 
       var str = ossPath.substring(DEF_ADDR.length);
       var ind = str.indexOf("/");
+      let bucket;
+      let key;
       if (ind == -1) {
-        var bucket = str;
-        var key = "";
+        bucket = str;
+        key = "";
       } else {
-        var bucket = str.substring(0, ind);
-        var key = str.substring(ind + 1);
+        bucket = str.substring(0, ind);
+        key = str.substring(ind + 1);
       }
       return {
         bucket: bucket,
@@ -1765,12 +1771,13 @@ angular.module("web").factory("ossSvs2", [
           protocol + "//" + bucket + "." + region + ".aliyuncs.com" + "/" + key
         );
       } else {
+        let domain;
         if (eptpl.indexOf("https://") == 0) {
-          var domain = eptpl.substring(8, eptpl.length);
+          domain = eptpl.substring(8, eptpl.length);
           domain.replace(/\/$/, "");
           return protocol + "//" + bucket + "." + domain + "/" + key;
         } else if (eptpl.indexOf("http://") == 0) {
-          var domain = eptpl.substring(7, eptpl.length);
+          domain = eptpl.substring(7, eptpl.length);
           domain.replace(/\/$/, "");
           return protocol + "//" + bucket + "." + domain + "/" + key;
         }
