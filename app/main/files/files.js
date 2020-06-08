@@ -32,6 +32,7 @@ angular
       Toast,
       Dialog
     ) {
+      const path = require("path");
       var T = $translate.instant;
       angular.extend($scope, {
         showTab: 1,
@@ -535,6 +536,8 @@ angular
       // 切换显示object的历史版本
       function toggleShowMultiVersionsFiles() {
         $scope.showMultiVersionsFiles = !$scope.showMultiVersionsFiles;
+        clearObjectsList();
+        $scope.isLoading = true;
         refreshList();
       }
 
@@ -659,9 +662,8 @@ angular
         $scope.nextObjectsMarker = null;
         const { region, bucket, key = "" } = info;
 
-        const prefix = new RegExp(`^${key}`);
         function removePrefix(s) {
-          return s.replace(prefix, "");
+          return path.basename(s);
         }
         function formatObj(obj) {
           // 文件夹不显示历史版本
@@ -684,15 +686,12 @@ angular
             .then((result) => {
               let objects = [];
               if (marker == null && result.prefixes) {
-                const prefixes = Array.isArray(result.prefixes)
-                  ? result.prefixes
-                  : [result.prefixes];
                 objects = objects.concat(
-                  prefixes.map((i) => {
-                    const name = removePrefix(i.Prefix);
+                  result.prefixes.map((i) => {
+                    const name = removePrefix(i);
                     return {
                       name,
-                      path: i.Prefix,
+                      path: i,
                       isFolder: true,
                     };
                   })
