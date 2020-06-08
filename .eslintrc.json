@@ -8,7 +8,8 @@
     }
   },
   "rules": {
-    "semi": 2
+    "semi": 0,
+    "quotes": 0
   },
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "ignorePatterns": ["static/", "vendor/", "dist/", "node_modules/", "test/"],
