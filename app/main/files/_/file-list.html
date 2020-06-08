@@ -100,7 +100,7 @@
                 &nbsp;
 
                 <span ng-if="item.isDeleted">
-                  {{item.lastModified|timeFormat}} (删除标记)
+                  {{item.lastModified|timeFormat}} ({{ 'marker.delete' | translate}})
                 </span>
                 <a
                   ng-click="showPreview(item);$event.stopPropagation()"
@@ -113,7 +113,7 @@
                   <span ng-class="{'text-muted': item.status=='uploading'}"
                     >{{item.lastModified|timeFormat}}</span
                   >
-                  <span ng-if="item.isLatest">(最新版本)</span>
+                  <span ng-if="item.isLatest">({{ 'marker.lastest' | translate}})</span>
                 </a>
               </span>
             </div>

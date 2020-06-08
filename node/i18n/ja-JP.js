@@ -144,6 +144,10 @@ module.exports = {
   "acl.warn-not-private.public-read-write":
     "<code>公開読み書き</code>権限は、匿名でバケット内のデータにアクセスでき、 セキュリティリスクが高くなるため、 非公開 (private) を推奨します。",
 
+  showObjectHistoryVersion: "オブジェクトの履歴バージョンを表示する",
+  "marker.delete": "マーカーを削除",
+  "marker.lastest": "の最新バージョン",
+
   "multipart.management": "マルチパート",
   "multipart.description":
     "マルチパート (アップロード) プロセス中に生成されたイベントやフラグメントを管理します",

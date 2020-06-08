@@ -11,7 +11,7 @@
 </div>
 <div class="modal-body pd0">
   <header class="pd4 bg-success">
-    <p>
+    <p style="margin: 0">
       oss://{{bucketInfo.bucket}}/{{objectInfo.path}}
       <a
         ng-if="prevUrl"
@@ -21,7 +21,7 @@
         >{{'preview.in.web.browser'|translate}}</a
       >
     </p>
-    <p ng-if="objectInfo.versionId !== undefined">
+    <p style="margin: 0" ng-if="objectInfo.versionId !== undefined">
       versionId: {{objectInfo.versionId}}
     </p>
   </header>

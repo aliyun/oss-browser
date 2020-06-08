@@ -138,7 +138,10 @@ module.exports = {
     "<code>公共读（public-read）</code>权限可以不通过身份验证直接读取您 Bucket 中的数据，安全风险高，为确保您的数据安全，不推荐此配置，建议您选择私有（private）。",
   "acl.warn-not-private.public-read-write":
     "<code>公共读写（public-read-write）</code>权限可以不通过身份验证直接读取您 Bucket 中的数据，安全风险高，为确保您的数据安全，不推荐此配置，建议您选择私有（private）。",
+
   showObjectHistoryVersion: "显示对象的历史版本",
+  "marker.delete": "删除标记",
+  "marker.lastest": "最新版本",
 
   "multipart.management": "Multipart管理",
   "multipart.description":

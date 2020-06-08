@@ -153,6 +153,10 @@ module.exports = {
   "acl.warn-not-private.public-read-write":
     "If your bucket ACL is <code>public read/write</code> anyone can access your bucket without prior authentication. We recommend that you set the Bucket ACL to Private. Exercise caution when setting bucket ACLs.",
 
+  showObjectHistoryVersion: "Display historical versions of objects",
+  "marker.delete": "Delete marker",
+  "marker.lastest": "Latest version",
+
   "multipart.management": "Multipart",
   "multipart.description":
     "Manage events and fragments that are generated during the multipipart (upload) process.",
