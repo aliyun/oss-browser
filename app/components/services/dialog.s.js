@@ -19,28 +19,30 @@ angular
           ? ["openDirectory", "multiSelections"]
           : ["openFile", "multiSelections"];
 
-        dialog.showOpenDialog(
-          {
+        dialog
+          .showOpenDialog({
             title: "Upload",
             properties: isMac
               ? ["openFile", "openDirectory", "multiSelections"]
               : selopt,
-          },
-          function (filePaths) {
-            if (typeof fn == "function") fn(filePaths);
-          }
-        );
+          })
+          .then((result) => {
+            if (!result.canceled) {
+              if (typeof fn == "function") fn(result.filePaths);
+            }
+          });
       }
       function showDownloadDialog(fn) {
-        dialog.showOpenDialog(
-          {
+        dialog
+          .showOpenDialog({
             title: "Download",
             properties: ["openDirectory"],
-          },
-          function (filePaths) {
-            if (typeof fn == "function") fn(filePaths);
-          }
-        );
+          })
+          .then((result) => {
+            if (!result.canceled) {
+              if (typeof fn == "function") fn(result.filePaths);
+            }
+          });
       }
 
       /**
@@ -73,7 +75,7 @@ angular
           title: title,
           message: msg,
           opt: opt,
-          callback: fn || function (flag) {},
+          callback: fn || function () {},
         };
 
         $modal.open({
@@ -109,7 +111,7 @@ angular
           title: title,
           message: msg,
           opt: opt,
-          callback: fn || function (flag) {},
+          callback: fn || function () {},
         };
 
         $modal.open({

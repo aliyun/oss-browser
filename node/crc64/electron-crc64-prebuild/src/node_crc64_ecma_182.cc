@@ -89,6 +89,8 @@ NAN_MODULE_INIT(Init)
     Nan::Export(target, "combileCrc64", CombileCRC64);
 }
 
-NODE_MODULE(crc64, Init)
+NAN_MODULE_WORKER_ENABLED(crc64, Init)
+
+// NODE_MODULE(crc64, Init)
 
 }

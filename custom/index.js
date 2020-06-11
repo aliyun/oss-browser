@@ -17,7 +17,7 @@ module.exports = {
   logo_png: path.join(__dirname, "./icon.png"),
 
   //logo icns 格式，主要用于mac系统
-  logo_ico: path.join(__dirname, "./icon.icns"),
+  logo_icns: path.join(__dirname, "./icon.icns"),
 
   //logo ico 格式，主要用于windows系统
   logo_ico: path.join(__dirname, "./icon.ico"),

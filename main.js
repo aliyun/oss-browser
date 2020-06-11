@@ -13,7 +13,7 @@ var BrowserWindow = electron.BrowserWindow;
 var fs = require("fs");
 var os = require("os");
 var path = require("path");
-var nativeImage = require("electron").nativeImage;
+// var nativeImage = require("electron").nativeImage;
 
 // electron-log收集和引入
 var log = require("electron-log");
@@ -64,12 +64,18 @@ function createWindow() {
     minWidth: 1020,
     minHeight: 660,
     title: custom.title || "OSS Browser",
-    icon: custom.logo_ico || path.join(__dirname, "icons", "icon.ico"),
+    icon: custom.logo_png || path.join(__dirname, "icons", "icon.png"),
 
     webPreferences: {
       plugins: true,
+      nodeIntegration: true,
+      enableRemoteModule: true,
     },
   };
+
+  if (process.platform === "win32") {
+    opt.icon = custom.logo_ico || path.join(__dirname, "icons", "icon.ico");
+  }
 
   if (process.platform == "linux") {
     opt.icon = custom.logo_png || path.join(__dirname, "icons", "icon.png");
@@ -178,18 +184,13 @@ function moveFile(from, to, fn) {
 }
 
 //singleton
-var shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
-  // Someone tried to run a second instance, we should focus our window.
+app.requestSingleInstanceLock();
+app.on("second-instance", () => {
   if (win) {
     if (win.isMinimized()) win.restore();
     win.focus();
   }
 });
-
-if (shouldQuit) {
-  app.quit();
-  process.exit(0);
-}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
