@@ -17,7 +17,7 @@ var path = require("path");
 
 // electron-log收集和引入
 var log = require("electron-log");
-log.transports.file.level = false;
+log.transports.file.level = "info";
 log.transports.console.level = false;
 
 ///*****************************************

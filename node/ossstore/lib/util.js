@@ -8,7 +8,8 @@ var CRC64 = require("../../crc64/index.js");
 var isLog = localStorage.getItem("logFile") || 0;
 var isLogInfo = localStorage.getItem("logFileInfo") || 0;
 //本地日志收集模块
-var log = require("electron-log");
+const { remote } = require("electron");
+var log = remote.require("electron-log");
 
 module.exports = {
   parseLocalPath: parseLocalPath,
@@ -70,7 +71,6 @@ function checkFileHash(filePath, hashCrc64ecma, fileMd5, fn) {
       console.timeEnd(`check crc64 ${filePath}`);
 
       if (isLog == 1 && isLogInfo == 1) {
-        log.transports.file.level = "info";
         log.info(`check crc64 ${filePath}: ${endTime - startTime}ms`);
       }
 
@@ -104,7 +104,6 @@ function checkFileHash(filePath, hashCrc64ecma, fileMd5, fn) {
         );
       } else {
         if (isLog == 1 && isLogInfo == 1) {
-          log.transports.file.level = "info";
           log.info(`check crc success: file[${filePath}], ${crc64Str}`);
         }
 
@@ -165,7 +164,6 @@ function getFileCrc64(p, fn) {
     console.log(data);
 
     if (isLog == 1 && isLogInfo == 1) {
-      log.transports.file.level = "info";
       log.info(`get crc64 hash for [ ${p} ]: ${endTime - startTime} ms`);
       log.info(data);
     }
@@ -228,7 +226,6 @@ function getStreamCrc64(p, fn) {
     console.log(data);
 
     if (isLog == 1 && isLogInfo == 1) {
-      log.transports.file.level = "info";
       log.info(`get crc64 hash for [ ${p} ]: ${endTime - startTime} ms`);
       log.info(data);
     }

@@ -13,9 +13,8 @@ var RETRYTIMES = commonUtil.getRetryTimes();
 var isLog = localStorage.getItem("logFile") || 0;
 var isLogInfo = localStorage.getItem("logFileInfo") || 0;
 //本地日志收集模块
-var log = require("electron-log");
-
-var { ipcRenderer } = require("electron");
+var { remote } = require("electron");
+var log = remote.require("electron-log");
 
 class UploadJob extends Base {
   /**
@@ -90,7 +89,6 @@ UploadJob.prototype.start = function () {
   if (isDebug) console.log("-----start", self.from.path);
 
   if (isLog == 1 && isLogInfo == 1) {
-    log.transports.file.level = "info";
     log.info(`----start ${self.from.path}`);
   }
 
@@ -118,7 +116,6 @@ UploadJob.prototype.stop = function () {
   if (isDebug) console.log("-----stop", this.from.path);
 
   if (isLog == 1 && isLogInfo == 1) {
-    log.transports.file.level = "info";
     log.info(`-----stop ${this.from.path}`);
   }
 
@@ -132,7 +129,6 @@ UploadJob.prototype.wait = function () {
   if (isDebug) console.log("-----wait", this.from.path);
 
   if (isLog == 1 && isLogInfo == 1) {
-    log.transports.file.level = "info";
     log.info(`-----wait ${this.from.path}`);
   }
 
@@ -183,7 +179,6 @@ UploadJob.prototype.startUpload = function () {
   if (isDebug) console.log("prepareChunks", self.from.path);
 
   if (isLog == 1 && isLogInfo == 1) {
-    log.transports.file.level = "info";
     log.info(`prepareChunks ${self.from.path}`);
   }
 
@@ -206,7 +201,6 @@ UploadJob.prototype.startUpload = function () {
       if (isDebug) console.log("uploadSingle", self.from.path);
 
       if (isLog == 1 && isLogInfo == 1) {
-        log.transports.file.level = "info";
         log.info(`uploadSingle ${self.from.path}`);
       }
 
@@ -215,7 +209,6 @@ UploadJob.prototype.startUpload = function () {
       if (isDebug) console.log("uploadMultipart", self.from.path);
 
       if (isLog == 1 && isLogInfo == 1) {
-        log.transports.file.level = "info";
         log.info(`uploadMultipart ${self.from.pathh}`);
       }
 
@@ -268,7 +261,6 @@ UploadJob.prototype.startSpeedCounter = function () {
         );
 
       if (isLog == 1 && isLogInfo == 1) {
-        log.transports.file.level = "info";
         log.info(
           `set max concurrency: ${self.maxConcurrency} ${self.from.path}`
         );
@@ -323,7 +315,6 @@ UploadJob.prototype.uploadSingle = function () {
             );
 
             if (isLog == 1) {
-              log.transports.file.level = "info";
               log.error(
                 `put object error: ${err} -------retrying...${retryTimes}/${RETRYTIMES}`
               );
@@ -395,7 +386,6 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     console.log("upload part nums:", uploadNumArr.join(","), self.from.path);
 
   if (isLog == 1 && isLogInfo == 1) {
-    log.transports.file.level = "info";
     log.info(`upload part nums: ${uploadNumArr.join(",")} ${self.from.path}`);
   }
 
@@ -440,7 +430,6 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
     if (isDebug) console.info("Got upload ID", err, uploadId, self.from.path);
 
     if (isLog == 1 && isLogInfo == 1) {
-      log.transports.file.level = "info";
       log.info(`Got upload ID: ${err} ${uploadId} ${self.from.path}`);
     }
 
@@ -517,7 +506,6 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
       );
 
     if (isLog == 1 && isLogInfo == 1) {
-      log.transports.file.level = "info";
       log.info(
         `doUploadPart: ${partNum}  stopFlag: ${self.stopFlag} ${self.from.path}`
       );

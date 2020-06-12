@@ -33,7 +33,7 @@
     "commander": "~2.9.0",
     "cross-env": "^3.1.4",
     "del": "^4.1.1",
-    "electron": "9.0.3",
+    "electron": "^9.0.3",
     "electron-packager": "^14.2.1",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.1",
