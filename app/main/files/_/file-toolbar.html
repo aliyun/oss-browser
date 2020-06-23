@@ -83,7 +83,7 @@
       <button
         type="button"
         class="btn btn-default btn-sm"
-        ng-disabled="!allowDownload()"
+        ng-disabled="!allowOpInVerions()"
         ng-click="showDownloadDialog()"
       >
         <i class="fa fa-download text-primary"></i>
@@ -94,7 +94,7 @@
       <button
         type="button"
         class="btn btn-default btn-sm"
-        ng-disabled="!sel.has || currentAuthInfo.privilege=='readOnly'"
+        ng-disabled="!sel.has || currentAuthInfo.privilege=='readOnly' || !allowOpInVerions()"
         ng-click="showMove(sel.has, true)"
       >
         <i class="fa fa-clone text-primary"></i>
@@ -121,7 +121,7 @@
           <a
             href=""
             class=""
-            ng-if="sel.has && currentAuthInfo.privilege!='readOnly'"
+            ng-if="sel.has && currentAuthInfo.privilege!='readOnly' && allowOpInVerions()"
             ng-click="showMove(sel.has)"
           >
             <i class="fa fa-cut text-primary"></i>
@@ -132,7 +132,7 @@
         <li>
           <a
             href=""
-            ng-if="(sel.has.length==1) && currentAuthInfo.privilege!='readOnly' && sel.has[0].storageClass!='Archive'"
+            ng-if="(sel.has.length==1) && currentAuthInfo.privilege!='readOnly' && sel.has[0].storageClass!='Archive' && allowOpInVerions()"
             ng-click="showRename(sel.has[0])"
           >
             <i class="fa fa-edit text-info"></i>
@@ -144,7 +144,7 @@
         <li>
           <a
             href=""
-            ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.privilege!='readOnly'"
+            ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.privilege!='readOnly' && allowOpInVerions()"
             ng-click="showACL(sel.has[0])"
           >
             <i class="fa fa-shield text-success"></i>
@@ -181,7 +181,7 @@
         <li>
           <a
             href=""
-            ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.id.indexOf('STS.')!=0"
+            ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.id.indexOf('STS.')!=0 && allowOpInVerions()"
             ng-click="showAddress(sel.has[0])"
           >
             <i class="fa fa-download"></i>

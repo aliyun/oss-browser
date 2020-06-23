@@ -111,7 +111,6 @@ angular.module("web").factory("ossSvs2", [
         bucket: bucket,
       });
       return client.head(key).catch((err) => {
-        handleError(err);
         return Promise.reject(err);
       });
     }

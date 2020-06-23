@@ -143,10 +143,11 @@ angular
             return $scope.objects.length;
           }
         },
-        allowDownload() {
+        allowOpInVerions() {
           if ($scope.showMultiVersionsFiles) {
             return (
-              $scope.sel.has && $scope.sel.has.every((item) => !item.isFolder)
+              $scope.sel.has &&
+              $scope.sel.has.every((item) => !item.isFolder && !item.isDeleted)
             );
           }
           return $scope.sel.has;
@@ -252,7 +253,7 @@ angular
               showDownloadDialog();
             },
             function () {
-              return $scope.allowDownload();
+              return $scope.allowOpInVerions();
             },
           ],
           [
@@ -265,7 +266,9 @@ angular
             },
             function () {
               return (
-                $scope.sel.has && $scope.currentAuthInfo.privilege != "readOnly"
+                $scope.sel.has &&
+                $scope.currentAuthInfo.privilege != "readOnly" &&
+                $scope.allowOpInVerions()
               );
             },
           ],
@@ -280,7 +283,9 @@ angular
             },
             function () {
               return (
-                $scope.sel.has && $scope.currentAuthInfo.privilege != "readOnly"
+                $scope.sel.has &&
+                $scope.currentAuthInfo.privilege != "readOnly" &&
+                $scope.allowOpInVerions()
               );
             },
           ],
@@ -297,7 +302,8 @@ angular
                 $scope.sel.has &&
                 $scope.sel.has.length == 1 &&
                 $scope.currentAuthInfo.privilege != "readOnly" &&
-                $scope.sel.has[0].storageClass != "Archive"
+                $scope.sel.has[0].storageClass != "Archive" &&
+                $scope.allowOpInVerions()
               );
             },
           ],
@@ -314,7 +320,8 @@ angular
                 $scope.sel.has &&
                 $scope.sel.has.length == 1 &&
                 !$scope.sel.has[0].isFolder &&
-                $scope.currentAuthInfo.privilege != "readOnly"
+                $scope.currentAuthInfo.privilege != "readOnly" &&
+                $scope.allowOpInVerions()
               );
             },
           ],
@@ -371,7 +378,8 @@ angular
                 $scope.sel.has &&
                 $scope.sel.has.length == 1 &&
                 !$scope.sel.has[0].isFolder &&
-                $scope.currentAuthInfo.id.indexOf("STS.") != 0
+                $scope.currentAuthInfo.id.indexOf("STS.") != 0 &&
+                $scope.allowOpInVerions()
               );
             },
           ],
@@ -586,7 +594,8 @@ angular
           }
 
           $scope.currentInfo = info;
-
+          $scope.sch.objectName = "";
+          $scope.sch.bucketName = "";
           if (info.bucket) {
             //has bucket , list objects
             $scope.currentBucket = info.bucket;
