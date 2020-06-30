@@ -64,8 +64,8 @@
   },
   "dependencies": {
     "ali-oss": "^6.1.1",
-    "clipboard": "^1.7.1",
     "aliyun-sdk": "^1.12.3",
+    "clipboard": "^1.7.1",
     "electron-log": "1.3.0",
     "koa": "^2.3.0",
     "koa-convert": "^1.2.0",
@@ -73,6 +73,7 @@
     "mime": "^1.3.6",
     "nodemailer": "4.0.1",
     "nodemailer-smtp-transport": "2.7.4",
+    "platform": "^1.3.5",
     "request": "^2.83.0"
   },
   "husky": {
