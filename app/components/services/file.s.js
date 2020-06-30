@@ -25,6 +25,7 @@ angular.module("web").factory("fileSvs", [
           case "jpg":
           case "jpeg":
           case "gif":
+          case "svg":
             return { type: "picture", ext: [ext] };
 
           //  case 'doc':
