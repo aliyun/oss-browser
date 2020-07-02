@@ -18,6 +18,10 @@ angular.module("web").factory("ossSvs2", [
     //var ALY = require('aliyun-sdk');
     // var path = require("path");
     var AliOSS = require("ali-oss");
+    const platform = require("platform");
+    // 打包后的文件app.js与package.json同级
+    const pkg = require("./package.json");
+    const USER_AGENT = `aliyun-sdk-ossbrowser-${platform.os}-${pkg.version}`;
 
     return {
       createFolder: createFolder,
@@ -94,6 +98,7 @@ angular.module("web").factory("ossSvs2", [
         final.stsToken = options.securityToken;
       }
       const client = new AliOSS(final);
+      client.userAgent = USER_AGENT;
       return client;
     }
 
@@ -1634,7 +1639,7 @@ angular.module("web").factory("ossSvs2", [
      */
     function getClient(opt) {
       var options = prepaireOptions(opt);
-
+      ALY.util.xUserAgent = () => USER_AGENT;
       var client = new ALY.OSS(options);
       return client;
     }

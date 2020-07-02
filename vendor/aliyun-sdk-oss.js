@@ -1137,6 +1137,7 @@ ALY.HttpRequest = inherit({
     this.endpoint = endpoint;
     this.region = region;
     this.setUserAgent();
+    this.setXUserAgent();
   },
 
   setUserAgent: function setUserAgent() {
@@ -1145,6 +1146,12 @@ ALY.HttpRequest = inherit({
     //this.headers['x-sdk-client'] = this.headers['User-Agent'] = ALY.util.userAgent();
     // pop 现在不支持 x-sdk-client 在浏览器设置
     this.headers['User-Agent'] = ALY.util.userAgent();
+  },
+
+  setXUserAgent: function setXUserAgent() {
+    if(ALY.util.xUserAgent) {
+      this.headers['x-oss-user-agent'] = ALY.util.xUserAgent()
+    }
   },
 
   pathname: function pathname() {

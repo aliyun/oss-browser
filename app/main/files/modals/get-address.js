@@ -29,6 +29,16 @@ angular.module("web").controller("getAddressModalCtrl", [
   ) {
     var T = $translate.instant;
 
+    const LastSelectedDomainCtor = {
+      key: "_lastSelectedDomain",
+      get() {
+        return window.localStorage.getItem(LastSelectedDomainCtor.key);
+      },
+      set(v) {
+        window.localStorage.setItem(LastSelectedDomainCtor.key, v);
+      },
+    };
+
     angular.extend($scope, {
       item: item,
       reg: {
@@ -43,6 +53,7 @@ angular.module("web").controller("getAddressModalCtrl", [
         mailTo: "",
       },
       customDomainList: [],
+      onCustomDomainChange: onCustomDomainChange,
       cancel: cancel,
       onSubmit: onSubmit,
       sendTo: sendTo,
@@ -69,7 +80,7 @@ angular.module("web").controller("getAddressModalCtrl", [
           $scope.isLoading = false;
           $scope.err = null;
           if (xhr.status >= 200 && xhr.status <= 300) {
-            $scope.info.url = $scope.item.url;
+            $scope.info.originUrl = $scope.item.url;
             $scope.step = 1;
           } else if (xhr.status == 403) {
             $scope.step = 2;
@@ -96,6 +107,12 @@ angular.module("web").controller("getAddressModalCtrl", [
                 value: domain,
               }))
             );
+            const last = LastSelectedDomainCtor.get();
+            if (domainList.includes(last)) {
+              $scope.info.custom_domain = last;
+              coerceRefDisplayUrl();
+            }
+            safeApply($scope);
           }
         });
       }
@@ -146,7 +163,11 @@ angular.module("web").controller("getAddressModalCtrl", [
     }
 
     $scope.$watch("info.originUrl", coerceRefDisplayUrl);
-    $scope.$watch("info.custom_domain", coerceRefDisplayUrl);
+
+    function onCustomDomainChange(v) {
+      LastSelectedDomainCtor.set(v);
+      coerceRefDisplayUrl();
+    }
 
     function coerceRefDisplayUrl() {
       $timeout(() => {

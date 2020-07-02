@@ -36,6 +36,7 @@
           class="form-control"
           id="custom_domain"
           ng-model="info.custom_domain"
+          ng-change="onCustomDomainChange(info.custom_domain)"
           ng-options="domain.value as (domain.label) for domain in customDomainList"
         >
         </select>
