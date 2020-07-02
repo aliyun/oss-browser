@@ -276,6 +276,8 @@ module.exports = {
   "move.cancel": "移動のキャンセル",
 
   "search.files.placeholder": "名前プレフィックスでフィルタリング",
+  "search.files.num_msg":
+    "現在読み込まれているディレクトリとオブジェクトの数は{{num}}であり、現在のバケット内のオブジェクトの総数ではありません。",
 
   "genAuthToken.title": "認証トークンの生成",
   "genAuthToken.message1.1": "認証するバケット",
@@ -476,7 +478,6 @@ module.exports = {
 
   "copy.successfully": "クリップボードにコピー済みです",
   "click.download": "クリックしてダウンロード",
-  "qrcode.download": "QR コードをスキャンしてダウンロード",
 
   saving: "保存中",
   "save.successfully": "成功完了",

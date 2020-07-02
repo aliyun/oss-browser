@@ -273,6 +273,8 @@ module.exports = {
   "move.cancel": "Cancel Move",
 
   "search.files.placeholder": "Filter by name prefix",
+  "search.files.num_msg":
+    "The number of currently loaded directories and objects is {{num}}, not the total number of objects in the current bucket.",
 
   "genAuthToken.title": "Generate Authorization Token",
   "genAuthToken.message1.1": "Authorize to Bucket",
@@ -473,7 +475,6 @@ module.exports = {
 
   "copy.successfully": "It has been copied to the clipboard",
   "click.download": "click to download",
-  "qrcode.download": "scan qrcode to download",
 
   saving: "Saving",
   "save.successfully": "Saved",
