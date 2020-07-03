@@ -1221,16 +1221,6 @@ angular.module("web").factory("ossSvs2", [
             type: "timestamp",
             name: "Last-Modified",
           },
-          // "Metadata": {
-          //   "type": "map",
-          //   "name": "x-oss-meta-",
-          //   "members": {},
-          //   "keys": {}
-          // },
-          // MissingMeta: {
-          //   type: "integer",
-          //   name: "x-oss-missing-meta",
-          // },
           Restore: {
             name: "x-oss-restore",
           },

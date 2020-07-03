@@ -68,7 +68,7 @@ angular.module("web").controller("pictureModalCtrl", [
           });
       } else {
         var process = "image/quality,q_10";
-        var url = ossSvs2.signatureUrl(
+        var url = ossSvs2.signatureUrl2(
           bucketInfo.region,
           bucketInfo.bucket,
           objectInfo.path
