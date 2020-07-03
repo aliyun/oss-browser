@@ -267,6 +267,8 @@ module.exports = {
   "move.cancel": "取消移动",
 
   "search.files.placeholder": "按名称前缀过滤",
+  "search.files.num_msg":
+    "当前已加载的目录及Object数量为{{num}}，并非当前Bucket的总共Object数量。",
 
   "genAuthToken.title": "生成授权码",
   "genAuthToken.message1.1": "授权给Bucket",
@@ -457,7 +459,6 @@ module.exports = {
 
   "copy.successfully": "已复制到剪贴板",
   "click.download": "点此下载",
-  "qrcode.download": "扫码下载",
 
   saving: "正在保存",
   "save.successfully": "保存成功",
