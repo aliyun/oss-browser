@@ -651,6 +651,14 @@ DownloadJob.prototype.wait = function () {
   return self;
 };
 
+DownloadJob.prototype.destroy = function () {
+  var self = this;
+  var tmpName = self.to.path + ".download";
+  util.deleteFileIfExists(tmpName);
+  self._lastStatusFailed = true;
+  return self.stop();
+};
+
 DownloadJob.prototype._changeStatus = function (status, retryTimes) {
   var self = this;
   self.status = status;
