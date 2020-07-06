@@ -151,7 +151,7 @@
           <a
             ng-if="item.status=='running' || item.status=='retrying' || item.status=='waiting'|| item.status=='verifying'"
             href=""
-            ng-click="item.stop()"
+            ng-click="stop(item)"
             class="btn btn-default btn-xs"
           >
             <i class="glyphicon glyphicon-pause text-warning"></i>
