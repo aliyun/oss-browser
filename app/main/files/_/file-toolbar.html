@@ -287,6 +287,13 @@
       <span class="input-group-addon">
         <i class="fa fa-search"></i> {{getTrueLength()}}
         <span ng-if="nextObjectsMarker">+</span>
+        <i
+          class="fa fa-question-circle"
+          style="margin-left: 3px;"
+          uib-tooltip="{{ 'search.files.num_msg' | translate(objects.length) }}"
+          tooltip-placement="bottom"
+          tooltip-append-to-body="true"
+        ></i>
       </span>
     </div>
   </div>

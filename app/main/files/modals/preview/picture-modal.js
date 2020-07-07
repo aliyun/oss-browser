@@ -83,7 +83,6 @@ angular.module("web").controller("pictureModalCtrl", [
           options.expires = 3600;
           options.process = "image/quality,q_10";
         }
-        console.log(options);
         $scope.imgsrc = ossSvs2.signatureUrl2(
           bucketInfo.region,
           bucketInfo.bucket,

@@ -38,7 +38,6 @@ angular.module("web").controller("updateHttpHeadersModalCtrl", [
     function init() {
       $scope.isLoading = true;
       $scope.step = 2;
-      var ignoreError = true;
       if (item.length > 1) return;
       ossSvs2
         .getMeta(currentInfo.region, currentInfo.bucket, item[0].path)
@@ -69,8 +68,21 @@ angular.module("web").controller("updateHttpHeadersModalCtrl", [
       var headers = angular.copy($scope.headers);
       var metaItems = angular.copy($scope.metaItems);
 
+      // 将ContentType转化为Content-Type
+      const HeadersMap = {
+        ContentLanguage: "Content-Language",
+        ContentType: "Content-Type",
+        CacheControl: "Cache-Control",
+        ContentDisposition: "Content-Disposition",
+        ContentEncoding: "Content-Encoding",
+        Expires: "Expires",
+      };
+
       for (var k in headers) {
-        if (!headers[k]) delete headers[k];
+        if (headers[k]) {
+          headers[HeadersMap[k]] = headers[k];
+        }
+        delete headers[k];
       }
 
       var metas = {};
@@ -90,7 +102,7 @@ angular.module("web").controller("updateHttpHeadersModalCtrl", [
           )
         )
       )
-        .then((result) => {
+        .then(() => {
           Toast.success(T("setting.success")); //'设置成功'
         })
         .finally(() => {

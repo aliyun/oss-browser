@@ -29,6 +29,7 @@ angular.module("web").controller("transferDownloadsCtrl", [
       clearAllCompleted: clearAllCompleted,
       clearAll: clearAll,
       stopAll: stopAll,
+      stop: stop,
       startAll: startAll,
       checkStartJob: checkStartJob,
       openLocaleFolder: function (item) {
@@ -87,6 +88,7 @@ angular.module("web").controller("transferDownloadsCtrl", [
       var arr = $scope.lists.downloadJobList;
       for (var i = 0; i < arr.length; i++) {
         if (item === arr[i]) {
+          item.destroy();
           arr.splice(i, 1);
           break;
         }
@@ -125,13 +127,7 @@ angular.module("web").controller("transferDownloadsCtrl", [
             var arr = $scope.lists.downloadJobList;
             for (var i = 0; i < arr.length; i++) {
               var n = arr[i];
-              if (
-                n.status == "running" ||
-                n.status == "waiting" ||
-                n.status == "verifying" ||
-                n.status == "retrying"
-              )
-                n.stop();
+              n.destroy();
               arr.splice(i, 1);
               i--;
             }
@@ -141,6 +137,11 @@ angular.module("web").controller("transferDownloadsCtrl", [
         },
         1
       );
+    }
+
+    function stop(item) {
+      item.stop();
+      ossDownloadManager.saveProg();
     }
 
     var stopFlag = false;
