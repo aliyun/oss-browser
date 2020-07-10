@@ -36,7 +36,9 @@ angular.module("web").factory("autoUpgradeSvs", [
     var job;
 
     function start() {
-      if (job) job.start();
+      if (job && job.status !== "running") {
+        job.start();
+      }
     }
 
     function getReleaseNote(version, lang, fn) {
