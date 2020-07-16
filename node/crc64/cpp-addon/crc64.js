@@ -1,7 +1,7 @@
 "use strict";
 const version_path = process.platform + "-" + process.arch;
 const path = require("path");
-const fs = require("fs");
+const fs = require("original-fs");
 
 var _crc64 =
   process.env.NODE_ENV == "test"

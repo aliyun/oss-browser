@@ -1,5 +1,5 @@
 var path = require("path");
-var fs = require("fs");
+var fs = require("original-fs");
 var crypto = require("crypto");
 
 var CRC64 = require("../../crc64/index.js");

@@ -1,7 +1,7 @@
 "use strict";
 
 var Base = require("./base");
-var fs = require("fs");
+var fs = require("original-fs");
 var path = require("path");
 var util = require("./upload-job-util");
 var isDebug = process.env.NODE_ENV == "development";
