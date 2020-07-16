@@ -470,7 +470,7 @@ module.exports = {
 
   "upgrade.start": "开始更新",
   "upgrade.downloading": "正在下载...",
-  "upgrade.download.field": "自动更新失败, 请手动下载安装包。",
+  "upgrade.download.failed": "自动更新失败, 请手动下载安装包。",
   "upgrade.download.success": "已经下载成功, 现在安装并重启应用",
 
   "Insufficient disk space": "磁盘空间不足",

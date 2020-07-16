@@ -1,6 +1,6 @@
 var CRC64 = require("../crc64.js");
 var path = require("path");
-var fs = require("fs");
+var fs = require("original-fs");
 const assert = require("assert");
 
 require("should");

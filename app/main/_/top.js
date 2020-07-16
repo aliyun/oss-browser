@@ -11,6 +11,7 @@ angular.module("web").controller("topCtrl", [
   "AuthInfo",
   "settingsSvs",
   "autoUpgradeSvs",
+  "updateSvs",
   "safeApply",
   function (
     $scope,
@@ -25,10 +26,12 @@ angular.module("web").controller("topCtrl", [
     AuthInfo,
     settingsSvs,
     autoUpgradeSvs,
+    updateSvs,
     safeApply
   ) {
     var fs = require("fs");
     var path = require("path");
+    const { app } = require("electron").remote;
     var T = $translate.instant;
 
     angular.extend($scope, {
@@ -37,6 +40,20 @@ angular.module("web").controller("topCtrl", [
       showAbout: showAbout,
       showReleaseNote: showReleaseNote,
       click10: click10,
+      app: {
+        logo: "icons/icon.png",
+        version: app.getVersion(),
+      },
+      upgradeInfo: {
+        currentVersion: app.getVersion(),
+        isLastVersion: true,
+        lastVersion: null,
+        lastReleaseNote: null,
+        status: null,
+        total: null,
+        current: null,
+        errorMsg: null,
+      },
     });
 
     var ctime = 0;
@@ -53,30 +70,24 @@ angular.module("web").controller("topCtrl", [
       }, 600);
     }
 
-    $rootScope.app = {};
-    angular.extend($rootScope.app, Global.app);
-
     //$scope.aid = AuthInfo.get().id;
     $scope.authInfo = AuthInfo.get();
     $scope.authInfo.expirationStr = moment(
       new Date($scope.authInfo.expiration)
     ).format("YYYY-MM-DD HH:mm:ss");
 
-    $scope.$watch("upgradeInfo.isLastVersion", function (v) {
-      if (false === v) {
-        if (1 == settingsSvs.autoUpgrade.get()) autoUpgradeSvs.start();
-        else $scope.showAbout();
-
-        if (!$scope.upgradeInfo.files) {
+    $timeout(function () {
+      updateSvs.checkForUpdate((info) => {
+        angular.extend($scope.upgradeInfo, info);
+        safeApply($scope);
+        if (info.status === "failed") {
+          console.log("Update failed" + info.errorMsg, info);
+        }
+        if (info.status === "finished") {
           $scope.showAbout();
         }
-      }
-    });
-    $scope.$watch("upgradeInfo.upgradeJob.status", function (s) {
-      if ("failed" == s || "finished" == s) {
-        $scope.showAbout();
-      }
-    });
+      });
+    }, 2000);
 
     $rootScope.showSettings = function (fn) {
       $modal.open({
@@ -110,13 +121,14 @@ angular.module("web").controller("topCtrl", [
     function showReleaseNote() {
       var converter = new showdown.Converter();
 
+      const currentVersion = $scope.upgradeInfo.currentVersion;
       var url =
-        autoUpgradeSvs.compareVersion(Global.app.version, "1.5.1") <= 0
-          ? path.join(__dirname, "release-notes", Global.app.version + ".md")
+        autoUpgradeSvs.compareVersion(currentVersion, "1.5.1") <= 0
+          ? path.join(__dirname, "release-notes", currentVersion + ".md")
           : path.join(
               __dirname,
               "release-notes",
-              Global.app.version + "." + $scope.langSettings.lang + ".md"
+              currentVersion + "." + $scope.langSettings.lang + ".md"
             );
 
       fs.readFile(url, function (err, text) {

@@ -5,7 +5,7 @@
  */
 "use strict";
 
-const fs = require("fs");
+const fs = require("original-fs");
 
 const binding = require("./crc");
 

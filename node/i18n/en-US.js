@@ -486,7 +486,7 @@ module.exports = {
 
   "upgrade.start": "Upgrade",
   "upgrade.downloading": "Start download...",
-  "upgrade.download.field":
+  "upgrade.download.failed":
     "Automatic update failed, please manually download the installation package.",
   "upgrade.download.success": "Download successfully, install and restart",
 

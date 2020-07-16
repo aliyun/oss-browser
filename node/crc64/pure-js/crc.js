@@ -79,7 +79,7 @@ if (ENVIRONMENT_IS_NODE) {
   var nodePath;
 
   Module["read"] = function shell_read(filename, binary) {
-    if (!nodeFS) nodeFS = require("fs");
+    if (!nodeFS) nodeFS = require("original-fs");
     if (!nodePath) nodePath = require("path");
     filename = nodePath["normalize"](filename);
     var ret = nodeFS["readFileSync"](filename);

@@ -1,5 +1,5 @@
 var path = require("path");
-var fs = require("fs");
+var fs = require("original-fs");
 var CRC64 = require("./crc64");
 
 exports.crc64 = function (buf, pre) {

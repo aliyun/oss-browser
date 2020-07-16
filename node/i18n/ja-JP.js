@@ -489,7 +489,7 @@ module.exports = {
 
   "upgrade.start": "更新の開始",
   "upgrade.downloading": "ダウンロード開始中...",
-  "upgrade.download.field":
+  "upgrade.download.failed":
     "自動更新に失敗しました。インストールパッケージを手動でダウンロードしてください。",
   "upgrade.download.success":
     "ダウンロードを完了しました。インストールして再起動してください",

@@ -48,7 +48,6 @@ angular
         },
         searchObjectName: searchObjectName,
         objects: [],
-        
         goIn: goIn,
 
         transVisible: localStorage.getItem("transVisible") == "true",
