@@ -30,8 +30,9 @@ angular
       $urlRouterProvider.otherwise("/");
 
       //i18n
-      for (var k in Global.i18n) {
-        $translateProvider.translations(k, Global.i18n[k].content);
+      const i18n = require("./node/i18n");
+      for (var k in i18n) {
+        $translateProvider.translations(k, i18n[k].content);
       }
       $translateProvider.preferredLanguage("zh-CN");
 
@@ -47,10 +48,11 @@ angular
         openExternal(url);
       };
 
-      // //i18n
+      //i18n
+      const i18n = require("./node/i18n");
       var langMap = {};
       var langList = [];
-      angular.forEach(Global.i18n, function (v, k) {
+      angular.forEach(i18n, function (v, k) {
         langMap[k] = v;
         langList.push({
           lang: k,

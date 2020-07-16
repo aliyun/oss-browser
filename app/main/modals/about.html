@@ -19,7 +19,9 @@
       <small class="text-muted">
         {{'opensource.address'|translate}}:
         <!-- 开源地址： -->
-        <a href="" ng-click="open('https://github.com/aliyun/oss-browser')"
+        <a
+          href="javascript: void(0);"
+          ng-click="open('https://github.com/aliyun/oss-browser')"
           >https://github.com/aliyun/oss-browser</a
         >
       </small>
@@ -36,56 +38,63 @@
         {{'foundNewVersion'|translate}}
         <!-- 发现新版本： -->
         v {{info.lastVersion}} &nbsp;&nbsp;&nbsp;&nbsp;
-        <a
-          href=""
-          ng-if="!info.files && !info.upgradeJob"
-          ng-click="open(info.link)"
-          class="btn btn-sm btn-success"
-        >
-          <i class="fa fa-download"></i>
-          {{'clickToDownload'|translate}}</a
-        >
+        <span ng-if="info.status === 'ready'">
+          <a
+            ng-if="info.files"
+            href="javascript: void(0);"
+            ng-click="startUpgrade()"
+            class="btn btn-sm btn-success"
+          >
+            <i class="fa fa-download"></i>
+            {{'upgrade.start'|translate}}
+          </a>
 
-        <a
-          ng-if="info.files && (!info.upgradeJob||info.upgradeJob.status=='waiting')"
-          href=""
-          ng-click="startUpgrade()"
-          class="btn btn-sm btn-success"
-        >
-          <i class="fa fa-download"></i>
-          {{'upgrade.start'|translate}}
-        </a>
+          <a
+            href="javascript: void(0);"
+            ng-if="!info.files"
+            ng-click="open(info.link)"
+            class="btn btn-sm btn-success"
+          >
+            <i class="fa fa-download"></i>
+            {{'clickToDownload'|translate}}</a
+          >
+        </span>
       </span>
       <!-- {{info.upgradeJob}} -->
 
       <!-- progress -->
-      <div ng-if="info.upgradeJob.status=='running'" style="margin: 4px auto;">
+      <div ng-if="info.status=='running'" style="margin: 4px auto;">
         <!-- 正在下载... -->
         {{'upgrade.downloading'|translate}}
         <div class="progress" style="height: 10px;">
           <div
             class="progress-bar progress-bar-info progress-bar-striped"
             role="progressbar"
-            aria-valuenow="{{info.upgradeJob.progress}}"
+            aria-valuenow="{{info.progress}}"
             aria-valuemin="0"
             aria-valuemax="100"
-            style="width: {{info.upgradeJob.progress}}%"
+            style="width: {{info.progress}}%"
           >
-            <!-- <span>{{info.upgradeJob.progress}}%</span> -->
+            <!-- <span>{{info.progress}}%</span> -->
           </div>
         </div>
       </div>
 
-      <div ng-if="info.upgradeJob.status=='failed'">
-        {{'upgrade.download.failed'|translate}}
-        <a href="" ng-click="open(info.link)" class="btn btn-sm btn-primary">
+      <div ng-if="info.status=='failed'">
+        {{'upgrade.download.failed'|translate}} {{info.errorMsg}}
+        <a
+          ng-if="info.link"
+          href="javascript: void(0);"
+          ng-click="open(info.link)"
+          class="btn btn-sm btn-primary"
+        >
           <i class="fa fa-download"></i>
           {{'clickToDownload'|translate}}
           <!-- 点此下载 -->
         </a>
       </div>
 
-      <div ng-if="info.upgradeJob.status=='finished'" class="text-center">
+      <div ng-if="info.status=='finished'" class="text-center">
         <button
           type="button"
           ng-disabled="disUpdateBtn"

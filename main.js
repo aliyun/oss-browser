@@ -14,6 +14,7 @@ var fs = require("fs");
 var os = require("os");
 var path = require("path");
 var nativeImage = require("electron").nativeImage;
+const { autoUpdater } = require("./auto-update");
 
 // electron-log收集和引入
 var log = require("electron-log");
@@ -117,65 +118,44 @@ ipcMain.on("asynchronous", (event, data) => {
     case "openDevTools":
       win.webContents.openDevTools();
       break;
-
     case "refreshPage":
       win.reload();
-      break;
-    case "installRestart":
-      var version = data.version;
-      //Copy
-      //var from = path.join(os.homedir(), '.oss-browser', version+'-app.asar');
-      var from = path.join(path.dirname(__dirname), version + "-app.asar");
-      var to = path.join(path.dirname(__dirname), "app.asar");
-
-      process.noAsar = true;
-
-      moveFile(from, to, function (e) {
-        if (e)
-          fs.writeFileSync(
-            path.join(os.homedir(), ".oss-browser", "upgrade-error.txt"),
-            JSON.stringify(e)
-          );
-        app.relaunch();
-        app.exit(0);
-      });
-
       break;
   }
 });
 
-function moveFile(from, to, fn) {
-  if (process.platform != "win32") {
-    fs.rename(from, to, fn);
-    return;
-  }
-
-  var readStream = fs.createReadStream(from);
-  var writeStream = fs.createWriteStream(to);
-
-  readStream.on("data", function (chunk) {
-    if (writeStream.write(chunk) === false) {
-      readStream.pause();
-    }
-  });
-  readStream.on("error", function (err) {
-    fn(err);
-  });
-  readStream.on("end", function () {
-    writeStream.end();
-    setTimeout(function () {
-      fs.unlinkSync(from);
-      fn();
-    }, 200);
-  });
-
-  writeStream.on("drain", function () {
-    readStream.resume();
-  });
-  writeStream.on("error", function (err) {
-    fn(err);
-  });
-}
+// 监听自动更新
+autoUpdater.on("checking-for-update", () => {
+  win.webContents.send("checking-for-update");
+});
+autoUpdater.on("update-available", (info) => {
+  win.webContents.send("update-available", info);
+});
+autoUpdater.on("update-not-available", () => {
+  win.webContents.send("update-not-available");
+});
+autoUpdater.on("download-progress", (info) => {
+  win.webContents.send("download-progress", info);
+});
+autoUpdater.on("update-downloaded", () => {
+  win.webContents.send("update-downloaded");
+});
+autoUpdater.on("update-download-failed", () => {
+  win.webContents.send("update-download-failed");
+});
+autoUpdater.on("error", (msg) => {
+  win.webContents.send("update-error", msg);
+});
+ipcMain.on("check-for-update", (event, config) => {
+  autoUpdater.setConfig(config);
+  autoUpdater.checkForUpdates();
+});
+ipcMain.on("update-start-download", () => {
+  autoUpdater.download();
+});
+ipcMain.once("quit-and-install", () => {
+  autoUpdater.quitAndInstall();
+});
 
 //singleton
 var shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {

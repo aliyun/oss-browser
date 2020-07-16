@@ -18,7 +18,7 @@ angular.module("web").directive("flvPlayer", [
         if (!scope.src) return;
         var src =
           "http://localhost:" +
-          Global.staticServerPort +
+          window.staticServerPort +
           "/flv-player.html?src=" +
           encodeURIComponent(scope.src) +
           "&autoplay=" +

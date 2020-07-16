@@ -47,6 +47,7 @@ angular
           objectName: "",
         },
         searchObjectName: searchObjectName,
+        objects: [],
 
         goIn: goIn,
 
@@ -124,6 +125,8 @@ angular
           uploadsChange: uploadsChange,
           downloadsChange: downloadsChange,
         },
+
+        objectLengthI18nTip: "",
       });
 
       if ($scope.isMac) {
@@ -617,6 +620,15 @@ angular
             }
           );
       }
+
+      $scope.$watch(
+        () => $scope.objects.length,
+        () => {
+          $scope.objectLengthI18nTip = T("search.files.num_msg", {
+            num: $scope.objects.length,
+          });
+        }
+      );
 
       function loadNext() {
         if ($scope.nextObjectsMarker) {
