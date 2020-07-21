@@ -40,6 +40,11 @@ var taskFns = {
     //combine all js files of the app
     gulp
       .src(["!./app/**/*_test.js", "./app/**/*.js"])
+      .pipe(
+        plugins.babel({
+          presets: ["es2015"],
+        })
+      )
       .pipe(plugins.concat("app.js"))
       .pipe(gulp.dest(DIST))
       .on("end", function () {
