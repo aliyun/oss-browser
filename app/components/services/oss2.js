@@ -29,7 +29,7 @@ angular.module("web").factory("ossSvs2", [
       restoreFile: restoreFile,
       loadStorageStatus: loadStorageStatus,
 
-      getMeta: getMeta2,
+      getMeta: getMeta3,
       getFileInfo: getMeta2, //head object
       setMeta: setMeta,
       setMeta2: setMeta2,
@@ -1177,6 +1177,44 @@ angular.module("web").factory("ossSvs2", [
       });
     }
 
+    function getMeta3(region, bucket, key) {
+      return new Promise((resolve, reject) => {
+        const { net } = require("electron").remote;
+        const resourceUrl = signatureUrl2(region, bucket, key);
+        const request = net.request(resourceUrl);
+        const Schema = {
+          ContentLanguage: "content-language",
+          ContentType: "content-type",
+          CacheControl: "cache-control",
+          ContentDisposition: "content-disposition",
+          ContentEncoding: "content-encoding",
+          Expires: "expires",
+        };
+        request.on("response", (response) => {
+          console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
+          const result = {};
+          for (let key in Schema) {
+            if (response.headers[Schema[key]]) {
+              result[key] = response.headers[Schema[key]].toString();
+            }
+          }
+          for (let key in response.headers) {
+            if (key.startsWith("x-oss-meta")) {
+              if (!result.Metadata) result.Metadata = {};
+              result.Metadata[
+                key.replace(/^x-oss-meta-/, "")
+              ] = response.headers[key].toString();
+            }
+          }
+          resolve(result);
+        });
+        request.on("error", () => {
+          reject();
+        });
+        request.end();
+      });
+    }
+
     function getMeta2(region, bucket, key) {
       const client = getClient3({ region, bucket });
       function adapter(obj) {
@@ -1303,7 +1341,47 @@ angular.module("web").factory("ossSvs2", [
     }
 
     function setMeta2(region, bucket, key, headers, meta) {
-      const client = getClient2({ region, bucket });
+      const client = getClient3({ region, bucket });
+      const net = require("electron").remote.net;
+      const stream = require("stream");
+      client.urllib.request = (url, params) => {
+        return new Promise((resolve, reject) => {
+          const request = net.request({
+            url,
+            method: params.method,
+          });
+          for (let key in params.headers) {
+            request.setHeader(key, params.headers[key]);
+          }
+          request.on("response", (response) => {
+            const str = new stream.PassThrough();
+            str.write = str.write.bind(str);
+            str.once = str.once.bind(str);
+            str.end = str.end.bind(str);
+            str.on = str.on.bind(str);
+            response.pipe(str);
+            // 为什么response不能直接触发 end 事件???
+            let data = "";
+            str.on("data", (chunk) => {
+              data += chunk.toString();
+            });
+            str.on("end", () => {
+              resolve({
+                status: response.statusCode,
+                headers: response.headers,
+                data,
+              });
+            });
+            str.on("error", (e) => {
+              reject(e);
+            });
+          });
+          request.on("error", (e) => {
+            reject(e);
+          });
+          request.end();
+        });
+      };
       return client
         .copy(key, key, {
           headers,
@@ -1663,6 +1741,7 @@ angular.module("web").factory("ossSvs2", [
         } else
           Toast.error(err.code + ": " + err.message, undefined, err.requestId);
       }
+      return Promise.reject(err);
     }
 
     /**

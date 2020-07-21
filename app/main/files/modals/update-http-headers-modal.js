@@ -79,10 +79,11 @@ angular.module("web").controller("updateHttpHeadersModalCtrl", [
       };
 
       for (var k in headers) {
-        if (headers[k]) {
-          headers[HeadersMap[k]] = headers[k];
-        }
+        const value = headers[k];
         delete headers[k];
+        if (value !== undefined) {
+          headers[HeadersMap[k]] = value;
+        }
       }
 
       var metas = {};
