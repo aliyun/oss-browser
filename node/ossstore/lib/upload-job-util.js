@@ -29,30 +29,30 @@ module.exports = {
  //  以下是纯函数
  ************************************/
 
-function getFileCrc64_2(self, p, fn) {
-  if (self.crc64Str) {
-    fn(null, self.crc64Str);
-    return;
-  }
-  var retryTimes = 0;
-  _dig();
-  function _dig() {
-    util.getFileCrc64(p, function (err, data) {
-      if (err) {
-        if (retryTimes > RETRYTIMES) {
-          fn(err);
-        } else {
-          retryTimes++;
-          setTimeout(function () {
-            if (!self.stopFlag) _dig();
-          }, 1000);
-        }
-      } else {
-        fn(null, data);
-      }
-    });
-  }
-}
+// function getFileCrc64_2(self, p, fn) {
+//   if (self.crc64Str) {
+//     fn(null, self.crc64Str);
+//     return;
+//   }
+//   var retryTimes = 0;
+//   _dig();
+//   function _dig() {
+//     util.getFileCrc64(p, function (err, data) {
+//       if (err) {
+//         if (retryTimes > RETRYTIMES) {
+//           fn(err);
+//         } else {
+//           retryTimes++;
+//           setTimeout(function () {
+//             if (!self.stopFlag) _dig();
+//           }, 1000);
+//         }
+//       } else {
+//         fn(null, data);
+//       }
+//     });
+//   }
+// }
 
 function getPartProgress(checkPoints) {
   var total = checkPoints.chunks.length;
@@ -76,23 +76,26 @@ function completeMultipartUpload(self, doneParams, fn) {
   var retryTimes = 0;
   setTimeout(_dig, 10);
   function _dig() {
-    self.oss.completeMultipartUpload(doneParams, function (err, data) {
-      if (err) {
+    self.aliOSS
+      .completeMultipartUpload(
+        doneParams.name,
+        doneParams.uploadId,
+        doneParams.parts,
+        doneParams.options
+      )
+      .then((data) => {
+        fn(null, data);
+      })
+      .catch((err) => {
         if (err.message.indexOf("The specified upload does not exist") != -1) {
-          self.oss.headObject(
-            {
-              Bucket: self.to.bucket,
-              Key: self.to.key,
-            },
-            function (err2, data2) {
-              //console.log('headobject: ', err2, err2.message, data);
-              if (err2) {
-                fn(err2);
-              } else {
-                fn(null, data2);
-              }
-            }
-          );
+          self.aliOSS
+            .head(self.to.key)
+            .then((data2) => {
+              fn(null, data2);
+            })
+            .catch((err2) => {
+              fn(err2);
+            });
           return;
         }
 
@@ -111,10 +114,7 @@ function completeMultipartUpload(self, doneParams, fn) {
             if (!self.stopFlag) _dig();
           }, 2000);
         }
-      } else {
-        fn(null, data);
-      }
-    });
+      });
   }
 }
 
@@ -124,12 +124,16 @@ function getUploadId(checkPoints, self, params, fn) {
     return;
   }
 
-  var retryTimes = 0;
+  let retryTimes = 0;
   _dig();
   function _dig() {
-    self.oss.createMultipartUpload(params, function (err, res) {
-      //console.log(err, res, '<========')
-      if (err) {
+    self.aliOSS
+      .initMultipartUpload(self.to.key, params)
+      .then((res) => {
+        checkPoints.uploadId = res.uploadId;
+        fn(null, res.uploadId);
+      })
+      .catch((err) => {
         if (
           err.message.indexOf("You have no right to access") != -1 ||
           retryTimes > RETRYTIMES
@@ -148,12 +152,7 @@ function getUploadId(checkPoints, self, params, fn) {
             if (!self.stopFlag) _dig();
           }, 2000);
         }
-        return;
-      } else {
-        checkPoints.uploadId = res.UploadId;
-        fn(null, res.UploadId);
-      }
-    });
+      });
   }
 }
 
@@ -195,7 +194,7 @@ function prepareChunks(filePath, checkPoints, fn) {
 
   fs.stat(filePath, function (err, state) {
     if (err) {
-      callback(err);
+      fn(err);
       return;
     }
 
