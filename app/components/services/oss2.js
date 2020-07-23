@@ -1417,7 +1417,30 @@ angular.module("web").factory("ossSvs2", [
 
     function listFiles(region, bucket, key, marker) {
       return new Promise(function (a, b) {
-        _listFilesOrigion(region, bucket, key, marker).then(
+        let ready = [];
+
+        function get(m) {
+          return _listFilesOrigion(region, bucket, key, m).then((result) => {
+            if (result.data) {
+              ready = ready.concat(result.data);
+              if (
+                ready.length < result.maxKeys &&
+                result.truncated &&
+                result.marker
+              ) {
+                return get(result.marker);
+              }
+            }
+            return {
+              data: ready,
+              marker: result.marker,
+              truncated: result.truncated,
+              maxKeys: result.maxKeys,
+            };
+          });
+        }
+
+        get(marker).then(
           function (result) {
             var arr = result.data;
             if (arr && arr.length) {
@@ -1547,6 +1570,8 @@ angular.module("web").factory("ossSvs2", [
           resolve({
             data: t_pre.concat(t),
             marker: result.NextMarker,
+            truncated: result.IsTruncated,
+            maxKeys: result.MaxKeys,
           });
         });
       });
