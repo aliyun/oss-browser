@@ -9,7 +9,8 @@
     "postbuild": "node gen",
     "prod": "./node_modules/.bin/cross-env NODE_ENV=production cd dist && electron .",
     "watch": "./node_modules/.bin/gulp watch --custom=$custom",
-    "build": "./node_modules/.bin/gulp build --custom=$custom"
+    "build": "./node_modules/.bin/gulp build --custom=$custom",
+    "rcedit": "cp tools/rcedit-x64.exe node_modules/rcedit/bin/rcedit.exe"
   },
   "engines": {
     "node": "8.2.1"
