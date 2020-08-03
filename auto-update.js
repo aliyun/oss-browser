@@ -28,7 +28,7 @@ const zip_file_name = `oss-browser-${process.platform}-${process.arch}.zip`;
  * 更新日志文件获取地址
  * release_note_url: "https://beajer-test.oss-cn-hangzhou.aliyuncs.com/release-notes/"
  *
- * 下载文件，优先增量更新,暂时只支持app.asar文件
+ * 下载文件，优先增量更新
  * files: [
  *   "app.asar"
  * ]
