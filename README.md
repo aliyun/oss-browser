@@ -40,11 +40,13 @@ Windows 7 above, Linux and Mac. We do not recommend using WindowsXP and WindowSe
 
 ## Debugging
 
-If you encounter any problems during using ossbrowser, you can switch to the debugging mode and observe the console panel. To switch to the debugging mode, click the left icon ten times. Note that in post-1.8.0 versions you can also open debug mode in settings page.
+If you encounter any problems during using ossbrowser, you can switch to the debugging mode and observe the console panel. To switch to the debugging mode, click the icon in the upper left corner (see Figure 1 below) ten times. Note that in post-1.8.0 versions you can also open debug mode in settings page ((see Figure 2 below).
 
-![left-icon](preview/left-icon.png)
+![left-icon](preview/left-icon.png "Figure 1") 
+Figure 1
 
-![setting-page](preview/setting-debug.png)
+![setting-page](preview/setting-debug.png "Figure 2")
+Figure 2
 
 ## Qr code
 
