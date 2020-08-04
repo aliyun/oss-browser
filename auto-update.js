@@ -71,6 +71,17 @@ function compareVersion(curV, lastV) {
   return 0;
 }
 
+function mkdirsSync(dirname) {
+  if (fs.existsSync(dirname)) {
+    return true;
+  } else {
+    if (mkdirsSync(path.dirname(dirname))) {
+      fs.mkdirSync(dirname);
+      return true;
+    }
+  }
+}
+
 /**
  * 使用 asar 包情况，在 Windows 系统里 Electron 应用启动后 node 文件和 app.asar 都会被占用，不能直接修改和删除，必须结束 Electron 应用的进程后才可以替换这些文件。
  * 不使用 asar 包的情况，如果没有 C++ 原生模块可以直接替换 app 目录里的文件，如果存在同理不能直接替换。
@@ -88,6 +99,9 @@ function moveFile(from, to, fn) {
       });
     });
   }
+
+  // 如果to是 /a/b/c/d.js 这种嵌套层级时，确保该文件夹存在
+  mkdirsSync(path.dirname(to));
 
   if (process.platform != "win32") {
     fs.rename(from, to, fn);
