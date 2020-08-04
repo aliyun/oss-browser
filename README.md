@@ -1,6 +1,6 @@
 # Quick start
 
-ossbrowser is a graphical management tool developed by Alibaba Cloud. It provides features similar to those of Windows Explorer. Using ossbrowser, you can view, upload, download, and manage items with ease.
+Ossbrowser is a graphical management tool developed by Alibaba Cloud. It provides features similar to those of Windows Explorer. Using ossbrowser, you can view, upload, download, and manage items with ease.
 
 ## [README of Chinese](https://github.com/aliyun/oss-browser/blob/master/README-CN.md)
 
@@ -21,13 +21,13 @@ Windows 7 above, Linux and Mac. We do not recommend using WindowsXP and WindowSe
 
 2.  Launch ossbrowser.
 3.  Log in to ossbrowser.
-3.  Manage buckets. You can do the following:
+4.  Manage buckets. You can do the following:
 - create a bucket
 - delete a bucket
 - modify the ACL for a bucket
 - manage the fragments in a bucket.
 
-4.  Manage items. You can do the following:
+5.  Manage items. You can do the following:
 - upload \(resumable\)
 - download \(resumable\)
 - delete
