@@ -36,7 +36,7 @@ Windows 7 above, Linux and Mac. We do not recommend using WindowsXP and WindowSe
 - rename
 - search for 
 - preview an object
-- modify the ACL or set an HTTP header of an object.
+- modify the ACL or set an HTTP header of an item.
 
 ## Debugging
 
