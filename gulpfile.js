@@ -21,7 +21,7 @@ var taskFns = {
               "@babel/env",
               {
                 targets: {
-                  chrome: "59",
+                  chrome: "83",
                 },
               },
             ],
