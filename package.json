@@ -66,6 +66,7 @@
   "dependencies": {
     "ali-oss": "^6.1.1",
     "aliyun-sdk": "^1.12.3",
+    "browserify-cipher": "^1.0.1",
     "clipboard": "^1.7.1",
     "electron-log": "^4.2.1",
     "koa": "^2.3.0",
