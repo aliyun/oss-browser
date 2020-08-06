@@ -9,7 +9,7 @@ ZIP=node ../zip.js
 
 ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/
 ELECTRON_VERSION=9.0.3
-BUILD=ELECTRON_MIRROR=$(ELECTRON_MIRROR) $(PKGER) ./dist $(NAME) --asar --asar-unpack *.node --overwrite --out=build --version $(ELECTRON_VERSION) --app-version $(VERSION)
+BUILD=ELECTRON_MIRROR=$(ELECTRON_MIRROR) $(PKGER) ./dist $(NAME) --asar.unpack="*.node" --overwrite --out=build --electron-version $(ELECTRON_VERSION) --app-version $(VERSION)
 ELECTON=./node_modules/.bin/electron
 
 i:
