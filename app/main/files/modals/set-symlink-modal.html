@@ -1,0 +1,51 @@
+<form class="form-horizontal" name="form1" ng-submit="onSubmit(form1)">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title text-info">
+      <i class="fa fa-edit"></i>
+      <!-- 设置软链接 -->
+      {{ "file.op.set_symlink" | translate }}
+    </h4>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label class="col-sm-3 control-label">
+        <!-- 源文件（全路径） -->
+        {{ "file.attr.symlink_src" | translate }}
+      </label>
+      <div class="col-sm-9 input-md pdt4">
+        {{item.name}}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label">
+        <!-- 软链接文件目录 -->
+        {{ "file.attr.symlink_file" | translate }}
+      </label>
+      <div class="col-sm-9 input-md pdt4">
+        <input
+          type="text"
+          ng-model="targetName"
+          ng-required="true"
+          class="form-control"
+        />
+        <pre>{{ "file.message.symlink_rule{min,max}!html!lines" | translate:{min: 1, max: 254} }}</pre>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-success btn-sm">
+      <i class="glyphicon glyphicon-ok"></i>
+      <!-- 确定 -->
+      {{'ok'|translate}}
+    </button>
+    <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
+      <i class="glyphicon glyphicon-remove"></i>
+      <!-- 取消 -->
+      {{'cancel'|translate}}
+    </button>
+  </div>
+</form>

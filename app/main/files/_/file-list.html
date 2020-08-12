@@ -87,6 +87,20 @@
                   >{{item.name|sub:50}}</span
                 >
               </a>
+              <span>
+                <object
+                  ng-if="item.type === 'Symlink'"
+                  width="14"
+                  height="14"
+                  data="./static/soft-link.svg"
+                  type="image/svg+xml"
+                  ng-mouseover="loadObjectSymlinkMeta(item)"
+                  uib-tooltip-html="getSymlinkTooltipTpl(item)"
+                  tooltip-append-to-body="true"
+                  tooltip-popup-close-delay="2000"
+                  tooltip-placement="right"
+                ></object>
+              </span>
             </span>
           </div>
         </td>
