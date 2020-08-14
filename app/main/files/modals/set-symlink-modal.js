@@ -5,6 +5,7 @@ angular.module("web").controller("setSymlinkModalCtrl", [
   "ossSvs2",
   "item",
   "currentInfo",
+  "callback",
   "Toast",
   function (
     $scope,
@@ -13,6 +14,7 @@ angular.module("web").controller("setSymlinkModalCtrl", [
     ossSvs2,
     item,
     currentInfo,
+    callback,
     Toast
   ) {
     var intl = $translate.instant;
@@ -67,6 +69,14 @@ angular.module("web").controller("setSymlinkModalCtrl", [
           ossSvs2
             .putObjectSymlinkMeta(region, bucket, $scope.targetName, item.path)
             .then(() => {
+              if (
+                (item.path.lastIndexOf("/") === -1 &&
+                  $scope.targetName.lastIndexOf("/") === -1) ||
+                item.path.slice(0, item.path.lastIndexOf("/")) ===
+                  $scope.targetName.slice(0, item.path.lastIndexOf("/"))
+              ) {
+                callback();
+              }
               Toast.success($translate.instant("setup.success"));
               cancel();
             });
