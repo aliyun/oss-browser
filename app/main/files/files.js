@@ -66,6 +66,7 @@ angular
         showDeleteFilesSelected: showDeleteFilesSelected,
         showRename: showRename,
         showMove: showMove,
+        showSymlink: showSymlink,
 
         //bucket相关
         showDeleteBucket: showDeleteBucket,
@@ -1369,6 +1370,13 @@ angular
             },
             currentInfo: function () {
               return angular.copy($scope.currentInfo);
+            },
+            callback: function () {
+              return function () {
+                $timeout(function () {
+                  listFiles();
+                }, 300);
+              };
             },
           },
         });
