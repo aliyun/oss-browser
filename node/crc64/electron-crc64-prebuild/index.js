@@ -16,7 +16,7 @@ exports.crc64 = function (buff, prev) {
  */
 exports.check = function (buff, prev) {
   if (typeof buff === "string") {
-    buff = new Buffer(buff);
+    buff = Buffer.from(buff);
   }
 
   if (!Buffer.isBuffer(buff) || (prev && !Buffer.isBuffer(prev))) {

@@ -18,7 +18,9 @@ arr.forEach((n) => {
   var version = n.substring(0, n.length - path.extname(n).length);
   try {
     version = version.match(/^(\d+\.\d+\.\d+)/)[0];
-  } catch (e) {}
+  } catch (e) {
+    //
+  }
   if (vs.indexOf(version) == -1 && compareVersion(version, start_version) <= 0)
     vs.push(version);
 });

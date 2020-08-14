@@ -4,22 +4,16 @@
   "description": "crc64 module prebuild for electron",
   "main": "index.js",
   "scripts": {
-    "test": "electron test",
-    "build": "node build.js"
+    "test": "electron test/",
+    "build": "node scripts/build.js",
+    "rebuild": "node scripts/rebuild.js",
+    "postinstall": "npm run build && npm run test"
+  },
+  "devDependencies": {
+    "nan": "^2.14.1",
+    "electron-rebuild": "^1.11.0"
   },
   "author": "",
   "license": "MIT",
-  "gypfile": true,
-  "devDependencies": {
-    "electron": "9.0.3",
-    "mocha": "^3.4.2",
-    "shelljs": "^0.7.8",
-    "should": "^11.2.1"
-  },
-  "dependencies": {
-    "nan": "^2.14.1"
-  },
-  "engines": {
-    "node": ">=8.2.1"
-  }
+  "gypfile": true
 }
