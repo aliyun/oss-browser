@@ -309,7 +309,9 @@ UploadJob.prototype.uploadSingle = function () {
             err.message.indexOf("You have no right to access") != -1 ||
             retryTimes > RETRYTIMES
           ) {
-            self.message = err.message;
+            self.message = err.message.includes("ECONNRESET")
+              ? "网络错误请重试"
+              : err.message;
             self._changeStatus("failed");
             self.emit("error", err);
           } else {
