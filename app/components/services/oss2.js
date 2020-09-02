@@ -44,6 +44,8 @@ angular.module("web").factory("ossSvs2", [
       getContent: getContent,
       saveContent: saveContent,
       getImageBase64Url: getImageBase64Url,
+      loadObjectSymlinkMeta: loadObjectSymlinkMeta,
+      putObjectSymlinkMeta,
 
       //重命名
       moveFile: moveFile,
@@ -1419,6 +1421,32 @@ angular.module("web").factory("ossSvs2", [
             }
           );
         }
+      });
+    }
+
+    function loadObjectSymlinkMeta(region, bucket, key) {
+      const client = getClient3({ region, bucket });
+      return new Promise((a, b) => {
+        client
+          .getSymlink(key)
+          .then((data) => a(data))
+          .catch((e) => {
+            handleError(e);
+            b(e);
+          });
+      });
+    }
+
+    function putObjectSymlinkMeta(region, bucket, key, targetName) {
+      const client = getClient3({ region, bucket });
+      return new Promise((a, b) => {
+        client
+          .putSymlink(key, targetName)
+          .then((data) => a(data))
+          .catch((e) => {
+            handleError(e);
+            b(e);
+          });
       });
     }
 
