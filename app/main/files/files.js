@@ -10,6 +10,7 @@ angular
     "$uibModal",
     "$timeout",
     "$translate",
+    "$sce",
     "AuthInfo",
     "ossSvs2",
     "settingsSvs",
@@ -23,6 +24,7 @@ angular
       $modal,
       $timeout,
       $translate,
+      $sce,
       AuthInfo,
       ossSvs2,
       settingsSvs,
@@ -48,6 +50,7 @@ angular
         },
         searchObjectName: searchObjectName,
         objects: [],
+
         goIn: goIn,
 
         transVisible: localStorage.getItem("transVisible") == "true",
@@ -63,6 +66,7 @@ angular
         showDeleteFilesSelected: showDeleteFilesSelected,
         showRename: showRename,
         showMove: showMove,
+        showSymlink: showSymlink,
 
         //bucket相关
         showDeleteBucket: showDeleteBucket,
@@ -126,6 +130,8 @@ angular
         },
 
         objectLengthI18nTip: "",
+        loadObjectSymlinkMeta,
+        getSymlinkTooltipTpl,
       });
 
       if ($scope.isMac) {
@@ -361,6 +367,24 @@ angular
                 $scope.sel.has &&
                 $scope.sel.has.length &&
                 $scope.sel.has.every((f) => !f.isFolder)
+              );
+            },
+          ],
+
+          [
+            function () {
+              // 设置软链接
+              return '<i class="fa fa-link"></i>' + T("file.op.set_symlink");
+            },
+            function ($itemScope, $event) {
+              showSymlink($scope.sel.has[0]);
+            },
+            function () {
+              return (
+                $scope.sel.has &&
+                $scope.sel.has.length === 1 &&
+                !$scope.sel.has[0].isFolder &&
+                $scope.sel.has[0].type !== "Symlink"
               );
             },
           ],
@@ -628,6 +652,40 @@ angular
           });
         }
       );
+
+      let isLoadingObjectSymlinkMeta = false;
+      let cacheSymlinkTooltipTpl = new Map();
+      function loadObjectSymlinkMeta(item) {
+        if (isLoadingObjectSymlinkMeta) return;
+        cacheSymlinkTooltipTpl.delete(item);
+        isLoadingObjectSymlinkMeta = true;
+        const { region, bucket } = $scope.currentInfo;
+        ossSvs2
+          .loadObjectSymlinkMeta(region, bucket, item.Key)
+          .then((result) => {
+            item.targetName = result.targetName;
+            cacheSymlinkTooltipTpl.set(
+              item,
+              $sce.trustAsHtml(`
+              <div style="text-align: left;">
+                ${T("file.message.symlink_help{target}!lines", {
+                  target: result.targetName,
+                })}
+              </div>
+              `)
+            );
+            safeApply($scope);
+          })
+          .finally(() => {
+            $timeout(() => {
+              isLoadingObjectSymlinkMeta = false;
+            }, 500);
+          });
+      }
+
+      function getSymlinkTooltipTpl(item) {
+        return cacheSymlinkTooltipTpl.get(item) || "loading...";
+      }
 
       function loadNext() {
         if ($scope.nextObjectsMarker) {
@@ -1297,6 +1355,28 @@ angular
             },
             currentInfo: function () {
               return angular.copy($scope.currentInfo);
+            },
+          },
+        });
+      }
+
+      function showSymlink(item) {
+        $modal.open({
+          templateUrl: "main/files/modals/set-symlink-modal.html",
+          controller: "setSymlinkModalCtrl",
+          resolve: {
+            item: function () {
+              return angular.copy(item);
+            },
+            currentInfo: function () {
+              return angular.copy($scope.currentInfo);
+            },
+            callback: function () {
+              return function () {
+                $timeout(function () {
+                  listFiles();
+                }, 300);
+              };
             },
           },
         });
