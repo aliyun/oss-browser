@@ -12,29 +12,31 @@ Windows 7 above, Linux and Mac. We do not recommend using WindowsXP and WindowSe
 
 1.  Download and install ossbrowser.
 
-    | Supported platform | Download link                                                                   |
-    | :----------------- | :------------------------------------------------------------------------------ |
-    | Window x32         | [Window x32](https://github.com/aliyun/oss-browser/blob/master/all-releases.md) |
-    | Window x64         | [Window x64](https://github.com/aliyun/oss-browser/blob/master/all-releases.md) |
-    | MAC                | [MAC](https://github.com/aliyun/oss-browser/blob/master/all-releases.md)        |
-    | Linux x64          | [Linux x64](https://github.com/aliyun/oss-browser/blob/master/all-releases.md)  |
+    | Supported platform | Download link                 |
+    | :----------------- | :---------------------------- |
+    | Window x32         | [Window x32](all-releases.md) |
+    | Window x64         | [Window x64](all-releases.md) |
+    | MAC                | [MAC](all-releases.md)        |
+    | Linux x64          | [Linux x64](all-releases.md)  |
 
 2.  Launch ossbrowser.
 3.  Log in to ossbrowser.
 4.  Manage buckets. You can do the following:
+
 - create a bucket
 - delete a bucket
 - modify the ACL for a bucket
 - manage the fragments in a bucket.
 
 5.  Manage items. You can do the following:
+
 - upload \(resumable\)
 - download \(resumable\)
 - delete
 - copy
 - move
 - rename
-- search for 
+- search for
 - preview an object
 - modify the ACL or set an HTTP header of an item.
 
@@ -42,7 +44,7 @@ Windows 7 above, Linux and Mac. We do not recommend using WindowsXP and WindowSe
 
 If you encounter any problems during using ossbrowser, you can switch to the debugging mode and observe the console panel. To switch to the debugging mode, click the icon in the upper left corner (see Figure 1 below) ten times. Note that in post-1.8.0 versions you can also open debug mode in settings page ((see Figure 2 below).
 
-![left-icon](preview/left-icon.png "Figure 1") 
+![left-icon](preview/left-icon.png "Figure 1")
 Figure 1
 
 ![setting-page](preview/setting-debug.png "Figure 2")
