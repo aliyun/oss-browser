@@ -30,15 +30,15 @@
   </div>
 </script>
 
-<div style="overflow: auto; height: 100%;">
-  <div class="clearfix" style="height: 40px;"></div>
+<div style="overflow: auto; height: 100%">
+  <div class="clearfix" style="height: 40px"></div>
 
   <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default shadow10">
       <!-- <div class="panel-heading">
       AK登录
        </div> -->
-      <div class="panel-heading pd0" style="border: 0;">
+      <div class="panel-heading pd0" style="border: 0">
         <ul class="nav nav-tabs">
           <li role="presentation" ng-class="{active:gtab==1}">
             <a href="" ng-click="gtab=1">
@@ -72,7 +72,7 @@
                 <i class="fa fa-question-circle"></i>
               </span>
             </label>
-            <div class="col-sm-8" style="padding: 0;">
+            <div class="col-sm-8" style="padding: 0">
               <div
                 ng-class="{'col-sm-9':eptplType=='default','col-sm-4':eptplType=='customize'||eptplType=='cname'}"
               >
@@ -81,8 +81,8 @@
                   ng-model="eptplType"
                   ng-change="eptplChange(eptplType)"
                 >
-                  <option value="default"
-                    >{{'default'|translate}} ({{'public.cloud'|translate}})
+                  <option value="default">
+                    {{'default'|translate}} ({{'public.cloud'|translate}})
                   </option>
                   <option value="customize">{{'customize'|translate}}</option>
                   <option value="cname">cname</option>
@@ -91,7 +91,7 @@
               <div
                 ng-if="eptplType=='default'"
                 class="col-sm-3"
-                style="height: 34px;"
+                style="height: 34px"
               >
                 <label
                   style="
@@ -109,9 +109,9 @@
                 </label>
               </div>
               <div
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: space-around"
                 class="col-sm-8"
-                style="padding-left: 0;"
+                style="padding-left: 0"
                 ng-if="eptplType=='customize'"
                 ng-class="{'has-error':!form1.endpoint.$valid}"
               >
@@ -128,9 +128,9 @@
               </div>
               <!--// cname -->
               <div
-                style="display: flex; justify-content: space-around;"
+                style="display: flex; justify-content: space-around"
                 class="col-sm-8"
-                style="padding-left: 0;"
+                style="padding-left: 0"
                 ng-if="eptplType=='cname'"
                 ng-class="{'has-error':!form1.cname.$valid}"
               >
@@ -222,7 +222,7 @@
                 <i class="fa fa-question-circle"></i>
               </span>
             </label>
-            <div class="col-sm-8">
+            <div class="col-sm-6">
               <input
                 type="text"
                 name="osspath"
@@ -232,6 +232,17 @@
                 id="input3"
                 placeholder="{{'auth.presetOssPath.placeholder'|translate}}"
               />
+            </div>
+            <div class="col-sm-2">
+              <label style="margin-bottom: 0; line-height: 34px">
+                <input
+                  type="checkbox"
+                  ng-model="item.osspath_isdir"
+                  ng-true-value="true"
+                  ng-false-value="false"
+                />
+                {{'folder' | translate}}
+              </label>
             </div>
           </div>
 
@@ -277,8 +288,7 @@
                 id="input4"
                 placeholder="{{'auth.region.placeholder'|translate}}"
                 ng-options="rg.id as ('region.'+rg.id|translate) for rg in regions"
-              >
-              </select>
+              ></select>
             </div>
           </div>
 
@@ -302,7 +312,7 @@
           <div class="form-group">
             <div class="col-sm-offset-4 col-sm-8">
               <div class="checkbox">
-                <label style="margin-right: 20px;">
+                <label style="margin-right: 20px">
                   <input
                     type="checkbox"
                     ng-model="flags.keepLoggedIn"
@@ -446,7 +456,7 @@
           href=""
           ng-click="showCleanHistories()"
           class="pull-right text-danger"
-          style="padding-top: 10px;"
+          style="padding-top: 10px"
         >
           {{'auth.clearHistories'|translate}}
           <!-- 清空历史 -->
