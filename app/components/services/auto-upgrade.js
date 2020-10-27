@@ -1,6 +1,6 @@
 angular.module("web").factory("autoUpgradeSvs", [
   "settingsSvs",
-  function (settingsSvs) {
+  function () {
     var util = require("./node/ossstore/lib/util");
     var NAME = "oss-browser";
 
@@ -219,8 +219,6 @@ angular.module("web").factory("autoUpgradeSvs", [
             //暂时只支持1个文件更新
             data.file = data.files.length > 0 ? data.files[0] : null;
 
-            var jobs = [];
-
             //var fileName = NAME + '-' + process.platform + '-' + process.arch + '.zip';
 
             var pkgLink =
@@ -237,8 +235,6 @@ angular.module("web").factory("autoUpgradeSvs", [
             upgradeOpt.upgradeJob.status = "waiting";
             upgradeOpt.upgradeJob.progress = 0;
             upgradeOpt.upgradeJob.pkgLink = pkgLink;
-
-            var jobsFinishedCount = 0;
 
             var to = path.join(__dirname, "..", lastVersion + "-" + data.file);
 
@@ -292,7 +288,7 @@ angular.module("web").factory("autoUpgradeSvs", [
             Range: "bytes=30-210",
           },
         }).then(
-          function (data) {
+          function () {
             var t2 = Date.now();
             t.push({ time: t2 - t1, linkPre: linkPre });
 

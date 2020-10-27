@@ -38,7 +38,7 @@ angular.module("web").controller("renameModalCtrl", [
       cancel: cancel,
       onSubmit: onSubmit,
       reg: {
-        folderName: /^[^\/]+$/,
+        folderName: /^[^/]+$/,
       },
       isLoading: false,
     });
@@ -56,7 +56,7 @@ angular.module("web").controller("renameModalCtrl", [
       //console.log(title, msg1,msg2)
 
       if ($scope.item.isFolder) {
-        var newPath =
+        let newPath =
           moveTo.key == ""
             ? item.name
             : moveTo.key.replace(/(\/$)/, "") + "/" + item.name;
@@ -79,12 +79,12 @@ angular.module("web").controller("renameModalCtrl", [
               showMoveFolder(newPath);
             }
           },
-          function (err) {
+          function () {
             $scope.isLoading = false;
           }
         );
       } else {
-        var newPath =
+        let newPath =
           moveTo.key == ""
             ? item.name
             : moveTo.key.replace(/(\/$)/, "") + "/" + item.name;
@@ -100,7 +100,7 @@ angular.module("web").controller("renameModalCtrl", [
         $scope.isLoading = true;
 
         ossSvs2.checkFileExists(moveTo.region, moveTo.bucket, newPath).then(
-          function (data) {
+          function () {
             Dialog.confirm(title, msg2, function (b) {
               if (b) {
                 renameFile(newPath);
@@ -109,7 +109,7 @@ angular.module("web").controller("renameModalCtrl", [
               }
             });
           },
-          function (err) {
+          function () {
             renameFile(newPath);
           }
         );
@@ -126,7 +126,8 @@ angular.module("web").controller("renameModalCtrl", [
           currentInfo.bucket,
           item.path,
           newPath,
-          isCopy
+          isCopy,
+          item.versionId
         )
         .then(
           function () {

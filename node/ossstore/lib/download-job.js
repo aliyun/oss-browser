@@ -130,13 +130,14 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
   var concurrency = 0;
 
   var tmpName = self.to.path + ".download";
-  var fileMd5 = "";
+  // var fileMd5 = "";
   var hashCrc64ecma = "";
   self.dataCache = new DataCache();
 
   var objOpt = {
     Bucket: self.from.bucket,
     Key: self.from.key,
+    versionId: self.from.versionId,
   };
   this.aliOSS.useBucket(self.from.bucket);
   let headers;
@@ -319,12 +320,18 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
       // 保留原始分片信息，出错后进行重置
       const originPart = Object.assign({}, part);
 
+      const options = {
+        headers: {
+          Range: `bytes=${start}=${end - 1}`,
+        },
+      };
+      if (objOpt.versionId) {
+        options.subres = {
+          versionId: objOpt.versionId,
+        };
+      }
       self.aliOSS
-        .getStream(objOpt.Key, {
-          headers: {
-            Range: `bytes=${start}-${end - 1}`,
-          },
-        })
+        .getStream(objOpt.Key, options)
         .then((res) => {
           if (self.stopFlag) {
             return;

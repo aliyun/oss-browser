@@ -144,6 +144,10 @@ module.exports = {
   "acl.warn-not-private.public-read-write":
     "<code>公開読み書き</code>権限は、匿名でバケット内のデータにアクセスでき、 セキュリティリスクが高くなるため、 非公開 (private) を推奨します。",
 
+  showObjectHistoryVersion: "オブジェクトの履歴バージョンを表示する",
+  "marker.delete": "マーカーを削除",
+  "marker.lastest": "の最新バージョン",
+
   "multipart.management": "マルチパート",
   "multipart.description":
     "マルチパート (アップロード) プロセス中に生成されたイベントやフラグメントを管理します",
@@ -479,8 +483,10 @@ module.exports = {
   "file.op.set_symlink": "ソフトリンクの設定",
   "file.attr.symlink_src": "ソースファイル（フルパス）",
   "file.attr.symlink_file": "ソフトリンクファイル",
-  "file.message.symlink_help{target}!lines": "ソフトリンクファイル\nソースファイルアドレス：{{target}} \nこのファイルリンクを使用してソースファイルの内容にアクセスできます。",
-  "file.message.symlink_rule{min,max}!html!lines": "ソフトリンクファイル命名規則： 現在のフォルダーにファイルを作成する場合は、filename の形式で入力します。別のフォルダーにファイルを作成する場合は、aaa/bbb/filename の形式で入力します。1. 絵文字は使用できません。2. パスはスラッシュ (/) で区切ります。先頭または末尾には、スラッシュ (/) を使用できません。連続したスラッシュ (/) を含むことはできません。3. サブフォルダー名には、連続したピリオド (.) を含むことはできません。4. 名前は {{min}}～{{max}} 文字です。",
+  "file.message.symlink_help{target}!lines":
+    "ソフトリンクファイル\nソースファイルアドレス：{{target}} \nこのファイルリンクを使用してソースファイルの内容にアクセスできます。",
+  "file.message.symlink_rule{min,max}!html!lines":
+    "ソフトリンクファイル命名規則： 現在のフォルダーにファイルを作成する場合は、filename の形式で入力します。別のフォルダーにファイルを作成する場合は、aaa/bbb/filename の形式で入力します。1. 絵文字は使用できません。2. パスはスラッシュ (/) で区切ります。先頭または末尾には、スラッシュ (/) を使用できません。連続したスラッシュ (/) を含むことはできません。3. サブフォルダー名には、連続したピリオド (.) を含むことはできません。4. 名前は {{min}}～{{max}} 文字です。",
   "file.md.name.error.emoji":
     "ディレクトリパスには、絵文字は使用できません。有効なUTF-8文字を使用してください。",
   "file.md.name.error.2dots":

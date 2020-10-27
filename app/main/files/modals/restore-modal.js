@@ -34,8 +34,14 @@ angular.module("web").controller("restoreModalCtrl", [
     init();
     function init() {
       $scope.isLoading = true;
+      const options =
+        item.versionId === undefined
+          ? undefined
+          : {
+              versionId: item.versionId,
+            };
       ossSvs2
-        .getFileInfo(currentInfo.region, currentInfo.bucket, item.path)
+        .getFileInfo(currentInfo.region, currentInfo.bucket, item.path, options)
         .then(function (data) {
           if (data.Restore) {
             var info = parseRestoreInfo(data.Restore);
@@ -59,10 +65,10 @@ angular.module("web").controller("restoreModalCtrl", [
 
     function parseRestoreInfo(s) {
       //"ongoing-request="true"
-      var arr = s.match(/([\w\-]+)=\"([^\"]+)\"/g);
+      var arr = s.match(/([\w-]+)="([^"]+)"/g);
       var m = {};
       angular.forEach(arr, function (n) {
-        var kv = n.match(/([\w\-]+)=\"([^\"]+)\"/);
+        var kv = n.match(/([\w-]+)="([^"]+)"/);
         m[kv[1]] = kv[2];
       });
       return m;
@@ -74,12 +80,20 @@ angular.module("web").controller("restoreModalCtrl", [
 
     function onSubmit(form1) {
       if (!form1.$valid) return;
+      if ($scope.info.type !== 1) {
+        cancel();
+        return;
+      }
 
-      var days = $scope.info.days;
+      // var days = $scope.info.days;
 
       Toast.info(T("restore.on")); //'提交中...'
+      const options =
+        item.versionId === undefined
+          ? undefined
+          : { versionId: item.versionId };
       ossSvs2
-        .restoreFile(currentInfo.region, currentInfo.bucket, item.path, days)
+        .restoreFile(currentInfo.region, currentInfo.bucket, item.path, options)
         .then(function () {
           Toast.success(T("restore.success")); //'恢复请求已经提交'
           callback();

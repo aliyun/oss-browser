@@ -153,6 +153,10 @@ module.exports = {
   "acl.warn-not-private.public-read-write":
     "If your bucket ACL is <code>public read/write</code> anyone can access your bucket without prior authentication. We recommend that you set the Bucket ACL to Private. Exercise caution when setting bucket ACLs.",
 
+  showObjectHistoryVersion: "Display historical versions of objects",
+  "marker.delete": "Delete marker",
+  "marker.lastest": "Latest version",
+
   "multipart.management": "Multipart",
   "multipart.description":
     "Manage events and fragments that are generated during the multipipart (upload) process.",
@@ -476,7 +480,8 @@ module.exports = {
   "file.op.set_symlink": "Set Soft Link",
   "file.attr.symlink_src": "Source File (full path)",
   "file.attr.symlink_file": "Soft Link File or Folder",
-  "file.message.symlink_help{target}!lines": "Soft Link File\nSource File Address: {{target}}\nYou can access the content of the source file through this file link.",
+  "file.message.symlink_help{target}!lines":
+    "Soft Link File\nSource File Address: {{target}}\nYou can access the content of the source file through this file link.",
   "file.message.symlink_rule{min,max}!html!lines":
     "Soft link file or folder naming rules:\nIf the file is in the current folder, specify filename. To specify a file in a different folder, use the aaa/bbb/filename format.\n1. The name cannot contain emojis.\n2. The path is separated with forward slashes (/). The name cannot start or end with forward slashes (/). The name cannot contain consecutive forward slashes (/).\n3. The subfolder name cannot contain consecutive periods (.).\n4. The name must be {{min}} to {{max}} characters in length.",
   "file.md.name.error.emoji":

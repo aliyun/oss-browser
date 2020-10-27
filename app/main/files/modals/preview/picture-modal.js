@@ -6,6 +6,7 @@ angular.module("web").controller("pictureModalCtrl", [
   "ossSvs2",
   "safeApply",
   "showFn",
+  "showStatus",
   "bucketInfo",
   "objectInfo",
   "AuthInfo",
@@ -18,6 +19,7 @@ angular.module("web").controller("pictureModalCtrl", [
     ossSvs2,
     safeApply,
     showFn,
+    showStatus,
     bucketInfo,
     objectInfo,
     AuthInfo,
@@ -32,6 +34,7 @@ angular.module("web").controller("pictureModalCtrl", [
 
       previewBarVisible: false,
       showFn: showFn,
+      showStatus,
       cancel: cancel,
 
       MAX_SIZE: 5 * 1024 * 1024, //5MB
@@ -54,10 +57,11 @@ angular.module("web").controller("pictureModalCtrl", [
       var info = AuthInfo.get();
       if (info.id.indexOf("STS.") == 0) {
         ossSvs2
-          .getImageBase64Url(
+          .getContent(
             bucketInfo.region,
             bucketInfo.bucket,
-            objectInfo.path
+            $scope.objectInfo.path,
+            $scope.objectInfo.versionId
           )
           .then(function (data) {
             if (data.ContentType.indexOf("image/") == 0) {
@@ -67,26 +71,24 @@ angular.module("web").controller("pictureModalCtrl", [
             }
           });
       } else {
-        var process = "image/quality,q_10";
-        var url = ossSvs2.signatureUrl2(
+        const options = {};
+        if ($scope.objectInfo.versionId !== undefined) {
+          options.subResource = {
+            versionId: $scope.objectInfo.versionId,
+          };
+        }
+        if ($scope.objectInfo.size < $scope.MAX_SIZE) {
+          options.expires = 60;
+        } else {
+          options.expires = 3600;
+          options.process = "image/quality,q_10";
+        }
+        $scope.imgsrc = ossSvs2.signatureUrl2(
           bucketInfo.region,
           bucketInfo.bucket,
-          objectInfo.path
+          $scope.objectInfo.path,
+          options
         );
-        var url5M = ossSvs2.signatureUrl2(
-          bucketInfo.region,
-          bucketInfo.bucket,
-          objectInfo.path,
-          3600,
-          process
-        );
-        $timeout(function () {
-          if (objectInfo.size < $scope.MAX_SIZE) {
-            $scope.imgsrc = url;
-          } else {
-            $scope.imgsrc = url5M;
-          }
-        }, 300);
       }
     }
   },

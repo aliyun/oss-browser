@@ -83,7 +83,7 @@
       <button
         type="button"
         class="btn btn-default btn-sm"
-        ng-disabled="!sel.has"
+        ng-disabled="!allowOpInVerions()"
         ng-click="showDownloadDialog()"
       >
         <i class="fa fa-download text-primary"></i>
@@ -94,7 +94,7 @@
       <button
         type="button"
         class="btn btn-default btn-sm"
-        ng-disabled="!sel.has || currentAuthInfo.privilege=='readOnly'"
+        ng-disabled="!sel.has || currentAuthInfo.privilege=='readOnly' || !allowOpInVerions()"
         ng-click="showMove(sel.has, true)"
       >
         <i class="fa fa-clone text-primary"></i>
@@ -121,7 +121,7 @@
           <a
             href=""
             class=""
-            ng-if="sel.has  && currentAuthInfo.privilege!='readOnly'"
+            ng-if="sel.has && currentAuthInfo.privilege!='readOnly' && allowOpInVerions()"
             ng-click="showMove(sel.has)"
           >
             <i class="fa fa-cut text-primary"></i>
@@ -132,7 +132,7 @@
         <li>
           <a
             href=""
-            ng-if="(sel.has.length==1) && currentAuthInfo.privilege!='readOnly' && sel.has[0].storageClass!='Archive'"
+            ng-if="(sel.has.length==1) && currentAuthInfo.privilege!='readOnly' && sel.has[0].storageClass!='Archive' && allowOpInVerions()"
             ng-click="showRename(sel.has[0])"
           >
             <i class="fa fa-edit text-info"></i>
@@ -144,7 +144,7 @@
         <li>
           <a
             href=""
-            ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.privilege!='readOnly'"
+            ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.privilege!='readOnly' && allowOpInVerions()"
             ng-click="showACL(sel.has[0])"
           >
             <i class="fa fa-shield text-success"></i>
@@ -156,7 +156,7 @@
         <li>
           <a
             href=""
-            ng-if="sel.has && currentAuthInfo.id.indexOf('STS.')!=0"
+            ng-if="sel.has && currentAuthInfo.id.indexOf('STS.')!=0 && !showMultiVersionsFiles"
             ng-class="{'text-success':sel.has}"
             ng-click="showGrant(sel.has)"
           >
@@ -168,7 +168,7 @@
         <li>
           <a
             href=""
-            ng-if="sel.has.length==1 && sel.has[0].isFolder && currentAuthInfo.id.indexOf('STS.')!=0"
+            ng-if="sel.has.length==1 && sel.has[0].isFolder && currentAuthInfo.id.indexOf('STS.')!=0 && !showMultiVersionsFiles"
             ng-class="{'text-success':sel.has}"
             ng-click="showGrantToken(sel.has[0])"
           >
@@ -181,7 +181,7 @@
         <li>
           <a
             href=""
-            ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.id.indexOf('STS.')!=0"
+            ng-if="sel.has.length==1 && !sel.has[0].isFolder && currentAuthInfo.id.indexOf('STS.')!=0 && allowOpInVerions()"
             ng-click="showAddress(sel.has[0])"
           >
             <i class="fa fa-download"></i>
@@ -193,7 +193,7 @@
         <li>
           <a
             href=""
-            ng-if="sel | canSetHeader"
+            ng-if="!showMultiVersionsFiles && (sel | canSetHeader)"
             ng-click="showHttpHeaders(sel.has)"
           >
             <i class="fa fa-cog"></i>
@@ -209,7 +209,7 @@
             ng-click="showRestoreBatch()"
           >
             <i class="fa fa-hourglass-2"></i>
-            <!-- 恢复 -->
+            <!-- 解冻 -->
             {{'restore'|translate}}
           </a>
         </li>
@@ -269,6 +269,21 @@
         <span class="text-danger"><i class="fa fa-close"></i></span>
       </button>
     </div>
+
+    <div class="btn-group" role="group" ng-if="enableMultiVersions">
+      <button
+        type="button"
+        class="btn btn-default btn-sm"
+        ng-click="toggleShowMultiVersionsFiles()"
+      >
+        <i
+          class="fa"
+          ng-class="{'fa-check-square-o': showMultiVersionsFiles ,'fa-square-o': !showMultiVersionsFiles}"
+        ></i>
+        <!-- 显示对象的历史版本 -->
+        {{'showObjectHistoryVersion'|translate}}
+      </button>
+    </div>
   </div>
 
   <div class="col-sm-2 pd0">
@@ -282,7 +297,7 @@
         placeholder="{{'search.files.placeholder'|translate}}"
       />
       <span class="input-group-addon">
-        <i class="fa fa-search"></i> {{objects.length}}
+        <i class="fa fa-search"></i> {{getTrueLength()}}
         <span ng-if="nextObjectsMarker">+</span>
         <i
           class="fa fa-question-circle"
@@ -294,8 +309,9 @@
       </span>
     </div>
   </div>
+
   <div class="col-sm-3 pd0">
-    <span ng-include="'main/files/_/list-view-options.html'"></span>
+    <span ng-if="!showMultiVersionsFiles" ng-include="'main/files/_/list-view-options.html'"></span>
     <span
       ng-if="currentAuthInfo.id.indexOf('STS.')!=0"
       class="f8 text-muted pull-right"

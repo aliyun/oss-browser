@@ -29,8 +29,10 @@ angular.module("web").controller("updateACLModalCtrl", [
       },
     });
 
+    const options =
+      item.versionId === undefined ? undefined : { versionId: item.versionId };
     ossSvs2
-      .getACL(currentInfo.region, currentInfo.bucket, item.path)
+      .getACL(currentInfo.region, currentInfo.bucket, item.path, options)
       .then(function (res) {
         $scope.info.acl = res.acl || "default";
         safeApply($scope);
@@ -44,8 +46,14 @@ angular.module("web").controller("updateACLModalCtrl", [
       if (!form.$valid) return;
       var acl = $scope.info.acl;
       ossSvs2
-        .updateACL(currentInfo.region, currentInfo.bucket, item.path, acl)
-        .then(function (res) {
+        .updateACL(
+          currentInfo.region,
+          currentInfo.bucket,
+          item.path,
+          acl,
+          options
+        )
+        .then(function () {
           Toast.success(T("acl.update.success")); //'修改ACL权限成功'
           cancel();
         });

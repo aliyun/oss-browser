@@ -7,6 +7,7 @@ angular.module("web").controller("mediaModalCtrl", [
   "ossSvs2",
   "safeApply",
   "showFn",
+  "showStatus",
   "bucketInfo",
   "objectInfo",
   "fileType",
@@ -19,6 +20,7 @@ angular.module("web").controller("mediaModalCtrl", [
     ossSvs2,
     safeApply,
     showFn,
+    showStatus,
     bucketInfo,
     objectInfo,
     fileType
@@ -32,6 +34,7 @@ angular.module("web").controller("mediaModalCtrl", [
 
       previewBarVisible: false,
       showFn: showFn,
+      showStatus,
       cancel: cancel,
 
       MAX_SIZE: 5 * 1024 * 1024, //5MB
@@ -51,11 +54,19 @@ angular.module("web").controller("mediaModalCtrl", [
     }
 
     function genURL() {
+      const options = {
+        expires: 3600,
+      };
+      if (objectInfo.versionId !== undefined) {
+        options.subResource = {
+          versionId: objectInfo.versionId,
+        };
+      }
       var url = ossSvs2.signatureUrl2(
         bucketInfo.region,
         bucketInfo.bucket,
         objectInfo.path,
-        3600
+        options
       );
       $timeout(function () {
         $scope.src_origin = url;

@@ -139,6 +139,10 @@ module.exports = {
   "acl.warn-not-private.public-read-write":
     "<code>公共读写（public-read-write）</code>权限可以不通过身份验证直接读取您 Bucket 中的数据，安全风险高，为确保您的数据安全，不推荐此配置，建议您选择私有（private）。",
 
+  showObjectHistoryVersion: "显示对象的历史版本",
+  "marker.delete": "删除标记",
+  "marker.lastest": "最新版本",
+
   "multipart.management": "Multipart管理",
   "multipart.description":
     "管理通过Multipart（分块）方式上传过程中产生的事件与碎片。",
@@ -460,8 +464,10 @@ module.exports = {
   "file.op.set_symlink": "设置软链接",
   "file.attr.symlink_src": "源文件（全路径）",
   "file.attr.symlink_file": "软链接文件目录",
-  "file.message.symlink_help{target}!lines": "软链接文件\n源文件地址：{{target}}\n您可以通过该文件链接访问到源文件内容。",
-  "file.message.symlink_rule{min,max}!html!lines": "软链接文件目录命名规范：\n举例：当前目录 filename 或指定目录 aaa/bbb/filename。\n1. 不允许使用表情符；\n2. / 用于分割路径，不要以 / 开头或结尾，不要出现连续的 /；\n3. 不允许出现名为 .. 的子目录；\n4. 总长度控制在 {{min}}-{{max}} 个字符。",
+  "file.message.symlink_help{target}!lines":
+    "软链接文件\n源文件地址：{{target}}\n您可以通过该文件链接访问到源文件内容。",
+  "file.message.symlink_rule{min,max}!html!lines":
+    "软链接文件目录命名规范：\n举例：当前目录 filename 或指定目录 aaa/bbb/filename。\n1. 不允许使用表情符；\n2. / 用于分割路径，不要以 / 开头或结尾，不要出现连续的 /；\n3. 不允许出现名为 .. 的子目录；\n4. 总长度控制在 {{min}}-{{max}} 个字符。",
   "file.md.name.error.emoji":
     "目录路径中不允许出现表情符，请使用符合要求的 UTF-8 字符",
   "file.md.name.error.2dots": "目录路径中不允许出现名为「..」的子目录。",
