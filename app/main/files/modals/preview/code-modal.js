@@ -118,7 +118,7 @@ angular.module("web").controller("codeModalCtrl", [
       lineNumbers: true,
       lineWrapping: true,
       autoFocus: true,
-      readOnly: false,
+      readOnly: objectInfo.type === "Symlink",
       mode: fileType.mode,
     };
 

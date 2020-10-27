@@ -324,6 +324,7 @@ module.exports = {
   address: "アドレス",
   "getAddress.message": "リンクの有効期間を入力してください",
   generate: "生成",
+  "qrcode.download": "コードをスキャンしダウンロード",
   not_use_own_domain: "独自のドイン名を使用しないいえ",
   custom_domain: " 自分のドメイン",
 
@@ -478,6 +479,22 @@ module.exports = {
   "file.download.address": "ファイルダウンロードアドレス",
   "file.download.warning":
     "OSS バケットのリファラリストを設定する際、ノーリファラを選択しなかった場合、ブラウザから直接 URL にアクセスすることはできません。",
+
+  "file.op.set_symlink": "ソフトリンクの設定",
+  "file.attr.symlink_src": "ソースファイル（フルパス）",
+  "file.attr.symlink_file": "ソフトリンクファイル",
+  "file.message.symlink_help{target}!lines":
+    "ソフトリンクファイル\nソースファイルアドレス：{{target}} \nこのファイルリンクを使用してソースファイルの内容にアクセスできます。",
+  "file.message.symlink_rule{min,max}!html!lines":
+    "ソフトリンクファイル命名規則： 現在のフォルダーにファイルを作成する場合は、filename の形式で入力します。別のフォルダーにファイルを作成する場合は、aaa/bbb/filename の形式で入力します。1. 絵文字は使用できません。2. パスはスラッシュ (/) で区切ります。先頭または末尾には、スラッシュ (/) を使用できません。連続したスラッシュ (/) を含むことはできません。3. サブフォルダー名には、連続したピリオド (.) を含むことはできません。4. 名前は {{min}}～{{max}} 文字です。",
+  "file.md.name.error.emoji":
+    "ディレクトリパスには、絵文字は使用できません。有効なUTF-8文字を使用してください。",
+  "file.md.name.error.2dots":
+    "サブフォルダー名には、連続したピリオド (.) を含むことはできません。",
+  "file.md.name.error.continuous slash":
+    "ディレクトリパスに連続したスラッシュ（/）は使用できません。",
+  "file.message.validation_end_slash!html":
+    "先頭には、スラッシュまたは連続したバックスラッシュを使用できません。",
 
   "copy.successfully": "クリップボードにコピー済みです",
   "click.download": "クリックしてダウンロード",

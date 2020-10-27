@@ -321,6 +321,7 @@ module.exports = {
   address: "Address",
   "getAddress.message": "Please enter the validity period of the link",
   generate: "Generate",
+  "qrcode.download": "Sweep code to download",
   not_use_own_domain: "Not use your own domain name",
   custom_domain: "Custom Domain Name",
 
@@ -475,6 +476,22 @@ module.exports = {
   "file.download.address": "file download address",
   "file.download.warning":
     "If you have enabled the Referer whitelist for OSS Buckets and the Referer field cannot be left empty, you will not be able to access this URL directly through a browser.",
+
+  "file.op.set_symlink": "Set Soft Link",
+  "file.attr.symlink_src": "Source File (full path)",
+  "file.attr.symlink_file": "Soft Link File or Folder",
+  "file.message.symlink_help{target}!lines":
+    "Soft Link File\nSource File Address: {{target}}\nYou can access the content of the source file through this file link.",
+  "file.message.symlink_rule{min,max}!html!lines":
+    "Soft link file or folder naming rules:\nIf the file is in the current folder, specify filename. To specify a file in a different folder, use the aaa/bbb/filename format.\n1. The name cannot contain emojis.\n2. The path is separated with forward slashes (/). The name cannot start or end with forward slashes (/). The name cannot contain consecutive forward slashes (/).\n3. The subfolder name cannot contain consecutive periods (.).\n4. The name must be {{min}} to {{max}} characters in length.",
+  "file.md.name.error.emoji":
+    "The folder name can contain only UTF-8 characters. The name cannot contain emojis.",
+  "file.md.name.error.2dots":
+    "The subfolder name cannot contain consecutive periods (.)",
+  "file.md.name.error.continuous slash":
+    "The name cannot contain consecutive forward slashes (/).",
+  "file.message.validation_end_slash!html":
+    "The name cannot start with a forward slash (/) or consecutive backslashes (\\).",
 
   "copy.successfully": "It has been copied to the clipboard",
   "click.download": "click to download",

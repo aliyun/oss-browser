@@ -48,6 +48,8 @@ angular.module("web").factory("ossSvs2", [
       getContent: getContent,
       saveContent: saveContent,
       getImageBase64Url: getImageBase64Url,
+      loadObjectSymlinkMeta: loadObjectSymlinkMeta,
+      putObjectSymlinkMeta,
 
       //重命名
       moveFile: moveFile,
@@ -1266,25 +1268,6 @@ angular.module("web").factory("ossSvs2", [
       });
     }
 
-    function listFiles(region, bucket, key, marker) {
-      return new Promise(function (a, b) {
-        _listFilesOrigion(region, bucket, key, marker).then(
-          function (result) {
-            var arr = result.data;
-            if (arr && arr.length) {
-              $timeout(() => {
-                loadStorageStatus(region, bucket, arr);
-              }, NEXT_TICK);
-            }
-            a(result);
-          },
-          function (err) {
-            b(err);
-          }
-        );
-      });
-    }
-
     function loadStorageStatus(region, bucket, arr) {
       return new Promise(function (a, b) {
         var len = arr.length;
@@ -1501,11 +1484,74 @@ angular.module("web").factory("ossSvs2", [
           }
         });
       }
+    }
 
-      //////////////////////////
-      this.abort = function () {
-        stopFlag = true;
-      };
+    function listFiles(region, bucket, key, marker) {
+      return new Promise(function (a, b) {
+        let ready = [];
+
+        function get(m) {
+          return _listFilesOrigion(region, bucket, key, m).then((result) => {
+            if (result.data) {
+              ready = ready.concat(result.data);
+              if (
+                ready.length < result.maxKeys &&
+                result.truncated &&
+                result.marker
+              ) {
+                return get(result.marker);
+              }
+            }
+            return {
+              data: ready,
+              marker: result.marker,
+              truncated: result.truncated,
+              maxKeys: result.maxKeys,
+            };
+          });
+        }
+
+        get(marker).then(
+          function (result) {
+            var arr = result.data;
+            if (arr && arr.length) {
+              $timeout(() => {
+                loadStorageStatus(region, bucket, arr);
+              }, NEXT_TICK);
+            }
+            a(result);
+          },
+          function (err) {
+            b(err);
+          }
+        );
+      });
+    }
+
+    function loadObjectSymlinkMeta(region, bucket, key) {
+      const client = getClient3({ region, bucket });
+      return new Promise((a, b) => {
+        client
+          .getSymlink(key)
+          .then((data) => a(data))
+          .catch((e) => {
+            handleError(e);
+            b(e);
+          });
+      });
+    }
+
+    function putObjectSymlinkMeta(region, bucket, key, targetName) {
+      const client = getClient3({ region, bucket });
+      return new Promise((a, b) => {
+        client
+          .putSymlink(key, targetName)
+          .then((data) => a(data))
+          .catch((e) => {
+            handleError(e);
+            b(e);
+          });
+      });
     }
 
     function listAllBuckets() {

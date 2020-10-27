@@ -80,7 +80,7 @@
   </button>
 
   <button
-    ng-if="previewBarVisible && currentAuthInfo.privilege!='readOnly'"
+    ng-if="previewBarVisible && currentAuthInfo.privilege!='readOnly' && objectInfo.type !== 'Symlink'"
     type="button"
     class="pull-right btn btn-primary btn-sm"
     ng-click="saveContent()"

@@ -172,8 +172,8 @@ angular.module("web").factory("ossDownloadManager", [
 
         _kdig();
 
-        function _kdig() {
-          dig(
+        async function _kdig() {
+          await dig(
             arr[c],
             t,
             function () {},
@@ -206,7 +206,7 @@ angular.module("web").factory("ossDownloadManager", [
         // });
       }
 
-      function dig(ossInfo, t, callFn, callFn2) {
+      async function dig(ossInfo, t, callFn, callFn2) {
         if (stopCreatingFlag) {
           return;
         }
@@ -273,11 +273,23 @@ angular.module("web").factory("ossDownloadManager", [
               );
             }
           }
+
+          let truePath = ossInfo.path;
+          if (ossInfo.type === "Symlink") {
+            truePath = (
+              await ossSvs2.loadObjectSymlinkMeta(
+                ossInfo.region,
+                ossInfo.bucket,
+                ossInfo.path
+              )
+            ).targetName;
+          }
+
           var job = createJob(authInfo, {
             region: ossInfo.region,
             from: {
               bucket: ossInfo.bucket,
-              key: ossInfo.path,
+              key: truePath,
               versionId: ossInfo.versionId,
             },
             to: {

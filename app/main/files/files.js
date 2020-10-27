@@ -11,6 +11,7 @@ angular
     "$uibModal",
     "$timeout",
     "$translate",
+    "$sce",
     "AuthInfo",
     "ossSvs2",
     "settingsSvs",
@@ -24,6 +25,7 @@ angular
       $modal,
       $timeout,
       $translate,
+      $sce,
       AuthInfo,
       ossSvs2,
       settingsSvs,
@@ -49,6 +51,7 @@ angular
           objectName: "",
         },
         searchObjectName: searchObjectName,
+        objects: [],
 
         goIn: goIn,
 
@@ -58,8 +61,6 @@ angular
           localStorage.setItem("transVisible", f);
         },
 
-        objects: [],
-
         //object 相关
         showAddFolder: showAddFolder,
         showDeleteFiles: showDeleteFiles,
@@ -67,6 +68,7 @@ angular
         showDeleteFilesSelected: showDeleteFilesSelected,
         showRename: showRename,
         showMove: showMove,
+        showSymlink: showSymlink,
 
         //bucket相关
         showDeleteBucket: showDeleteBucket,
@@ -152,6 +154,9 @@ angular
           }
           return $scope.sel.has;
         },
+        objectLengthI18nTip: "",
+        loadObjectSymlinkMeta,
+        getSymlinkTooltipTpl,
       });
 
       if ($scope.isMac) {
@@ -773,6 +778,49 @@ angular
             }
           );
         }
+      }
+
+      $scope.$watch(
+        () => $scope.objects.length,
+        () => {
+          $scope.objectLengthI18nTip = T("search.files.num_msg", {
+            num: $scope.objects.length,
+          });
+        }
+      );
+
+      let isLoadingObjectSymlinkMeta = false;
+      let cacheSymlinkTooltipTpl = new Map();
+      function loadObjectSymlinkMeta(item) {
+        if (isLoadingObjectSymlinkMeta) return;
+        cacheSymlinkTooltipTpl.delete(item);
+        isLoadingObjectSymlinkMeta = true;
+        const { region, bucket } = $scope.currentInfo;
+        ossSvs2
+          .loadObjectSymlinkMeta(region, bucket, item.Key)
+          .then((result) => {
+            item.targetName = result.targetName;
+            cacheSymlinkTooltipTpl.set(
+              item,
+              $sce.trustAsHtml(`
+              <div style="text-align: left;">
+                ${T("file.message.symlink_help{target}!lines", {
+                  target: result.targetName,
+                })}
+              </div>
+              `)
+            );
+            safeApply($scope);
+          })
+          .finally(() => {
+            $timeout(() => {
+              isLoadingObjectSymlinkMeta = false;
+            }, 500);
+          });
+      }
+
+      function getSymlinkTooltipTpl(item) {
+        return cacheSymlinkTooltipTpl.get(item) || "loading...";
       }
 
       function loadNext() {
@@ -1459,6 +1507,28 @@ angular
             },
             currentInfo: function () {
               return angular.copy($scope.currentInfo);
+            },
+          },
+        });
+      }
+
+      function showSymlink(item) {
+        $modal.open({
+          templateUrl: "main/files/modals/set-symlink-modal.html",
+          controller: "setSymlinkModalCtrl",
+          resolve: {
+            item: function () {
+              return angular.copy(Array.isArray(item) ? item : [item]);
+            },
+            currentInfo: function () {
+              return angular.copy($scope.currentInfo);
+            },
+            callback: function () {
+              return function () {
+                $timeout(function () {
+                  listFiles();
+                }, 300);
+              };
             },
           },
         });
