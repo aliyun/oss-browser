@@ -78,6 +78,7 @@ angular.module("web").factory("ossSvs2", [
       signatureUrl: signatureUrl,
 
       getClient2: getClient2,
+      getClient3: getClient3,
       signatureUrl2: signatureUrl2,
     };
 
@@ -149,34 +150,22 @@ angular.module("web").factory("ossSvs2", [
     }
 
     function checkFolderExists(region, bucket, prefix) {
-      var df = $q.defer();
-      var client = getClient({
+      const client = getClient3({
         region: region,
         bucket: bucket,
       });
-      client.listObjects(
-        {
-          Bucket: bucket,
-          Prefix: prefix,
-          MaxKeys: 1,
-        },
-        function (err, data) {
-          if (err) {
-            handleError(err);
-            df.reject(err);
+      return client
+        .listV2({
+          prefix: prefix,
+          "max-keys": 1,
+        })
+        .then((res) => {
+          if (res.keyCount !== "0") {
+            return true;
           } else {
-            if (
-              data.Contents.length > 0 &&
-              data.Contents[0].Key.indexOf(prefix) == 0
-            ) {
-              df.resolve(true);
-            } else {
-              df.resolve(false);
-            }
+            return false;
           }
-        }
-      );
-      return df.promise;
+        });
     }
 
     function stopDeleteFiles() {
