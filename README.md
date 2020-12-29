@@ -2,7 +2,7 @@
 
 Ossbrowser is a graphical management tool developed by Alibaba Cloud. It provides features similar to those of Windows Explorer. Using ossbrowser, you can view, upload, download, and manage items with ease.
 
-## [README of Chinese](https://github.com/aliyun/oss-browser/blob/master/README-CN.md)
+## [README of Chinese](README-CN.md)
 
 ## Platform
 
@@ -12,12 +12,13 @@ Windows 7 above, Linux and Mac. We do not recommend using WindowsXP and WindowSe
 
 1.  Download and install ossbrowser.
 
-    | Supported platform | Download link                 |
-    | :----------------- | :---------------------------- |
-    | Window x32         | [Window x32](all-releases.md) |
-    | Window x64         | [Window x64](all-releases.md) |
-    | MAC                | [MAC](all-releases.md)        |
-    | Linux x64          | [Linux x64](all-releases.md)  |
+    | Supported platform | Download link                                                                                                     |
+    | :----------------- | :---------------------------------------------------------------------------------------------------------------- |
+    | Window x32         | [Window x32](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.13.0/oss-browser-win32-ia32.zip) |
+    | Window x64         | [Window x64](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.13.0/oss-browser-win32-x64.zip)  |
+    | MAC                | [MAC](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.13.0/oss-browser-darwin-x64.zip)        |
+    | Linux x32          | [Linux x64](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.13.0/oss-browser-linux-x64.zip)   |
+    | Linux x64          | [Linux x64](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.13.0/oss-browser-linux-ia32.zip)  |
 
 2.  Launch ossbrowser.
 3.  Log in to ossbrowser.
