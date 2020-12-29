@@ -130,34 +130,13 @@ angular.module("web").controller("getAddressModalCtrl", [
       if (!form1.$valid) return;
 
       var v = $scope.info.sec;
-
       var url = ossSvs2.signatureUrl2(
         currentInfo.region,
         currentInfo.bucket,
         item.path,
         v
       );
-
-      $scope.isLoading = true;
-      $.ajax({
-        url: url,
-        headers: {
-          Range: "bytes=0-1",
-          "x-random": Math.random(),
-          "Cache-Control": "no-cache",
-        },
-        complete: function (xhr) {
-          $scope.isLoading = false;
-          if (xhr.status >= 200 && xhr.status <= 300) {
-            $scope.err = null;
-            $scope.info.originUrl = url;
-          } else {
-            $scope.err = xhr.responseText;
-            $scope.step = 3;
-          }
-          safeApply($scope);
-        },
-      });
+      $scope.info.originUrl = url;
       safeApply($scope);
     }
 
