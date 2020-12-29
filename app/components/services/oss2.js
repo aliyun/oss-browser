@@ -193,8 +193,6 @@ angular.module("web").factory("ossSvs2", [
     function deleteFiles(region, bucket, items, progCb) {
       stopDeleteFilesFlag = false;
 
-      var df = $q.defer();
-
       var client = getClient3({
         region: region,
         bucket: bucket,
@@ -205,160 +203,51 @@ angular.module("web").factory("ossSvs2", [
         errorCount: 0,
       };
 
-      progress.total += items.length;
+      const PARAMS_SIZE_LIMIT = 2000;
 
-      delArr(items, function (terr) {
-        if (terr && terr.length > 0) {
-          df.resolve(terr);
-        } else {
-          df.resolve();
-        }
-      });
-      return df.promise;
-
-      function delArr(arr, fn) {
-        var c = 0;
-        var len = arr.length;
-        var terr = [];
-        var objectsCount = 0;
-        var foldersCount = 0;
-        var itemsToDelete = [];
-        dig();
-
-        function dig() {
-          if (c >= len) {
-            if (progCb) progCb(progress);
-            $timeout(function () {
-              fn(terr);
-            }, NEXT_TICK);
-            return;
-          }
-
-          if (stopDeleteFilesFlag) {
-            df.resolve([
-              {
-                item: {},
-                error: new Error("User cancelled"),
-              },
-            ]);
-            return;
-          }
-
-          var item = arr[objectsCount + foldersCount];
-
-          if (item.isFolder) {
-            foldersCount++;
-            listAllFiles(region, bucket, item.path).then(
-              function (arr2) {
-                progress.total += arr2.length;
-                //删除所有文件
-                delArr(arr2, function (terr2) {
-                  if (stopDeleteFilesFlag) {
-                    df.resolve([
-                      {
-                        item: {},
-                        error: new Error("User cancelled"),
-                      },
-                    ]);
-                    return;
-                  }
-
-                  if (terr2) terr = terr.concat(terr2);
-                  //删除目录本身
-                  delFile(item);
-                });
-              },
-              function () {
-                //删除目录本身
-                delFile(item);
+      return Promise.all(
+        items.map((item) => {
+          return listAllFiles(region, bucket, item.path).then((objects) => {
+            if (stopDeleteFilesFlag) return;
+            progress.total += objects.length;
+            // 防止一次删除过多，参数长度过大，引起的请求错误
+            const tasks = [];
+            let index = 0;
+            while (index < objects.length) {
+              let size = 0;
+              let task = [];
+              while (size < PARAMS_SIZE_LIMIT) {
+                const object = objects[index];
+                task.push(object.name);
+                size += object.name.length;
+                index++;
+                if (index >= objects.length) {
+                  break;
+                }
               }
+              tasks.push(task);
+            }
+            return Promise.all(
+              tasks.map((names) =>
+                client.deleteMulti(names).then(({ deleted }) => {
+                  progress.current += deleted.length;
+                  progress.errorCount += objects.length - deleted.length;
+                  if (progCb) progCb(progress);
+                })
+              )
             );
-          } else if (
-            itemsToDelete.length < 500 &&
-            objectsCount + foldersCount < len
-          ) {
-            //删除文件
-            itemsToDelete.push(item.path);
-            objectsCount++;
-
-            if (
-              itemsToDelete.length == 500 ||
-              (objectsCount != 0 && objectsCount + foldersCount == len)
-            ) {
-              if (itemsToDelete.length > 1) {
-                client
-                  .deleteMulti(itemsToDelete)
-                  .then(function () {
-                    c += itemsToDelete.length;
-                    progress.current += itemsToDelete.length;
-                    itemsToDelete.splice(0, itemsToDelete.length);
-                    $timeout(dig, NEXT_TICK);
-                  })
-                  .catch(function (err) {
-                    terr.push({
-                      item: item,
-                      error: err,
-                    });
-                    progress.errorCount += itemsToDelete.length;
-                    c += itemsToDelete.length;
-                    itemsToDelete.splice(0, itemsToDelete.length);
-                    $timeout(dig, NEXT_TICK);
-                  });
-              } else {
-                client
-                  .delete(itemsToDelete[0])
-                  .then(function () {
-                    c += itemsToDelete.length;
-                    progress.current += itemsToDelete.length;
-                    itemsToDelete.splice(0, itemsToDelete.length);
-                    $timeout(dig, NEXT_TICK);
-                  })
-                  .catch(function (err) {
-                    terr.push({
-                      item: item,
-                      error: err,
-                    });
-                    progress.errorCount += itemsToDelete.length;
-                    c += itemsToDelete.length;
-                    itemsToDelete.splice(0, itemsToDelete.length);
-                    $timeout(dig, NEXT_TICK);
-                  });
-              }
-            } else {
-              $timeout(dig, NEXT_TICK);
-            }
-          }
-
-          function delFile(item) {
-            if (stopDeleteFilesFlag) {
-              df.resolve([
-                {
-                  item: {},
-                  error: new Error("User cancelled"),
-                },
-              ]);
-              return;
-            }
-
-            client
-              .delete(item.path)
-              .then(function () {
-                c++;
-                progress.current++;
-                $timeout(dig, NEXT_TICK);
-              })
-              .catch(function (err) {
-                terr.push({
-                  item: item,
-                  error: err,
-                });
-                progress.errorCount++;
-                c++;
-                $timeout(dig, NEXT_TICK);
-              });
-          }
-        }
-      }
+          });
+        })
+      ).then(() => {
+        if (progCb) progCb(progress);
+        if (stopDeleteFilesFlag)
+          return [
+            {
+              item: {},
+              error: new Error("User cancelled"),
+            },
+          ];
+      });
     }
 
     function stopCopyFiles() {
@@ -1528,108 +1417,41 @@ angular.module("web").factory("ossSvs2", [
     }
 
     function listAllFiles(region, bucket, key, folderOnly) {
-      // if (keepListFilesJob) {
-      //   keepListFilesJob.abort();
-      //   keepListFilesJob = null;
-      // }
-
-      return new Promise(function (a, b) {
-        keepListFilesJob = new DeepListJob(
-          region,
-          bucket,
-          key,
-          folderOnly,
-          function (data) {
-            a(data);
-          },
-          function (err) {
-            handleError(err);
-            b(err);
-          }
-        );
-      });
-    }
-
-    function DeepListJob(region, bucket, key, folderOnly, succFn, errFn) {
-      var stopFlag = false;
-
-      var client = getClient({
-        region: region,
-        bucket: bucket,
+      const client = getClient3({
+        region,
+        bucket,
       });
 
-      var t = [];
-      var t_pre = [];
-      var opt = {
-        Bucket: bucket,
-        Prefix: key,
-        Delimiter: "/",
-      };
-      _dig();
+      let result = [];
 
-      function _dig() {
-        if (stopFlag) return;
-        client.listObjects(opt, function (err, result) {
-          if (stopFlag) return;
-          if (err) {
-            errFn(err);
-            return;
-          }
-
-          var prefix = opt.Prefix;
-          if (!prefix.endsWith("/")) {
-            prefix = prefix.substring(0, prefix.lastIndexOf("/") + 1);
-          }
-
-          if (result.CommonPrefixes) {
-            //目录
-            result.CommonPrefixes.forEach(function (n) {
-              n = n.Prefix;
-              t_pre.push({
-                name: n.substring(prefix.length).replace(/(\/$)/, ""),
-                path: n,
-                //size: 0,
-                isFolder: true,
-                itemType: "folder",
-              });
-            });
-          }
-
-          if (!folderOnly && result["Contents"]) {
-            //文件
-            result["Contents"].forEach(function (n) {
-              n.Prefix = n.Prefix || "";
-
-              if (!opt.Prefix.endsWith("/") || n.Key != opt.Prefix) {
-                n.isFile = true;
-                n.itemType = "file";
-                n.path = n.Key;
-                n.name = n.Key.substring(prefix.length);
-                n.size = n.Size;
-                n.storageClass = n.StorageClass;
-                n.type = n.Type;
-                n.lastModified = n.LastModified;
-                n.url = getOssUrl(region, opt.Bucket, n.Key);
-
-                t.push(n);
-              }
-            });
-          }
-
-          if (result.NextMarker) {
-            opt.Marker = result.NextMarker;
-            $timeout(_dig, NEXT_TICK);
+      function listMore(marker) {
+        const options = {
+          prefix: key,
+          "max-keys": 1000,
+        };
+        if (folderOnly) {
+          options.delimiter = "/";
+        }
+        if (marker) {
+          options.marker = marker;
+        }
+        return client.list(options).then((resp) => {
+          if (folderOnly) {
+            result = result.concat(
+              resp.objects.filter((i) => i.name.endsWith("/"))
+            );
           } else {
-            if (stopFlag) return;
-            succFn(t_pre.concat(t));
+            result = result.concat(resp.objects);
+          }
+          if (resp.nextMarker) {
+            return listMore(resp.nextMarker);
+          } else {
+            return result;
           }
         });
       }
 
-      //////////////////////////
-      this.abort = function () {
-        stopFlag = true;
-      };
+      return listMore();
     }
 
     function listAllBuckets() {
