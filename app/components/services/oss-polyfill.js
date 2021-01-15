@@ -2,6 +2,18 @@
   const AliOSS = require("ali-oss");
   if (!AliOSS.prototype.listV2) {
     AliOSS.prototype.listV2 = async function listV2(query, options) {
+      const continuation_token =
+        query["continuation-token"] || query.continuationToken;
+      delete query["continuation-token"];
+      delete query.continuationToken;
+      if (continuation_token) {
+        options.subres = Object.assign(
+          {
+            "continuation-token": continuation_token,
+          },
+          options.subres
+        );
+      }
       const params = this._objectRequestParams("GET", "", options);
       params.query = Object.assign(
         {
@@ -47,7 +59,7 @@
         objects,
         prefixes,
         isTruncated: result.data.IsTruncated === "true",
-        keyCount: result.data.KeyCount,
+        keyCount: +result.data.KeyCount,
         continuationToken: result.data.ContinuationToken || null,
         nextContinuationToken: result.data.NextContinuationToken || null,
       };
