@@ -629,7 +629,22 @@ angular
                 ? signPicURL(info, arr)
                 : null;
 
-              $scope.objects = $scope.objects.concat(arr);
+              let oldFolderIndex = Math.max(
+                0,
+                $scope.objects.findIndex((i) => !i.isFolder)
+              );
+              let comingFolderIndex = Math.max(
+                0,
+                arr.findIndex((i) => !i.isFolder)
+              );
+              $scope.objects.splice(
+                oldFolderIndex,
+                0,
+                ...arr.slice(0, comingFolderIndex)
+              );
+              $scope.objects = $scope.objects.concat(
+                arr.slice(comingFolderIndex)
+              );
               $scope.nextObjectsMarker = result.marker || null;
 
               safeApply($scope);

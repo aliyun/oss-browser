@@ -116,6 +116,11 @@ angular.module("web").factory("Const", [
           storageClasses: getStorageClasses(3),
         },
         {
+          id: "oss-cn-guangzhou",
+          label: "华南3（广州）",
+          storageClasses: getStorageClasses(3),
+        },
+        {
           id: "oss-cn-chengdu",
           label: "西南1(成都)",
           storageClasses: getStorageClasses(3),

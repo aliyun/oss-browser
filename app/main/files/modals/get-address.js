@@ -67,7 +67,6 @@ angular.module("web").controller("getAddressModalCtrl", [
 
     function init() {
       $scope.isLoading = true;
-      $scope.step = 2;
 
       $.ajax({
         url: item.url,
@@ -77,7 +76,6 @@ angular.module("web").controller("getAddressModalCtrl", [
           "Cache-Control": "no-cache",
         },
         complete: function (xhr) {
-          $scope.isLoading = false;
           $scope.err = null;
           if (xhr.status >= 200 && xhr.status <= 300) {
             $scope.info.originUrl = $scope.item.url;
@@ -88,68 +86,57 @@ angular.module("web").controller("getAddressModalCtrl", [
             $scope.err = xhr.responseText;
             $scope.step = 3;
           }
-          safeApply($scope);
-        },
-      });
 
-      // 如果不是Cname方式登录的，获取自有域名列表
-      if (!$rootScope.currentAuthInfo.cname) {
-        ossSvs2.listAllCustomDomains(currentInfo.bucket).then((domainList) => {
-          if (domainList.length) {
-            $scope.customDomainList = [
-              {
-                label: T("not_use_own_domain"), // 不使用自有域名
-                value: undefined,
-              },
-            ].concat(
-              domainList.map((domain) => ({
-                label: domain,
-                value: domain,
-              }))
-            );
-            const last = LastSelectedDomainCtor.get();
-            if (domainList.includes(last)) {
-              $scope.info.custom_domain = last;
-              coerceRefDisplayUrl();
-            }
+          // 如果不是Cname方式登录的，获取自有域名列表
+          if (!$rootScope.currentAuthInfo.cname) {
+            ossSvs2
+              .listAllCustomDomains(currentInfo.bucket)
+              .then((domainList) => {
+                if (domainList && domainList.length) {
+                  $scope.customDomainList = [
+                    {
+                      label: T("not_use_own_domain"), // 不使用自有域名
+                      value: undefined,
+                    },
+                  ].concat(
+                    domainList.map((domain) => ({
+                      label: domain,
+                      value: domain,
+                    }))
+                  );
+                  const last = LastSelectedDomainCtor.get();
+                  if (domainList.includes(last)) {
+                    $scope.info.custom_domain = last;
+                    coerceRefDisplayUrl();
+                  }
+                }
+                $scope.isLoading = false;
+                safeApply($scope);
+              })
+              .catch((e) => {
+                console.log(e);
+                $scope.isLoading = false;
+                safeApply($scope);
+              });
+          } else {
+            $scope.isLoading = false;
             safeApply($scope);
           }
-        });
-      }
+        },
+      });
     }
 
     function onSubmit(form1) {
       if (!form1.$valid) return;
 
       var v = $scope.info.sec;
-
       var url = ossSvs2.signatureUrl2(
         currentInfo.region,
         currentInfo.bucket,
         item.path,
         v
       );
-
-      $scope.isLoading = true;
-      $.ajax({
-        url: url,
-        headers: {
-          Range: "bytes=0-1",
-          "x-random": Math.random(),
-          "Cache-Control": "no-cache",
-        },
-        complete: function (xhr) {
-          $scope.isLoading = false;
-          if (xhr.status >= 200 && xhr.status <= 300) {
-            $scope.err = null;
-            $scope.info.originUrl = url;
-          } else {
-            $scope.err = xhr.responseText;
-            $scope.step = 3;
-          }
-          safeApply($scope);
-        },
-      });
+      $scope.info.originUrl = url;
       safeApply($scope);
     }
 
@@ -163,9 +150,15 @@ angular.module("web").controller("getAddressModalCtrl", [
     function coerceRefDisplayUrl() {
       $timeout(() => {
         const { originUrl, custom_domain } = $scope.info;
-        $scope.info.url = custom_domain
-          ? (originUrl || "").replace(/\/\/[^/]+\//, `//${custom_domain}/`)
+        // 初始化时 originUrl 为 null，确保其值合法
+        if (!originUrl || typeof originUrl !== "string") {
+          return;
+        }
+        const newUrlWithCustomDomain = custom_domain
+          ? originUrl.replace(/\/\/[^/]+\//, `//${custom_domain}/`)
           : originUrl;
+        $scope.item.url = newUrlWithCustomDomain;
+        $scope.info.url = newUrlWithCustomDomain;
       }, 1);
     }
 

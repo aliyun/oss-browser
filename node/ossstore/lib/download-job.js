@@ -451,8 +451,12 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           return;
         }
 
+        const friendlyError = err.message.includes("ECONNRESET")
+          ? `failed to download part [${partNumber}]: 网络错误请重试`
+          : `failed to download part [${partNumber}]: ${err.message}`;
+
         if (retryCount >= maxRetries) {
-          self.message = `failed to download part [${partNumber}]: ${err.message}`;
+          self.message = friendlyError;
           //console.error(self.message);
           console.error(self.message, self.to.path);
           //self._changeStatus('failed');
@@ -460,7 +464,7 @@ DownloadJob.prototype.startDownload = async function (checkPoints) {
           //self.emit('error', err);
           //util.closeFD(keepFd);
         } else if (err.code == "InvalidObjectState") {
-          self.message = `failed to download part [${partNumber}]: ${err.message}`;
+          self.message = friendlyError;
           //console.error(self.message);
           console.error(self.message, self.to.path);
           self._changeStatus("failed");
