@@ -7,9 +7,15 @@ DEFS_Debug := \
 	'-DUSING_UV_SHARED=1' \
 	'-DUSING_V8_SHARED=1' \
 	'-DV8_DEPRECATION_WARNINGS=1' \
+	'-DV8_DEPRECATION_WARNINGS' \
+	'-DV8_IMMINENT_DEPRECATION_WARNINGS' \
 	'-D_DARWIN_USE_64_BIT_INODE=1' \
 	'-D_LARGEFILE_SOURCE' \
 	'-D_FILE_OFFSET_BITS=64' \
+	'-DV8_COMPRESS_POINTERS' \
+	'-DV8_31BIT_SMIS_ON_64BIT_ARCH' \
+	'-DOPENSSL_NO_PINSHARED' \
+	'-DOPENSSL_THREADS' \
 	'-DBUILDING_NODE_EXTENSION' \
 	'-DDEBUG' \
 	'-D_DEBUG' \
@@ -19,7 +25,7 @@ DEFS_Debug := \
 CFLAGS_Debug := \
 	-O0 \
 	-gdwarf-2 \
-	-mmacosx-version-min=10.7 \
+	-mmacosx-version-min=10.10 \
 	-arch x86_64 \
 	-Wall \
 	-Wendif-labels \
@@ -32,11 +38,10 @@ CFLAGS_C_Debug := \
 
 # Flags passed to only C++ files.
 CFLAGS_CC_Debug := \
-	-std=gnu++0x \
+	-std=gnu++1y \
 	-stdlib=libc++ \
 	-fno-rtti \
 	-fno-exceptions \
-	-fno-threadsafe-statics \
 	-fno-strict-aliasing
 
 # Flags passed to only ObjC files.
@@ -46,13 +51,13 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/include/node \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/src \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/openssl/config \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/openssl/openssl/include \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/uv/include \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/zlib \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/v8/include \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/include/node \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/src \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/deps/openssl/config \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/deps/openssl/openssl/include \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/deps/uv/include \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/deps/zlib \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/deps/v8/include \
 	-I$(srcdir)/node_modules/nan
 
 DEFS_Release := \
@@ -60,16 +65,22 @@ DEFS_Release := \
 	'-DUSING_UV_SHARED=1' \
 	'-DUSING_V8_SHARED=1' \
 	'-DV8_DEPRECATION_WARNINGS=1' \
+	'-DV8_DEPRECATION_WARNINGS' \
+	'-DV8_IMMINENT_DEPRECATION_WARNINGS' \
 	'-D_DARWIN_USE_64_BIT_INODE=1' \
 	'-D_LARGEFILE_SOURCE' \
 	'-D_FILE_OFFSET_BITS=64' \
+	'-DV8_COMPRESS_POINTERS' \
+	'-DV8_31BIT_SMIS_ON_64BIT_ARCH' \
+	'-DOPENSSL_NO_PINSHARED' \
+	'-DOPENSSL_THREADS' \
 	'-DBUILDING_NODE_EXTENSION'
 
 # Flags passed to all source files.
 CFLAGS_Release := \
 	-Os \
 	-gdwarf-2 \
-	-mmacosx-version-min=10.7 \
+	-mmacosx-version-min=10.10 \
 	-arch x86_64 \
 	-Wall \
 	-Wendif-labels \
@@ -82,11 +93,10 @@ CFLAGS_C_Release := \
 
 # Flags passed to only C++ files.
 CFLAGS_CC_Release := \
-	-std=gnu++0x \
+	-std=gnu++1y \
 	-stdlib=libc++ \
 	-fno-rtti \
 	-fno-exceptions \
-	-fno-threadsafe-statics \
 	-fno-strict-aliasing
 
 # Flags passed to only ObjC files.
@@ -96,13 +106,13 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/include/node \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/src \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/openssl/config \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/openssl/openssl/include \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/uv/include \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/zlib \
-	-I/Users/luozhang/.electron-gyp/Library/Caches/node-gyp/iojs-1.8.4/deps/v8/include \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/include/node \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/src \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/deps/openssl/config \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/deps/openssl/openssl/include \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/deps/uv/include \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/deps/zlib \
+	-I/Users/biejia/.electron-gyp/Library/Caches/node-gyp/9.0.3/deps/v8/include \
 	-I$(srcdir)/node_modules/nan
 
 OBJS := \
@@ -141,7 +151,7 @@ LDFLAGS_Debug := \
 	-undefined dynamic_lookup \
 	-Wl,-no_pie \
 	-Wl,-search_paths_first \
-	-mmacosx-version-min=10.7 \
+	-mmacosx-version-min=10.10 \
 	-arch x86_64 \
 	-L$(builddir) \
 	-stdlib=libc++
@@ -155,7 +165,7 @@ LDFLAGS_Release := \
 	-undefined dynamic_lookup \
 	-Wl,-no_pie \
 	-Wl,-search_paths_first \
-	-mmacosx-version-min=10.7 \
+	-mmacosx-version-min=10.10 \
 	-arch x86_64 \
 	-L$(builddir) \
 	-stdlib=libc++
