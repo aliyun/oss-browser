@@ -4,16 +4,17 @@ NAME=oss-browser
 CUSTOM=./custom
 
 GULP=node ./node_modules/gulp/bin/gulp.js
-PKGER=node node_modules/electron-packager/cli.js
-ZIP=node ../zip.js
+PKGER=npx electron-packager
+ZIP=node ../scripts/zip.js
+GEN=node ../scripts/gen.js
 
 ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/
-ELECTRON_VERSION=1.8.4
-BUILD=ELECTRON_MIRROR=$(ELECTRON_MIRROR) $(PKGER) ./dist $(NAME) --asar --asar-unpack *.node --overwrite --out=build --version $(ELECTRON_VERSION) --app-version $(VERSION)
+ELECTRON_VERSION=9.0.3
+BUILD=ELECTRON_MIRROR=$(ELECTRON_MIRROR) $(PKGER) ./dist $(NAME) --asar.unpack="*.node" --overwrite --out=build --electron-version $(ELECTRON_VERSION) --app-version $(VERSION)
 ELECTON=./node_modules/.bin/electron
 
 i:
-	cnpm i
+	cnpm i || ELECTRON_MIRROR=$(ELECTRON_MIRROR) npm i
 clean:
 	rm -rf dist node_modules build releases node/crc64/cpp-addon/node_modules node/crc64/electron-crc64-prebuild/node_modules node/ossstore/node_modules
 dev:
@@ -30,7 +31,7 @@ watch:
 	$(GULP) watch --custom=$(CUSTOM)
 build:
 	$(GULP) build --custom=$(CUSTOM)
-	node gen.js
+	$(GEN)
 
 win64:
 	$(BUILD) --platform=win32 --arch=x64 --icon=$(CUSTOM)/icon.ico

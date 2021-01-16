@@ -1,10 +1,7 @@
 // require modules
 var fs = require("fs");
 var archiver = require("archiver");
-var pkg = require("./package");
 var sh = require("shelljs");
-var app_name = process.env.name || pkg.name;
-var app_version = process.env.version || pkg.version;
 
 if (process.argv.length > 3) {
   var dest = process.argv[2].trim();
