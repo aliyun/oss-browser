@@ -118,8 +118,11 @@ angular.module("web").controller("getAddressModalCtrl", [
                       value: `${currentInfo.bucket}.${domain}`,
                     }))
                   );
+                const domainList = $scope.customDomainList.map(
+                  (li) => li.value
+                );
                 const last = LastSelectedDomainCtor.get();
-                if ($scope.customDomainList.includes(last)) {
+                if (domainList.includes(last)) {
                   $scope.info.custom_domain = last;
                   coerceRefDisplayUrl();
                 }
