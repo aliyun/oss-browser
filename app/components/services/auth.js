@@ -5,18 +5,7 @@ angular.module("web").factory("Auth", [
   "$translate",
   "ossSvs2",
   "AuthInfo",
-  "Const",
-  "Cipher",
-  function (
-    $q,
-    $rootScope,
-    $location,
-    $translate,
-    ossSvs2,
-    AuthInfo,
-    Const,
-    Cipher
-  ) {
+  function ($q, $rootScope, $location, $translate, ossSvs2, AuthInfo) {
     var T = $translate.instant;
     return {
       login: login,
@@ -41,18 +30,15 @@ angular.module("web").factory("Auth", [
         var info = ossSvs2.parseOSSPath(data.osspath);
         data.bucket = info.bucket;
 
-        ossSvs2.getClient(data).listObjects(
-          {
-            Bucket: info.bucket,
-            Prefix: info.key,
-            Marker: "",
-            MaxKeys: 1,
-            Delimiter: "/",
-          },
-          function (err, result) {
-            if (err) {
-              df.reject(err);
-            } else if (result.RequestId && result.CommonPrefixes) {
+        ossSvs2
+          .getClient2(data)
+          .listV2({
+            prefix: info.key,
+            "max-keys": 1,
+            delimiter: "/",
+          })
+          .then((result) => {
+            if (result.keyCount !== "0") {
               //登录成功
               AuthInfo.save(data);
               df.resolve();
@@ -62,8 +48,10 @@ angular.module("web").factory("Auth", [
                 message: T("login.endpoint.error"),
               }); //'请确定Endpoint是否正确'
             }
-          }
-        );
+          })
+          .catch((err) => {
+            df.reject(err);
+          });
       } else {
         ossSvs2.getClient(data).listBuckets(function (err, result) {
           if (err) {

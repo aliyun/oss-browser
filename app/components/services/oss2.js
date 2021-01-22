@@ -80,6 +80,7 @@ angular.module("web").factory("ossSvs2", [
       signatureUrl: signatureUrl,
 
       getClient2: getClient2,
+      getClient3: getClient3,
       signatureUrl2: signatureUrl2,
     };
 
@@ -151,34 +152,22 @@ angular.module("web").factory("ossSvs2", [
     }
 
     function checkFolderExists(region, bucket, prefix) {
-      var df = $q.defer();
-      var client = getClient({
+      const client = getClient3({
         region: region,
         bucket: bucket,
       });
-      client.listObjects(
-        {
-          Bucket: bucket,
-          Prefix: prefix,
-          MaxKeys: 1,
-        },
-        function (err, data) {
-          if (err) {
-            handleError(err);
-            df.reject(err);
+      return client
+        .listV2({
+          prefix: prefix,
+          "max-keys": 1,
+        })
+        .then((res) => {
+          if (res.keyCount !== "0") {
+            return true;
           } else {
-            if (
-              data.Contents.length > 0 &&
-              data.Contents[0].Key.indexOf(prefix) == 0
-            ) {
-              df.resolve(true);
-            } else {
-              df.resolve(false);
-            }
+            return false;
           }
-        }
-      );
-      return df.promise;
+        });
     }
 
     function stopDeleteFiles() {
@@ -412,7 +401,7 @@ angular.module("web").factory("ossSvs2", [
 
       function doCopyFolder(source, target, fn) {
         var t = [];
-        var client = getClient({
+        var client = getClient3({
           region: region,
           bucket: source.bucket,
         });
@@ -421,13 +410,77 @@ angular.module("web").factory("ossSvs2", [
 
         function nextList(marker) {
           var opt = {
-            Bucket: source.bucket,
-            Prefix: source.path,
+            prefix: source.path,
           };
-          if (marker) opt.Marker = marker;
+          if (marker) opt.continuationToken = marker;
 
-          client.listObjects(opt, function (err, result) {
-            if (err) {
+          client
+            .listV2(opt)
+            .then((result) => {
+              if (!result.objects) return;
+              const newTarget = {
+                key: target.key,
+                bucket: target.bucket,
+              };
+
+              const objs = result.objects.map((n) => {
+                return Object.assign({}, n, {
+                  isFile: true,
+                  itemType: "file",
+                  path: n.name,
+                  name: n.name.replace(opt.prefix, ""),
+                });
+              });
+
+              doCopyOssFiles(
+                source.bucket,
+                source.path,
+                objs,
+                newTarget,
+                function (terr) {
+                  if (stopCopyFilesFlag) {
+                    df.resolve([
+                      {
+                        item: {},
+                        error: new Error("User cancelled"),
+                      },
+                    ]);
+                    return;
+                  }
+
+                  if (terr) t = t.concat(terr);
+                  if (result.nextContinuationToken) {
+                    $timeout(function () {
+                      nextList(result.nextContinuationToken);
+                    }, NEXT_TICK);
+                  } else {
+                    if (removeAfterCopy && terr.length == 0) {
+                      //移动全部成功， 删除目录
+                      const client1 = getClient({
+                        region: region,
+                        bucket: source.bucket,
+                      });
+                      client1.deleteObject(
+                        {
+                          Bucket: source.bucket,
+                          Key: source.path,
+                        },
+                        function () {
+                          $timeout(function () {
+                            fn(t);
+                          }, NEXT_TICK);
+                        }
+                      );
+                    } else {
+                      $timeout(function () {
+                        fn(t);
+                      }, NEXT_TICK);
+                    }
+                  }
+                }
+              );
+            })
+            .catch((err) => {
               t.push({
                 item: source,
                 error: err,
@@ -436,80 +489,7 @@ angular.module("web").factory("ossSvs2", [
                 fn(t);
               }, NEXT_TICK);
               return;
-            }
-            var newTarget = {
-              key: target.key,
-              bucket: target.bucket,
-            };
-
-            var prefix = opt.Prefix;
-            if (!prefix.endsWith("/")) {
-              prefix = prefix.substring(0, prefix.lastIndexOf("/") + 1);
-            }
-
-            var objs = [];
-            result["Contents"].forEach(function (n) {
-              n.Prefix = n.Prefix || "";
-
-              //if (!opt.Prefix.endsWith('/') || n.Key != opt.Prefix) {
-              n.isFile = true;
-              n.itemType = "file";
-              n.path = n.Key;
-              n.name = n.Key.substring(prefix.length);
-              n.size = n.Size;
-              n.storageClass = n.StorageClass;
-              n.type = n.Type;
-              n.lastModified = n.LastModified;
-              n.url = getOssUrl(region, opt.Bucket, n.Key);
-
-              objs.push(n);
-              //}
             });
-
-            doCopyOssFiles(
-              source.bucket,
-              source.path,
-              objs,
-              newTarget,
-              function (terr) {
-                if (stopCopyFilesFlag) {
-                  df.resolve([
-                    {
-                      item: {},
-                      error: new Error("User cancelled"),
-                    },
-                  ]);
-                  return;
-                }
-
-                if (terr) t = t.concat(terr);
-                if (result.NextMarker) {
-                  $timeout(function () {
-                    nextList(result.NextMarker);
-                  }, NEXT_TICK);
-                } else {
-                  if (removeAfterCopy && terr.length == 0) {
-                    //移动全部成功， 删除目录
-                    client.deleteObject(
-                      {
-                        Bucket: source.bucket,
-                        Key: source.path,
-                      },
-                      function () {
-                        $timeout(function () {
-                          fn(t);
-                        }, NEXT_TICK);
-                      }
-                    );
-                  } else {
-                    $timeout(function () {
-                      fn(t);
-                    }, NEXT_TICK);
-                  }
-                }
-              }
-            );
-          });
         }
       }
 
@@ -1233,11 +1213,15 @@ angular.module("web").factory("ossSvs2", [
     function listFiles(region, bucket, key, marker) {
       return new Promise(function (a, b) {
         let ready = [];
-
+        let ready_dirs = [];
+        let ready_objects = [];
         function get(m) {
           return _listFilesOrigion(region, bucket, key, m).then((result) => {
-            if (result.data) {
-              ready = ready.concat(result.data);
+            const { dirs, objects } = result.data;
+            if (dirs.length || objects.length) {
+              ready_dirs = ready_dirs.concat(dirs);
+              ready_objects = ready_objects.concat(objects);
+              ready = ready_dirs.concat(ready_objects);
               if (
                 ready.length < result.maxKeys &&
                 result.truncated &&
@@ -1342,80 +1326,48 @@ angular.module("web").factory("ossSvs2", [
     }
 
     function _listFilesOrigion(region, bucket, key, marker) {
-      return new Promise(function (resolve, reject) {
-        var client = getClient({
-          region: region,
-          bucket: bucket,
-        });
-
-        var t = [];
-        var t_pre = [];
-        var opt = {
-          Bucket: bucket,
-          Prefix: key,
-          Delimiter: "/",
-          Marker: marker || "",
-        };
-
-        client.listObjects(opt, function (err, result) {
-          if (err) {
-            handleError(err);
-            reject(err);
-            return;
-          }
-
-          var prefix = opt.Prefix;
-          if (!prefix.endsWith("/")) {
-            prefix = prefix.substring(0, prefix.lastIndexOf("/") + 1);
-          }
-
-          if (result.CommonPrefixes) {
-            //目录
-            result.CommonPrefixes.forEach(function (n) {
-              n = n.Prefix;
-              t_pre.push({
-                name: n.substring(prefix.length).replace(/(\/$)/, ""),
-                path: n,
-                //size: 0,
-                isFolder: true,
-                itemType: "folder",
-              });
-            });
-          }
-
-          if (result["Contents"]) {
-            //文件
-            result["Contents"].forEach(function (n) {
-              n.Prefix = n.Prefix || "";
-
-              if (!opt.Prefix.endsWith("/") || n.Key != opt.Prefix) {
-                n.isFile = true;
-                n.itemType = "file";
-                n.path = n.Key;
-                n.name = n.Key.substring(prefix.length);
-                n.size = n.Size;
-                n.storageClass = n.StorageClass;
-                n.type = n.Type;
-                n.lastModified = n.LastModified;
-                n.url = getOssUrl(
-                  region,
-                  opt.Bucket,
-                  encodeURIComponent(n.Key).replace(/%2F/g, "/")
-                );
-
-                t.push(n);
-              }
-            });
-          }
-
-          resolve({
-            data: t_pre.concat(t),
-            marker: result.NextMarker,
-            truncated: result.IsTruncated,
-            maxKeys: result.MaxKeys,
-          });
-        });
+      const client = getClient3({
+        region,
+        bucket,
       });
+      return client
+        .listV2({
+          prefix: key,
+          delimiter: "/",
+          "max-keys": 1000,
+          "continuation-token": marker,
+        })
+        .then((resp) => {
+          const dirs = (resp.prefixes || []).map((n) => {
+            return {
+              name: n,
+              path: n,
+              isFolder: true,
+              itemType: "folder",
+            };
+          });
+          const objects = (resp.objects || []).map((n) => {
+            return Object.assign(n, {
+              isFile: true,
+              itemType: "file",
+              path: n.name,
+              name: n.name.replace(key, ""),
+            });
+          });
+          return {
+            data: {
+              dirs,
+              objects,
+            },
+            marker: resp.nextContinuationToken,
+            truncated: resp.isTruncated,
+            maxKeys: +resp.keyCount,
+          };
+        })
+        .catch((e) => {
+          handleError(e);
+          return Promise.reject(e);
+        });
     }
 
     function listAllFiles(region, bucket, key, folderOnly) {
@@ -1424,7 +1376,8 @@ angular.module("web").factory("ossSvs2", [
         bucket,
       });
 
-      let result = [];
+      let all_dirs = [];
+      let all_objects = [];
 
       function listMore(marker) {
         const options = {
@@ -1435,20 +1388,33 @@ angular.module("web").factory("ossSvs2", [
           options.delimiter = "/";
         }
         if (marker) {
-          options.marker = marker;
+          options["next-continuationToken"] = marker;
         }
-        return client.list(options).then((resp) => {
-          if (folderOnly) {
-            result = result.concat(
-              resp.objects.filter((i) => i.name.endsWith("/"))
-            );
-          } else {
-            result = result.concat(resp.objects);
+        return client.listV2(options).then((resp) => {
+          const dirs = (resp.prefixes || []).map((n) => {
+            return {
+              name: n,
+              path: n,
+              isFolder: true,
+              itemType: "folder",
+            };
+          });
+          all_dirs = all_dirs.concat(dirs);
+          if (!folderOnly && resp.objects) {
+            const objects = (resp.objects || []).map((n) => {
+              return Object.assign(n, {
+                isFile: true,
+                itemType: "file",
+                path: n.name,
+                name: n.name.replace(options.prefix, ""),
+              });
+            });
+            all_objects = all_objects.concat(objects);
           }
-          if (resp.nextMarker) {
-            return listMore(resp.nextMarker);
+          if (resp.nextContinuationToken) {
+            return listMore(resp.nextContinuationToken);
           } else {
-            return result;
+            return all_dirs.concat(all_objects);
           }
         });
       }
@@ -1613,6 +1579,7 @@ angular.module("web").factory("ossSvs2", [
       };
     }
 
+    // eslint-disable-next-line no-unused-vars
     function getOssUrl(region, bucket, key) {
       var eptpl = AuthInfo.get().eptpl || "http://{region}.aliyuncs.com";
 
