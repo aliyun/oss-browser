@@ -321,8 +321,8 @@ module.exports = {
   "getAddress.message": "リンクの有効期間を入力してください",
   generate: "生成",
   "qrcode.download": "コードをスキャンしダウンロード",
-  not_use_own_domain: "独自のドイン名を使用しないいえ",
-  custom_domain: " 自分のドメイン",
+  not_use_own_domain: "他のドメイン名はありません",
+  custom_domain: "その他のドメイン",
 
   "restore.checker.message1":
     "プレビューまたはダウンロードするためにアーカイブをリストアする必要があります。",
@@ -479,8 +479,10 @@ module.exports = {
   "file.op.set_symlink": "ソフトリンクの設定",
   "file.attr.symlink_src": "ソースファイル（フルパス）",
   "file.attr.symlink_file": "ソフトリンクファイル",
-  "file.message.symlink_help{target}!lines": "ソフトリンクファイル\nソースファイルアドレス：{{target}} \nこのファイルリンクを使用してソースファイルの内容にアクセスできます。",
-  "file.message.symlink_rule{min,max}!html!lines": "ソフトリンクファイル命名規則： 現在のフォルダーにファイルを作成する場合は、filename の形式で入力します。別のフォルダーにファイルを作成する場合は、aaa/bbb/filename の形式で入力します。1. 絵文字は使用できません。2. パスはスラッシュ (/) で区切ります。先頭または末尾には、スラッシュ (/) を使用できません。連続したスラッシュ (/) を含むことはできません。3. サブフォルダー名には、連続したピリオド (.) を含むことはできません。4. 名前は {{min}}～{{max}} 文字です。",
+  "file.message.symlink_help{target}!lines":
+    "ソフトリンクファイル\nソースファイルアドレス：{{target}} \nこのファイルリンクを使用してソースファイルの内容にアクセスできます。",
+  "file.message.symlink_rule{min,max}!html!lines":
+    "ソフトリンクファイル命名規則： 現在のフォルダーにファイルを作成する場合は、filename の形式で入力します。別のフォルダーにファイルを作成する場合は、aaa/bbb/filename の形式で入力します。1. 絵文字は使用できません。2. パスはスラッシュ (/) で区切ります。先頭または末尾には、スラッシュ (/) を使用できません。連続したスラッシュ (/) を含むことはできません。3. サブフォルダー名には、連続したピリオド (.) を含むことはできません。4. 名前は {{min}}～{{max}} 文字です。",
   "file.md.name.error.emoji":
     "ディレクトリパスには、絵文字は使用できません。有効なUTF-8文字を使用してください。",
   "file.md.name.error.2dots":

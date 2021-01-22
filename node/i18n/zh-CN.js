@@ -311,8 +311,8 @@ module.exports = {
   "getAddress.message": "请输入链接有效期",
   generate: "生成",
   "qrcode.download": "扫码下载",
-  not_use_own_domain: "不使用自有域名",
-  custom_domain: "自有域名",
+  not_use_own_domain: "不使用其他域名",
+  custom_domain: "其他域名",
 
   "restore.checker.message1": "归档文件，需要解冻才能预览或下载。",
   "restore.immediately": "立即解冻",
@@ -460,8 +460,10 @@ module.exports = {
   "file.op.set_symlink": "设置软链接",
   "file.attr.symlink_src": "源文件（全路径）",
   "file.attr.symlink_file": "软链接文件目录",
-  "file.message.symlink_help{target}!lines": "软链接文件\n源文件地址：{{target}}\n您可以通过该文件链接访问到源文件内容。",
-  "file.message.symlink_rule{min,max}!html!lines": "软链接文件目录命名规范：\n举例：当前目录 filename 或指定目录 aaa/bbb/filename。\n1. 不允许使用表情符；\n2. / 用于分割路径，不要以 / 开头或结尾，不要出现连续的 /；\n3. 不允许出现名为 .. 的子目录；\n4. 总长度控制在 {{min}}-{{max}} 个字符。",
+  "file.message.symlink_help{target}!lines":
+    "软链接文件\n源文件地址：{{target}}\n您可以通过该文件链接访问到源文件内容。",
+  "file.message.symlink_rule{min,max}!html!lines":
+    "软链接文件目录命名规范：\n举例：当前目录 filename 或指定目录 aaa/bbb/filename。\n1. 不允许使用表情符；\n2. / 用于分割路径，不要以 / 开头或结尾，不要出现连续的 /；\n3. 不允许出现名为 .. 的子目录；\n4. 总长度控制在 {{min}}-{{max}} 个字符。",
   "file.md.name.error.emoji":
     "目录路径中不允许出现表情符，请使用符合要求的 UTF-8 字符",
   "file.md.name.error.2dots": "目录路径中不允许出现名为「..」的子目录。",

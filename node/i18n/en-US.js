@@ -318,8 +318,8 @@ module.exports = {
   "getAddress.message": "Please enter the validity period of the link",
   generate: "Generate",
   "qrcode.download": "Sweep code to download",
-  not_use_own_domain: "Not use your own domain name",
-  custom_domain: "Custom Domain Name",
+  not_use_own_domain: "Not use other domains",
+  custom_domain: "Other Domains",
 
   "restore.checker.message1":
     "Archive need to be restored in order to preview or download.",
@@ -476,7 +476,8 @@ module.exports = {
   "file.op.set_symlink": "Set Soft Link",
   "file.attr.symlink_src": "Source File (full path)",
   "file.attr.symlink_file": "Soft Link File or Folder",
-  "file.message.symlink_help{target}!lines": "Soft Link File\nSource File Address: {{target}}\nYou can access the content of the source file through this file link.",
+  "file.message.symlink_help{target}!lines":
+    "Soft Link File\nSource File Address: {{target}}\nYou can access the content of the source file through this file link.",
   "file.message.symlink_rule{min,max}!html!lines":
     "Soft link file or folder naming rules:\nIf the file is in the current folder, specify filename. To specify a file in a different folder, use the aaa/bbb/filename format.\n1. The name cannot contain emojis.\n2. The path is separated with forward slashes (/). The name cannot start or end with forward slashes (/). The name cannot contain consecutive forward slashes (/).\n3. The subfolder name cannot contain consecutive periods (.).\n4. The name must be {{min}} to {{max}} characters in length.",
   "file.md.name.error.emoji":

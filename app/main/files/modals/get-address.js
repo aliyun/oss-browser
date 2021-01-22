@@ -87,41 +87,54 @@ angular.module("web").controller("getAddressModalCtrl", [
             $scope.step = 3;
           }
 
-          // 如果不是Cname方式登录的，获取自有域名列表
-          if (!$rootScope.currentAuthInfo.cname) {
-            ossSvs2
-              .listAllCustomDomains(currentInfo.bucket)
-              .then((domainList) => {
-                if (domainList && domainList.length) {
-                  $scope.customDomainList = [
-                    {
-                      label: T("not_use_own_domain"), // 不使用自有域名
-                      value: undefined,
-                    },
-                  ].concat(
-                    domainList.map((domain) => ({
+          Promise.all([
+            new Promise((resolve) => {
+              // 如果不是Cname方式登录的，获取自有域名列表
+              if (!$rootScope.currentAuthInfo.cname) {
+                resolve(ossSvs2.listAllCustomDomains(currentInfo.bucket));
+              } else {
+                resolve([]);
+              }
+            }),
+            ossSvs2.listUsableAccelarateDomains(currentInfo.bucket),
+          ])
+            .then(([cnameList, accList]) => {
+              if ((cnameList && cnameList.length) || accList.length) {
+                $scope.customDomainList = [
+                  {
+                    label: T("not_use_own_domain"), // 不使用其他域名
+                    value: undefined,
+                  },
+                ]
+                  .concat(
+                    cnameList.map((domain) => ({
                       label: domain,
                       value: domain,
                     }))
+                  )
+                  .concat(
+                    accList.map((domain) => ({
+                      label: `${currentInfo.bucket}.${domain}`,
+                      value: `${currentInfo.bucket}.${domain}`,
+                    }))
                   );
-                  const last = LastSelectedDomainCtor.get();
-                  if (domainList.includes(last)) {
-                    $scope.info.custom_domain = last;
-                    coerceRefDisplayUrl();
-                  }
+                const domainList = $scope.customDomainList.map(
+                  (li) => li.value
+                );
+                const last = LastSelectedDomainCtor.get();
+                if (domainList.includes(last)) {
+                  $scope.info.custom_domain = last;
+                  coerceRefDisplayUrl();
                 }
-                $scope.isLoading = false;
-                safeApply($scope);
-              })
-              .catch((e) => {
-                console.log(e);
-                $scope.isLoading = false;
-                safeApply($scope);
-              });
-          } else {
-            $scope.isLoading = false;
-            safeApply($scope);
-          }
+              }
+              $scope.isLoading = false;
+              safeApply($scope);
+            })
+            .catch((e) => {
+              console.log(e);
+              $scope.isLoading = false;
+              safeApply($scope);
+            });
         },
       });
     }

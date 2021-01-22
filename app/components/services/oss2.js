@@ -65,6 +65,8 @@ angular.module("web").factory("ossSvs2", [
 
       // 自有域名列表
       listAllCustomDomains: listAllCustomDomains,
+      // 可用加速域名列表
+      listUsableAccelarateDomains: listUsableAccelarateDomains,
 
       getBucketACL: getBucketACL,
       updateBucketACL: updateBucketACL,
@@ -1721,6 +1723,23 @@ angular.module("web").factory("ossSvs2", [
       };
 
       return client.getCnameList(bucket);
+    }
+
+    function listUsableAccelarateDomains(bucket) {
+      const acc_endpoints = [
+        `oss-accelerate.aliyuncs.com`,
+        `oss-accelerate-overseas.aliyuncs.com`,
+      ];
+      const store = getClient3({ bucket });
+      const urlutil = require("url");
+      store.options.endpoint = urlutil.parse(`https://${acc_endpoints[0]}`);
+      store.options.cname = false;
+      return store
+        .list({
+          "max-keys": 1,
+        })
+        .then(() => acc_endpoints)
+        .catch(() => []);
     }
   },
 ]);
