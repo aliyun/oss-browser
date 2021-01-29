@@ -1404,7 +1404,7 @@ angular
           for (let i in selectObjects) {
             if (
               selectObjects[i].storageStatus !== 3 &&
-              selectObjects[i].StorageClass === "Archive"
+              selectObjects[i].storageClass === "Archive"
             ) {
               SelRestore.push(selectObjects[i]);
             }
