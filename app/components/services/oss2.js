@@ -87,6 +87,7 @@ angular.module("web").factory("ossSvs2", [
     function getClient2(opt) {
       var options = prepaireOptions(opt);
       // console.log(options)
+      const OSS = require("ali-oss/dist/aliyun-oss-sdk");
       var client = new OSS({
         accessKeyId: options.accessKeyId,
         accessKeySecret: options.secretAccessKey,
