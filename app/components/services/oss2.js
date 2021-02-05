@@ -199,47 +199,57 @@ angular.module("web").factory("ossSvs2", [
 
       return Promise.all(
         items.map((item) => {
-          return listAllFiles(region, bucket, item.path).then((objects) => {
-            if (stopDeleteFilesFlag) return;
-            progress.total += objects.length;
-            // 防止一次删除过多，参数长度过大，引起的请求错误
-            const tasks = [];
-            let index = 0;
-            while (index < objects.length) {
-              let size = 0;
-              let task = [];
-              while (size < PARAMS_SIZE_LIMIT) {
-                const object = objects[index];
-                task.push(object.name);
-                size += object.name.length;
-                index++;
-                if (index >= objects.length) {
-                  break;
-                }
-              }
-              tasks.push(task);
-            }
-            return Promise.all(
-              tasks.map((names) =>
-                client.deleteMulti(names).then(({ deleted }) => {
-                  progress.current += deleted.length;
-                  progress.errorCount += objects.length - deleted.length;
-                  if (progCb) progCb(progress);
-                })
-              )
+          if (item.isFile || !item.path.endsWith("/")) {
+            return item.path;
+          } else {
+            return listAllFiles(region, bucket, item.path).then((objects) =>
+              objects.map((o) => o.path)
             );
-          });
+          }
         })
-      ).then(() => {
-        if (progCb) progCb(progress);
-        if (stopDeleteFilesFlag)
-          return [
-            {
-              item: {},
-              error: new Error("User cancelled"),
-            },
-          ];
-      });
+      )
+        .then((result) => {
+          if (stopDeleteFilesFlag) return;
+          const objects = result.reduce((final, o) => final.concat(o), []);
+
+          progress.total += objects.length;
+          // 防止一次删除过多，参数长度过大，引起的请求错误
+          const tasks = [];
+          let index = 0;
+          while (index < objects.length) {
+            let size = 0;
+            let task = [];
+            while (size < PARAMS_SIZE_LIMIT) {
+              const object = objects[index];
+              task.push(object);
+              size += object.length;
+              index++;
+              if (index >= objects.length) {
+                break;
+              }
+            }
+            tasks.push(task);
+          }
+          return Promise.all(
+            tasks.map((names) =>
+              client.deleteMulti(names).then(({ deleted }) => {
+                progress.current += deleted.length;
+                progress.errorCount += objects.length - deleted.length;
+                if (progCb) progCb(progress);
+              })
+            )
+          );
+        })
+        .then(() => {
+          if (progCb) progCb(progress);
+          if (stopDeleteFilesFlag)
+            return [
+              {
+                item: {},
+                error: new Error("User cancelled"),
+              },
+            ];
+        });
     }
 
     function stopCopyFiles() {
