@@ -46,7 +46,7 @@ angular.module("web").controller("loginCtrl", [
       },
       item: {
         eptpl: DEF_EP_TPL,
-        osspath_isdir: true,
+        osspath_isdir: false,
       },
       eptplType: "default",
 
