@@ -16,6 +16,7 @@ module.exports = {
   "region.oss-cn-heyuan": "河源(中国南部 2)",
   "region.oss-cn-chengdu": "成都(中国西部 1)",
   "region.oss-cn-hongkong": "香港",
+  "region.oss-cn-guangzhou": "广州(中国南部 3)",
 
   "region.oss-ap-southeast-1": "アジア東南 1 (シンガポール)",
   "region.oss-ap-southeast-2": "アジア東南 2 (シドニー)",

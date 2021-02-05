@@ -16,6 +16,7 @@ module.exports = {
   "region.oss-cn-heyuan": "South China 2(Heyuan)",
   "region.oss-cn-chengdu": "Southwest China 1(Chengdu)",
   "region.oss-cn-hongkong": "Hongkong",
+  "region.oss-cn-guangzhou": "South China 3(Guangzhou)",
 
   "region.oss-ap-southeast-1": "Asia Pacific Southeast 1(Singapore)",
   "region.oss-ap-southeast-2": "Asia Pacific Southeast 2(Sydney)",
