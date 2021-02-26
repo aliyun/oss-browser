@@ -163,7 +163,7 @@ angular.module("web").factory("ossSvs2", [
           "max-keys": 1,
         })
         .then((res) => {
-          if (res.keyCount !== "0") {
+          if (res.keyCount != 0) {
             return true;
           } else {
             return false;
@@ -433,15 +433,16 @@ angular.module("web").factory("ossSvs2", [
                 key: target.key,
                 bucket: target.bucket,
               };
-
-              const objs = result.objects.map((n) => {
-                return Object.assign({}, n, {
-                  isFile: true,
-                  itemType: "file",
-                  path: n.name,
-                  name: n.name.replace(opt.prefix, ""),
+              const objs = result.objects
+                .filter((n) => n.name !== opt.prefix)
+                .map((n) => {
+                  return Object.assign({}, n, {
+                    isFile: true,
+                    itemType: "file",
+                    path: n.name,
+                    name: n.name.replace(opt.prefix, ""),
+                  });
                 });
-              });
 
               doCopyOssFiles(
                 source.bucket,
@@ -597,11 +598,11 @@ angular.module("web").factory("ossSvs2", [
               $timeout(_, NEXT_TICK);
             });
           } else {
+            progress.total -= 1;
             doCopyFolder(item, newTarget, function (errs) {
               if (errs) {
                 terr = terr.concat(errs);
               }
-              progress.current++;
               if (progFn)
                 try {
                   progFn(progress);
@@ -1349,22 +1350,27 @@ angular.module("web").factory("ossSvs2", [
           "continuation-token": marker,
         })
         .then((resp) => {
-          const dirs = (resp.prefixes || []).map((n) => {
-            return {
-              name: n,
-              path: n,
-              isFolder: true,
-              itemType: "folder",
-            };
-          });
-          const objects = (resp.objects || []).map((n) => {
-            return Object.assign(n, {
-              isFile: true,
-              itemType: "file",
-              path: n.name,
-              name: n.name.replace(key, ""),
+          const dirs = (resp.prefixes || [])
+            .filter((n) => n !== key)
+            .map((n) => {
+              const name = n.replace(key, "");
+              return {
+                isFolder: true,
+                itemType: "folder",
+                path: n,
+                name: name === "/" ? name : name.replace(/\/$/, ""),
+              };
             });
-          });
+          const objects = (resp.objects || [])
+            .filter((n) => n.name !== key)
+            .map((n) => {
+              return Object.assign(n, {
+                isFile: true,
+                itemType: "file",
+                path: n.name,
+                name: n.name.replace(key, ""),
+              });
+            });
           return {
             data: {
               dirs,
