@@ -104,8 +104,8 @@ function getFreeDiskSize(p, fn) {
         var lastLine = arr.slice(arr.length - 1);
         lastLine = (lastLine + "").trim();
 
-        num = lastLine.match(/\s+([\d,]+)\s+/)[1];
-        num = parseInt(num.replace(/,/g, ""));
+        num = lastLine.match(/\s+((\d{1,3}[,\s\.])+)/)[1];
+        num = parseInt(num.replace(/[,\s\.]/g, ""));
       } catch (e) {}
       if (num != null) fn(null, num + fileSize);
       else fn(new Error("Failed to get free disk size, path=" + p));
