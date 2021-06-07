@@ -76,6 +76,7 @@ angular.module("web").factory("Auth", [
     }
 
     function logout() {
+      $rootScope.bucketMap = {};
       var df = $q.defer();
       AuthInfo.remove();
       df.resolve();
