@@ -31,7 +31,7 @@
     </tr>
 
     <tr
-      ng-repeat="item in buckets|filter:sch.bucketName"
+      ng-repeat="item in buckets|filter:{name: sch.bucketName}"
       context-menu="bucketMenuOptions"
       ng-dblclick="goIn(item.name)"
       ng-click="selectBucket(item);"
