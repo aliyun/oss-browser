@@ -624,7 +624,7 @@ angular
           .listFiles(info.region, info.bucket, info.key, marker || "")
           .then(
             function (result) {
-              var arr = result.data;
+              const arr = result.data;
               settingsSvs.showImageSnapshot.get() == 1
                 ? signPicURL(info, arr)
                 : null;

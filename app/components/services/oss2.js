@@ -1353,7 +1353,8 @@ angular.module("web").factory("ossSvs2", [
           const dirs = (resp.prefixes || [])
             .filter((n) => n !== key)
             .map((n) => {
-              const name = n.replace(key, "");
+              const arr = n.split('/').filter(k => !!k);
+              const name = arr[arr.length - 1];
               return {
                 isFolder: true,
                 itemType: "folder",
@@ -1364,11 +1365,13 @@ angular.module("web").factory("ossSvs2", [
           const objects = (resp.objects || [])
             .filter((n) => n.name !== key)
             .map((n) => {
+              const arr = n.name.split('/').filter(k => !!k);
+              const name = arr[arr.length - 1];
               return Object.assign(n, {
                 isFile: true,
                 itemType: "file",
                 path: n.name,
-                name: n.name.replace(key, ""),
+                name: name,
               });
             });
           return {
