@@ -115,6 +115,7 @@ ipcMain.on("asynchronous", (event, data) => {
       event.sender.send("asynchronous-reply", { key: data.key, port: port });
       break;
     case "openDevTools":
+      process.env["DEBUG"] = 'ali-oss';
       win.webContents.openDevTools();
       break;
 
