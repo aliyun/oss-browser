@@ -957,49 +957,87 @@ angular.module("web").factory("ossSvs2", [
     }
 
     function saveContent(region, bucket, key, content) {
-      return new Promise(function (a, b) {
-        var client = getClient({
+      return new Promise(function (resolve, reject) {
+        // aliyun sdk, browser
+        const client = getClient({
           region: region,
           bucket: bucket,
         });
-
-        client.headObject(
-          {
-            Bucket: bucket,
-            Key: key,
-          },
-          function (err, result) {
-            if (err) {
-              handleError(err);
-              b(err);
-            } else {
-              client.putObject(
-                {
-                  Bucket: bucket,
-                  Key: key,
-                  Body: content,
-
-                  //保留http头
-                  ContentLanguage: result.ContentLanguage,
-                  ContentType: result.ContentType,
-                  CacheControl: result.CacheControl,
-                  ContentDisposition: result.ContentDisposition,
-                  ContentEncoding: "",
-                  Expires: result.Expires,
-                  Metadata: result.Metadata,
-                },
-                function (err) {
-                  if (err) {
-                    handleError(err);
-                    b(err);
-                  } else {
-                    a();
-                  }
-                }
-              );
-            }
+        // ali-oss, node
+        const client3 = getClient3({
+          region: region,
+          bucket: bucket,
+        })
+        Promise.all([
+          new Promise((resolve, reject) => {
+            client.headObject({Bucket: bucket, Key: key}, (err, result) => {
+              if (err) {
+                reject(err)
+              } else {
+                resolve(result)
+              }
+            })
+          }),
+          client3.getACL(key),
+          client3.getObjectTagging(key)
+        ]).then(([headResult, aclResult, taggingResult])=> {
+          let tagging = '';
+          if (taggingResult && taggingResult.tag) {
+            tagging = Object.keys(taggingResult.tag).map(function(k) {
+              return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+            }).join('&')
           }
-        );
+          client3.put(key, new Buffer(content), {
+            mime: headResult.ContentType,
+            meta: headResult.Metadata,
+            headers: {
+              'Content-Disposition': headResult.ContentDisposition,
+              'Content-Encoding': headResult.ContentEncoding,
+              'Cache-Control': headResult.CacheControl,
+              'Content-Language': headResult.ContentLanguage,
+              'x-oss-storage-class': headResult.StorageClass,
+              'x-oss-object-acl': aclResult.acl,
+              'x-oss-tagging': tagging
+            }
+          }).then(resolve).catch(e => {
+            handleError(e);
+            reject(e);
+          });
+        }).catch(e => {
+          handleError(e);
+          reject(e);
+        })
+
+
+        // client.headObject({ Bucket: bucket, Key: key }, function (err, result) {
+        //   if (err) {
+        //     handleError(err);
+        //     reject(err);
+        //   } else {
+            // client.putObject({
+            //     Bucket: bucket,
+            //     Key: key,
+            //     Body: content,
+            //
+            //     //保留http头
+            //     ContentLanguage: result.ContentLanguage,
+            //     ContentType: result.ContentType,
+            //     CacheControl: result.CacheControl,
+            //     ContentDisposition: result.ContentDisposition,
+            //     ContentEncoding: "",
+            //     Expires: result.Expires,
+            //     Metadata: result.Metadata,
+            //   }, function (err) {
+            //     if (err) {
+            //       handleError(err);
+            //       reject(err);
+            //     } else {
+            //       resolve();
+            //     }
+            //   }
+            // );
+        //   }
+        // });
       });
     }
 
@@ -1353,7 +1391,8 @@ angular.module("web").factory("ossSvs2", [
           const dirs = (resp.prefixes || [])
             .filter((n) => n !== key)
             .map((n) => {
-              const name = n.replace(key, "");
+              const arr = n.split("/").filter((k) => !!k);
+              const name = arr[arr.length - 1];
               return {
                 isFolder: true,
                 itemType: "folder",
@@ -1364,11 +1403,13 @@ angular.module("web").factory("ossSvs2", [
           const objects = (resp.objects || [])
             .filter((n) => n.name !== key)
             .map((n) => {
+              const arr = n.name.split("/").filter((k) => !!k);
+              const name = arr[arr.length - 1];
               return Object.assign(n, {
                 isFile: true,
                 itemType: "file",
                 path: n.name,
-                name: n.name.replace(key, ""),
+                name: name,
               });
             });
           return {

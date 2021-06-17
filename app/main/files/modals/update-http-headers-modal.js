@@ -35,6 +35,7 @@ angular.module("web").controller("updateHttpHeadersModalCtrl", [
     }
 
     init();
+
     function init() {
       $scope.isLoading = true;
       $scope.step = 2;
@@ -54,7 +55,7 @@ angular.module("web").controller("updateHttpHeadersModalCtrl", [
 
           var t = [];
           for (var k in result.Metadata) {
-            t.push({ key: k, value: result.Metadata[k] });
+            t.push({key: k, value: result.Metadata[k]});
           }
           $scope.metaItems = t;
 
@@ -91,23 +92,18 @@ angular.module("web").controller("updateHttpHeadersModalCtrl", [
       });
       //console.log(headers, metas)
       Toast.info(T("setting.on")); //'正在设置..'
-      Promise.all(
-        item.map((i) =>
-          ossSvs2.setMeta2(
-            currentInfo.region,
-            currentInfo.bucket,
-            i.path,
-            headers,
-            metas
-          )
-        )
-      )
-        .then(() => {
-          Toast.success(T("setting.success")); //'设置成功'
-        })
-        .finally(() => {
-          cancel();
-        });
+      Promise.all(item.map((i) =>
+        ossSvs2.setMeta2(
+          currentInfo.region,
+          currentInfo.bucket,
+          i.path,
+          headers,
+          metas
+        ))
+      ).then(() => {
+        Toast.success(T("setting.success")); //'设置成功'
+      })
+      cancel();
     }
   },
 ]);
