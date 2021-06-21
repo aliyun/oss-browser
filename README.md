@@ -14,11 +14,11 @@ Windows 7 above, Linux and Mac. We do not recommend using WindowsXP and WindowSe
 
     | Supported platform | Download link                                                                                                     |
     | :----------------- | :---------------------------------------------------------------------------------------------------------------- |
-    | Window x32         | [Window x32](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.14.0/oss-browser-win32-ia32.zip) |
-    | Window x64         | [Window x64](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.14.0/oss-browser-win32-x64.zip)  |
-    | MAC                | [MAC](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.14.0/oss-browser-darwin-x64.zip)        |
-    | Linux x32          | [Linux x32](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.14.0/oss-browser-linux-ia32.zip)   |
-    | Linux x64          | [Linux x64](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.14.0/oss-browser-linux-x64.zip)  |
+    | Window x32         | [Window x32](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.15.0/oss-browser-win32-ia32.zip) |
+    | Window x64         | [Window x64](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.15.0/oss-browser-win32-x64.zip)  |
+    | MAC                | [MAC](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.15.0/oss-browser-darwin-x64.zip)        |
+    | Linux x32          | [Linux x32](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.15.0/oss-browser-linux-ia32.zip)   |
+    | Linux x64          | [Linux x64](https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/1.15.0/oss-browser-linux-x64.zip)  |
 
 2.  Launch ossbrowser.
 3.  Log in to ossbrowser.
