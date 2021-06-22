@@ -6,31 +6,7 @@ angular.module("web").controller("mainCtrl", [
   "$q",
   "Const",
   "AuthInfo",
-  "autoUpgradeSvs",
-  function (
-    $scope,
-    $rootScope,
-    $timeout,
-    $state,
-    $q,
-    Const,
-    AuthInfo,
-    autoUpgradeSvs
-  ) {
-    angular.extend($scope, {
-      upgradeInfo: {
-        files: false,
-        currentVersion: Global.app.version,
-        isLastVersion: true,
-      },
-    });
-
-    $timeout(function () {
-      autoUpgradeSvs.load(function (info) {
-        angular.extend($scope.upgradeInfo, info);
-      });
-    }, 2000);
-
+  function ($scope, $rootScope, $timeout, $state, $q, Const, AuthInfo) {
     $rootScope.internalSupported = false;
 
     $scope.$on("$stateChangeSuccess", function () {

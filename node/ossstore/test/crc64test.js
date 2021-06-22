@@ -1,6 +1,6 @@
 var Store = require("../");
 var path = require("path");
-var fs = require("fs");
+var fs = require("original-fs");
 var should = require("should");
 
 //需要到 node/crc64/下运行 npm test

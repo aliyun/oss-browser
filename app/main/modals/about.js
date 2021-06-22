@@ -8,6 +8,7 @@ angular.module("web").controller("aboutCtrl", [
   "autoUpgradeSvs",
   "safeApply",
   "Toast",
+  "updateSvs",
   "pscope",
   function (
     $scope,
@@ -17,6 +18,7 @@ angular.module("web").controller("aboutCtrl", [
     autoUpgradeSvs,
     safeApply,
     Toast,
+    updateSvs,
     pscope
   ) {
     angular.extend($scope, {
@@ -24,19 +26,40 @@ angular.module("web").controller("aboutCtrl", [
       startUpgrade: startUpgrade,
       installAndRestart: installAndRestart,
       open: open,
-      app_logo: Global.app.logo,
+      app_logo: "icons/icon.png",
       info: {
-        currentVersion: Global.app.version,
+        currentVersion: null,
+        isLastVersion: true,
+        lastVersion: null,
+        lastReleaseNote: null,
+        status: null,
+        files: null,
+        link: null,
+        total: null,
+        current: null,
+        errorMsg: null,
       },
-      custom_about_html: Global.about_html,
+      custom_about_html: null,
     });
 
-    $interval(function () {
+    let stop = $interval(function () {
       Object.assign($scope.info, pscope.upgradeInfo);
+      if ($scope.info.current && $scope.info.total) {
+        $scope.info.progress = Math.ceil(
+          ($scope.info.current / $scope.info.total) * 100
+        );
+        safeApply($scope);
+      }
+      if ($scope.info.status === "finished") {
+        if (angular.isDefined(stop)) {
+          $interval.cancel(stop);
+          stop = undefined;
+        }
+      }
     }, 1000);
 
     function installAndRestart() {
-      gInstallAndRestart($scope.info.lastVersion);
+      updateSvs.quitAndInstall();
     }
 
     init();
@@ -45,21 +68,14 @@ angular.module("web").controller("aboutCtrl", [
 
       if (!$scope.info.isLastVersion) {
         var converter = new showdown.Converter();
-        autoUpgradeSvs.getLastestReleaseNote(
-          $scope.info.lastVersion,
-          $scope.langSettings.lang,
-          function (text) {
-            text = text + "";
-            var html = converter.makeHtml(text);
-            $scope.info.lastReleaseNote = html;
-            //safeApply($scope);
-          }
+        $scope.info.lastReleaseNote = converter.makeHtml(
+          $scope.info.lastReleaseNote
         );
       }
     }
 
     function startUpgrade() {
-      autoUpgradeSvs.start();
+      updateSvs.startDownload();
     }
 
     function open(a) {

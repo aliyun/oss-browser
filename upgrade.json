@@ -4,5 +4,8 @@
   "package_urls": [
     "https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/"
   ],
-  "files": ["app.asar"]
+  "release_note_url": "https://beajer-test.oss-cn-hangzhou.aliyuncs.com/release-notes/",
+  "files": [
+    "app.asar"
+  ]
 }

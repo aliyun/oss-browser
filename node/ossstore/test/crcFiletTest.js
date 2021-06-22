@@ -1,6 +1,6 @@
 // 切割大文件，分别计算crc64,然后计算整个crc64，分块计算进行比对
 
-var fs = require("fs");
+var fs = require("original-fs");
 var path = require("path");
 var should = require("should");
 

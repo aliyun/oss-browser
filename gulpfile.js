@@ -40,8 +40,6 @@ var taskFns = {
     //combine all js files of the app
     gulp
       .src(["!./app/**/*_test.js", "./app/**/*.js"])
-      //.pipe(plugins.jshint())
-      //.pipe(plugins.jshint.reporter('default'))
       .pipe(
         plugins.babel({
           presets: ["es2015"],
@@ -178,6 +176,7 @@ gulp.task("copy-index", function () {
     .src([
       "./app/index.html",
       "./main.js",
+      "./auto-update.js",
       "./server.js",
       "./vendor/*.js",
       "./release-notes.md",

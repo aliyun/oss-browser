@@ -22,7 +22,7 @@ angular.module("web").factory("ossUploadManager", [
     settingsSvs
   ) {
     var OssStore = require("./node/ossstore");
-    var fs = require("fs");
+    var fs = require("original-fs");
     var path = require("path");
     var os = require("os");
 

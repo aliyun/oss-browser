@@ -1,6 +1,6 @@
 "use strict";
 
-var fs = require("fs");
+var fs = require("original-fs");
 var path = require("path");
 var util = require("./util");
 var commonUtil = require("./util");
