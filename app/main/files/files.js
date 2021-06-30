@@ -616,6 +616,10 @@ angular
         doListFiles(info, marker, function (err) {
           $scope.isLoading = false;
           safeApply($scope);
+          if (err) {
+            console.error(err);
+            Toast.error(err);
+          }
         });
       }
 
@@ -628,7 +632,6 @@ angular
               settingsSvs.showImageSnapshot.get() == 1
                 ? signPicURL(info, arr)
                 : null;
-
               let oldFolderIndex = Math.max(
                 0,
                 $scope.objects.findIndex((i) => !i.isFolder)
@@ -637,23 +640,30 @@ angular
                 0,
                 arr.findIndex((i) => !i.isFolder)
               );
-              $scope.objects.splice(
-                oldFolderIndex,
-                0,
-                ...arr.slice(0, comingFolderIndex)
-              );
+              let addFolders = [];
+              let folders = arr.slice(0, comingFolderIndex);
+              let prevFolders = $scope.objects.slice(0, oldFolderIndex);
+              folders.forEach((i) => {
+                const index = prevFolders.findIndex(
+                  (j) => i.name === j.name && i.path === j.path
+                );
+                if (index === -1) {
+                  addFolders.push(i);
+                }
+              });
+              $scope.objects.splice(oldFolderIndex, 0, ...addFolders);
               $scope.objects = $scope.objects.concat(
                 arr.slice(comingFolderIndex)
               );
+
               $scope.nextObjectsMarker = result.marker || null;
 
               safeApply($scope);
               if (fn) fn(null);
             },
             function (err) {
-              console.log(err);
+              console.error(err);
               clearObjectsList();
-
               if (fn) fn(err);
             }
           );
@@ -704,8 +714,11 @@ angular
 
       function loadNext() {
         if ($scope.nextObjectsMarker) {
-          console.log("loadNext");
-          doListFiles($scope.currentInfo, $scope.nextObjectsMarker);
+          doListFiles($scope.currentInfo, $scope.nextObjectsMarker, (err) => {
+            if (err) {
+              Toast.error(err);
+            }
+          });
         }
       }
 
@@ -765,7 +778,7 @@ angular
             if (fn) fn();
           },
           function (err) {
-            console.log(err);
+            console.error(err);
             $scope.isLoading = false;
 
             clearObjectsList();
