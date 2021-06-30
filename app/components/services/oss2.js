@@ -1494,7 +1494,7 @@ angular.module("web").factory("ossSvs2", [
 
       const processData = (resp) => {
         // 部分bucket 会返回 prefiex: ['/']， 需要进行过滤
-        const dirs = (resp.prefixes || []).filter((n) => n !== key).map((n) => {
+        const dirs = (resp.prefixes || []).filter((n) => n !== key && n !== '/').map((n) => {
             const arr = n.split("/").filter((k) => !!k);
             const name = arr[arr.length - 1];
             return {
