@@ -42,17 +42,26 @@ angular.module("web").controller("deleteFilesModalCtrl", [
       $scope.isStop = false;
       $scope.step = 2;
       ossSvs2
-        .deleteFiles(currentInfo.region, currentInfo.bucket, items, function (
-          prog
-        ) {
-          //进度
-          $scope.progress = angular.copy(prog);
-          safeApply($scope);
-        })
-        .then(function (terr) {
+        .deleteFiles(
+          currentInfo.region,
+          currentInfo.bucket,
+          items,
+          function (prog) {
+            //进度
+            $scope.progress = angular.copy(prog);
+            safeApply($scope);
+          }
+        )
+        .then(function () {
           //结果
           $scope.step = 3;
-          $scope.terr = terr;
+          callback();
+        })
+        .catch((e) => {
+          $scope.step = 3;
+          // item: {isFolder,  path }
+          // error message
+          $scope.terr = e;
           callback();
         });
     }
