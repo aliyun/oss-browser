@@ -6,7 +6,8 @@ angular.module("web").factory("ossSvs2", [
   "Toast",
   "Const",
   "AuthInfo",
-  function ($q, $rootScope, $timeout, $state, Toast, Const, AuthInfo) {
+  "settingsSvs",
+  function ($q, $rootScope, $timeout, $state, Toast, Const, AuthInfo,  settingsSvs) {
     var NEXT_TICK = 1;
     var stopDeleteFilesFlag = false;
     var stopCopyFilesFlag = false;
@@ -55,6 +56,11 @@ angular.module("web").factory("ossSvs2", [
 
       //删除
       deleteFiles: deleteFiles,
+
+      //删除文件
+      deleteMultiFiles: deleteMultiFiles,
+      //删除文件夹
+      deleteFolder: deleteFolder,
       stopDeleteFiles: stopDeleteFiles,
 
       //碎片
@@ -86,7 +92,6 @@ angular.module("web").factory("ossSvs2", [
 
     function getClient2(opt) {
       var options = prepaireOptions(opt);
-      // console.log(options)
       const OSS = require("ali-oss/dist/aliyun-oss-sdk");
       var client = new OSS({
         accessKeyId: options.accessKeyId,
@@ -189,67 +194,178 @@ angular.module("web").factory("ossSvs2", [
         region: region,
         bucket: bucket,
       });
-      var progress = {
+      const progress = {
         current: 0,
         total: 0,
         errorCount: 0,
       };
-
-      const PARAMS_SIZE_LIMIT = 2000;
-
+      const files = [];
+      const folders = [];
+      items.forEach((item) => {
+        if (item.isFile) {
+          files.push(item.path);
+        } else if (item.isFolder && item.path) {
+          folders.push(item.path)
+        }
+      })
+      let p = [];
+      if (folders.length) {
+        p = p.concat(
+          folders.map((folder) => () => deleteFolder({ region, bucket, folder,  progCb, progress }))
+        );
+      }
+      if (files.length) {
+        p.push(() => deleteMultiFiles({region, bucket, files, progCb, progress}));
+      }
       return Promise.all(
-        items.map((item) => {
-          if (item.isFile || !item.path.endsWith("/")) {
-            return item.path;
-          } else {
-            return listAllFiles(region, bucket, item.path).then((objects) =>
-              objects.map((o) => o.path)
-            );
-          }
-        })
-      )
-        .then((result) => {
-          if (stopDeleteFilesFlag) return;
-          const objects = result.reduce((final, o) => final.concat(o), []);
-
-          progress.total += objects.length;
-          // 防止一次删除过多，参数长度过大，引起的请求错误
-          const tasks = [];
-          let index = 0;
-          while (index < objects.length) {
-            let size = 0;
-            let task = [];
-            while (size < PARAMS_SIZE_LIMIT) {
-              const object = objects[index];
-              task.push(object);
-              size += object.length;
-              index++;
-              if (index >= objects.length) {
-                break;
+        p.map(
+          i => i()
+            .then(value => ({status: 'fulfilled', value}))
+            .catch(reason => ({status: 'rejected', reason}))
+        )
+      ).then(v => {
+        const fulfilled = []
+        let rejected = [];
+        if (v && v.length) {
+          v.forEach(i => {
+            if (i.status === 'fulfilled') {
+              fulfilled.push(i.value)
+            } else {
+              i.status === 'rejected'
+              if (Array.isArray(i.reason)) {
+                rejected = rejected.concat(i.reason)
               }
+              rejected.push(i.reason)
             }
-            tasks.push(task);
-          }
-          return Promise.all(
-            tasks.map((names) =>
-              client.deleteMulti(names).then(({ deleted }) => {
-                progress.current += deleted.length;
-                progress.errorCount += objects.length - deleted.length;
-                if (progCb) progCb(progress);
-              })
-            )
-          );
-        })
-        .then(() => {
-          if (progCb) progCb(progress);
-          if (stopDeleteFilesFlag)
-            return [
-              {
-                item: {},
-                error: new Error("User cancelled"),
+          })
+        }
+        if (rejected && rejected.length) {
+          throw rejected;
+        }
+        return fulfilled;
+      })
+    }
+
+    /**
+     * 删除某个文件夹
+     * @param region {string}
+     * @param bucket {string}
+     * @param folder  {string} 目录
+     * @param progCb  {function} 可选， 进度回调  (current,total, errorCount)
+     */
+    function deleteFolder({ region, bucket, folder, marker, progCb, progress}) {
+      const client = getClient3({ region: region, bucket: bucket });
+      const options = { prefix: folder, "max-keys": 1000 };
+      if (stopDeleteFilesFlag) {
+        throw {
+          item: {
+            isFolder: true,
+            path: folder
+          },
+          error: new Error('User cancelled')
+        }
+      }
+      return new Promise((resolve, reject) => {
+        let listFinish = false;
+        const listDeleteFolder = (token) => {
+          if (stopDeleteFilesFlag) {
+            reject({
+              item: {
+                isFolder: true,
+                path: folder
               },
-            ];
-        });
+              error: new Error('User cancelled')
+            })
+            return
+          }
+          return client.listV2(Object.assign({}, options, { 'continuation-token': token }))
+            .then(({objects = [], nextContinuationToken, isTruncated}) => {
+              if (stopDeleteFilesFlag) {
+                reject({
+                  item: {
+                    isFolder: true,
+                    path: folder
+                  },
+                  error: new Error('User cancelled')
+                })
+                return;
+              }
+              const files = objects.map(i => i.name);
+              if (files && files.length) {
+                progress.total += files.length;
+                if (progCb) progCb(progress);
+                client.deleteMulti(files).then(() => {
+                  progress.current += files.length;
+                  progCb(progress);
+                  if (listFinish && progress.current + progress.errorCount === progress.total) {
+                    resolve();
+                    return;
+                  }
+                }).catch((e) => {
+                  progress.errorCount += files.length;
+                  console.error('删除失败', e)
+                })
+              }
+            if (nextContinuationToken) {
+              return listDeleteFolder(nextContinuationToken);
+            } else {
+              listFinish = true;
+              return '';
+            }
+          }).catch(() => {
+            reject();
+          });
+        }
+        listDeleteFolder('');
+      })
+    }
+    /**
+     * 删除多个文件
+     * @param region {string}
+     * @param bucket {string}
+     * @param files  {string[]} 文件数组
+     * @param progCb  {function} 可选， 进度回调  (current,total, errorCount)
+     */
+    function deleteMultiFiles({ region, bucket, files, progCb, progress}) {
+      const client = getClient3({
+        region: region,
+        bucket: bucket
+      });
+      const CHUNK_SIZE = 1000;
+
+
+      return new Promise((resolve, reject) => {
+        const chunk = files.reduce((rows, key, index) =>
+          (index % CHUNK_SIZE == 0 ? rows.push([key]) : rows[rows.length - 1].push(key)) && rows,
+          [])
+        chunk.forEach((chunkFiles, index) => {
+          progress.total += chunkFiles.length;
+          if (stopDeleteFilesFlag) {
+            reject(chunkFiles.map((i) => {
+              return {
+                item: {
+                  isFile: true,
+                  path: i
+                },
+                error: new Error('User cancelled')
+              }
+            }));
+            return
+          }
+          client.deleteMulti(chunkFiles).then(() => {
+            progress.current += chunkFiles.length;
+            progCb(progress);
+            if (index === chunk.length - 1) {
+              resolve();
+              return
+            }
+          }).catch((e) => {
+            progress.errorCount += files.length;
+            console.error('删除失败', e)
+            reject(e);
+          })
+        })
+      })
     }
 
     function stopCopyFiles() {
@@ -258,7 +374,7 @@ angular.module("web").factory("ossSvs2", [
 
     /**
      * 批量复制或移动文件
-     * @param retion {string} 要求相同region
+     * @param region {string} 要求相同region
      * @param items {array} 需要被复制的文件列表，可能为folder，可能为file
      * @param target {object} {bucket,key} 目标目录路径
      * @param progFn {Function} 进度回调  {current:1, total: 11, errorCount: 0}
@@ -299,13 +415,11 @@ angular.module("web").factory("ossSvs2", [
           to.bucket + "/" + toKey
         );
 
-        client.copyObject(
-          {
+        client.copyObject({
             Bucket: to.bucket,
             Key: toKey,
             CopySource: fromKey,
-          },
-          function (err) {
+          }, function (err) {
             if (err) {
               fn(err);
               return;
@@ -433,7 +547,7 @@ angular.module("web").factory("ossSvs2", [
                 key: target.key,
                 bucket: target.bucket,
               };
-              const objs = result.objects
+              let objs = result.objects
                 .filter((n) => n.name !== opt.prefix)
                 .map((n) => {
                   return Object.assign({}, n, {
@@ -443,6 +557,18 @@ angular.module("web").factory("ossSvs2", [
                     name: n.name.replace(opt.prefix, ""),
                   });
                 });
+              if (result.objects && result.objects.length === 1 &&
+                result.objects[0].name === opt.prefix && !result.isTruncated
+              ) {
+                // 如果只有一个空文件夹，需要单独重命名这个空文件夹，不能过滤掉
+                const file =  result.objects[0];
+                objs = [Object.assign({}, file, {
+                  isFile: true,
+                  itemType: "file",
+                  path: file.name,
+                  name: ''
+                })]
+              }
 
               doCopyOssFiles(
                 source.bucket,
@@ -1261,7 +1387,7 @@ angular.module("web").factory("ossSvs2", [
     }
 
     function listFiles(region, bucket, key, marker) {
-      return new Promise(function (a, b) {
+      return new Promise(function (resolve, reject) {
         let ready = [];
         let ready_dirs = [];
         let ready_objects = [];
@@ -1272,13 +1398,6 @@ angular.module("web").factory("ossSvs2", [
               ready_dirs = ready_dirs.concat(dirs);
               ready_objects = ready_objects.concat(objects);
               ready = ready_dirs.concat(ready_objects);
-              if (
-                ready.length < result.maxKeys &&
-                result.truncated &&
-                result.marker
-              ) {
-                return get(result.marker);
-              }
             }
             return {
               data: ready,
@@ -1289,39 +1408,34 @@ angular.module("web").factory("ossSvs2", [
           });
         }
 
-        get(marker).then(
-          function (result) {
-            var arr = result.data;
-            if (arr && arr.length) {
-              $timeout(() => {
-                loadStorageStatus(region, bucket, arr);
-              }, NEXT_TICK);
-            }
-            a(result);
-          },
-          function (err) {
-            b(err);
+        get(marker).then(function (result) {
+          var arr = result.data;
+          if (arr && arr.length) {
+            $timeout(() => {
+              loadStorageStatus(region, bucket, arr);
+            }, NEXT_TICK);
           }
-        );
+          resolve(result);
+        }, reject);
       });
     }
 
     function loadStorageStatus(region, bucket, arr) {
-      return new Promise(function (a, b) {
+      return new Promise(function (resolve, reject) {
         var len = arr.length;
         var c = 0;
         _dig();
 
         function _dig() {
           if (c >= len) {
-            a();
+            resolve();
             return;
           }
           var item = arr[c];
           c++;
 
           if (!item.isFile || item.storageClass != "Archive") {
-            $timeout(_dig, NEXT_TICK);
+            _dig();
             return;
           }
 
@@ -1339,10 +1453,9 @@ angular.module("web").factory("ossSvs2", [
                 item.storageStatus = 1;
               }
               $timeout(_dig, NEXT_TICK);
-            },
-            function (err) {
-              b(err);
-              $timeout(_dig, NEXT_TICK);
+            }, function (err) {
+              _dig();
+              reject(err);
             }
           );
         }
@@ -1375,18 +1488,77 @@ angular.module("web").factory("ossSvs2", [
       });
     }
 
-    function _listFilesOrigion(region, bucket, key, marker) {
+    function _listFilesOrigion(region, bucket, key, marker = '', length = 1000) {
       const client = getClient3({
         region,
         bucket,
       });
-      return client
-        .listV2({
-          prefix: key,
-          delimiter: "/",
-          "max-keys": 1000,
-          "continuation-token": marker,
-        })
+      const options = {prefix: key, delimiter: "/", "max-keys": length};
+      let data = {
+        nextContinuationToken: '',
+        objects: [],
+        prefixes: [],
+        keyCount: [],
+        isTruncated: true,
+      };
+
+      const processData = (resp) => {
+        // 部分bucket 会返回 prefiex: ['/']， 需要进行过滤
+        const dirs = (resp.prefixes || []).filter((n) => n !== key && n !== '/').map((n) => {
+            const arr = n.split("/").filter((k) => !!k);
+            const name = arr[arr.length - 1];
+            return {
+              isFolder: true,
+              itemType: "folder",
+              path: n,
+              name: name === "/" ? name : name.replace(/\/$/, ""),
+            };
+          });
+        const objects = (resp.objects || [])
+          .filter((n) => n.name !== key)
+          .map((n) => {
+            const arr = n.name.split("/").filter((k) => !!k);
+            const name = arr[arr.length - 1];
+            return Object.assign(n, {
+              isFile: true,
+              itemType: "file",
+              path: n.name,
+              name: name,
+            });
+          });
+        return {
+          data: {
+            dirs,
+            objects,
+          },
+          marker: resp.nextContinuationToken,
+          truncated: resp.isTruncated,
+        };
+      }
+
+      return new Promise((resolve, reject) => {
+        const list = (token) => {
+          client.listV2(Object.assign({}, options, { "continuation-token": token })).then(res => {
+            if (res.objects && res.objects.length) {
+              data.objects = data.objects.concat(res.objects)
+            }
+            if (res.prefixes && res.prefixes.length) {
+              data.prefixes = data.prefixes.concat(res.prefixes)
+            }
+            data.keyCount += res.keyCount;
+            data.isTruncated = res.isTruncated;
+            data.nextContinuationToken = res.nextContinuationToken;
+            if (res.isTruncated && res.nextContinuationToken && data.keyCount < length) {
+              options['max-keys'] = length - data.keyCount;
+              list(res.nextContinuationToken);
+            } else {
+              resolve(processData(data));
+            }
+          }).catch(reject)
+        };
+        list(marker)
+      })
+      return client.listV2(Object.assign({}, options, { "continuation-token": marker }))
         .then((resp) => {
           const dirs = (resp.prefixes || [])
             .filter((n) => n !== key)
@@ -1429,10 +1601,7 @@ angular.module("web").factory("ossSvs2", [
     }
 
     function listAllFiles(region, bucket, key, folderOnly) {
-      const client = getClient3({
-        region,
-        bucket,
-      });
+      const client = getClient3({ region, bucket});
 
       let all_dirs = [];
       let all_objects = [];
@@ -1595,14 +1764,15 @@ angular.module("web").factory("ossSvs2", [
         endpointname
       );
       console.log("[endpoint]:", endpoint);
-      var options = {
+      const timeout = settingsSvs.connectTimeout.get();
+      const options = {
         //region: authInfo.region,
         accessKeyId: authInfo.id || "a",
         secretAccessKey: authInfo.secret || "a",
         endpoint: endpoint,
         apiVersion: "2013-10-15",
         httpOptions: {
-          timeout: authInfo.httpOptions ? authInfo.httpOptions.timeout : 0,
+          timeout: authInfo.httpOptions ? authInfo.httpOptions.timeout : timeout,
         },
         maxRetries: 50,
         cname: authInfo.cname || false,
