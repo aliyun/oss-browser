@@ -16,6 +16,7 @@
     "node": "8.2.1"
   },
   "devDependencies": {
+    "@alicloud/eslint-config": "^1.2.23",
     "angular": "1.5.8",
     "angular-bootstrap-contextmenu": "^1.1.0",
     "angular-sanitize": "1.5.8",
@@ -36,8 +37,6 @@
     "electron": "1.8.4",
     "electron-packager": "7.1.0",
     "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-plugin-prettier": "^3.1.2",
     "font-awesome": "^4.7.0",
     "gulp": "~3.5.5",
     "gulp-angular-templatecache": "^1.1.0",
@@ -57,7 +56,6 @@
     "mocha": "~2.4.5",
     "moment": "^2.19.2",
     "npm-run-all": "^4.0.2",
-    "prettier": "^2.0.4",
     "shelljs": "~0.7.0",
     "should": "~9.0.0",
     "showdown": "^1.4.2",
@@ -84,7 +82,6 @@
     }
   },
   "lint-staged": {
-    "*.js": "eslint --fix",
-    "*.{js,css,md}": "prettier --write"
+    "app/**/*.js": ["eslint --fix", "git add"]
   }
 }

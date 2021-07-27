@@ -415,13 +415,11 @@ angular.module("web").factory("ossSvs2", [
           to.bucket + "/" + toKey
         );
 
-        client.copyObject(
-          {
+        client.copyObject({
             Bucket: to.bucket,
             Key: toKey,
             CopySource: fromKey,
-          },
-          function (err) {
+          }, function (err) {
             if (err) {
               fn(err);
               return;
@@ -549,7 +547,7 @@ angular.module("web").factory("ossSvs2", [
                 key: target.key,
                 bucket: target.bucket,
               };
-              const objs = result.objects
+              let objs = result.objects
                 .filter((n) => n.name !== opt.prefix)
                 .map((n) => {
                   return Object.assign({}, n, {
@@ -559,6 +557,18 @@ angular.module("web").factory("ossSvs2", [
                     name: n.name.replace(opt.prefix, ""),
                   });
                 });
+              if (result.objects && result.objects.length === 1 &&
+                result.objects[0].name === opt.prefix && !result.isTruncated
+              ) {
+                // 如果只有一个空文件夹，需要单独重命名这个空文件夹，不能过滤掉
+                const file =  result.objects[0];
+                objs = [Object.assign({}, file, {
+                  isFile: true,
+                  itemType: "file",
+                  path: file.name,
+                  name: ''
+                })]
+              }
 
               doCopyOssFiles(
                 source.bucket,

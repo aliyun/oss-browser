@@ -10,7 +10,7 @@
   "rules": {
     "semi": 2
   },
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "extends": ["@alicloud/eslint-config/es5"],
   "ignorePatterns": ["static/", "vendor/", "dist/", "node_modules/", "test/"],
   "env": {
     "es6": true,
