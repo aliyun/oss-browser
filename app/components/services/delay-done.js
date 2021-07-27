@@ -1,11 +1,11 @@
-angular.module("web").factory("DelayDone", [
-  "$timeout",
-  function ($timeout) {
+angular.module('web').factory('DelayDone', [
+  '$timeout',
+  function($timeout) {
     var mDelayCall = {};
 
     return {
       delayRun: delayRun,
-      seriesRun: seriesRun,
+      seriesRun: seriesRun
     };
 
     /**
@@ -16,11 +16,13 @@ angular.module("web").factory("DelayDone", [
      */
 
     function delayRun(id, timeout, fn, times) {
-      if (!mDelayCall[id])
+      if (!mDelayCall[id]) {
         mDelayCall[id] = {
-          tid: "",
-          c: 0,
+          tid: '',
+          c: 0
         };
+      }
+
       var n = mDelayCall[id];
 
       n.c++;
@@ -40,12 +42,14 @@ angular.module("web").factory("DelayDone", [
 
       function _dig() {
         var n = arr[c];
-        fn(n, function () {
+
+        fn(n, function() {
           c++;
+
           if (c >= len) {
             doneFn();
           } else {
-            $timeout(function () {
+            $timeout(function() {
               _dig();
             }, 1);
           }
@@ -53,5 +57,5 @@ angular.module("web").factory("DelayDone", [
       }
       _dig();
     }
-  },
+  }
 ]);

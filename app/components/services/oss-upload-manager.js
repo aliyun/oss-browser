@@ -1,30 +1,30 @@
-angular.module("web").factory("ossUploadManager", [
-  "$q",
-  "$state",
-  "$timeout",
-  "ossSvs2",
-  "AuthInfo",
-  "Toast",
-  "Const",
-  "DelayDone",
-  "safeApply",
-  "settingsSvs",
-  function (
-    $q,
-    $state,
-    $timeout,
-    ossSvs2,
-    AuthInfo,
-    Toast,
-    Const,
-    DelayDone,
-    safeApply,
-    settingsSvs
+angular.module('web').factory('ossUploadManager', [
+  '$q',
+  '$state',
+  '$timeout',
+  'ossSvs2',
+  'AuthInfo',
+  'Toast',
+  'Const',
+  'DelayDone',
+  'safeApply',
+  'settingsSvs',
+  function(
+      $q,
+      $state,
+      $timeout,
+      ossSvs2,
+      AuthInfo,
+      Toast,
+      Const,
+      DelayDone,
+      safeApply,
+      settingsSvs
   ) {
-    var OssStore = require("./node/ossstore");
-    var fs = require("fs");
-    var path = require("path");
-    var os = require("os");
+    var OssStore = require('./node/ossstore');
+    var fs = require('fs');
+    var path = require('path');
+    var os = require('os');
 
     var stopCreatingFlag = false;
 
@@ -38,9 +38,9 @@ angular.module("web").factory("ossUploadManager", [
       checkStart: checkStart,
       saveProg: saveProg,
 
-      stopCreatingJobs: function () {
+      stopCreatingJobs: function() {
         stopCreatingFlag = true;
-      },
+      }
     };
 
     function init(scope) {
@@ -52,60 +52,61 @@ angular.module("web").factory("ossUploadManager", [
       var arr = loadProg();
       var authInfo = AuthInfo.get();
 
-      angular.forEach(arr, function (n) {
-        //console.log(n,'<=====');
+      angular.forEach(arr, function(n) {
+        // console.log(n,'<=====');
         var job = createJob(authInfo, n);
+
         if (
-          job.status == "waiting" ||
-          job.status == "running" ||
-          job.status == "verifying" ||
-          job.status == "retrying"
-        )
-          job.stop();
+          job.status == 'waiting' ||
+          job.status == 'running' ||
+          job.status == 'verifying' ||
+          job.status == 'retrying'
+        ) { job.stop(); }
+
         addEvents(job);
       });
     }
 
     function addEvents(job) {
       $scope.lists.uploadJobList.push(job);
-      //$scope.calcTotalProg();
+      // $scope.calcTotalProg();
       safeApply($scope);
       checkStart();
 
-      //save
+      // save
       saveProg();
 
-      job.on("partcomplete", function (prog) {
+      job.on('partcomplete', function(prog) {
         safeApply($scope);
-        //save
+        // save
         saveProg();
       });
 
-      job.on("statuschange", function (status, retryTimes) {
-        if (status == "stopped") {
+      job.on('statuschange', function(status, retryTimes) {
+        if (status == 'stopped') {
           concurrency--;
           $timeout(checkStart, 100);
         }
 
-        if (status == "retrying") {
+        if (status == 'retrying') {
           $scope.retryTimes = retryTimes;
         }
 
         safeApply($scope);
-        //save
+        // save
         saveProg();
       });
-      job.on("speedChange", function () {
+      job.on('speedChange', function() {
         safeApply($scope);
       });
 
-      job.on("complete", function () {
+      job.on('complete', function() {
         concurrency--;
         checkStart();
         checkNeedRefreshFileList(job.to.bucket, job.to.key);
-        //$scope.$emit('needrefreshfilelists');
+        // $scope.$emit('needrefreshfilelists');
       });
-      job.on("error", function (err) {
+      job.on('error', function(err) {
         console.error(err);
         concurrency--;
         checkStart();
@@ -113,17 +114,21 @@ angular.module("web").factory("ossUploadManager", [
     }
 
     function checkStart() {
-      //流控, 同时只能有 n 个上传任务.
+      // 流控, 同时只能有 n 个上传任务.
       var maxConcurrency = settingsSvs.maxUploadJobCount.get();
-      //console.log(concurrency , maxConcurrency);
+
+      // console.log(concurrency , maxConcurrency);
       concurrency = Math.max(0, concurrency);
+
       if (concurrency < maxConcurrency) {
         var arr = $scope.lists.uploadJobList;
+
         for (var i = 0; i < arr.length; i++) {
-          if (concurrency >= maxConcurrency) return;
+          if (concurrency >= maxConcurrency) { return; }
 
           var n = arr[i];
-          if (n.status == "waiting") {
+
+          if (n.status == 'waiting') {
             n.start();
             concurrency++;
           }
@@ -133,11 +138,12 @@ angular.module("web").factory("ossUploadManager", [
 
     function checkNeedRefreshFileList(bucket, key) {
       if ($scope.currentInfo.bucket == bucket) {
-        var p = path.dirname(key) + "/";
-        p = p == "./" ? "" : p;
+        var p = path.dirname(key) + '/';
+
+        p = p == './' ? '' : p;
 
         if ($scope.currentInfo.key == p) {
-          $scope.$emit("needrefreshfilelists");
+          $scope.$emit('needrefreshfilelists');
         }
       }
     }
@@ -151,14 +157,13 @@ angular.module("web").factory("ossUploadManager", [
      */
     function createUploadJobs(filePaths, bucketInfo, jobsAddingFn) {
       stopCreatingFlag = false;
-      //console.log('--------uploadFilesHandler:',  filePaths, bucketInfo);
+      // console.log('--------uploadFilesHandler:',  filePaths, bucketInfo);
 
       var authInfo = AuthInfo.get();
 
-      digArr(filePaths, function () {
-        if (jobsAddingFn) jobsAddingFn();
+      digArr(filePaths, function() {
+        if (jobsAddingFn) { jobsAddingFn(); }
       });
-      return;
 
       function digArr(filePaths, fn) {
         var t = [];
@@ -169,9 +174,9 @@ angular.module("web").factory("ossUploadManager", [
           var n = filePaths[c];
           var dirPath = path.dirname(n);
 
-          if (stopCreatingFlag) return;
+          if (stopCreatingFlag) { return; }
 
-          dig(filePaths[c], dirPath, function (jobs) {
+          dig(filePaths[c], dirPath, function(jobs) {
             t = t.concat(jobs);
             c++;
 
@@ -190,17 +195,17 @@ angular.module("web").factory("ossUploadManager", [
         var t = [];
         var len = arr.length;
         var c = 0;
-        if (len == 0) callFn([]);
-        else inDig();
 
-        //串行
+        if (len == 0) { callFn([]); } else { inDig(); }
+
+        // 串行
         function inDig() {
-          dig(path.join(parentPath, arr[c]), dirPath, function (jobs) {
+          dig(path.join(parentPath, arr[c]), dirPath, function(jobs) {
             t = t.concat(jobs);
             c++;
-            //console.log(c,'/',len);
-            if (c >= len) callFn(t);
-            else {
+
+            // console.log(c,'/',len);
+            if (c >= len) { callFn(t); } else {
               if (stopCreatingFlag) {
                 return;
               }
@@ -220,26 +225,26 @@ angular.module("web").factory("ossUploadManager", [
 
         var filePath = path.relative(dirPath, absPath);
 
-        if (path.sep != "/") {
-          //修复window下 \ 问题
-          filePath = filePath.replace(/\\/g, "/");
+        if (path.sep != '/') {
+          // 修复window下 \ 问题
+          filePath = filePath.replace(/\\/g, '/');
         }
 
-        //修复window下 \ 问题
+        // 修复window下 \ 问题
         filePath = bucketInfo.key
-          ? bucketInfo.key.replace(/(\/*$)/g, "") + "/" + filePath
+          ? bucketInfo.key.replace(/(\/*$)/g, '') + '/' + filePath
           : filePath;
 
         if (fs.statSync(absPath).isDirectory()) {
-          //创建目录
+          // 创建目录
           ossSvs2
-            .createFolder(bucketInfo.region, bucketInfo.bucket, filePath + "/")
-            .then(function () {
-              //判断是否刷新文件列表
-              checkNeedRefreshFileList(bucketInfo.bucket, filePath + "/");
-            });
+              .createFolder(bucketInfo.region, bucketInfo.bucket, filePath + '/')
+              .then(function() {
+              // 判断是否刷新文件列表
+                checkNeedRefreshFileList(bucketInfo.bucket, filePath + '/');
+              });
 
-          //递归遍历目录
+          // 递归遍历目录
           // var t = [];
           // var arr = fs.readdirSync(absPath);
           // arr.forEach(function (fname) {
@@ -247,34 +252,34 @@ angular.module("web").factory("ossUploadManager", [
           //   t = t.concat(ret);
           // });
 
-          fs.readdir(absPath, function (err, arr) {
+          fs.readdir(absPath, function(err, arr) {
             if (err) {
               console.log(err.stack);
             } else {
-              loop(absPath, dirPath, arr, function (jobs) {
-                $timeout(function () {
+              loop(absPath, dirPath, arr, function(jobs) {
+                $timeout(function() {
                   callFn(jobs);
                 }, 1);
               });
             }
           });
         } else {
-          //文件
+          // 文件
           var job = createJob(authInfo, {
             region: bucketInfo.region,
             from: {
               name: fileName,
-              path: absPath,
+              path: absPath
             },
             to: {
               bucket: bucketInfo.bucket,
-              key: filePath,
-            },
+              key: filePath
+            }
           });
 
           addEvents(job);
 
-          $timeout(function () {
+          $timeout(function() {
             callFn([job]);
           }, 1);
         }
@@ -295,37 +300,38 @@ angular.module("web").factory("ossUploadManager", [
       var cname = AuthInfo.get().cname || false;
       var endpointname = cname ? auth.eptplcname : auth.eptpl;
 
-      //stsToken
-      if (auth.stoken && auth.id.indexOf("STS.") == 0) {
+      // stsToken
+      if (auth.stoken && auth.id.indexOf('STS.') == 0) {
         var store = new OssStore({
           stsToken: {
             Credentials: {
               AccessKeyId: auth.id,
               AccessKeySecret: auth.secret,
-              SecurityToken: auth.stoken,
-            },
+              SecurityToken: auth.stoken
+            }
           },
           endpoint: ossSvs2.getOssEndpoint(
-            opt.region,
-            opt.to.bucket,
-            endpointname
+              opt.region,
+              opt.to.bucket,
+              endpointname
           ),
-          cname: cname,
+          cname: cname
         });
       } else {
         var store = new OssStore({
           aliyunCredential: {
             accessKeyId: auth.id,
-            secretAccessKey: auth.secret,
+            secretAccessKey: auth.secret
           },
           endpoint: ossSvs2.getOssEndpoint(
-            opt.region,
-            opt.to.bucket,
-            endpointname
+              opt.region,
+              opt.to.bucket,
+              endpointname
           ),
-          cname: cname,
+          cname: cname
         });
       }
+
       return store.createUploadJob(opt);
       // {
       //   region: opt.region,
@@ -339,37 +345,39 @@ angular.module("web").factory("ossUploadManager", [
      */
     function saveProg() {
       DelayDone.delayRun(
-        "save_upload_prog",
-        1000,
-        function () {
-          var t = [];
-          angular.forEach($scope.lists.uploadJobList, function (n) {
-            if (n.status == "finished") return;
+          'save_upload_prog',
+          1000,
+          function() {
+            var t = [];
 
-            if (n.checkPoints && n.checkPoints.chunks) {
-              var checkPoints = angular.copy(n.checkPoints);
-              delete checkPoints.chunks;
-            }
+            angular.forEach($scope.lists.uploadJobList, function(n) {
+              if (n.status == 'finished') { return; }
 
-            t.push({
-              crc64Str: n.crc64Str,
-              checkPoints: checkPoints,
-              region: n.region,
-              to: n.to,
-              from: n.from,
-              status: n.status,
-              message: n.message,
-              prog: n.prog,
+              if (n.checkPoints && n.checkPoints.chunks) {
+                var checkPoints = angular.copy(n.checkPoints);
+
+                delete checkPoints.chunks;
+              }
+
+              t.push({
+                crc64Str: n.crc64Str,
+                checkPoints: checkPoints,
+                region: n.region,
+                to: n.to,
+                from: n.from,
+                status: n.status,
+                message: n.message,
+                prog: n.prog
+              });
             });
-          });
 
-          //console.log('request save upload:', t);
+            // console.log('request save upload:', t);
 
-          //console.log('-save')
-          fs.writeFileSync(getUpProgFilePath(), JSON.stringify(t));
-          $scope.calcTotalProg();
-        },
-        20
+            // console.log('-save')
+            fs.writeFileSync(getUpProgFilePath(), JSON.stringify(t));
+            $scope.calcTotalProg();
+          },
+          20
       );
     }
 
@@ -379,20 +387,24 @@ angular.module("web").factory("ossUploadManager", [
     function loadProg() {
       try {
         var data = fs.readFileSync(getUpProgFilePath());
-        return JSON.parse(data ? data.toString() : "[]");
+
+        return JSON.parse(data ? data.toString() : '[]');
       } catch (e) {}
+
       return [];
     }
 
-    //上传进度保存路径
+    // 上传进度保存路径
     function getUpProgFilePath() {
-      var folder = path.join(os.homedir(), ".oss-browser");
+      var folder = path.join(os.homedir(), '.oss-browser');
+
       if (!fs.existsSync(folder)) {
         fs.mkdirSync(folder);
       }
 
-      var username = AuthInfo.get().id || "";
-      return path.join(folder, "upprog_" + username + ".json");
+      var username = AuthInfo.get().id || '';
+
+      return path.join(folder, 'upprog_' + username + '.json');
     }
-  },
+  }
 ]);

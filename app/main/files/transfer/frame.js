@@ -1,23 +1,24 @@
-angular.module("web").controller("transferFrameCtrl", [
-  "$scope",
-  "$translate",
-  "ossUploadManager",
-  "ossDownloadManager",
-  "Toast",
-  "safeApply",
-  function (
-    $scope,
-    $translate,
-    ossUploadManager,
-    ossDownloadManager,
-    Toast,
-    safeApply
+angular.module('web').controller('transferFrameCtrl', [
+  '$scope',
+  '$translate',
+  'ossUploadManager',
+  'ossDownloadManager',
+  'Toast',
+  'safeApply',
+  function(
+      $scope,
+      $translate,
+      ossUploadManager,
+      ossDownloadManager,
+      Toast,
+      safeApply
   ) {
     var T = $translate.instant;
+
     angular.extend($scope, {
       lists: {
         uploadJobList: [],
-        downloadJobList: [],
+        downloadJobList: []
       },
 
       totalProg: { loaded: 0, total: 0 },
@@ -29,14 +30,14 @@ angular.module("web").controller("transferFrameCtrl", [
         upFailed: 0,
         upStopped: 0,
         downFailed: 0,
-        downStopped: 0,
+        downStopped: 0
       },
       calcTotalProg: calcTotalProg,
 
-      transTab: 1,
+      transTab: 1
     });
 
-    //functions in parent scope
+    // functions in parent scope
     $scope.handlers.uploadFilesHandler = uploadFilesHandler;
 
     $scope.handlers.downloadFilesHandler = downloadFilesHandler;
@@ -56,11 +57,11 @@ angular.module("web").controller("transferFrameCtrl", [
      * @param toLocalPath {string}
      */
     function downloadFilesHandler(fromOssPath, toLocalPath) {
-      Toast.info(T("download.addtolist.on")); //'正在添加到下载队列'
-      ossDownloadManager.createDownloadJobs(fromOssPath, toLocalPath, function (
-        isCancelled
+      Toast.info(T('download.addtolist.on')); // '正在添加到下载队列'
+      ossDownloadManager.createDownloadJobs(fromOssPath, toLocalPath, function(
+          isCancelled
       ) {
-        Toast.info(T("download.addtolist.success")); //'已全部添加到下载队列'
+        Toast.info(T('download.addtolist.success')); // '已全部添加到下载队列'
         $scope.toggleTransVisible(true);
         $scope.transTab = 2;
       });
@@ -71,52 +72,60 @@ angular.module("web").controller("transferFrameCtrl", [
      * @param bucketInfo {object} {bucket, region, key}
      */
     function uploadFilesHandler(filePaths, bucketInfo) {
-      Toast.info(T("upload.addtolist.on")); //'正在添加到上传队列'
-      ossUploadManager.createUploadJobs(filePaths, bucketInfo, function (
-        isCancelled
+      Toast.info(T('upload.addtolist.on')); // '正在添加到上传队列'
+      ossUploadManager.createUploadJobs(filePaths, bucketInfo, function(
+          isCancelled
       ) {
-        Toast.info(T("upload.addtolist.success")); //'已全部添加到上传队列'
+        Toast.info(T('upload.addtolist.success')); // '已全部添加到上传队列'
         $scope.toggleTransVisible(true);
         $scope.transTab = 1;
       });
     }
 
     function calcTotalProg() {
-      var c = 0,
-        c2 = 0;
-      var cf = 0,
-        cs = 0;
-      var cf2 = 0,
-        cs2 = 0;
-      angular.forEach($scope.lists.uploadJobList, function (n) {
-        if (n.status == "running") {
+      var c = 0;
+      var c2 = 0;
+      var cf = 0;
+      var cs = 0;
+      var cf2 = 0;
+      var cs2 = 0;
+
+      angular.forEach($scope.lists.uploadJobList, function(n) {
+        if (n.status == 'running') {
           c++;
         }
-        if (n.status == "waiting") {
+
+        if (n.status == 'waiting') {
           c++;
         }
-        if (n.status == "verifying") {
+
+        if (n.status == 'verifying') {
           c++;
         }
-        if (n.status == "failed") {
+
+        if (n.status == 'failed') {
           cf++;
         }
-        if (n.status == "stopped") {
+
+        if (n.status == 'stopped') {
           c++;
           cs++;
         }
       });
-      angular.forEach($scope.lists.downloadJobList, function (n) {
-        if (n.status == "running") {
+      angular.forEach($scope.lists.downloadJobList, function(n) {
+        if (n.status == 'running') {
           c2++;
         }
-        if (n.status == "waiting") {
+
+        if (n.status == 'waiting') {
           c2++;
         }
-        if (n.status == "failed") {
+
+        if (n.status == 'failed') {
           cf2++;
         }
-        if (n.status == "stopped") {
+
+        if (n.status == 'stopped') {
           c2++;
           cs2++;
         }
@@ -136,7 +145,7 @@ angular.module("web").controller("transferFrameCtrl", [
       $scope.totalNum.total =
         $scope.lists.uploadJobList.length + $scope.lists.downloadJobList.length;
 
-      //safeApply($scope);
+      // safeApply($scope);
     }
-  },
+  }
 ]);

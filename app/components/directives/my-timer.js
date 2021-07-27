@@ -1,14 +1,14 @@
-angular.module("web").directive("myTimer", [
-  "$timeout",
-  "utilSvs",
-  function ($timeout, utilSvs) {
+angular.module('web').directive('myTimer', [
+  '$timeout',
+  'utilSvs',
+  function($timeout, utilSvs) {
     return {
       link: linkFn,
-      restrict: "EA",
+      restrict: 'EA',
       transclude: false,
       scope: {
-        expiration: "=",
-      },
+        expiration: '='
+      }
     };
 
     function linkFn(scope, ele, attr) {
@@ -21,8 +21,9 @@ angular.module("web").directive("myTimer", [
 
       function go() {
         var s = Date.parse(scope.expiration) - Date.now();
+
         ele.html(utilSvs.leftTime(s));
       }
     }
-  },
+  }
 ]);

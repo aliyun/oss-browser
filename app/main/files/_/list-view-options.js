@@ -1,18 +1,18 @@
-angular.module("web").controller("listViewOptionsCtrl", [
-  "$scope",
-  function ($scope) {
+angular.module('web').controller('listViewOptionsCtrl', [
+  '$scope',
+  function($scope) {
     angular.extend($scope, {
-      setListView: setListView,
+      setListView: setListView
     });
 
     $scope.ref.isListView = getListView();
 
     function getListView() {
-      return localStorage.getItem("is-list-view") == "false" ? false : true;
+      return localStorage.getItem('is-list-view') != 'false';
     }
     function setListView(f) {
       $scope.ref.isListView = f;
-      localStorage.setItem("is-list-view", f);
+      localStorage.setItem('is-list-view', f);
     }
-  },
+  }
 ]);

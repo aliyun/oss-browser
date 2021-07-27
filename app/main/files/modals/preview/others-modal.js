@@ -1,21 +1,21 @@
-angular.module("web").controller("othersModalCtrl", [
-  "$scope",
-  "$uibModalInstance",
-  "$uibModal",
-  "bucketInfo",
-  "objectInfo",
-  "fileType",
-  "showFn",
-  "safeApply",
-  function (
-    $scope,
-    $modalInstance,
-    $modal,
-    bucketInfo,
-    objectInfo,
-    fileType,
-    showFn,
-    safeApply
+angular.module('web').controller('othersModalCtrl', [
+  '$scope',
+  '$uibModalInstance',
+  '$uibModal',
+  'bucketInfo',
+  'objectInfo',
+  'fileType',
+  'showFn',
+  'safeApply',
+  function(
+      $scope,
+      $modalInstance,
+      $modal,
+      bucketInfo,
+      objectInfo,
+      fileType,
+      showFn,
+      safeApply
   ) {
     angular.extend($scope, {
       bucketInfo: bucketInfo,
@@ -29,9 +29,9 @@ angular.module("web").controller("othersModalCtrl", [
       cancel: cancel,
 
       showAs: showAs,
-      //showDownload: showDownload,
+      // showDownload: showDownload,
 
-      showAsCodeBtn: shouldShowAsCodeBtn(),
+      showAsCodeBtn: shouldShowAsCodeBtn()
     });
     function afterRestoreSubmit() {
       showFn.callback(true);
@@ -44,32 +44,33 @@ angular.module("web").controller("othersModalCtrl", [
       var name = objectInfo.name;
 
       if (
-        endswith(name, ".tar.gz") ||
-        endswith(name, ".tar") ||
-        endswith(name, ".zip") ||
-        endswith(name, ".bz") ||
-        endswith(name, ".xz") ||
-        endswith(name, ".dmg") ||
-        endswith(name, ".pkg") ||
-        endswith(name, ".apk") ||
-        endswith(name, ".exe") ||
-        endswith(name, ".msi") ||
-        endswith(name, ".dll") ||
-        endswith(name, ".chm") ||
-        endswith(name, ".iso") ||
-        endswith(name, ".img") ||
-        endswith(name, ".img") ||
-        endswith(name, ".pdf") ||
-        endswith(name, ".doc") ||
-        endswith(name, ".docx")
+        endswith(name, '.tar.gz') ||
+        endswith(name, '.tar') ||
+        endswith(name, '.zip') ||
+        endswith(name, '.bz') ||
+        endswith(name, '.xz') ||
+        endswith(name, '.dmg') ||
+        endswith(name, '.pkg') ||
+        endswith(name, '.apk') ||
+        endswith(name, '.exe') ||
+        endswith(name, '.msi') ||
+        endswith(name, '.dll') ||
+        endswith(name, '.chm') ||
+        endswith(name, '.iso') ||
+        endswith(name, '.img') ||
+        endswith(name, '.img') ||
+        endswith(name, '.pdf') ||
+        endswith(name, '.doc') ||
+        endswith(name, '.docx')
       ) {
         return false;
       }
+
       return true;
     }
 
     function cancel() {
-      $modalInstance.dismiss("close");
+      $modalInstance.dismiss('close');
     }
 
     function showAs(type) {
@@ -85,5 +86,5 @@ angular.module("web").controller("othersModalCtrl", [
     function endswith(s, ext) {
       return s.lastIndexOf(ext) == s.length - ext.length;
     }
-  },
+  }
 ]);

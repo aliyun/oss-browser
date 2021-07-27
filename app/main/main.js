@@ -1,49 +1,51 @@
-angular.module("web").controller("mainCtrl", [
-  "$scope",
-  "$rootScope",
-  "$timeout",
-  "$state",
-  "$q",
-  "Const",
-  "AuthInfo",
-  "autoUpgradeSvs",
-  function (
-    $scope,
-    $rootScope,
-    $timeout,
-    $state,
-    $q,
-    Const,
-    AuthInfo,
-    autoUpgradeSvs
+angular.module('web').controller('mainCtrl', [
+  '$scope',
+  '$rootScope',
+  '$timeout',
+  '$state',
+  '$q',
+  'Const',
+  'AuthInfo',
+  'autoUpgradeSvs',
+  function(
+      $scope,
+      $rootScope,
+      $timeout,
+      $state,
+      $q,
+      Const,
+      AuthInfo,
+      autoUpgradeSvs
   ) {
     angular.extend($scope, {
       upgradeInfo: {
         files: false,
         currentVersion: Global.app.version,
-        isLastVersion: true,
-      },
+        isLastVersion: true
+      }
     });
 
-    $timeout(function () {
-      autoUpgradeSvs.load(function (info) {
+    $timeout(function() {
+      autoUpgradeSvs.load(function(info) {
         angular.extend($scope.upgradeInfo, info);
       });
     }, 2000);
 
     $rootScope.internalSupported = false;
 
-    $scope.$on("$stateChangeSuccess", function () {
+    $scope.$on('$stateChangeSuccess', function() {
       var name = $state.current.name;
-      if (name != "login") {
+
+      if (name != 'login') {
         $rootScope.internalSupported =
-          (AuthInfo.get().eptpl || "").indexOf("-internal") != -1;
+          (AuthInfo.get().eptpl || '').indexOf('-internal') != -1;
       }
     });
 
-    window.addEventListener("unload", () => {
+    window.addEventListener('unload', () => {
       const shouldRemoveAuthInfo =
-        localStorage.getItem(Const.KEEP_ME_LOGGED_IN) === "NO";
+        localStorage.getItem(Const.KEEP_ME_LOGGED_IN) === 'NO';
+
       if (shouldRemoveAuthInfo) {
         AuthInfo.remove();
       }
@@ -61,5 +63,5 @@ angular.module("web").controller("mainCtrl", [
     //   }});
     //   return df.promise;
     // }
-  },
+  }
 ]);

@@ -1,28 +1,29 @@
-angular.module("web").directive("longScrollList", [
-  "$timeout",
-  function ($timeout) {
+angular.module('web').directive('longScrollList', [
+  '$timeout',
+  function($timeout) {
     return {
-      restrict: "EA",
+      restrict: 'EA',
       transclude: true,
       scope: {
-        loadMoreFn: "=loadMore",
-        triggerSize: "=",
+        loadMoreFn: '=loadMore',
+        triggerSize: '='
       },
-      template: "<div ng-transclude></div>",
+      template: '<div ng-transclude></div>',
 
-      link: function (scope, ele, attr) {
+      link: function(scope, ele, attr) {
         var t = ele.offset().top;
         var h = $(ele).height();
 
         var SIZE = scope.triggerSize || 20;
 
         $(ele).scroll(onScroll);
-        //effect();
+        // effect();
 
         var tid;
+
         function onScroll() {
           $timeout.cancel(tid);
-          tid = $timeout(function () {
+          tid = $timeout(function() {
             effect();
           }, 200);
         }
@@ -32,7 +33,7 @@ angular.module("web").directive("longScrollList", [
           var scrollHeight = $(ele)[0].scrollHeight;
 
           if (scrollTop + h > scrollHeight - SIZE) {
-            if (typeof scope.loadMoreFn == "function") scope.loadMoreFn();
+            if (typeof scope.loadMoreFn === 'function') { scope.loadMoreFn(); }
           }
 
           // var arr = $($(ele).find('li.list-group-item'));
@@ -51,7 +52,7 @@ angular.module("web").directive("longScrollList", [
           //   });
           // }
         }
-      },
+      }
     };
-  },
+  }
 ]);

@@ -1,33 +1,34 @@
-angular.module("web").controller("codeModalCtrl", [
-  "$scope",
-  "$uibModalInstance",
-  "$translate",
-  "$timeout",
-  "$uibModal",
-  "bucketInfo",
-  "objectInfo",
-  "fileType",
-  "showFn",
-  "Toast",
-  "DiffModal",
-  "ossSvs2",
-  "safeApply",
-  function (
-    $scope,
-    $modalInstance,
-    $translate,
-    $timeout,
-    _$modal,
-    bucketInfo,
-    objectInfo,
-    fileType,
-    showFn,
-    Toast,
-    DiffModal,
-    ossSvs2,
-    safeApply
+angular.module('web').controller('codeModalCtrl', [
+  '$scope',
+  '$uibModalInstance',
+  '$translate',
+  '$timeout',
+  '$uibModal',
+  'bucketInfo',
+  'objectInfo',
+  'fileType',
+  'showFn',
+  'Toast',
+  'DiffModal',
+  'ossSvs2',
+  'safeApply',
+  function(
+      $scope,
+      $modalInstance,
+      $translate,
+      $timeout,
+      _$modal,
+      bucketInfo,
+      objectInfo,
+      fileType,
+      showFn,
+      Toast,
+      DiffModal,
+      ossSvs2,
+      safeApply
   ) {
     var T = $translate.instant;
+
     angular.extend($scope, {
       bucketInfo: bucketInfo,
       objectInfo: objectInfo,
@@ -41,15 +42,16 @@ angular.module("web").controller("codeModalCtrl", [
       cancel: cancel,
       getContent: getContent,
       saveContent: saveContent,
-      //showDownload: showDownload,
-      MAX_SIZE: 5 * 1024 * 1024,
+      // showDownload: showDownload,
+      MAX_SIZE: 5 * 1024 * 1024
     });
 
     function afterCheckSuccess() {
       $scope.previewBarVisible = true;
+
       if (objectInfo.size < $scope.MAX_SIZE) {
-        //修复ubuntu下无法获取的bug
-        $timeout(function () {
+        // 修复ubuntu下无法获取的bug
+        $timeout(function() {
           getContent();
         }, 100);
       }
@@ -62,70 +64,74 @@ angular.module("web").controller("codeModalCtrl", [
     function saveContent() {
       var originalContent = $scope.originalContent;
       var v = editor.getValue();
+
       $scope.content = v;
 
       if (originalContent != v) {
-        DiffModal.show("Diff", originalContent, v, function (v) {
-          Toast.info(T("saving")); //'正在保存...'
+        DiffModal.show('Diff', originalContent, v, function(v) {
+          Toast.info(T('saving')); // '正在保存...'
 
           ossSvs2
-            .saveContent(
-              bucketInfo.region,
-              bucketInfo.bucket,
-              objectInfo.path,
-              v
-            )
-            .then(function () {
-              Toast.success(T("save.successfully")); //'保存成功'
-              cancel();
-            });
+              .saveContent(
+                  bucketInfo.region,
+                  bucketInfo.bucket,
+                  objectInfo.path,
+                  v
+              )
+              .then(function() {
+                Toast.success(T('save.successfully')); // '保存成功'
+                cancel();
+              });
         });
       } else {
-        Toast.info(T("content.isnot.modified")); //内容没有修改
+        Toast.info(T('content.isnot.modified')); // 内容没有修改
       }
     }
 
     function getContent() {
       $scope.isLoading = true;
       ossSvs2
-        .getContent(bucketInfo.region, bucketInfo.bucket, objectInfo.path)
-        .then(function (result) {
+          .getContent(bucketInfo.region, bucketInfo.bucket, objectInfo.path)
+          .then(function(result) {
           // 在data为空时，用safeApply手动触发更新
-          safeApply($scope, () => {
-            $scope.isLoading = false;
-            const data = result.content.toString();
-            $scope.originalContent = data;
-            $scope.content = data;
-            editor.setValue(data);
+            safeApply($scope, () => {
+              $scope.isLoading = false;
+              const data = result.content.toString();
+
+              $scope.originalContent = data;
+              $scope.content = data;
+              editor.setValue(data);
+            });
           });
-        });
     }
 
     function cancel() {
-      $modalInstance.dismiss("close");
+      $modalInstance.dismiss('close');
     }
 
     $scope.codeOptions = {
       lineNumbers: true,
       lineWrapping: true,
       autoFocus: true,
-      readOnly: objectInfo.type === "Symlink",
-      mode: fileType.mode,
+      readOnly: objectInfo.type === 'Symlink',
+      mode: fileType.mode
     };
 
     var editor;
-    $scope.codemirrorLoaded = function (_editor) {
+
+    $scope.codemirrorLoaded = function(_editor) {
       editor = _editor;
       // Editor part
       var _doc = _editor.getDoc();
+
       _editor.focus();
 
       // Options
-      _editor.setSize("100%", 500);
+      _editor.setSize('100%', 500);
 
       _editor.refresh();
 
       _doc.markClean();
     };
-  },
+  }
 ]);
