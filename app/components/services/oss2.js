@@ -180,7 +180,7 @@ angular.module('web').factory('ossSvs2', [
             if (res.keyCount != 0) {
               return true;
             }
- 
+
             return false;
           });
     }
@@ -337,7 +337,7 @@ angular.module('web').factory('ossSvs2', [
                 if (nextContinuationToken) {
                   return listDeleteFolder(nextContinuationToken);
                 }
- 
+
                 listFinish = true;
 
                 return '';
@@ -1170,7 +1170,7 @@ angular.module('web').factory('ossSvs2', [
       });
     }
 
-    function saveContent(region, bucket, key, content) {
+    function saveContent(region, bucket, key, content, isCodeSave) {
       return new Promise(function(resolve, reject) {
         // aliyun sdk, browser
         const client = getClient({
@@ -1204,12 +1204,18 @@ angular.module('web').factory('ossSvs2', [
             }).join('&');
           }
 
+          let encoding = headResult.ContentEncoding;
+          // code-modal保存时，如果encoding=gzip，就不变更gzip，避免内容未做gzip压缩，导致sdk中的urllib响应内容解析失败
+          if(isCodeSave && encoding === 'gzip'){
+            encoding=undefined;
+          }
+
           client3.put(key, new Buffer(content), {
             mime: headResult.ContentType,
             meta: headResult.Metadata,
             headers: {
               'Content-Disposition': headResult.ContentDisposition,
-              'Content-Encoding': headResult.ContentEncoding,
+              'Content-Encoding': encoding,
               'Cache-Control': headResult.CacheControl,
               'Content-Language': headResult.ContentLanguage,
               'x-oss-storage-class': headResult.StorageClass,
@@ -1777,7 +1783,7 @@ angular.module('web').factory('ossSvs2', [
           if (resp.nextContinuationToken) {
             return listMore(resp.nextContinuationToken);
           }
- 
+
           return all_dirs.concat(all_objects);
         });
       }
@@ -1993,7 +1999,7 @@ angular.module('web').factory('ossSvs2', [
           protocol + '//' + bucket + '.' + region + '.aliyuncs.com' + '/' + key
         );
       }
- 
+
       let domain;
 
       if (eptpl.indexOf('https://') == 0) {
