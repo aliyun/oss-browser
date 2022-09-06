@@ -76,7 +76,8 @@ angular.module('web').controller('codeModalCtrl', [
                   bucketInfo.region,
                   bucketInfo.bucket,
                   objectInfo.path,
-                  v
+                  v,
+                  true
               )
               .then(function() {
                 Toast.success(T('save.successfully')); // '保存成功'
