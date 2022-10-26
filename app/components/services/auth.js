@@ -18,7 +18,9 @@ angular.module('web').factory('Auth', [
 
       var df = $q.defer();
 
-      data.httpOptions = { timeout: 15000 };
+      data.httpOptions = {
+        timeout: 15000
+      };
 
       if (data.id.indexOf('STS.') != 0) {
         delete data.stoken;
@@ -51,8 +53,7 @@ angular.module('web').factory('Auth', [
                   message: T('login.endpoint.error')
                 }); // '请确定Endpoint是否正确'
               }
-            })
-            ['catch']((err) => {
+            })['catch']((err) => {
               df.reject(err);
             });
       } else {
@@ -66,12 +67,14 @@ angular.module('web').factory('Auth', [
               // 失败
               df.reject(err);
             }
-          } else if (result.RequestId && result.Buckets) {
+          } else if (result.Buckets) {
             // 登录成功
             AuthInfo.save(data);
             df.resolve();
           } else {
-            df.reject({ code: 'Error', message: T('login.endpoint.error') });
+            df.reject({
+              code: 'Error', message: T('login.endpoint.error')
+            });
           }
         });
       }
