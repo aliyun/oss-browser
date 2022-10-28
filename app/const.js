@@ -87,6 +87,16 @@ angular.module('web').factory('Const', [
           storageClasses: getStorageClasses(3)
         },
         {
+          id: 'oss-cn-nanjing',
+          label: '华东5(南京本地地域)',
+          storageClasses: getStorageClasses(3)
+        },
+        {
+          id: 'oss-cn-fuzhou',
+          label: '华东6(福州本地地域)',
+          storageClasses: getStorageClasses(3)
+        },
+        {
           id: 'oss-cn-qingdao',
           label: '华北1(青岛)',
           storageClasses: getStorageClasses(3)
@@ -104,6 +114,11 @@ angular.module('web').factory('Const', [
         {
           id: 'oss-cn-huhehaote',
           label: '华北5(呼和浩特)',
+          storageClasses: getStorageClasses(3)
+        },
+        {
+          id: 'oss-cn-wulanchabu',
+          label: '华北6(乌兰察布)',
           storageClasses: getStorageClasses(3)
         },
         {
@@ -128,10 +143,29 @@ angular.module('web').factory('Const', [
         },
         {
           id: 'oss-cn-hongkong',
-          label: '香港',
+          label: '中国(香港)',
           storageClasses: getStorageClasses(3)
         },
-
+        {
+          id: 'oss-us-west-1',
+          label: '美国西部1(硅谷)',
+          storageClasses: getStorageClasses(3)
+        },
+        {
+          id: 'oss-us-east-1',
+          label: '美国东部1(弗吉尼亚)',
+          storageClasses: getStorageClasses(3)
+        },
+        {
+          id: 'oss-ap-northeast-1',
+          label: '日本(东京)',
+          storageClasses: getStorageClasses(3)
+        },
+        {
+          id: 'oss-ap-northeast-2',
+          label: '韩国(首尔)',
+          storageClasses: getStorageClasses(3)
+        },
         {
           id: 'oss-ap-southeast-1',
           label: '亚太东南1(新加坡)',
@@ -153,39 +187,33 @@ angular.module('web').factory('Const', [
           storageClasses: getStorageClasses(3)
         },
         {
-          id: 'oss-ap-northeast-1',
-          label: '亚太东北1(东京)',
+          id: 'oss-ap-southeast-6',
+          label: '菲律宾(马尼拉)',
+          storageClasses: getStorageClasses(3)
+        },
+        {
+          id: 'oss-ap-southeast-7',
+          label: '泰国(曼谷)',
           storageClasses: getStorageClasses(3)
         },
         {
           id: 'oss-ap-south-1',
-          label: '亚太南部(孟买)',
-          storageClasses: getStorageClasses(3)
-        },
-
-        {
-          id: 'oss-us-west-1',
-          label: '美国西部1(硅谷)',
-          storageClasses: getStorageClasses(3)
-        },
-        {
-          id: 'oss-us-east-1',
-          label: '美国东部1(弗吉尼亚)',
+          label: '印度(孟买)',
           storageClasses: getStorageClasses(3)
         },
         {
           id: 'oss-eu-central-1',
-          label: '欧洲中部1(法兰克福)',
-          storageClasses: getStorageClasses(3)
-        },
-        {
-          id: 'oss-me-east-1',
-          label: '中东东部1(迪拜)',
+          label: '德国(法兰克福)',
           storageClasses: getStorageClasses(3)
         },
         {
           id: 'oss-eu-west-1',
-          label: '英国（伦敦）',
+          label: '英国(伦敦)',
+          storageClasses: getStorageClasses(3)
+        },
+        {
+          id: 'oss-me-east-1',
+          label: '阿联酋(迪拜)',
           storageClasses: getStorageClasses(3)
         }
       ],

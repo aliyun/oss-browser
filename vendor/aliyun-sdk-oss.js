@@ -3253,7 +3253,8 @@ ALY.ServiceInterface.RestXml = {
 
     // extract request id
     resp.data.RequestId = httpResponse.headers['x-oss-request-id'] ||
-                          httpResponse.headers['x-oss-requestid'];
+                          httpResponse.headers['x-oss-requestid']||
+                          httpResponse.headers['X-Oss-Request-Id'];
   },
 
   populateBody: function populateBody(req) {
@@ -3857,7 +3858,7 @@ ALY.OSS = ALY.Service.defineService('oss', ['2013-10-15'], {
   populateURI: function populateURI(req) {
     var httpRequest = req.httpRequest;
     var b = req.params.Bucket;
-  
+
     if (b) {
       // support cname
       var cname = req.service.config.cname || false
@@ -3879,7 +3880,7 @@ ALY.OSS = ALY.Service.defineService('oss', ['2013-10-15'], {
         httpRequest.virtualHostedBucket = b;
         httpRequest.path = httpRequest.path.replace(new RegExp('^/' + b), '');
       }
-      
+
       if (httpRequest.path[0] !== '/') {
         httpRequest.path = '/' + httpRequest.path;
       }
