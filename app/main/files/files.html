@@ -2,13 +2,15 @@
 
 <div>
   <div
-    ng-if="currentAuthInfo.id.indexOf('STS.')!=0"
+    ng-if="true || currentAuthInfo.id.indexOf('STS.')!=0"
     ng-include="'main/files/_/address-bar.html'"
   ></div>
-  <div
+  <!--
+    改成：地址栏不区分 是否是 sts登陆，统一用户操作习惯
+    <div
     ng-if="currentAuthInfo.id.indexOf('STS.')==0"
     ng-include="'main/files/_/sub-address-bar.html'"
-  ></div>
+  ></div> -->
 
   <div ng-if="ref.isBucketList">
     <div ng-include="'main/files/_/bucket-toolbar.html'"></div>

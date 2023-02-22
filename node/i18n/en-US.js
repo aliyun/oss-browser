@@ -33,7 +33,7 @@ module.exports = {
 
   "region.oss-us-west-1": "Western US 1(Silicon Valley)",
   "region.oss-us-east-1": "Eastern US 1(Virginia)",
-  "region.oss-eu-central-1": "CGermany (Frankfurt)",
+  "region.oss-eu-central-1": "Germany (Frankfurt)",
   "region.oss-me-east-1": "United Arab Emirates (Dubai)",
   "region.oss-eu-west-1": "England (LonDon)",
 
