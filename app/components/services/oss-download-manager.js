@@ -259,6 +259,7 @@ angular.module('web').factory('ossDownloadManager', [
           // 文件
           if (process.platform == 'win32') {
             // 修复window下，文件名含非法字符需要转义
+            // eslint-disable-next-line no-useless-escape
             if (/[\/\\\:\<\>\?\*\"\|]/.test(fileName)) {
               fileName = encodeURIComponent(fileName);
               filePath = path.join(

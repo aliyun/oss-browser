@@ -9,7 +9,7 @@ angular.module('web').factory('Cipher', function() {
   };
 
   function cipher(buf, key, algorithm) {
-    if (!buf instanceof Buffer) {
+    if (!(buf instanceof Buffer)) {
       buf = new Buffer(buf);
     }
 

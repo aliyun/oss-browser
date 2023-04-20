@@ -1,4 +1,3 @@
-
 angular
     .module('web')
     .filter('trustAsResourceUrl', [

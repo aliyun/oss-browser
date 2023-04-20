@@ -1,4 +1,3 @@
-
 angular.module('web').controller('transferUploadsCtrl', [
   '$scope',
   '$timeout',
@@ -43,7 +42,8 @@ angular.module('web').controller('transferUploadsCtrl', [
         );
       },
       limitToNum: 100,
-      loadMoreUploadItems: loadMoreItems
+      loadMoreUploadItems: loadMoreItems,
+      copyMessage: copyMessage
     });
 
     function loadMoreItems() {
@@ -205,6 +205,14 @@ angular.module('web').controller('transferUploadsCtrl', [
             }
         );
       }
+    }
+
+    /** 复制到剪贴板 */
+    function copyMessage(item) {
+      const { clipboard } = require('electron');
+      const { message, ecCode, requestId } = item;
+      clipboard.writeText(`Message: ${message}${ecCode ? '\nEC Code: ' + ecCode : ''}${requestId ? '\nRequest Id: ' + requestId : '' }`);
+      Toast.success(T('copy.successfully'));
     }
   }
 ]);

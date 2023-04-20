@@ -147,7 +147,7 @@ function getBigFileMd5(p, fn) {
     md5sum.update(chunk);
   });
   stream.on("end", function () {
-    str = md5sum.digest("base64");
+    var str = md5sum.digest("base64");
     console.timeEnd("get md5 hash for [" + p + "]");
     fn(null, str);
   });
@@ -260,11 +260,11 @@ function getBufferCrc64(buffer, fn) {
   });
 }
 
-function getStreamCrc64(s, fn) {
-  CRC64.crc64Stream(s, function (err, data) {
-    fn(err, data);
-  });
-}
+// function getStreamCrc64(s, fn) {
+//   CRC64.crc64Stream(s, function (err, data) {
+//     fn(err, data);
+//   });
+// }
 
 function closeFD(fd) {
   fs.close(fd, (err) => {

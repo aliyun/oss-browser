@@ -119,10 +119,12 @@
             {{item.status|status:1}}
             <i
               ng-if="item.message"
-              uib-tooltip="{{item.message}}"
+              uib-tooltip-template="'error-mess-tooltip-tpl.html'"
               tooltip-placement="left"
               tooltip-append-to-body="true"
               class="fa fa-info-circle"
+              style="cursor: pointer;"
+              ng-click="copyMessage(item)"
             ></i>
           </small>
           <small ng-show="item.status=='running'">
@@ -185,7 +187,14 @@
 
 <script type="text/ng-template" id="upload-path-tooltip-tpl.html">
   <div class="break text-left">
-    <div><label class="text-primary">From:</label>{{item.from.path}}</div>
-    <div><label class="text-success">To:</label>oss://{{item.to.bucket}}/{{item.to.key}}</div>
+    <div><label class="text-primary">From:&nbsp;</label>{{item.from.path}}</div>
+    <div><label class="text-success">To:&nbsp;</label>oss://{{item.to.bucket}}/{{item.to.key}}</div>
+  </div>
+</script>
+<script type="text/ng-template" id="error-mess-tooltip-tpl.html">
+  <div class="break text-left">
+    <div><label class="text-primary">Message:&nbsp;</label>{{item.message}}</div>
+    <div ng-if="item.ecCode"><label class="text-success">EC Code:&nbsp;</label>{{item.ecCode}}</div>
+    <div ng-if="item.requestId"><label class="text-success">Request Id:&nbsp;</label>{{item.requestId}}</div>
   </div>
 </script>

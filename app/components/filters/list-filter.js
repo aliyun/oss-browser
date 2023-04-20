@@ -1,4 +1,3 @@
-
 angular.module('web').filter('listFilter', function() {
   return function(arr, keyFn, value) {
     if (!value) { return arr; }

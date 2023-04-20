@@ -18,4 +18,4 @@ app.asar
 
 
 #tool
-.vscode/
+#.vscode/
