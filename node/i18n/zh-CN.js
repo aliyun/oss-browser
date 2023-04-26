@@ -31,7 +31,6 @@ module.exports = {
   "region.oss-ap-southeast-7": "泰国(曼谷)",
   "region.oss-ap-south-1": "印度(孟买)",
 
-
   "region.oss-us-west-1": "美国西部1(硅谷)",
   "region.oss-us-east-1": "美国东部1(弗吉尼亚)",
   "region.oss-eu-central-1": "德国(法兰克福)",
@@ -223,6 +222,9 @@ module.exports = {
   "settings.uploadPartSize": "分片大小(M)",
   "settings.downloadConcurrecyPartSize": "并发分片下载数",
   "settings.uploadAndDownloadRetryTimes": "重试次数",
+  "settings.other": "其他设置",
+  "settings.other.list.object.max.number": "单次列举Object最大数量",
+
   //bookmark
   "bookmarks.title": "书签管理",
   time: "时间",

@@ -1614,7 +1614,9 @@ angular.module('web').factory('ossSvs2', [
       });
     }
 
-    function _listFilesOrigion(region, bucket, key, marker = '', length = 1000) {
+    function _listFilesOrigion(region, bucket, key, marker = '', length) {
+      if (!length) length = localStorage.getItem("listObjectNum") || 500;
+      console.log('list-object-max-length', length);
       const client = getClient3({
         region,
         bucket
@@ -1691,51 +1693,6 @@ angular.module('web').factory('ossSvs2', [
 
         list(marker);
       });
-
-      // return client.listV2(Object.assign({}, options, { 'continuation-token': marker }))
-      //     .then((resp) => {
-      //       const dirs = (resp.prefixes || [])
-      //           .filter((n) => n !== key)
-      //           .map((n) => {
-      //             const arr = n.split('/').filter((k) => !!k);
-      //             const name = arr[arr.length - 1];
-
-      //             return {
-      //               isFolder: true,
-      //               itemType: 'folder',
-      //               path: n,
-      //               name: name === '/' ? name : name.replace(/\/$/, '')
-      //             };
-      //           });
-      //       const objects = (resp.objects || [])
-      //           .filter((n) => n.name !== key)
-      //           .map((n) => {
-      //             const arr = n.name.split('/').filter((k) => !!k);
-      //             const name = arr[arr.length - 1];
-
-      //             return Object.assign(n, {
-      //               isFile: true,
-      //               itemType: 'file',
-      //               path: n.name,
-      //               name: name
-      //             });
-      //           });
-
-      //       return {
-      //         data: {
-      //           dirs,
-      //           objects
-      //         },
-      //         marker: resp.nextContinuationToken,
-      //         truncated: resp.isTruncated,
-      //         maxKeys: +resp.keyCount
-      //       };
-      //     })
-      //     ['catch']((e) => {
-      //       handleError(e);
-
-      //       return Promise.reject(e);
-      //     });
     }
 
     function listAllFiles(region, bucket, key, folderOnly) {

@@ -130,6 +130,8 @@ module.exports = {
   "settings.uploadPartSize": "uploadpart size(M)",
   "settings.downloadConcurrecyPartSize": "download concurrency part number",
   "settings.uploadAndDownloadRetryTimes": "retry times",
+  "settings.other": "Other Settings",
+  "settings.other.list.object.max.number": "Maximum number of objects listed in a single instance",
 
   //address bar
   backward: "Backward",
