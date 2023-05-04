@@ -276,7 +276,7 @@ angular.module('web').controller('loginCtrl', [
       $scope.item.osspath = $scope.item.osspath || '';
 
       if (
-        $scope.item.osspath_isdir &&
+        // $scope.item.osspath_isdir &&   //默认用户登陆的输入都是目录，而不是文件路径
         $scope.item.osspath &&
         !$scope.item.osspath.endsWith('/')
       ) {

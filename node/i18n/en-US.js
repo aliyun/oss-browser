@@ -33,7 +33,7 @@ module.exports = {
 
   "region.oss-us-west-1": "Western US 1(Silicon Valley)",
   "region.oss-us-east-1": "Eastern US 1(Virginia)",
-  "region.oss-eu-central-1": "CGermany (Frankfurt)",
+  "region.oss-eu-central-1": "Germany (Frankfurt)",
   "region.oss-me-east-1": "United Arab Emirates (Dubai)",
   "region.oss-eu-west-1": "England (LonDon)",
 
@@ -131,7 +131,7 @@ module.exports = {
   "settings.downloadConcurrecyPartSize": "download concurrency part number",
   "settings.uploadAndDownloadRetryTimes": "retry times",
 
-  //address bar
+  // address bar
   backward: "Backward",
   forward: "Forward",
   goUp: "Go up",
@@ -145,7 +145,7 @@ module.exports = {
   "bookmark.add.error1": "Add Bookmark failed: Exceeds the maximum limit",
   "bookmark.add.success": "Add Bookmark success",
 
-  //bucket
+  // bucket
   "bucket.add": "Create Bucket",
   "bucket.multipart": "MultiPart",
   acl: "ACL",
@@ -218,7 +218,7 @@ module.exports = {
   "simplePolicy.noauth.message3": "You are not authorized to get role list",
   "simplePolicy.success": "Apply policy successfully",
 
-  //settings
+  // settings
   "settings.maxUploadNum": "Upload tasks concurrent number",
   "settings.maxDownloadNum": "Download tasks concurrent number",
   "settings.WhetherShowThumbnail": "Whether to show the image thumbnail",
@@ -228,7 +228,7 @@ module.exports = {
   "settings.autoUpgrade": "Auto update",
   "settings.autoUpgrade.msg": "Download update package automatically",
 
-  //bookmark
+  // bookmark
   "bookmarks.title": "Bookmarks",
   time: "Time",
   "bookmarks.delete.success": "Deleted bookmark successfully",
@@ -238,7 +238,7 @@ module.exports = {
   clickToDownload: "Click to download",
   currentIsLastest: "This is the lastest version!",
 
-  //files
+  // files
   upload: "Upload",
   "folder.create": "Directory",
   "folder.create.success": "Directory created successfully",

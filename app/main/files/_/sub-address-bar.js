@@ -1,3 +1,7 @@
+/* eslint-disable no-console */
+/* eslint-disable object-curly-newline */
+/* eslint-disable brace-style */
+/* eslint-disable padding-line-between-statements */
 angular.module('web').controller('subAddressBarCtrl', [
   '$scope',
   '$translate',
@@ -14,6 +18,7 @@ angular.module('web').controller('subAddressBarCtrl', [
       subAddress: '/',
       goUp: goUp,
       go: go,
+      subGo: subGo,
       goHome: goHome,
       saveDefaultAddress: saveDefaultAddress,
       getDefaultAddress: getDefaultAddress,
@@ -115,7 +120,7 @@ angular.module('web').controller('subAddressBarCtrl', [
     function goBack() {
       var addr = His.goBack();
 
-      // console.log('-->',addr);
+      // console.log('goBack-->',addr);
       $scope.address = addr.url;
       $scope.subAddress = getSubAddress();
       $scope.$emit('ossAddressChange', addr.url);
@@ -123,7 +128,7 @@ angular.module('web').controller('subAddressBarCtrl', [
     function goAhead() {
       var addr = His.goAhead();
 
-      // console.log('-->',addr);
+      // console.log('goAhead-->',addr);
       $scope.address = addr.url;
       $scope.subAddress = getSubAddress();
       $scope.$emit('ossAddressChange', addr.url);
@@ -165,7 +170,7 @@ angular.module('web').controller('subAddressBarCtrl', [
       if (!addr) {
         $scope.address = DEF_ADDR;
         $scope.subAddress = getSubAddress();
-        length;
+        // length;
 
         return DEF_ADDR;
       }
@@ -192,6 +197,11 @@ angular.module('web').controller('subAddressBarCtrl', [
       His.add(addr); // 历史记录
       console.log(addr);
       $scope.$emit('ossAddressChange', addr, force);
+    }
+    // 地址栏改变后 刷新
+    function subGo() {
+      $scope.address = DEF_ADDR + $scope.subAddress.substring(1);
+      go();
     }
     // 向上
     function goUp() {
@@ -222,8 +232,10 @@ angular.module('web').controller('subAddressBarCtrl', [
     function getSubAddress(addr) {
       addr = addr || $scope.address;
       addr = addr.substring(DEF_ADDR.length);
+      if (addr == '/') { return addr; }
+      if (addr.indexOf('/') == 0) { return addr; }
 
-      return addr == '/' ? '/' : '/' + addr;
+      return '/' + addr;
     }
   }
 ]);
