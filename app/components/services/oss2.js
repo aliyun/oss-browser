@@ -1638,8 +1638,9 @@ angular.module('web').factory('ossSvs2', [
             name: name === '/' ? name : name.replace(/\/$/, '')
           };
         });
+        //保证oss://10012/1/2/3/oss-browser-develop.zip也能加载成功
         const objects = (resp.objects || [])
-            .filter((n) => n.name !== key)
+            .filter((n) => n.name !== key || (!key.endsWith('/') && n.name === key))
             .map((n) => {
               const arr = n.name.split('/').filter((k) => !!k);
               const name = arr[arr.length - 1];
