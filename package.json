@@ -72,7 +72,7 @@
     "koa-convert": "^1.2.0",
     "koa-static-server": "^1.2.1",
     "mime": "^1.3.6",
-    "nodemailer": "4.0.1",
+    "nodemailer": "^6.7.2",
     "nodemailer-smtp-transport": "2.7.4",
     "platform": "^1.3.5",
     "request": "^2.83.0"
@@ -83,6 +83,9 @@
     }
   },
   "lint-staged": {
-    "app/**/*.js": ["eslint --fix", "git add"]
+    "app/**/*.js": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }
