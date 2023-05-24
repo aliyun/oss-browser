@@ -367,13 +367,13 @@ angular.module('web').factory('ossUploadManager', [
                 from: n.from,
                 status: n.status,
                 message: n.message,
+                ecCode: n.ecCode,
+                requestId: n.requestId,
                 prog: n.prog
               });
             });
 
             // console.log('request save upload:', t);
-
-            // console.log('-save')
             fs.writeFileSync(getUpProgFilePath(), JSON.stringify(t));
             $scope.calcTotalProg();
           },

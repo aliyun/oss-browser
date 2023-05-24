@@ -104,7 +104,9 @@ function getFreeDiskSize(p, fn) {
         var lastLine = arr.slice(arr.length - 1);
         lastLine = (lastLine + "").trim();
 
+        // eslint-disable-next-line no-useless-escape
         num = lastLine.match(/\s+((\d{1,3}[,\s\.])+)/)[1];
+        // eslint-disable-next-line no-useless-escape
         num = parseInt(num.replace(/[,\s\.]/g, ""));
       } catch (e) {}
       if (num != null) fn(null, num + fileSize);

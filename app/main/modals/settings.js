@@ -1,4 +1,3 @@
-
 angular.module('web').controller('settingsCtrl', [
   '$scope',
   '$state',
@@ -40,6 +39,7 @@ angular.module('web').controller('settingsCtrl', [
         connectTimeout: settingsSvs.connectTimeout.get(),
         uploadPartSize: settingsSvs.uploadPartSize.get(),
         downloadConcurrecyPartSize: settingsSvs.downloadConcurrecyPartSize.get(),
+        listObjectNum: settingsSvs.listObjectNum.get(),
         uploadAndDownloadRetryTimes: settingsSvs.uploadAndDownloadRetryTimes.get()
       },
       reg: {

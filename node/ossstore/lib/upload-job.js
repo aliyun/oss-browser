@@ -65,6 +65,8 @@ class UploadJob extends Base {
     };
 
     this.message = this._config.message;
+    this.ecCode = this._config.ecCode;
+    this.requestId = this._config.requestId;
     this.status = this._config.status || "waiting";
 
     this.stopFlag = this.status != "running";
@@ -95,6 +97,8 @@ UploadJob.prototype.start = function () {
   }
 
   self.message = "";
+  self.ecCode = "";
+  self.requestId = "";
   this.startTime = new Date().getTime();
   this.endTime = null;
   this._changeStatus("running");
@@ -756,7 +760,10 @@ UploadJob.prototype.uploadMultipart = function (checkPoints) {
       );
       if (err) {
         console.error("[" + doneParams.UploadId + "]", err, doneParams);
+        var headers = err.headers;
         self.message = err.message;
+        self.ecCode = headers["x-oss-ec"];
+        self.requestId = headers["x-oss-request-id"];
         self._changeStatus("failed");
         self.emit("error", err);
       } else {

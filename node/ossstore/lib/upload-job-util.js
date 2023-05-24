@@ -76,6 +76,7 @@ function completeMultipartUpload(self, doneParams, fn) {
   var retryTimes = 0;
   setTimeout(_dig, 10);
   function _dig() {
+    console.log("self.oss", self);
     self.oss.completeMultipartUpload(doneParams, function (err, data) {
       if (err) {
         if (err.message.indexOf("The specified upload does not exist") != -1) {
@@ -87,7 +88,7 @@ function completeMultipartUpload(self, doneParams, fn) {
             function (err2, data2) {
               //console.log('headobject: ', err2, err2.message, data);
               if (err2) {
-                fn(err2);
+                fn(err2, data2);
               } else {
                 fn(null, data2);
               }
@@ -97,7 +98,7 @@ function completeMultipartUpload(self, doneParams, fn) {
         }
 
         if (retryTimes > RETRYTIMES) {
-          fn(err);
+          fn(err, data);
         } else {
           retryTimes++;
           self._changeStatus("retrying", retryTimes);
@@ -148,7 +149,6 @@ function getUploadId(checkPoints, self, params, fn) {
             if (!self.stopFlag) _dig();
           }, 2000);
         }
-        return;
       } else {
         checkPoints.uploadId = res.UploadId;
         fn(null, res.UploadId);
@@ -195,7 +195,7 @@ function prepareChunks(filePath, checkPoints, fn) {
 
   fs.stat(filePath, function (err, state) {
     if (err) {
-      callback(err);
+      // callback(err);
       return;
     }
 

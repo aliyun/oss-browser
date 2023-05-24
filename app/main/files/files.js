@@ -648,6 +648,7 @@ angular
                   function(result) {
                     const arr = result.data;
 
+                    // eslint-disable-next-line no-unused-expressions
                     settingsSvs.showImageSnapshot.get() == 1
                       ? signPicURL(info, arr)
                       : null;
@@ -726,8 +727,7 @@ angular
               `)
                 );
                 safeApply($scope);
-              })
-              ['finally'](() => {
+              }).finally(() => {
                 $timeout(() => {
                   isLoadingObjectSymlinkMeta = false;
                 }, 500);

@@ -230,6 +230,8 @@ module.exports = {
   "settings.uploadPartSize": "スライスサイズ(M)",
   "settings.downloadConcurrecyPartSize": "ダウンロード数",
   "settings.uploadAndDownloadRetryTimes": "再試行回数",
+  "settings.other": "その他の設定",
+  "settings.other.list.object.max.number": "Objectの最大数を列挙",
 
   //bookmark
   "bookmarks.title": "ブックマーク",

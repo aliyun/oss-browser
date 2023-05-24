@@ -1,3 +1,4 @@
+/* eslint-disable no-unexpected-multiline */
 angular.module('web').factory('ossSvs2', [
   '$q',
   '$rootScope',
@@ -245,6 +246,7 @@ angular.module('web').factory('ossSvs2', [
             if (i.status === 'fulfilled') {
               fulfilled.push(i.value);
             } else {
+              // eslint-disable-next-line no-unused-expressions
               i.status === 'rejected';
 
               if (Array.isArray(i.reason)) {
@@ -1200,14 +1202,15 @@ angular.module('web').factory('ossSvs2', [
 
           if (taggingResult && taggingResult.tag) {
             tagging = Object.keys(taggingResult.tag).map(function(k) {
+              // eslint-disable-next-line no-undef
               return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
             }).join('&');
           }
 
           let encoding = headResult.ContentEncoding;
           // code-modal保存时，如果encoding=gzip，就不变更gzip，避免内容未做gzip压缩，导致sdk中的urllib响应内容解析失败
-          if(isCodeSave && encoding === 'gzip'){
-            encoding=undefined;
+          if (isCodeSave && encoding === 'gzip') {
+            encoding = undefined;
           }
 
           client3.put(key, new Buffer(content), {
@@ -1611,7 +1614,9 @@ angular.module('web').factory('ossSvs2', [
       });
     }
 
-    function _listFilesOrigion(region, bucket, key, marker = '', length = 1000) {
+    function _listFilesOrigion(region, bucket, key, marker = '', length) {
+      if (!length) length = localStorage.getItem("listObjectNum") || 500;
+      console.log('list-object-max-length', length);
       const client = getClient3({
         region,
         bucket
@@ -1689,51 +1694,6 @@ angular.module('web').factory('ossSvs2', [
 
         list(marker);
       });
-
-      return client.listV2(Object.assign({}, options, { 'continuation-token': marker }))
-          .then((resp) => {
-            const dirs = (resp.prefixes || [])
-                .filter((n) => n !== key)
-                .map((n) => {
-                  const arr = n.split('/').filter((k) => !!k);
-                  const name = arr[arr.length - 1];
-
-                  return {
-                    isFolder: true,
-                    itemType: 'folder',
-                    path: n,
-                    name: name === '/' ? name : name.replace(/\/$/, '')
-                  };
-                });
-            const objects = (resp.objects || [])
-                .filter((n) => n.name !== key)
-                .map((n) => {
-                  const arr = n.name.split('/').filter((k) => !!k);
-                  const name = arr[arr.length - 1];
-
-                  return Object.assign(n, {
-                    isFile: true,
-                    itemType: 'file',
-                    path: n.name,
-                    name: name
-                  });
-                });
-
-            return {
-              data: {
-                dirs,
-                objects
-              },
-              marker: resp.nextContinuationToken,
-              truncated: resp.isTruncated,
-              maxKeys: +resp.keyCount
-            };
-          })
-          ['catch']((e) => {
-            handleError(e);
-
-            return Promise.reject(e);
-          });
     }
 
     function listAllFiles(region, bucket, key, folderOnly) {
@@ -1997,7 +1957,7 @@ angular.module('web').factory('ossSvs2', [
         }
 
         return (
-          protocol + '//' + bucket + '.' + region + '.aliyuncs.com' + '/' + key
+          protocol + '//' + bucket + '.' + region + '.aliyuncs.com/' + key
         );
       }
 
@@ -2018,7 +1978,7 @@ angular.module('web').factory('ossSvs2', [
       }
 
       return (
-        protocol + '//' + bucket + '.' + region + '.aliyuncs.com' + '/' + key
+        protocol + '//' + bucket + '.' + region + '.aliyuncs.com/' + key
       );
     }
 

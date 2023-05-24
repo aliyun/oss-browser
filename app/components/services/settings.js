@@ -112,6 +112,16 @@ angular.module('web').factory('settingsSvs', [
           return localStorage.setItem('downloadConcurrecyPartSize', v);
         }
       },
+      listObjectNum: {
+        get: function() {
+          return parseInt(
+              localStorage.getItem('listObjectNum') || 500
+          );
+        },
+        set: function(v) {
+          return localStorage.setItem('listObjectNum', v);
+        }
+      },
       uploadAndDownloadRetryTimes: {
         get: function() {
           return parseInt(

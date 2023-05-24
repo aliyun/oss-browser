@@ -385,6 +385,30 @@
         </div>
       </div>
     </fieldset>
+    <fieldset>
+      <legend>
+        <h5 class="text-primary">{{'settings.other'|translate}}</h5>
+      </legend>
+      <div class="form-group">
+        <label class="col-sm-4 control-label">
+          <!-- 单次列举Object最大数量 -->
+          {{'settings.other.list.object.max.number'|translate}}:
+        </label>
+        <div class="col-sm-7">
+          <input
+            type="number"
+            name="listObjectNum"
+            ng-model="set.listObjectNum"
+            ng-change="setChange(form1,'listObjectNum')"
+            max="1000"
+            min="20"
+            required
+            class="form-control"
+            placeholder="20-1000"
+          />
+        </div>
+      </div>
+    </fieldset>
   </div>
   <div class="modal-footer">
     <!-- <button type="submit" class="btn btn-success btn-sm">
