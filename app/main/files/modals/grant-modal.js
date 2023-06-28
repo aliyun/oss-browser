@@ -52,6 +52,7 @@ angular.module('web').controller('grantModalCtrl', [
         privTypes: ['readOnly', 'all'],
         privType: 'readOnly'
       },
+      // eslint-disable-next-line no-useless-escape
       policyNameReg: /^[a-z0-9A-Z\-]{1,128}$/,
       mailSmtp: settingsSvs.mailSmtp.get(),
       showEmailSettings: function() {
@@ -223,27 +224,29 @@ angular.module('web').controller('grantModalCtrl', [
             function() {
               switch ($scope.grant.toType) {
                 case 'user':
-                  ramSvs
-                      .attachPolicyToUser(policyName, $scope.grant.userName)
-                      .then(function() {
-                        // 发邮件
-                        if (sendInfo) {
-                          Mailer.send(sendInfo).then(
-                              function(result) {
-                                console.log(result);
-                                Toast.success(T('mail.test.success'));
-                              },
-                              function(err) {
-                                console.error(err);
-                                Toast.error(err);
-                              }
-                          );
-                        }
+                  // 使用setTimeout 避免createPolicy后，服务端的policy没生效导致attachPolicyToUser提示policyName不存在
+                  setTimeout(()=>{
+                    ramSvs
+                    .attachPolicyToUser(policyName, $scope.grant.userName) // 为指定用户添加权限
+                    .then(function() {
+                      // 发邮件
+                      if (sendInfo) {
+                        Mailer.send(sendInfo).then(
+                            function(result) {
+                              console.log(result);
+                              Toast.success(T('mail.test.success'));
+                            },
+                            function(err) {
+                              console.error(err);
+                              Toast.error(err);
+                            }
+                        );
+                      }
 
-                        Toast.success(successMsg);
-                        cancel();
-                      });
-
+                      Toast.success(successMsg);
+                      cancel();
+                    });
+                  }, 999);
                   break;
                 case 'group':
                   ramSvs
@@ -294,7 +297,7 @@ angular.module('web').controller('grantModalCtrl', [
           }
       );
 
-      return df.promise;
+      // return df.promise;
     }
 
     function checkCreateUser(fn) {

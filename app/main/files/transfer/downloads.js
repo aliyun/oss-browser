@@ -1,4 +1,4 @@
-
+// 下载弹窗
 angular.module('web').controller('transferDownloadsCtrl', [
   '$scope',
   '$timeout',
@@ -34,7 +34,7 @@ angular.module('web').controller('transferDownloadsCtrl', [
       checkStartJob: checkStartJob,
       openLocaleFolder: function(item) {
         var suffix = item.status == 'finished' ? '' : '.download';
-
+        // eslint-disable-next-line no-undef
         openLocaleFolder(item.to.path + suffix);
       },
 
