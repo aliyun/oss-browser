@@ -220,33 +220,41 @@ angular.module('web').controller('grantModalCtrl', [
         var title = T('simplePolicy.title'); // 简化policy授权
         var successMsg = T('simplePolicy.success'); // '应用policy成功'
 
+        let retry = 0; // policyName创建后需要等几秒才生效，故需要重试3次，使用setTimeout避免attachPolicyToUser提示policyName不存在
+        const retryFunc = ()=>{
+          if (retry < 3) {
+            retry++;
+            setTimeout(()=>{
+              ramSvs
+              .attachPolicyToUser(policyName, $scope.grant.userName) // 为指定用户添加权限
+              .then(function() {
+                // 发邮件
+                if (sendInfo) {
+                  Mailer.send(sendInfo).then(
+                      function(result) {
+                        console.log(result);
+                        Toast.success(T('mail.test.success'));
+                      },
+                      function(err) {
+                        console.error(err);
+                        Toast.error(err);
+                      }
+                  );
+                }
+
+                Toast.success(successMsg);
+                cancel();
+              }).catch(()=>{
+                retryFunc(); // 递归重试
+              });
+            }, 1000);
+          }
+        };
         checkCreatePolicy(policyName, $scope.grant.policy, title).then(
             function() {
               switch ($scope.grant.toType) {
                 case 'user':
-                  // 使用setTimeout 避免createPolicy后，服务端的policy没生效导致attachPolicyToUser提示policyName不存在
-                  setTimeout(()=>{
-                    ramSvs
-                    .attachPolicyToUser(policyName, $scope.grant.userName) // 为指定用户添加权限
-                    .then(function() {
-                      // 发邮件
-                      if (sendInfo) {
-                        Mailer.send(sendInfo).then(
-                            function(result) {
-                              console.log(result);
-                              Toast.success(T('mail.test.success'));
-                            },
-                            function(err) {
-                              console.error(err);
-                              Toast.error(err);
-                            }
-                        );
-                      }
-
-                      Toast.success(successMsg);
-                      cancel();
-                    });
-                  }, 999);
+                  retryFunc();
                   break;
                 case 'group':
                   ramSvs
