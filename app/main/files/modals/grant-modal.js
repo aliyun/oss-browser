@@ -52,6 +52,7 @@ angular.module('web').controller('grantModalCtrl', [
         privTypes: ['readOnly', 'all'],
         privType: 'readOnly'
       },
+      // eslint-disable-next-line no-useless-escape
       policyNameReg: /^[a-z0-9A-Z\-]{1,128}$/,
       mailSmtp: settingsSvs.mailSmtp.get(),
       showEmailSettings: function() {
@@ -219,31 +220,41 @@ angular.module('web').controller('grantModalCtrl', [
         var title = T('simplePolicy.title'); // 简化policy授权
         var successMsg = T('simplePolicy.success'); // '应用policy成功'
 
+        let retry = 0; // policyName创建后需要等几秒才生效，故需要重试3次，使用setTimeout避免attachPolicyToUser提示policyName不存在
+        const retryFunc = ()=>{
+          if (retry < 3) {
+            retry++;
+            setTimeout(()=>{
+              ramSvs
+              .attachPolicyToUser(policyName, $scope.grant.userName) // 为指定用户添加权限
+              .then(function() {
+                // 发邮件
+                if (sendInfo) {
+                  Mailer.send(sendInfo).then(
+                      function(result) {
+                        console.log(result);
+                        Toast.success(T('mail.test.success'));
+                      },
+                      function(err) {
+                        console.error(err);
+                        Toast.error(err);
+                      }
+                  );
+                }
+
+                Toast.success(successMsg);
+                cancel();
+              }).catch(()=>{
+                retryFunc(); // 递归重试
+              });
+            }, 1000);
+          }
+        };
         checkCreatePolicy(policyName, $scope.grant.policy, title).then(
             function() {
               switch ($scope.grant.toType) {
                 case 'user':
-                  ramSvs
-                      .attachPolicyToUser(policyName, $scope.grant.userName)
-                      .then(function() {
-                        // 发邮件
-                        if (sendInfo) {
-                          Mailer.send(sendInfo).then(
-                              function(result) {
-                                console.log(result);
-                                Toast.success(T('mail.test.success'));
-                              },
-                              function(err) {
-                                console.error(err);
-                                Toast.error(err);
-                              }
-                          );
-                        }
-
-                        Toast.success(successMsg);
-                        cancel();
-                      });
-
+                  retryFunc();
                   break;
                 case 'group':
                   ramSvs
@@ -294,7 +305,7 @@ angular.module('web').controller('grantModalCtrl', [
           }
       );
 
-      return df.promise;
+      // return df.promise;
     }
 
     function checkCreateUser(fn) {

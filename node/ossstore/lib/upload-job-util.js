@@ -195,7 +195,7 @@ function prepareChunks(filePath, checkPoints, fn) {
 
   fs.stat(filePath, function (err, state) {
     if (err) {
-      // callback(err);
+      console.error(err);
       return;
     }
 
