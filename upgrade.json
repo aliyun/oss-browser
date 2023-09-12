@@ -1,8 +1,8 @@
 {
-  "version": "1.9.5",
-  "package_url": "https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/",
+  "version": "1.17.0",
+  "package_url": "https://oss-browser-attachment.oss-cn-hangzhou.aliyuncs.com/",
   "package_urls": [
-    "https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/"
+    "https://oss-browser-attachment.oss-cn-hangzhou.aliyuncs.com/"
   ],
   "files": ["app.asar"]
 }
