@@ -12,7 +12,7 @@ Windows7 above, Linux and Mac,不建议使用 windows XP 平台和 windows Serve
 
 ## 2. 客户端下载：
 
-最新版本`1.16.0`，下载地址如下，解压即可使用。
+最新版本`1.17.0`，下载地址如下，解压即可使用。
 
 > [<h4>Window x32 版下载</h4>](https://oss-attachment.oss-cn-zhangjiakou.aliyuncs.com/ossbrowser/1.17.0/oss-browser-win32-ia32.zip)
 
