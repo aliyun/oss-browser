@@ -671,8 +671,13 @@ DownloadJob.prototype._changeStatus = function (status, retryTimes) {
   if (status == "failed" || status == "stopped" || status == "finished") {
     self.endTime = new Date().getTime();
     //util.closeFD(self.keepFd);
-    util.closeFD(self.fd); // #50555373 不关闭会导致windows下删除job后，缓冲文件不会删除
-    console.log("clear speed tid, status:", self.status);
+    console.log("clear speed tid, status:", self.status, self.fd, self);
+    try {
+      util.closeFD(self.fd); // #50555373 不关闭会导致windows下删除job后，缓冲文件不会删除
+    } catch (e) {
+      console.error(e);
+    }
+
     clearInterval(self.speedTid);
     self.speed = 0;
     //推测耗时
