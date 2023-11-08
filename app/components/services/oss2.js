@@ -1615,8 +1615,11 @@ angular.module('web').factory('ossSvs2', [
     }
 
     function _listFilesOrigion(region, bucket, key, marker = '', length) {
-      if (!length) length = localStorage.getItem("listObjectNum") || 500;
-      console.log('list-object-max-length', length);
+      if (!length) {
+        const lcount = localStorage.getItem("listObjectNum");
+        if (lcount) length = parseInt(lcount, 10);
+        else length = 500;
+      }
       const client = getClient3({
         region,
         bucket
@@ -1626,7 +1629,7 @@ angular.module('web').factory('ossSvs2', [
         nextContinuationToken: '',
         objects: [],
         prefixes: [],
-        keyCount: [],
+        keyCount: 0,
         isTruncated: true
       };
 

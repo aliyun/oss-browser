@@ -395,16 +395,17 @@
           {{'settings.other.list.object.max.number'|translate}}:
         </label>
         <div class="col-sm-7">
+          <!-- min="30" 不能小于30，小了后会因为高度不够，第一页没有滚动条，就没法触发加载第二页 -->
           <input
             type="number"
             name="listObjectNum"
             ng-model="set.listObjectNum"
             ng-change="setChange(form1,'listObjectNum')"
             max="1000"
-            min="20"
+            min="30"
             required
             class="form-control"
-            placeholder="20-1000"
+            placeholder="30-1000"
           />
         </div>
       </div>
