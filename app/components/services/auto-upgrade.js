@@ -8,7 +8,7 @@ angular.module('web').factory('autoUpgradeSvs', [
     var upgrade_url = Global.upgrade_url;
     var gVersion = Global.app.version;
     // var config_path = Global.config_path;
-console.log('gVersion', gVersion);
+
     var upgradeOpt = {
       currentVersion: gVersion,
       isLastVersion: false,
