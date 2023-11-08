@@ -115,28 +115,20 @@
       //   return false;
       // };
 
-      var branch = 'csg/fix/develop/53032343';// isDev ? "dev" : "master"
       var Global = {
         //ossEndpointProtocol:'https:',
-
         app: {
           id: custom.appId || "oss-browser",
           logo: custom.logo_png || "icons/icon.png", //logo
           version: custom.version || pkg.version, //自定义版本号
         },
         i18n: require("./node/i18n"),
-
         config_path: path.join(os.homedir(), ".oss-browser"),
 
         //release notes目录后缀，里面有 ${version}.md, 如 1.0.0.md
-        release_notes_url: `https://raw.githubusercontent.com/aliyun/oss-browser/${
-          branch
-        }/release-notes/`,
-
-        // //升级检测链接
-        upgrade_url: `https://raw.githubusercontent.com/aliyun/oss-browser/${
-          branch
-        }/upgrade.json`,
+        release_notes_url: `https://oss-browser-attachment.oss-cn-hangzhou.aliyuncs.com/release-notes/`,
+        // 升级检测链接
+        upgrade_url: `https://oss-browser-attachment.oss-cn-hangzhou.aliyuncs.com/upgrade.json`,
 
         about_html: custom.about_html,
       };
