@@ -3,6 +3,7 @@ angular.module('web').controller('grantModalCtrl', [
   '$q',
   '$uibModalInstance',
   '$translate',
+  '$uibModal',
   'items',
   'currentInfo',
   'ramSvs',
@@ -19,6 +20,7 @@ angular.module('web').controller('grantModalCtrl', [
       $q,
       $modalInstance,
       $translate,
+      $modal,
       items,
       currentInfo,
       ramSvs,
@@ -112,6 +114,19 @@ angular.module('web').controller('grantModalCtrl', [
             }
           }
       );
+    }
+
+    function openCodeWindow(items) {
+      $modal.open({
+        templateUrl: 'main/files/modals/grant-modal-code.html',
+        controller: 'grantModalCtrlCode',
+        backdrop: 'static',
+        resolve: {
+          items: function() {
+            return items;
+          }
+        }
+      });
     }
 
     // Object的读操作包括：GetObject，HeadObject，CopyObject和UploadPartCopy中的对source object的读；
@@ -230,6 +245,7 @@ angular.module('web').controller('grantModalCtrl', [
               .then(function() {
                 // 发邮件
                 if (sendInfo) {
+                  openCodeWindow(sendInfo);
                   Mailer.send(sendInfo).then(
                       function(result) {
                         console.log(result);
@@ -416,7 +432,7 @@ AccessKeySecret: ${secret}<br/>
 
 2. ${T('auth.tokenLogin')}:<br/><br/>
 
-<code>${tokenStr}</code>
+<code style="word-wrap:break-word;">${tokenStr}</code>
 
 <br/>
 <hr/>
