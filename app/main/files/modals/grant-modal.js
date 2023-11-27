@@ -116,15 +116,13 @@ angular.module('web').controller('grantModalCtrl', [
       );
     }
 
-    function openCodeWindow(items) {
+    function openCodeWindow(info) {
       $modal.open({
         templateUrl: 'main/files/modals/grant-modal-code.html',
         controller: 'grantModalCtrlCode',
         backdrop: 'static',
         resolve: {
-          items: function() {
-            return items;
-          }
+          info
         }
       });
     }
