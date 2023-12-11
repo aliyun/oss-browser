@@ -673,7 +673,7 @@ DownloadJob.prototype._changeStatus = function (status, retryTimes) {
     //util.closeFD(self.keepFd);
     console.log("clear speed tid, status:", self.status, self.fd, self);
     try {
-      util.closeFD(self.fd); // #50555373 不关闭会导致windows下删除job后，缓冲文件不会删除
+     if (self.fd) util.closeFD(self.fd); // #50555373 不关闭会导致windows下删除job后，缓冲文件不会删除
     } catch (e) {
       console.error(e);
     }
