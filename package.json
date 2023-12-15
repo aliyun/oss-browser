@@ -4,7 +4,7 @@
   "main": "dist/main.js",
   "scripts": {
     "test": "ava test",
-    "dev": "./node_modules/.bin/npm-run-all --parallel build watch dev:run:proxy",
+    "dev": "./node_modules/.bin/npm-run-all --parallel build watch dev:run",
     "dev:run": "./node_modules/.bin/cross-env NODE_ENV=development electron .",
     "dev:run:proxy": "./node_modules/.bin/cross-env http_proxy=http://127.0.0.1:9090 https_proxy=http://127.0.0.1:9090 NODE_ENV=development electron .",
     "postbuild": "node gen",
