@@ -117,7 +117,7 @@
           <!-- <a href="" ng-if="item.isFolder==true" ng-click="goIn(currentBucket,item.path);$event.stopPropagation()">进入</a>
         | -->
           <span
-            ng-if="!item.isFolder && (item.storageClass!='Archive' || item.storageStatus==3)"
+            ng-if="!item.isFolder && (!['Archive', 'ColdArchive', 'DeepColdArchive'].includes(item.storageClass) || item.storageStatus==3)"
           >
             <a
               href=""
@@ -130,7 +130,7 @@
             |
           </span>
 
-          <span ng-if="item.storageClass!='Archive' || item.storageStatus==3">
+          <span ng-if="!['Archive', 'ColdArchive', 'DeepColdArchive'].includes(item.storageClass) || item.storageStatus==3">
             <a href="" ng-click="showDownload(item);$event.stopPropagation()">
               <!-- 下载 -->
               {{'download'|translate}}
@@ -139,7 +139,7 @@
           </span>
 
           <span
-            ng-if="!item.isFolder && (item.storageClass=='Archive' && item.storageStatus!=3)"
+            ng-if="!item.isFolder && (['Archive', 'ColdArchive', 'DeepColdArchive'].includes(item.storageClass) && item.storageStatus!=3)"
           >
             <a href="" ng-click="showRestore(item);$event.stopPropagation()">
               <!-- 恢复 -->
