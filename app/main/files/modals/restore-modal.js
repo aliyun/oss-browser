@@ -61,11 +61,11 @@ angular.module('web').controller('restoreModalCtrl', [
 
     function parseRestoreInfo(s) {
       // "ongoing-request="true"
-      var arr = s.match(/([\w\-]+)=\"([^\"]+)\"/g);
+      var arr = s.match(/([\w-]+)="([^"]+)"/g);
       var m = {};
 
       angular.forEach(arr, function(n) {
-        var kv = n.match(/([\w\-]+)=\"([^\"]+)\"/);
+        var kv = n.match(/([\w-]+)="([^"]+)"/);
 
         m[kv[1]] = kv[2];
       });
