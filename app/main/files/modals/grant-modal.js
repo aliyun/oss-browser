@@ -114,6 +114,7 @@ angular.module('web').controller('grantModalCtrl', [
             }
           }
       );
+      genUserName();
     }
 
     function openCodeWindow(info) {

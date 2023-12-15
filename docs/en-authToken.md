@@ -53,7 +53,7 @@ opt = JSON.stringify(opt);
 Buffer.from(opt).toString("base64");
 ```
 
-For details, see the following code: [app/main/files/modals/grant-token-modal.js](app/main/files/modals/grant-token-modal.js).
+For details, see the following code: [app/main/files/modals/grant-token-modal.js](../app/main/files/modals/grant-token-modal.js).
 
 ## 2. Sub user AK encoding
 
