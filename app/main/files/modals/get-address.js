@@ -132,8 +132,7 @@ angular.module('web').controller('getAddressModalCtrl', [
 
                 $scope.isLoading = false;
                 safeApply($scope);
-              })
-              ['catch']((e) => {
+              })['catch']((e) => {
                 console.log(e);
                 $scope.isLoading = false;
                 safeApply($scope);

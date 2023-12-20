@@ -56,7 +56,7 @@ opt = JSON.stringify(opt);
 Buffer.from(opt).toString("base64");
 ```
 
-具体可以参考代码: [app/main/files/modals/grant-token-modal.js](app/main/files/modals/grant-token-modal.js)
+具体可以参考代码: [app/main/files/modals/grant-token-modal.js](../app/main/files/modals/grant-token-modal.js)
 
 ## 2. 子账号 AK 编码
 

@@ -1,0 +1,27 @@
+<form name="form1">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title text-danger">
+      <!-- 简化Policy授权 -->
+      {{'simplePolicy.title'|translate}}
+    </h4>
+  </div>
+  <div class="modal-body">
+    <div class="clearfix">
+      <div ng-bind-html="htm"></div>
+      <a href="" ng-click="copy()" style="float: right">
+        <!-- 点击复制 -->
+        {{'click.copy'|translate}}
+      </a>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default btn-sm" ng-click="cancel()">
+      <i class="glyphicon glyphicon-remove"></i>
+      <!-- 关闭 -->
+      {{'close'|translate}}
+    </button>
+  </div>
+</form>
