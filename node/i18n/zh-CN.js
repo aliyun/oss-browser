@@ -503,4 +503,5 @@ module.exports = {
     "OSS Browser 目前支持2种方式登录, 您可以选择任意一种:",
 
   "goto.create.role": "去创建角色",
+  "restore.days.tips.7": "有效期范围1-7天",
 };

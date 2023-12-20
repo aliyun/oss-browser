@@ -526,4 +526,5 @@ module.exports = {
     "OSS ブラウザは現在 2 つのログイン方法をサポートしています。いずれかを選択できます:",
 
   "goto.create.role": "ロールの作成",
+  "restore.days.tips.7": "有効期限 1～7日",
 };
