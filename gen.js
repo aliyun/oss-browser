@@ -7,6 +7,8 @@ const PRES = [
   {
     title: "download",
     url: "https://oss-attachment.cn-hangzhou.oss.aliyun-inc.com/oss-browser/",
+    newUrl:
+      "https://oss-attachment.oss-cn-zhangjiakou.aliyuncs.com/ossbrowser/",
   },
 ];
 
@@ -32,7 +34,8 @@ PRES.forEach((n) => {
   t.push(`||Windows ia32|Windows x64| Mac(zip) |Linux ia32|Linux x64|Release note|
   |-----|-----|-----|-----|--------|--------|---|`);
   vs.forEach((version) => {
-    var str = `|${version}|[Download](${n.url}${version}/oss-browser-win32-ia32.zip) |[Download](${n.url}${version}/oss-browser-win32-x64.zip) |  [Download](${n.url}${version}/oss-browser-darwin-x64.zip) | [Download](${n.url}${version}/oss-browser-linux-ia32.zip) | [Download](${n.url}${version}/oss-browser-linux-x64.zip)|`;
+    const url = compareVersion("1.16.0", version) < 0 ? n.url : n.newUrl;
+    var str = `|${version}|[Download](${url}${version}/oss-browser-win32-ia32.zip) |[Download](${url}${version}/oss-browser-win32-x64.zip) |  [Download](${url}${version}/oss-browser-darwin-x64.zip) | [Download](${url}${version}/oss-browser-linux-ia32.zip) | [Download](${url}${version}/oss-browser-linux-x64.zip)|`;
     if (compareVersion(version, start_i18n_version) >= 0)
       str += "[" + version + ".md](release-notes/" + version + ".md)|";
     else str += "[" + version + ".md](release-notes/" + version + ".en-US.md)|";
