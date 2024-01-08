@@ -5,6 +5,7 @@ module.exports = {
   type: "类型",
   customize: "自定义",
   "public.cloud": "公共云",
+  "storage.class": "存储类型",
 
   "region.oss-cn-hangzhou": "华东1(杭州)",
   "region.oss-cn-shanghai": "华东2(上海)",
@@ -100,6 +101,8 @@ module.exports = {
   "storageClassesType.standard": "标准类型",
   "storageClassesType.ia": "低频访问类型",
   "storageClassesType.archive": "归档存储",
+  "storageClassesType.coldarchive": "冷归档存储",
+  "storageClassesType.deepcoldarchive": "深度冷归档存储",
 
   "aclType.default": "继承Bucket",
   "aclType.public-read-write": "公共读写",

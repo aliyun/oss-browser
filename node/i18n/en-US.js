@@ -5,6 +5,7 @@ module.exports = {
   type: "Type",
   customize: "Customize",
   "public.cloud": "Public Cloud",
+  "storage.class": "Storage Class",
 
   "region.oss-cn-hangzhou": "East China 1(Hangzhou)",
   "region.oss-cn-shanghai": "East China 2(Shanghai)",
@@ -102,6 +103,8 @@ module.exports = {
   "storageClassesType.standard": "Standard",
   "storageClassesType.ia": "IA",
   "storageClassesType.archive": "Archive",
+  "storageClassesType.coldarchive": "Cold Archive",
+  "storageClassesType.deepcoldarchive": "Deep Cold Archive",
 
   "aclType.default": "Inherit From Bucket",
   "aclType.public-read-write": "Public Read and Write",

@@ -5,6 +5,7 @@ module.exports = {
   type: "タイプ",
   customize: "カスタマイズ",
   "public.cloud": "パブリッククラウド",
+  "storage.class": "ストレージタイプ",
 
   "region.oss-cn-hangzhou": "杭州 (中国東部 1)",
   "region.oss-cn-shanghai": "上海 (中国東部 2)",
@@ -103,6 +104,8 @@ module.exports = {
   "storageClassesType.standard": "標準",
   "storageClassesType.ia": "低頻度アクセス",
   "storageClassesType.archive": "アーカイブ",
+  "storageClassesType.coldarchive": "コールド・アーカイブ",
+  "storageClassesType.deepcoldarchive": "ディープコールドアーカイブ",
 
   "aclType.default": "バケットから継承",
   "aclType.public-read-write": "公開読み書き",
