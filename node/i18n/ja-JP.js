@@ -527,4 +527,5 @@ module.exports = {
 
   "goto.create.role": "ロールの作成",
   "restore.days.tips.7": "有効期限 1～7日",
+  "rename.tip": "/パスを分割するために使用します。サブディレクトリをすばやく作成できますが、連続した/"
 };

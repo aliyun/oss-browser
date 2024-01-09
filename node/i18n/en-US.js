@@ -523,4 +523,5 @@ module.exports = {
 
   "goto.create.role": "Go to create a role",
   "restore.days.tips.7": "Validity range 1-7 days",
+  "rename.tip": "Forward slashes (/) are used in a directory name to indicate subdirectories and can be used to create subdirectories. The directory name cannot start with a forward slash (/) or consecutive backslashes (\\). A directory name cannot contain consecutive forward slashes (/)."
 };
