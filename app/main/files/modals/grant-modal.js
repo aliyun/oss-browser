@@ -115,6 +115,7 @@ angular.module('web').controller('grantModalCtrl', [
           }
       );
       genUserName();
+      $scope.create.Email = $scope.mailSmtp.from;
     }
 
     function openCodeWindow(info) {
