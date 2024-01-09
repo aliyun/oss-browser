@@ -38,7 +38,7 @@ angular.module('web').controller('addBucketModalCtrl', [
         region: regions[0].id,
         storageClass: 'Standard'
       },
-      reg: /^[a-z0-9][a-z0-9\-]{1,61}[a-z0-9]$/,
+      reg: /^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$/,
       onRegionChanged: onRegionChanged,
       onAclChanged: onAclChanged,
       openURL: function(v) {

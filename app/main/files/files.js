@@ -836,6 +836,7 @@ angular
                 if (b) {
                   ossSvs2.deleteBucket(item.region, item.name).then(function() {
                     Toast.success(T('bucket.delete.success')); // 删除Bucket成功
+                    $scope.bucket_sel.item = null;
                     // 删除Bucket不是实时的，等待1秒后刷新
                     $timeout(function() {
                       listBuckets();
