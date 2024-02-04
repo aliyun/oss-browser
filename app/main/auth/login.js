@@ -67,8 +67,9 @@ angular.module('web').controller('loginCtrl', [
     });
 
     $scope.$watch('item.eptpl', function(v) {
-      $scope.eptplType =
-        v.indexOf('{region}.aliyuncs.com') !== -1 ? 'default' : 'customize';
+      if (v) {
+        $scope.eptplType = v.indexOf('{region}.aliyuncs.com') !== -1 ? 'default' : 'customize';
+      }
     });
 
     $scope.$watch('gtab', function(v) {

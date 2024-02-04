@@ -115,16 +115,23 @@
                 ng-if="eptplType=='customize'"
                 ng-class="{'has-error':!form1.endpoint.$valid}"
               >
-                <input
-                  type="text"
-                  required
-                  ng-model="item.eptpl"
-                  ng-pattern="/^http(s)?\:\/\//"
-                  class="form-control"
-                  id="endpoint"
-                  name="endpoint"
-                  placeholder="http(s)://"
-                />
+                  <div
+                    uib-tooltip="{{'https.tooltip'|translate}}"
+                    tooltip-is-open="!form1.endpoint.$valid"
+                    tooltip-placement="top"
+                    style="width: 100%;"
+                    >
+                      <input
+                        type="text"
+                        required
+                        ng-model="item.eptpl"
+                        ng-pattern="/^http(s)?\:\/\//"
+                        class="form-control"
+                        id="endpoint"
+                        name="endpoint"
+                        placeholder="http(s)://"
+                      />
+                  </div>
               </div>
               <!--// cname -->
               <div
@@ -134,16 +141,23 @@
                 ng-if="eptplType=='cname'"
                 ng-class="{'has-error':!form1.cname.$valid}"
               >
-                <input
-                  type="text"
-                  required
-                  ng-model="item.eptplcname"
-                  ng-pattern="/^http(s)?\:\/\//"
-                  class="form-control"
-                  id="cname"
-                  name="cname"
-                  placeholder="http(s)://"
-                />
+                <div
+                    uib-tooltip="{{'https.tooltip'|translate}}"
+                    tooltip-is-open="!form1.cname.$valid"
+                    tooltip-placement="top"
+                    style="width: 100%;"
+                    >
+                      <input
+                        type="text"
+                        required
+                        ng-model="item.eptplcname"
+                        ng-pattern="/^http(s)?\:\/\//"
+                        class="form-control"
+                        id="cname"
+                        name="cname"
+                        placeholder="http(s)://"
+                      />
+                  </div>
               </div>
             </div>
           </div>
@@ -187,7 +201,7 @@
           </div>
 
           <div
-            ng-if="item.id.indexOf('STS.')==0"
+            ng-if="item.id && item.id.indexOf('STS.') == 0"
             class="form-group has-feedback"
             ng-class="{'has-error': !form1.stoken.$valid }"
           >
@@ -273,7 +287,7 @@
 
           <div
             class="form-group"
-            ng-if="item.osspath && item.eptpl.indexOf('{region}')!=-1"
+            ng-if="item.osspath && item.eptpl && item.eptpl.indexOf('{region}') != -1"
           >
             <label for="input4" class="col-sm-4 control-label">
               <!-- <span class="red">*</span> -->

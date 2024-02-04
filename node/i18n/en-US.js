@@ -523,4 +523,5 @@ module.exports = {
 
   "goto.create.role": "Go to create a role",
   "restore.days.tips.7": "Validity range 1-7 days",
+  "https.tooltip": "Invalid URL. Must start with 'http://' or 'https://'."
 };
