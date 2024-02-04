@@ -504,4 +504,5 @@ module.exports = {
 
   "goto.create.role": "去创建角色",
   "restore.days.tips.7": "有效期范围1-7天",
+  "https.tooltip": "URL必须以'http://'或'https://'开头"
 };

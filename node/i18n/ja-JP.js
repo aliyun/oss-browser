@@ -527,4 +527,5 @@ module.exports = {
 
   "goto.create.role": "ロールの作成",
   "restore.days.tips.7": "有効期限 1～7日",
+  "https.tooltip": "URLは'http://'または'https://'で始まる必要があります"
 };
