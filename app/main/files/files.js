@@ -18,6 +18,7 @@ angular
       'safeApply',
       'Toast',
       'Dialog',
+      'utilSvs',
       function(
           $scope,
           $rootScope,
@@ -31,11 +32,15 @@ angular
           fileSvs,
           safeApply,
           Toast,
-          Dialog
+          Dialog,
+          utilSvs
       ) {
         var T = $translate.instant;
 
         angular.extend($scope, {
+          isArchiveRead: function() {
+           return $scope.sel.has && utilSvs.isArchiveRead($scope.sel.has);
+          },
           showTab: 1,
           ref: {
             isBucketList: false,
@@ -115,6 +120,7 @@ angular
 
           showHttpHeaders: showHttpHeaders,
 
+          showSelrestores: showSelrestores,
           showRestore: showRestore,
 
           loadNext: loadNext,
@@ -235,7 +241,7 @@ angular
                 showDownloadDialog();
               },
               function() {
-                return $scope.sel.has;
+                return utilSvs.isArchiveRead($scope.sel.has);
               }
             ],
             [
@@ -248,7 +254,7 @@ angular
               },
               function() {
                 return (
-                  $scope.sel.has && $scope.currentAuthInfo.privilege != 'readOnly'
+                  $scope.sel.has && $scope.currentAuthInfo.privilege != 'readOnly' && utilSvs.isArchiveRead($scope.sel.has)
                 );
               }
             ],
@@ -263,11 +269,10 @@ angular
               },
               function() {
                 return (
-                  $scope.sel.has && $scope.currentAuthInfo.privilege != 'readOnly'
+                  $scope.sel.has && $scope.currentAuthInfo.privilege != 'readOnly' && utilSvs.isArchiveRead($scope.sel.has)
                 );
               }
             ],
-
             [
               function() {
                 return '<i class="fa fa-edit text-info"></i> ' + T('rename');
@@ -278,9 +283,8 @@ angular
               function() {
                 return (
                   $scope.sel.has &&
-                $scope.sel.has.length == 1 &&
-                $scope.currentAuthInfo.privilege != 'readOnly' &&
-                $scope.sel.has[0].storageClass != 'Archive'
+                  $scope.sel.has.length == 1 &&
+                  $scope.currentAuthInfo.privilege != 'readOnly' && utilSvs.isArchiveRead($scope.sel.has)
                 );
               }
             ],
@@ -313,7 +317,7 @@ angular
               },
               function() {
                 return (
-                  $scope.sel.has && $scope.currentAuthInfo.id.indexOf('STS.') != 0
+                  $scope.sel.has && $scope.currentAuthInfo.id.indexOf('STS.') != 0 && utilSvs.isArchiveRead($scope.sel.has)
                 );
               }
             ],
@@ -331,9 +335,10 @@ angular
               function() {
                 return (
                   $scope.sel.has &&
-                $scope.sel.has.length == 1 &&
-                $scope.sel.has[0].isFolder &&
-                $scope.currentAuthInfo.id.indexOf('STS.') != 0
+                  $scope.sel.has.length == 1 &&
+                  $scope.sel.has[0].isFolder &&
+                  $scope.currentAuthInfo.id.indexOf('STS.') != 0 &&
+                  utilSvs.isArchiveRead($scope.sel.has)
                 );
               }
             ],
@@ -351,7 +356,7 @@ angular
                   $scope.sel.has &&
                 $scope.sel.has.length == 1 &&
                 !$scope.sel.has[0].isFolder &&
-                $scope.currentAuthInfo.id.indexOf('STS.') != 0
+                $scope.currentAuthInfo.id.indexOf('STS.') != 0 && utilSvs.isArchiveRead($scope.sel.has)
                 );
               }
             ],
@@ -368,7 +373,7 @@ angular
                 return (
                   $scope.sel.has &&
                 $scope.sel.has.length &&
-                $scope.sel.has.every((f) => !f.isFolder)
+                $scope.sel.has.every((f) => !f.isFolder) && utilSvs.isArchiveRead($scope.sel.has)
                 );
               }
             ],
@@ -647,7 +652,6 @@ angular
               .then(
                   function(result) {
                     const arr = result.data;
-
                     // eslint-disable-next-line no-unused-expressions
                     settingsSvs.showImageSnapshot.get() == 1
                       ? signPicURL(info, arr)
@@ -1464,15 +1468,15 @@ angular
           if (selectObjects && selectObjects.length > 0) {
             for (let i in selectObjects) {
               if (
-                selectObjects[i].storageStatus !== 3 &&
-              selectObjects[i].storageClass === 'Archive'
+                selectObjects[i].storageStatus !== 3 && selectObjects[i].storageStatus !== 2 &&
+                ['Archive', 'ColdArchive', 'DeepColdArchive'].includes(selectObjects[i].storageClass)
               ) {
                 SelRestore.push(selectObjects[i]);
               }
             }
 
-            if (!SelRestore.length) {
-              Toast.info(T('restore.msg'));
+            if (SelRestore.length !== selectObjects.length) {
+              Toast.info(T('restore.msg.no'), 6000);
             } else {
               showSelrestores(SelRestore);
             }
@@ -1480,6 +1484,7 @@ angular
         }
 
         function showSelrestores(items) {
+          console.log('showSelrestores', items);
           $modal.open({
             templateUrl: 'main/files/modals/batch-restore-modal.html',
             controller: 'batchRestoreModalCtrl',
@@ -1498,7 +1503,7 @@ angular
                         $scope.currentInfo.bucket,
                         items
                     );
-                  }, 300);
+                  }, 1300);
                 };
               }
             }
@@ -1525,7 +1530,7 @@ angular
                         $scope.currentInfo.bucket,
                         [item]
                     );
-                  }, 300);
+                  }, 1300);
                 };
               }
             }

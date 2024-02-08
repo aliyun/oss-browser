@@ -5,50 +5,41 @@
     </button>
     <h4 class="modal-title text-info">
       <i class="fa fa-edit"></i>
-      <!-- 恢复 -->
+      <!-- 批量解冻 -->
       {{'restore.title'|translate}}
     </h4>
   </div>
   <div class="modal-body">
     <div class="form-group">
-      <div style="padding: 0 20px;">
+      <div style="padding: 0 20px">
         <!-- 文件: -->
         {{'file'|translate}}:
       </div>
-      <!-- <div class="col-sm-10 input-md pdt4">oss://{{currentInfo.bucket}}/{{currentInfo.key}}{{item.name}}</div> -->
       <ul>
         <li ng-repeat="item in items" class="break">
-          <i
-            class="fa fa-folder"
-            style="color: orange;"
-            ng-if="item.isFolder"
-          ></i>
+          <i class="fa fa-folder" style="color: orange" ng-if="item.isFolder"></i>
           <i class="fa fa-file" ng-if="!item.isFolder"></i>
           oss://{{currentInfo.bucket}}/{{currentInfo.key}}{{item.name}}
         </li>
       </ul>
     </div>
-
-    <div is-loading ng-if="isLoading"></div>
-
+    <!-- <div is-loading ng-if="isLoading"></div>
     <div ng-if="!isLoading && info.type==2" class="alert alert-warning">
-      <!-- 正在恢复中，请耐心等待！ -->
       {{'restore.onprogress'|translate}}
     </div>
     <div ng-if="!isLoading && info.type==3" class="alert alert-success">
-      <!-- 可读截止时间： -->
       {{'restore.message2'|translate}}: {{info['expiry_date']}}
-    </div>
-
+    </div> -->
     <div
-      ng-if="!isLoading && info.type==1"
+      ng-if="classList.includes('Archive')"
       class="form-group"
-      ng-class="{'has-error': form1.name.$dirty && !form1.name.$valid,
-  'has-success': form1.name.$dirty && form1.name.$valid}"
+      ng-class="{'has-error': form1.days.$dirty && !form1.days.$valid,'has-success':true || form1.days.$dirty && form1.days.$valid}"
     >
-      <label class="col-sm-2 control-label" for="days">
-        <!-- 恢复天数: -->
-        {{'restore.days'|translate}}:
+      <div style="font-size: 14px; font-weight: 600; margin-left: 12px; margin-bottom: 8px">
+        {{'restore.file.type.archive'|translate}}
+      </div>
+      <label class="col-sm-3 control-label" for="days" style="font-size: 13px; text-align: left">
+        {{'restore.copyvalidity'|translate}}:
       </label>
       <div class="col-sm-8">
         <input
@@ -64,17 +55,117 @@
           required="required"
           class="input-md form-control"
         />
-        <div style="margin:5px;color:gray;">{{'restore.days.tips.7'|translate}}</div>
+        <div style="margin: 5px; color: gray">{{'restore.days.tips.7'|translate}}</div>
       </div>
+      <div class="clearfix"></div>
+    </div>
+    <div
+      style="border-top: 1px solid #e4e4e4; margin-bottom: 15px; margin-top: -5px"
+      ng-if="classList.includes('Archive') && classList.includes('ColdArchive')"
+    ></div>
+    <div
+      ng-if="classList.includes('ColdArchive')"
+      class="form-group"
+      ng-class="{'has-error': form1.cold_days.$dirty && !form1.cold_days.$valid,'has-success':true || form1.cold_days.$dirty && form1.cold_days.$valid}"
+    >
+      <div style="font-size: 14px; font-weight: 600; margin-left: 12px; margin-bottom: 8px">
+        {{'restore.file.type.cold.archive'|translate}}
+      </div>
+      <label class="col-sm-3 control-label" for="days" style="font-size: 13px; text-align: left">
+        {{'restore.copyvalidity'|translate}}:
+      </label>
+      <div class="col-sm-8">
+        <input
+          type="number"
+          max="365"
+          step="1"
+          min="1"
+          ng-model="info.coldDays"
+          id="cold_days"
+          autocomplete="off"
+          autofocus
+          name="cold_days"
+          required="required"
+          class="input-md form-control"
+        />
+        <div style="margin: 5px; color: gray">{{'restore.days.tips.365'|translate}}</div>
+      </div>
+      <label class="col-sm-3 control-label" for="days" style="font-size: 13px; text-align: left">
+        {{'restore.mode'|translate}}:
+      </label>
+      <div class="col-sm-8">
+        <label class="radio-inline">
+          <input type="radio" ng-model="info.coldMode" value="Expedited" name="cold_mode" />
+          {{'restore.mode.type.expedited'|translate}}
+        </label>
+        <label class="radio-inline">
+          <input type="radio" ng-model="info.coldMode" value="Standard" name="cold_mode" />
+          {{'restore.mode.type.standard'|translate}}
+        </label>
+        <label class="radio-inline">
+          <input type="radio" ng-model="info.coldMode" value="Bulk" name="cold_mode" />
+          {{'restore.mode.type.bulk'|translate}}
+        </label>
+        <div style="margin: 5px; color: gray">
+          {{'restore.mode.type.'+info.coldMode.toLowerCase()+'.explain'|translate}}
+        </div>
+      </div>
+
+      <div class="clearfix"></div>
+    </div>
+    <div
+      style="border-top: 1px solid #e4e4e4; margin-bottom: 15px; margin-top: -5px"
+      ng-if="classList.includes('DeepColdArchive') && (classList.includes('Archive') || classList.includes('ColdArchive'))"
+    ></div>
+    <div
+      ng-if="classList.includes('DeepColdArchive')"
+      class="form-group"
+      ng-class="{'has-error': form1.deep_cold_days.$dirty && !form1.deep_cold_days.$valid,'has-success':true || form1.deep_cold_days.$dirty && form1.deep_cold_days.$valid}"
+    >
+      <div style="font-size: 14px; font-weight: 600; margin-left: 12px; margin-bottom: 8px">
+        {{'restore.file.type.deep.cold.archive'|translate}}
+      </div>
+      <label class="col-sm-3 control-label" for="days" style="font-size: 13px; text-align: left">
+        {{'restore.copyvalidity'|translate}}:
+      </label>
+      <div class="col-sm-8">
+        <input
+          type="number"
+          max="365"
+          step="1"
+          min="1"
+          ng-model="info.deepColdDays"
+          id="deep_cold_days"
+          autocomplete="off"
+          autofocus
+          name="deep_cold_days"
+          required="required"
+          class="input-md form-control"
+        />
+        <div style="margin: 5px; color: gray">{{'restore.days.tips.365'|translate}}</div>
+      </div>
+      <label class="col-sm-3 control-label" for="days" style="font-size: 13px; text-align: left">
+        {{'restore.mode'|translate}}:
+      </label>
+      <div class="col-sm-8">
+        <label class="radio-inline">
+          <input type="radio" ng-model="info.deepColdMode" value="Expedited" name="deep_cold_mode" />
+          {{'restore.mode.type.expedited'|translate}}
+        </label>
+        <label class="radio-inline">
+          <input type="radio" ng-model="info.deepColdMode" value="Standard" name="deep_cold_mode" />
+          {{'restore.mode.type.standard'|translate}}
+        </label>
+        <div style="margin: 5px; color: gray">
+          {{'restore.mode.type.'+info.deepColdMode.toLowerCase()+'.explain.deep'|translate}}
+        </div>
+      </div>
+
       <div class="clearfix"></div>
     </div>
   </div>
   <div class="modal-footer">
-    <button
-      ng-disabled="isLoading || info.msg"
-      type="submit"
-      class="btn btn-success btn-sm"
-    >
+    <button ng-disabled="isLoading || info.msg" type="submit" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-ok"></i>
       <!-- 确定 -->
       {{'ok'|translate}}

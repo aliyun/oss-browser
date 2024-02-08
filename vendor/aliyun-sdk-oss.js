@@ -22597,6 +22597,16 @@ module.exports={
               "Days": {
                 "type": "integer",
                 "required": true
+              },
+              "JobParameters": {
+                "type": "structure",
+                "members": {
+                  "Tier": {
+                    "type": "string",
+                    "name": "Tier",
+                    "required": false
+                  }
+                }
               }
             }
           }

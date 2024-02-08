@@ -19,6 +19,7 @@ angular.module('web').controller('restoreModalCtrl', [
       Toast,
       safeApply
   ) {
+    /* 单文件解冻 */
     var T = $translate.instant;
 
     angular.extend($scope, {
