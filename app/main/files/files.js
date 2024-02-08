@@ -1484,7 +1484,6 @@ angular
         }
 
         function showSelrestores(items) {
-          console.log('showSelrestores', items);
           $modal.open({
             templateUrl: 'main/files/modals/batch-restore-modal.html',
             controller: 'batchRestoreModalCtrl',
