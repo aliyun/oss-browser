@@ -62,7 +62,7 @@ angular.module('web').directive('restoreChecker', [
 
                   if (fn) { fn(); }
                 }
-              } else if ($scope.objectInfo.storageClass == 'Archive') {
+              } else if (['Archive', 'ColdArchive', 'DeepColdArchive'].includes($scope.objectInfo.storageClass)) {
                 $scope.info.type = 1; // 归档文件，需要恢复才能预览或下载
                 $scope.info.showContent = false;
                 $scope.info.needRestore = true;
@@ -80,11 +80,11 @@ angular.module('web').directive('restoreChecker', [
 
       function showRestore() {
         $modal.open({
-          templateUrl: 'main/files/modals/restore-modal.html',
-          controller: 'restoreModalCtrl',
+          templateUrl: 'main/files/modals/batch-restore-modal.html',
+          controller: 'batchRestoreModalCtrl',
           resolve: {
             item: function() {
-              return angular.copy($scope.objectInfo);
+              return angular.copy([$scope.objectInfo]);
             },
             currentInfo: function() {
               return angular.copy($scope.bucketInfo);

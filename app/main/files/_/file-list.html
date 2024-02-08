@@ -26,6 +26,10 @@
           {{'type'|translate}} / {{'size'|translate}}
         </th>
         <th>
+          <!-- 存储类型 -->
+          {{'storageClassesType'|translate}}
+        </th>
+        <th>
           <!-- 最后修改时间 -->
           {{'lastModifyTime'|translate}}
         </th>
@@ -83,9 +87,7 @@
                 tooltip-popup-delay="500"
                 tooltip-append-to-body="true"
               >
-                <span ng-class="{'text-muted': item.status=='uploading'}"
-                  >{{item.name|sub:50}}</span
-                >
+                <span ng-class="{'text-muted': item.status=='uploading'}">{{item.name|sub:50}}</span>
               </a>
               <span>
                 <object
@@ -111,13 +113,16 @@
           </span>
           <span ng-if="item.isFolder!=true">{{item.size|sizeFormat}}</span>
         </td>
+        <td>
+          <span ng-if="item.isFolder!=true">{{'storageClassesType.'+item.storageClass.toLowerCase()|translate}}</span>
+        </td>
         <td>{{item.lastModified|timeFormat}}</td>
         <td align="right">
           <!-- <a href="" ng-if="item.isFolder!=true" ng-click="showPreview(item);$event.stopPropagation()">预览</a> -->
           <!-- <a href="" ng-if="item.isFolder==true" ng-click="goIn(currentBucket,item.path);$event.stopPropagation()">进入</a>
         | -->
           <span
-            ng-if="!item.isFolder && (item.storageClass!='Archive' || item.storageStatus==3)"
+            ng-if="!item.isFolder && (!['Archive','ColdArchive','DeepColdArchive'].includes(item.storageClass) || item.storageStatus==3)"
           >
             <a
               href=""
@@ -129,25 +134,31 @@
             </a>
             |
           </span>
-
-          <span ng-if="item.storageClass!='Archive' || item.storageStatus==3">
+          <span ng-if="!['Archive','ColdArchive','DeepColdArchive'].includes(item.storageClass) || item.storageStatus==3">
             <a href="" ng-click="showDownload(item);$event.stopPropagation()">
               <!-- 下载 -->
               {{'download'|translate}}
             </a>
             |
           </span>
-
           <span
-            ng-if="!item.isFolder && (item.storageClass=='Archive' && item.storageStatus!=3)"
+            ng-if="!item.isFolder && (['Archive','ColdArchive','DeepColdArchive'].includes(item.storageClass) && item.storageStatus!=3 && item.storageStatus!=2)"
           >
-            <a href="" ng-click="showRestore(item);$event.stopPropagation()">
-              <!-- 恢复 -->
+            <a href="" ng-click="showSelrestores([item]);$event.stopPropagation()">
+              <!-- 解冻 -->
               {{'restore'|translate}}
             </a>
             |
           </span>
-
+          <span
+          ng-if="!item.isFolder && (['Archive','ColdArchive','DeepColdArchive'].includes(item.storageClass) &&  item.storageStatus==2)"
+        >
+          <a href="" ng-click="$event.stopPropagation()">
+            <!-- 解冻中 -->
+            {{'restoring'|translate}}
+          </a>
+          |
+        </span>
           <a href="" ng-click="showDeleteFiles([item])" class="text-danger">
             <!-- 删除 -->
             {{'delete'|translate}}

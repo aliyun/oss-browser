@@ -1473,7 +1473,7 @@ angular.module('web').factory('ossSvs2', [
           ['catch'](handleError);
     }
 
-    function restoreFile(region, bucket, key, days) {
+    function restoreFile(region, bucket, key, days, tier) {
       return new Promise(function(a, b) {
         var client = getClient({
           region: region,
@@ -1483,9 +1483,14 @@ angular.module('web').factory('ossSvs2', [
           Bucket: bucket,
           Key: key,
           RestoreRequest: {
-            Days: days || 7
+            Days: days || 7,
           }
         };
+        if (tier) {
+          opt.RestoreRequest.JobParameters = {
+            Tier: tier
+          };
+        }
 
         client.restoreObject(opt, function(err, data) {
           if (err) {
@@ -1555,7 +1560,7 @@ angular.module('web').factory('ossSvs2', [
 
           c++;
 
-          if (!item.isFile || item.storageClass != 'Archive') {
+          if (!item.isFile || !['Archive', 'ColdArchive', 'DeepColdArchive'].includes(item.storageClass)) {
             _dig();
 
             return;
