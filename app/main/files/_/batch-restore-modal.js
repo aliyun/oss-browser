@@ -38,19 +38,19 @@ angular.module('web').controller('batchRestoreModalCtrl', [
       onSubmit: onSubmit,
     });
 
-    // init();
+    init();
     function init() {
       $scope.isLoading = true;
 
       const pros = [];
-      for (let i in items) {
-        const p = ossSvs2.getFileInfo(currentInfo.region, currentInfo.bucket, items[i].path);
+      for (const i of items) {
+        const p = ossSvs2.getFileInfo(currentInfo.region, currentInfo.bucket, i.path);
         pros.push(p);
       }
 
       Promise.all(pros).then(function (datas) {
-        const data = datas.find(item => !!item.Restore);
-        if (data.Restore) {
+        const data = datas.find(item => !!item.Restore); //有解冻记录
+        if (data && data.Restore) {
           var info = parseRestoreInfo(data.Restore);
 
           if (info['ongoing-request'] == 'true') {
