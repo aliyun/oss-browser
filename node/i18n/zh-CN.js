@@ -504,4 +504,5 @@ module.exports = {
 
   "goto.create.role": "去创建角色",
   "restore.days.tips.7": "有效期范围1-7天",
+  "rename.tip": "/ 用于分割路径，可快速创建子目录，但不要以 / 或 \\ 开头，不要出现连续的 /"
 };
