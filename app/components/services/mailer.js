@@ -14,7 +14,7 @@ angular.module('web').factory('Mailer', [
             subject: info.subject,
             html: info.html || info.content
           };
-          // console.log('sending..', smtp, opt);
+          console.log('sending..', smtp, opt);
 
           var transporter = nodemailer.createTransport(smtpTransport(smtp));
 
