@@ -1992,6 +1992,13 @@ angular.module('web').factory('ossSvs2', [
 
     function getOssEndpoint(region, bucket, eptpl) {
       eptpl = eptpl || AuthInfo.get().eptpl || 'http://{region}.aliyuncs.com';
+      if (region === "oss-cn-wuhan") {
+        if ($rootScope.internalSupported) {
+          eptpl = "http:oss-cn-wuhan-lr-internal.aliyuncs.com";
+        } else {
+          eptpl = "http://oss-cn-wuhan-lr.aliyuncs.com";
+        }
+      }
 
       // 通过bucket获取endpoint
       if (bucket && $rootScope.bucketMap && $rootScope.bucketMap[bucket]) {

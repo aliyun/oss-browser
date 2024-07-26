@@ -98,6 +98,11 @@ angular.module('web').factory('Const', [
           storageClasses: getStorageClasses(3)
         },
         {
+          id: "oss-cn-wuhan",
+          label: "华中1（武汉-本地地域）",
+          storageClasses: getStorageClasses(3)
+        },
+        {
           id: 'oss-cn-qingdao',
           label: '华北1(青岛)',
           storageClasses: getStorageClasses(3)

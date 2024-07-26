@@ -10,6 +10,7 @@ module.exports = {
   "region.oss-cn-shanghai": "华东2(上海)",
   "region.oss-cn-nanjing": "华东5(南京本地地域)",
   "region.oss-cn-fuzhou": "华东6(福州本地地域)",
+  "region.oss-cn-wuhan": "华中1(武汉-本地地域)",
   "region.oss-cn-qingdao": "华北1(青岛)",
   "region.oss-cn-beijing": "华北2(北京)",
   "region.oss-cn-zhangjiakou": "华北3(张家口)",

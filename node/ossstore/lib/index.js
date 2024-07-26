@@ -68,10 +68,13 @@ function OssStore(config) {
         localStorage.getItem("show-request-pay") === "YES" ? true : false,
     });
   } else {
+    const privateLink = localStorage.getItem("private-link");
+    const isPrivateLink = privateLink !== null;
     this.oss = new ALYD.OSS({
       accessKeyId: this._config.aliyunCredential.accessKeyId,
       secretAccessKey: this._config.aliyunCredential.secretAccessKey,
-      endpoint: this._config.endpoint,
+      endpoint: isPrivateLink ? privateLink : this._config.endpoint,
+      sldEnable: isPrivateLink,
       apiVersion: "2013-10-15",
       maxRetries: 0,
       httpOptions: {
@@ -84,7 +87,8 @@ function OssStore(config) {
     this.aliOSS = new OSS({
       accessKeyId: this._config.aliyunCredential.accessKeyId,
       accessKeySecret: this._config.aliyunCredential.secretAccessKey,
-      endpoint: this._config.endpoint,
+      endpoint: isPrivateLink ? privateLink : this._config.endpoint,
+      sldEnable: isPrivateLink,
       cname: this._config.cname,
       timeout: TIMEOUT,
       isRequestPay:
