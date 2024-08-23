@@ -59,7 +59,7 @@ angular
             label: v.label
           });
         });
-        var lang = localStorage.getItem('lang') || langList[0].lang;
+        var lang = localStorage.getItem('lang') || (langList[0] && langList[0].lang);
 
         $rootScope.langSettings = {
           langList: langList,

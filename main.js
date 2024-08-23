@@ -1,4 +1,5 @@
 var electron = require("electron");
+const server = require('./server.js');
 // Module to control application life.
 
 // use self signed certificate for Apsara Stack
@@ -23,17 +24,18 @@ log.transports.console.level = false;
 ///*****************************************
 //静态服务
 var PORTS = [7123, 7124, 7125, 7126];
-
-for (var port of PORTS) {
-  try {
-    //var subp = require('child_process').fork('./server.js',[port]);
-    require("./server.js").listen(port);
-    console.log("listening on port " + port);
-    break;
-  } catch (e) {
-    console.log(e);
-  }
+try {
+  // var subp = require('child_process').fork('./server.js',[port]);
+  server.listen(PORTS[0]);
+  console.log("listening on port " + PORTS[0]);
+  // break;
+} catch (e) {
+  console.log(e);
 }
+
+// for (var port of PORTS) {
+
+// }
 
 app.commandLine.appendSwitch("ignore-certificate-errors");
 ///*****************************************
@@ -57,7 +59,7 @@ if (process.platform == "darwin") {
   );
 }
 
-function createWindow() {
+function createWindow () {
   var opt = {
     width: 1221,
     height: 700,
@@ -67,6 +69,9 @@ function createWindow() {
     icon: custom.logo_ico || path.join(__dirname, "icons", "icon.ico"),
 
     webPreferences: {
+      nodeIntegration: true, // 允许在渲染器进程中使用 Node.js API
+      contextIsolation: false, // 需要配合 nodeIntegration 使用
+      enableRemoteModule: true, // 允许使用 remote 模块
       plugins: true,
     },
   };
@@ -112,7 +117,7 @@ ipcMain.on("asynchronous", (event, data) => {
   switch (data.key) {
     case "getStaticServerPort":
       //在main process里向web page发出message
-      event.sender.send("asynchronous-reply", { key: data.key, port: port });
+      event.sender.send("asynchronous-reply", { key: data.key, port: 7123 });
       break;
     case "openDevTools":
       process.env["DEBUG"] = 'ali-oss';
@@ -145,7 +150,7 @@ ipcMain.on("asynchronous", (event, data) => {
   }
 });
 
-function moveFile(from, to, fn) {
+function moveFile (from, to, fn) {
   if (process.platform != "win32") {
     fs.rename(from, to, fn);
     return;
@@ -179,23 +184,20 @@ function moveFile(from, to, fn) {
 }
 
 //singleton
-var shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
-  // Someone tried to run a second instance, we should focus our window.
-  if (win) {
-    if (win.isMinimized()) win.restore();
-    win.focus();
-  }
-});
+app.requestSingleInstanceLock({});
+// console.log('shouldQuit', shouldQuit);
+// var shouldQuit = false;
 
-if (shouldQuit) {
-  app.quit();
-  process.exit(0);
-}
+// if (shouldQuit) {
+//   app.quit();
+//   process.exit(0);
+// }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+// app.on("ready", createWindow);
+app.whenReady().then(() => createWindow());
 
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {
@@ -228,7 +230,7 @@ app.on(
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-function getMenuTemplate() {
+function getMenuTemplate () {
   var name = app.getName();
   return [
     {

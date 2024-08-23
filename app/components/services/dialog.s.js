@@ -3,7 +3,7 @@ angular
     .factory('Dialog', [
       '$uibModal',
       function($modal) {
-        var dialog = require('electron').remote.dialog;
+        var dialog = require('electron').dialog;
 
         return {
           alert: alert,

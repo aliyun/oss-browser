@@ -16,6 +16,7 @@ ossutil*
 ossutil_output
 app.asar
 pvl
+out
 
 #tool
 .vscode/
